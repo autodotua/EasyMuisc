@@ -44,7 +44,7 @@ namespace EasyMuisc
         /// <summary>
         /// 音乐文件路径
         /// </summary>
-        string path = "";
+        public string path = "";
         /// <summary>
         /// 音乐播放句柄
         /// </summary>
@@ -147,10 +147,10 @@ namespace EasyMuisc
         public MainWindow()
         {
             InitializeComponent();
-            //if(!File.Exists("bass.dll"))
-            //{
-            //    File.WriteAllBytes("bass.dll", Properties.Resources.bass);
-            //}
+            if (!File.Exists("bass.dll"))
+            {
+                File.WriteAllBytes("bass.dll", Properties.Resources.bass);
+            }
             try
             {
                 if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_CPSPEAKERS, new WindowInteropHelper(this).Handle))
@@ -168,7 +168,6 @@ namespace EasyMuisc
             }
             musicInfo = new ObservableCollection<MusicInfo>();
             lvw.DataContext = musicInfo;
-
             playTimer.Tick += delegate
             {
 
@@ -224,6 +223,11 @@ namespace EasyMuisc
                     cfa.AppSettings.Settings.Clear();
                 }
             }
+            //if(path!="")
+            //{
+            //    AddNewMusic(path);
+            //    PlayNew(musicInfo[musicInfo.Count - 1]);
+            //}
         }
         /// <summary>
         /// 从配置文件读取音乐列表

@@ -14,8 +14,6 @@ namespace EasyMuisc
     /// </summary>
     public partial class App : Application
     {
-
-
         void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
            ShowAlert(e.Exception.Message);
