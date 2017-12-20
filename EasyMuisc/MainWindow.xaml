@@ -1,0 +1,461 @@
+﻿<Window x:Class="EasyMuisc.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasyMuisc"
+        mc:Ignorable="d"
+        Title="EasyMusic" 
+        Height="600" 
+        Width="1000"
+        SizeChanged="Window_SizeChanged"
+        Loaded="WindowLoadedEventHandler" 
+        AllowDrop="True"
+        Closing="WindowClosingEventHandler" 
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <!--Textbox-->
+        <Style x:Key="txtStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="#FFABADB3"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="True"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0,0,0,1" Background="Transparent" SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF7EB4EA"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF569DE5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="True"/>
+                        <Condition Property="IsSelectionActive" Value="False"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+
+
+        <!--ListView-->
+        <AlternationConverter x:Key="AlternationConverter"/>
+        <ControlTemplate x:Key="tmpForThumb" TargetType="{x:Type Thumb}">
+            <Border>
+                <Rectangle Width="1.5" x:Name="rec" Fill="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}"/>
+            </Border>
+        </ControlTemplate>
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                        <Grid x:Name="g" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                            <Border x:Name="bd" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter Margin="2"  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                            </Border>
+                            <Thumb x:Name="PART_HeaderGripper" Template="{StaticResource tmpForThumb}" HorizontalAlignment="Right" Margin="0"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--ContextMenu-->
+        <Style TargetType="{x:Type ContextMenu}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ContextMenu}">
+                        <Border x:Name="Border" Background="#FFEEEEEE"  BorderThickness="0">
+                            <ItemsPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type MenuItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                        <Border Margin="1" MinWidth="80" >
+                            <Border.Background>
+                                <SolidColorBrush x:Name="MyAnimatedBrushBackground" Color="Transparent" />
+                            </Border.Background>
+                            <StackPanel Orientation="Horizontal" Margin="8">
+                                <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="MyAnimatedBrushBackground" Storyboard.TargetProperty="Color">
+                                                <LinearColorKeyFrame Value="Transparent" KeyTime="00:00:00.0020000" />
+                                                <LinearColorKeyFrame Value="#7E9C9C9C" KeyTime="00:00:00.0220000" />
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.EnterActions>
+                                <MultiTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="MyAnimatedBrushBackground" Storyboard.TargetProperty="Color">
+                                                <LinearColorKeyFrame Value="#7E9C9C9C" KeyTime="00:00:00.0020000" />
+                                                <LinearColorKeyFrame Value="Transparent" KeyTime="00:00:00.0220000" />
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.ExitActions>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+
+    </Window.Resources>
+
+    <Grid x:Name="grdMain" Margin="4">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="4"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="8"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="grdList">
+            <ListView x:Name="lvw" ItemsSource="{Binding}" DragEnter="LvwDragEnterEventHandler" Foreground="Black" BorderThickness="0">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Style.Setters>
+                            <EventSetter Event="PreviewKeyDown" Handler="LvwItemPreviewKeyDownEventHandler"/>
+                            <EventSetter Event="MouseDoubleClick" Handler="LvwItemPreviewMouseDoubleClickEventHandler"/>
+                            <Setter Property="SnapsToDevicePixels" Value="True"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <Border x:Name="bd"  
+                                BorderThickness="1"  
+                                Padding="{TemplateBinding Padding}"  
+                                SnapsToDevicePixels="True">
+                                            <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                                  Margin="3"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True" >
+                                                <Trigger.Setters>
+                                                    <Setter TargetName="bd" Property="Background" Value="#FFD9D9D9"/>
+                                                </Trigger.Setters>
+                                            </Trigger>
+
+                                            <Trigger Property="IsMouseOver"  Value="True" >
+                                                <Trigger.Setters>
+                                                    <Setter TargetName="bd" Property="Background" Value="#FFC2C2C2"/>
+                                                </Trigger.Setters>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style.Setters>
+                    </Style>
+
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="歌名" Width="144" DisplayMemberBinding="{Binding Path=MusicName}"/>
+                        <GridViewColumn Header="歌手" Width="96" DisplayMemberBinding="{Binding Path=Singer}"/>
+                        <GridViewColumn Header="时长" Width="96" DisplayMemberBinding="{Binding Path=Length}"/>
+                    </GridView>
+                </ListView.View>
+
+            </ListView>
+            <Button x:Name="btnListOption" Width="32" Height="32" MouseEnter="BtnAnimitionMouseEnterEventHandler" MouseLeave="BtnAnimitionMouseLeaveEventHandler" Click="BtnListOptionClickEventHanlder"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Opacity="0.2" Margin="0,0,20,1">
+                <Button.Style>
+                    <Style  TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Image  x:Name="btnImg" Source="Properties/Images/menu_normal.png"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+        <Grid Grid.Column="2">
+
+            <StackPanel x:Name="stkLrc" Visibility="Hidden" Background="Transparent"/>
+            <TextBox x:Name="txtLrc"  TextAlignment="Center" IsReadOnly="True" BorderThickness="0" VerticalScrollBarVisibility="Auto" Visibility="Hidden"/>
+            <Grid x:Name="grdLrc"  IsHitTestVisible="False" Margin="0,-4,0,-4">
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                        <GradientStop Color="White" Offset="0"/>
+                        <GradientStop Color="White" Offset="1"/>
+                        <GradientStop Offset="0.75"/>
+                        <GradientStop Offset="0.25"/>
+                        <GradientStop Color="White" Offset="0.04"/>
+                        <GradientStop Color="White" Offset="0.975"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+            </Grid>
+            <Button x:Name="btnLrcOption" Width="32" Height="32" MouseEnter="BtnAnimitionMouseEnterEventHandler" MouseLeave="BtnAnimitionMouseLeaveEventHandler" Click="BtnLrcOptionClickEventHanlder"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Opacity="0.2" Margin="0,0,20,1">
+                <Button.Style>
+                    <Style  TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Image  x:Name="btnImg" Source="Properties/Images/menu_normal.png"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button x:Name="btnListSwitcher" Width="24" Height="128" MouseEnter="BtnAnimitionMouseEnterEventHandler" MouseLeave="BtnAnimitionMouseLeaveEventHandler" Click="btnListSwitcher_Click"  VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="0.2" >
+                <Button.Style>
+                    <Style  TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Image  x:Name="btnImg" Source="Properties/Images/verticalBar.png"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+        </Grid>
+
+        <!--播放控制区-->
+        <Grid x:Name="grdControl" Grid.Row="2" Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!--<ScrollBar x:Name="scb" Orientation="Horizontal" PreviewMouseDown="ScbPreviewMouseDownEventHandler" ValueChanged="ScbValueChangedEventHandler"  PreviewMouseUp="ScbPreviewMouseUpEventHandler" MouseMove="ScbMouseMoveEventHandler" SmallChange="1" LargeChange="10"/>-->
+            <Slider x:Name="sldProcess" Orientation="Horizontal" PreviewMouseDown="ScbPreviewMouseDownEventHandler" ValueChanged="SldValueChangedEventHandler"  PreviewMouseUp="SldPreviewMouseUpEventHandler" MouseMove="SldMouseMoveEventHandler" >
+            
+            </Slider>
+            <!--按钮控制区-->
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="btnOpen" Width="32" Height="32" Click="BtnOpenFileClickEventHandler">
+                    <Button.Style>
+                        <Style  TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Image  x:Name="btnImg" Source="Properties/Images/open_normal.png"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Source"  Value="Properties/Images/open_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter Property="Source"  Value="Properties/Images/open_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button x:Name="btnLast" Grid.Column="2" Width="32" Height="32" Click="BtnLastClickEventHandler">
+                    <Button.Style>
+                        <Style  TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Image  x:Name="btnImg" Source="Properties/Images/last_normal.png"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Source"  Value="Properties/Images/last_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter Property="Source"  Value="Properties/Images/last_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button x:Name="btnPlay" Grid.Column="4" Width="32" Height="32" Click="BtnPlayClickEventHandler">
+                    <Button.Style>
+                        <Style  TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Image  x:Name="btnImg" Source="Properties/Images/play_normal.png"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Source"  Value="Properties/Images/play_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter Property="Source"  Value="Properties/Images/play_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button x:Name="btnPause" Grid.Column="4"  Width="32" Height="32" Visibility="Hidden" Click="BtnPauseClickEventHandler">
+                    <Button.Style>
+                        <Style  TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Image  x:Name="btnImg" Source="Properties/Images/pause_normal.png"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Source"  Value="Properties/Images/pause_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter Property="Source"  Value="Properties/Images/pause_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button x:Name="btnNext" Grid.Column="6" Width="32" Height="32" Click="BtnNextClickEventHandler">
+                    <Button.Style>
+                        <Style  TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Image  x:Name="btnImg" Source="Properties/Images/next_normal.png"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Source"  Value="Properties/Images/next_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter Property="Source"  Value="Properties/Images/next_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button x:Name="btnListCycle" Grid.Column="8" Width="32" Height="32" Click="BtnCycleModeClickEventHandler"  Visibility="Hidden">
+                    <Button.Style>
+                        <Style  TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Image  x:Name="btnImg" Source="Properties/Images/listCircle_normal.png"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Source"  Value="Properties/Images/listCircle_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter Property="Source"  Value="Properties/Images/listCircle_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button x:Name="btnSingleCycle" Grid.Column="8" Width="32" Height="32" Click="BtnCycleModeClickEventHandler" Visibility="Hidden">
+                    <Button.Style>
+                        <Style  TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Image  x:Name="btnImg" Source="Properties/Images/singleCircle_normal.png"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Source"  Value="Properties/Images/singleCircle_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter Property="Source"  Value="Properties/Images/singleCircle_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button x:Name="btnShuffle" Grid.Column="8" Width="32" Height="32" Click="BtnCycleModeClickEventHandler" Visibility="Hidden">
+                    <Button.Style>
+                        <Style  TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Image  x:Name="btnImg" Source="Properties/Images/shuffle_normal.png"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Source"  Value="Properties/Images/shuffle_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter Property="Source"  Value="Properties/Images/shuffle_mouseOver.png" TargetName="btnImg" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
