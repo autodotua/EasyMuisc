@@ -147,10 +147,10 @@ namespace EasyMuisc
         public MainWindow()
         {
             InitializeComponent();
-            if(!File.Exists("bass.dll"))
-            {
-                File.WriteAllBytes("bass.dll", Properties.Resources.bass);
-            }
+            //if(!File.Exists("bass.dll"))
+            //{
+            //    File.WriteAllBytes("bass.dll", Properties.Resources.bass);
+            //}
             try
             {
                 if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_CPSPEAKERS, new WindowInteropHelper(this).Handle))

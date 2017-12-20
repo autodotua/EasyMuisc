@@ -19,7 +19,7 @@
       </requestedPrivileges>
       <applicationRequestMinimum>
         <defaultAssemblyRequest permissionSetReference="Custom" />
-        <PermissionSet class="System.Security.PermissionSet" version="1" Unrestricted="true" ID="Custom" SameSite="site" />
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
       </applicationRequestMinimum>
     </security>
   </trustInfo>
@@ -37,7 +37,7 @@
       <!-- Windows 8.1 -->
       <!--<supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}" />-->
       <!-- Windows 10 -->
-      <!--<supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />-->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
     </application>
   </compatibility>
   <!-- 指示该应用程序可以感知 DPI 且 Windows 在 DPI 较高时将不会对其进行
@@ -52,18 +52,9 @@
   </application>
   -->
   <!-- 启用 Windows 公共控件和对话框的主题(Windows XP 和更高版本) -->
-  <!--
   <dependency>
     <dependentAssembly>
-      <assemblyIdentity
-          type="win32"
-          name="Microsoft.Windows.Common-Controls"
-          version="6.0.0.0"
-          processorArchitecture="*"
-          publicKeyToken="6595b64144ccf1df"
-          language="*"
-        />
+      <assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls" version="6.0.0.0" processorArchitecture="*" publicKeyToken="6595b64144ccf1df" language="*" />
     </dependentAssembly>
   </dependency>
-  -->
 </assembly>
