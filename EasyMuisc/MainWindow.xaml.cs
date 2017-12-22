@@ -16,6 +16,8 @@ using System.Windows.Media.Animation;
 using Microsoft.Win32;
 using System.Windows.Controls.Primitives;
 using System.Drawing;
+using System.Windows.Data;
+using System.Runtime.InteropServices;
 
 namespace EasyMuisc
 {
@@ -24,6 +26,9 @@ namespace EasyMuisc
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 单曲信息
+        /// </summary>
         public class MusicInfo
         {
             public string MusicName { get; internal set; }
@@ -31,20 +36,25 @@ namespace EasyMuisc
             public string Length { get; internal set; }
             public string Path { get; internal set; }
             public bool Enable { get; internal set; }
-
-
         }
+        #region 枚举、属性、字段
+        /// <summary>
+        /// 循环模式
+        /// </summary>
         private enum CycleMode
         {
             SingleCycle,
             ListCycle,
             Shuffle,
         }
+        /// <summary>
+        /// 每秒钟检测次数
+        /// </summary>
         double fps = 20;
         /// <summary>
         /// 音乐文件路径
         /// </summary>
-        public string path = "";
+        public string path;
         /// <summary>
         /// 音乐播放句柄
         /// </summary>
@@ -111,7 +121,13 @@ namespace EasyMuisc
         /// 历史记录
         /// </summary>
         private List<MusicInfo> history = new List<MusicInfo>();
+        /// <summary>
+        /// 当前播放历史索引
+        /// </summary>
         int currentHistoryIndex = -1;
+        /// <summary>
+        /// 内部音量
+        /// </summary>
         private double Volumn
         {
             set
@@ -133,14 +149,16 @@ namespace EasyMuisc
                 return value;
             }
         }
-        DispatcherTimer playTimer = new DispatcherTimer()
-        {
-            Interval = TimeSpan.FromMilliseconds(1000 / 60),
-        };
-        DispatcherTimer pauseTimer = new DispatcherTimer()
-        {
-            Interval = TimeSpan.FromMilliseconds(1000 / 60),
-        };
+        /// <summary>
+        /// 继续播放渐响定时器
+        /// </summary>
+        DispatcherTimer playTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(1000 / 60) };
+        /// <summary>
+        /// 暂停播放渐隐定时器
+        /// </summary>
+        DispatcherTimer pauseTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(1000 / 60) };
+        #endregion
+        #region 初始化和配置
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -155,10 +173,8 @@ namespace EasyMuisc
             {
                 if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_CPSPEAKERS, new WindowInteropHelper(this).Handle))
                 {
-
                     ShowAlert("无法初始化音乐引擎。");
                     Application.Current.Shutdown();
-
                 }
             }
             catch
@@ -168,6 +184,15 @@ namespace EasyMuisc
             }
             musicInfo = new ObservableCollection<MusicInfo>();
             lvw.DataContext = musicInfo;
+            InitialiazeTimer();
+
+
+        }
+        /// <summary>
+        /// 初始化定时器事件
+        /// </summary>
+        private void InitialiazeTimer()
+        {
             playTimer.Tick += delegate
             {
 
@@ -176,18 +201,18 @@ namespace EasyMuisc
                     playTimer.Stop();
                     return;
                 }
-                Volumn += 0.02;
+                Volumn += 0.05;
             };
             pauseTimer.Tick += delegate
             {
 
-                if (Volumn <= 0.02)
+                if (Volumn <= 0.05)
                 {
                     Bass.BASS_ChannelPause(stream);
                     pauseTimer.Stop();
                     return;
                 }
-                Volumn -= 0.02;
+                Volumn -= 0.05;
             };
         }
         /// <summary>
@@ -200,6 +225,7 @@ namespace EasyMuisc
             try
             {
                 GetMusicListFromConfig();
+                Cursor = Cursors.Arrow;
                 switch (GetConfig("CycleMode", "1"))
                 {
                     case "1":
@@ -215,19 +241,17 @@ namespace EasyMuisc
                 normalLrcFontSize = double.Parse(GetConfig("normalLrcFontSize", normalLrcFontSize.ToString()));
                 highlightLrcFontSize = double.Parse(GetConfig("highlightLrcFontSize", highlightLrcFontSize.ToString()));
                 textLrcFontSize = double.Parse(GetConfig("textLrcFontSize", textLrcFontSize.ToString()));
+
+
+
             }
             catch
             {
-               if( ShowAlert("配置文件被篡改，是否重置？", MessageBoxButton.YesNo))
+                if (ShowAlert("配置文件被篡改，是否重置？", MessageBoxButton.YesNo))
                 {
                     cfa.AppSettings.Settings.Clear();
                 }
             }
-            //if(path!="")
-            //{
-            //    AddNewMusic(path);
-            //    PlayNew(musicInfo[musicInfo.Count - 1]);
-            //}
         }
         /// <summary>
         /// 从配置文件读取音乐列表
@@ -237,16 +261,32 @@ namespace EasyMuisc
         {
             try
             {
-                if (cfa.AppSettings.Settings["MusicList"] != null)
+                Thread t = new Thread(() =>
                 {
-                    string[] musics = cfa.AppSettings.Settings["MusicList"].Value.Split(new string[] { split }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var i in musics)
+                    if (cfa.AppSettings.Settings["MusicList"] != null)
                     {
-
-                        AddNewMusic(i);
-
+                        string[] musics = cfa.AppSettings.Settings["MusicList"].Value.Split(new string[] { split }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var i in musics)
+                        {
+                            Dispatcher.Invoke(new Action(() =>
+                            {
+                                AddNewMusic(i);
+                            }));
+                        }
                     }
-                }
+                    if (path == null)
+                    {
+                        string tempPath = GetConfig("lastMusic", "");
+                        if (File.Exists(tempPath))
+                        {
+                            Dispatcher.Invoke(new Action(() =>
+                            {
+                                PlayNew(AddNewMusic(tempPath), false);
+                            }));
+                        }
+                    }
+                });
+                t.Start();
                 return true;
             }
             catch
@@ -258,31 +298,34 @@ namespace EasyMuisc
         /// 增加新的歌曲到列表中
         /// </summary>
         /// <param name="path"></param>
-        private void AddNewMusic(string path)
+        /// <returns></returns>
+        private MusicInfo AddNewMusic(string path)
         {
-            Thread t = new Thread(() =>
-            {
-                this.Dispatcher.Invoke(new Action(() =>
-                    {
-                        foreach (var i in musicInfo)
-                        {
-                            if (path == i.Path)
-                            {
-                                return;
-                            }
-                        }
-                        musicInfo.Add(new MusicInfo
-                        {
-                            Enable = GetMusicInfo(path, out string name, out string singer, out string length) ? true : false,
-                            MusicName = name,
-                            Singer = singer,
-                            Length = length.StartsWith("00:") ? length.Remove(0, 3) : length,
-                            Path = path,
-                        });
-                    }));
 
-            });
-            t.Start();
+            try
+            {
+                foreach (var i in musicInfo)
+                {
+                    if (path == i.Path)
+                    {
+                        return i;
+                    }
+                }
+                musicInfo.Add(new MusicInfo
+                {
+                    Enable = GetMusicInfo(path, out string name, out string singer, out string length) ? true : false,
+                    MusicName = name,
+                    Singer = singer,
+                    Length = length.StartsWith("00:") ? length.Remove(0, 3) : length,
+                    Path = path,
+                });
+                return musicInfo[musicInfo.Count - 1];
+            }
+            catch
+            {
+                return null;
+            }
+
         }
         /// <summary>
         /// 获取音乐的信息
@@ -369,64 +412,34 @@ namespace EasyMuisc
             }
         }
         /// <summary>
-        /// 单击播放按钮
+        /// 窗体关闭事件，保存配置项
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnPlayClickEventHandler(object sender, RoutedEventArgs e)
+        private void WindowClosingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (stream == int.MinValue)
+            SaveMusicListFromConfig();
+            switch (CurrentCycleMode)
             {
-                if (musicInfo.Count != 0)
-                {
-                    PlayNew(0);
-                }
+                case CycleMode.ListCycle:
+                    SetConfig("CycleMode", "1");
+                    break;
+                case CycleMode.Shuffle:
+                    SetConfig("CycleMode", "2");
+                    break;
+                case CycleMode.SingleCycle:
+                    SetConfig("CycleMode", "3");
+                    break;
             }
-            Play();
+            SetConfig("normalLrcFontSize", normalLrcFontSize.ToString());
+            SetConfig("highlightLrcFontSize", highlightLrcFontSize.ToString());
+            SetConfig("textLrcFontSize", textLrcFontSize.ToString());
+            SetConfig("lastMusic", path);
+            Bass.BASS_Stop();
+            cfa.Save();
         }
-        /// <summary>
-        /// 单击暂停按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnPauseClickEventHandler(object sender, RoutedEventArgs e)
-        {
-
-            Pause();
-        }
-        /// <summary>
-        /// 单击上一首按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnLastClickEventHandler(object sender, RoutedEventArgs e)
-        {
-            if (history.Count == 0)
-            {
-                PlayNew(currentMusicIndex == 0 ? musicInfo.Count - 1 : currentMusicIndex - 1);
-            }
-            else
-            {
-                currentHistoryIndex--;
-                PlayNew(currentHistoryIndex == -1 ? history[currentHistoryIndex = history.Count - 1] : history[currentHistoryIndex]);
-            }
-        }
-        /// <summary>
-        /// 单击下一首按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnNextClickEventHandler(object sender, RoutedEventArgs e)
-        {
-            if (currentHistoryIndex == history.Count - 1)
-            {
-                PlayNext();
-            }
-            else
-            {
-                PlayNew(history[++currentHistoryIndex]);
-            }
-        }
+        #endregion
+        #region 音乐相关
         /// <summary>
         /// 初始化新的歌曲
         /// </summary>
@@ -568,9 +581,9 @@ namespace EasyMuisc
             }
             else
             {
-                for (int i = 0; i < lrcTime.Count ; i++)//从第一个循环到倒数第二个歌词时间
+                for (int i = 0; i < lrcTime.Count; i++)//从第一个循环到倒数第二个歌词时间
                 {
-                    if (lrcTime[i] < position )//如果当前的播放时间夹在两个歌词时间之间
+                    if (lrcTime[i] < position)//如果当前的播放时间夹在两个歌词时间之间
                     {
                         if (currentLrcIndex != i)//如果上一次不是这一句歌词
                         {
@@ -646,17 +659,17 @@ namespace EasyMuisc
         /// 播放新的歌曲
         /// </summary>
         /// <returns></returns>
-        private bool PlayNew()
+        private bool PlayNew(bool playAtOnce = true)
         {
             currentMusicIndex = lvw.SelectedIndex;
-            return PlayNew(currentMusicIndex);
+            return PlayNew(currentMusicIndex, playAtOnce);
         }
         /// <summary>
         /// 播放新的歌曲
         /// </summary>
         /// <param name="index">指定列表中的歌曲索引</param>
         /// <returns></returns>
-        private bool PlayNew(int index)
+        private bool PlayNew(int index, bool playAtOnce = true)
         {
             if (!File.Exists(musicInfo[index].Path))
             {
@@ -672,6 +685,7 @@ namespace EasyMuisc
             lrcTime.Clear();//清空歌词时间
             stkLrc.Children.Clear();//清空歌词表
             lvw.SelectedIndex = index;//选中列表中的歌曲
+            lvw.ScrollIntoView(lvw.SelectedItem);
             if (currentHistoryIndex == history.Count - 1)
             {
                 if (currentHistoryIndex == -1)
@@ -689,7 +703,10 @@ namespace EasyMuisc
             //Debug.WriteLine(currentHistoryIndex);
             InitialiazeMusic();//初始化歌曲
             Volumn = 1;
-            Play();
+            if (playAtOnce)
+            {
+                Play();
+            }
             return true;
 
         }
@@ -698,14 +715,14 @@ namespace EasyMuisc
         /// </summary>
         /// <param name="music">指定歌曲信息实例</param>
         /// <returns></returns>
-        private bool PlayNew(MusicInfo music)
+        private bool PlayNew(MusicInfo music, bool playAtOnce = true)
         {
             int index = musicInfo.IndexOf(music);
             if (index < 0 && index >= musicInfo.Count)
             {
                 return false;
             }
-            PlayNew(index);
+            PlayNew(index, playAtOnce);
             return true;
         }
         /// <summary>
@@ -730,27 +747,118 @@ namespace EasyMuisc
         {
             return Bass.BASS_StreamFree(stream);
         }
+        #endregion
+        #region 播放控制
         /// <summary>
-        /// 显示错误信息
+        /// 单击播放按钮
         /// </summary>
-        /// <param name="message"></param>
-
-        private bool ShowAlert(string message, MessageBoxButton button = MessageBoxButton.OK)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnPlayClickEventHandler(object sender, RoutedEventArgs e)
         {
-            if (button == MessageBoxButton.YesNo)
+            if (stream == int.MinValue)
             {
-                if (MessageBox.Show(message, "错误", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
+                if (musicInfo.Count != 0)
                 {
-                    return true;
+                    PlayNew(0);
                 }
-                return false;
+            }
+            Play();
+        }
+        /// <summary>
+        /// 单击暂停按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnPauseClickEventHandler(object sender, RoutedEventArgs e)
+        {
+
+            Pause();
+        }
+        /// <summary>
+        /// 单击上一首按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnLastClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            if (history.Count == 0)
+            {
+                PlayNew(currentMusicIndex == 0 ? musicInfo.Count - 1 : currentMusicIndex - 1);
             }
             else
             {
-                MessageBox.Show(message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                currentHistoryIndex--;
+                PlayNew(currentHistoryIndex == -1 ? history[currentHistoryIndex = history.Count - 1] : history[currentHistoryIndex]);
             }
-            return true;
         }
+        /// <summary>
+        /// 单击下一首按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnNextClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            if (currentHistoryIndex == history.Count - 1)
+            {
+                PlayNext();
+            }
+            else
+            {
+                PlayNew(history[++currentHistoryIndex]);
+            }
+        }
+        /// <summary>
+        /// 单击循环模式按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnCycleModeClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            //将三个按钮的事件放到了一起
+            (sender as Button).Visibility = Visibility.Hidden;
+            switch ((sender as Button).Name)
+            {
+                case "btnListCycle":
+                    btnShuffle.Visibility = Visibility.Visible;
+                    break;
+                case "btnShuffle":
+                    btnSingleCycle.Visibility = Visibility.Visible;
+                    break;
+                case "btnSingleCycle":
+                    btnListCycle.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    ShowAlert("黑人问号");
+                    break;
+            }
+
+        }
+        /// <summary>
+        /// 单击打开文件按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnOpenFileClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog opd = new OpenFileDialog()
+            {
+                Title = "请选择音乐文件。",
+                Filter = "MP3文件(*.mp3)|*.mp3|WAVE文件(*.wav)|*.wav|所有文件(*.*) | *.*",
+                Multiselect = false
+            };
+            if (opd.ShowDialog() == true && opd.FileNames != null)
+            {
+                MusicInfo temp = AddNewMusic(opd.FileName);
+                if (temp != null)
+                {
+                    PlayNew(temp);
+                }
+
+            }
+        }
+        #endregion
+        #region 列表相关
         /// <summary>
         /// 将文件拖到列表上方事件
         /// </summary>
@@ -819,117 +927,99 @@ namespace EasyMuisc
 
         }
         /// <summary>
-        /// 窗体关闭事件，保存配置项
+        /// 单击收放列表事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void WindowClosingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
+        private void BtnListSwitcherClickEventHandler(object sender, RoutedEventArgs e)
         {
-            SaveMusicListFromConfig();
-            switch (CurrentCycleMode)
+            ThicknessAnimation ani = new ThicknessAnimation
             {
-                case CycleMode.ListCycle:
-                    SetConfig("CycleMode", "1");
-                    break;
-                case CycleMode.Shuffle:
-                    SetConfig("CycleMode", "2");
-                    break;
-                case CycleMode.SingleCycle:
-                    SetConfig("CycleMode", "3");
-                    break;
-            }
-            SetConfig("normalLrcFontSize", normalLrcFontSize.ToString());
-            SetConfig("highlightLrcFontSize", highlightLrcFontSize.ToString());
-            SetConfig("textLrcFontSize", textLrcFontSize.ToString());
-            Bass.BASS_Stop();
-            cfa.Save();
-        }
-        /// <summary>
-        /// 滚动条鼠标按下事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ScbPreviewMouseDownEventHandler(object sender, MouseButtonEventArgs e)
-        {
-            var pt = e.GetPosition(sldProcess);
-            sldProcess.Value = (pt.X / sldProcess.ActualWidth) * sldProcess.Maximum;
-            changingPosition = true;
-        }
-        /// <summary>
-        /// 滚动条值改变事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SldValueChangedEventHandler(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (changingPosition)
-            {
-                Bass.BASS_ChannelSetPosition(stream, sldProcess.Value);
-            }
-        }
-        /// <summary>
-        /// 滚动条鼠标松开事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SldPreviewMouseUpEventHandler(object sender, MouseButtonEventArgs e)
-        {
-            changingPosition = false;
-        }
-        /// <summary>
-        /// 滚动条鼠标移动事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SldMouseMoveEventHandler(object sender, MouseEventArgs e)
-        {
-            if (changingPosition)
-            {
-                //如果正在拖动进度条，那么更新歌词
-                UpdatePositionOfLrcPanel();
-            }
-        }
-        /// <summary>
-        /// 单击循环模式按钮事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnCycleModeClickEventHandler(object sender, RoutedEventArgs e)
-        {
-            //将三个按钮的事件放到了一起
-            (sender as Button).Visibility = Visibility.Hidden;
-            switch ((sender as Button).Name)
-            {
-                case "btnListCycle":
-                    btnShuffle.Visibility = Visibility.Visible;
-                    break;
-                case "btnShuffle":
-                    btnSingleCycle.Visibility = Visibility.Visible;
-                    break;
-                case "btnSingleCycle":
-                    btnListCycle.Visibility = Visibility.Visible;
-                    break;
-                default:
-                    ShowAlert("黑人问号");
-                    break;
-            }
-
-        }
-
-        private void BtnOpenFileClickEventHandler(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog opd = new OpenFileDialog()
-            {
-                Title = "请选择音乐文件。",
-                Filter = "MP3文件(*.mp3)|*.mp3|WAVE文件(*.wav)|*.wav|所有文件(*.*) | *.*",
-                Multiselect = false
+                Duration = new Duration(TimeSpan.FromSeconds(0.5)),//动画时间1秒
+                DecelerationRatio = 0.3
             };
-            if (opd.ShowDialog() == true && opd.FileNames != null)
+            Storyboard.SetTargetName(ani, grdList.Name);
+            Storyboard.SetTargetProperty(ani, new PropertyPath(MarginProperty));
+            Storyboard story = new Storyboard();
+
+            story.Children.Add(ani);
+            if (grdList.Margin.Left < 0)
             {
-                AddNewMusic(opd.FileName);
+                ani.To = new Thickness(0, 0, 0, 0);
+            }
+            else
+            {
+                ani.To = new Thickness(-lvw.ActualWidth, 0, 0, 0);
+            }
+            story.Begin(grdList);
+
+
+        }
+        /// <summary>
+        /// 窗体大小改变事件，自动收放列表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WindowSizeChangedEventHandler(object sender, SizeChangedEventArgs e)
+        {
+
+            double marginLeft = grdList.Margin.Left;
+
+            if (ActualWidth < 500 && marginLeft == 0)
+            {
+                BtnListSwitcherClickEventHandler(null, null);
+            }
+            else if (ActualWidth >= 500 && marginLeft == -lvw.ActualWidth)
+            {
+                BtnListSwitcherClickEventHandler(null, null);
             }
         }
+        /// <summary>
+        /// 将文件拖到列表上方事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenAndPlayMusicDragEnterEventHandler(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.All;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
 
+            (sender as UIElement).Drop += delegate
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+                if (files == null)
+                {
+                    return;
+                }
+                int currentCount = musicInfo.Count;
+                foreach (var i in files)
+                {
+                    string extension = new FileInfo(i).Extension;
+                    if (extension == ".mp3" || extension == ".wav")
+                    {
+                        AddNewMusic(i);
+                    }
+                }
+                if (musicInfo.Count > currentCount)
+                {
+                    PlayNew(currentCount);
+                }
+
+            };
+        }
+        #endregion
+        #region 列表与歌词选项
+        /// <summary>
+        /// 单击列表选项事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnListOptionClickEventHanlder(object sender, RoutedEventArgs e)
         {
             ContextMenu menu = new ContextMenu()
@@ -1010,17 +1100,17 @@ namespace EasyMuisc
                 Header = "删除选中项"
             };
             delete.Click += delegate
-              {
-                  musicInfo.RemoveAt(lvw.SelectedIndex);
-              };
+            {
+                musicInfo.RemoveAt(lvw.SelectedIndex);
+            };
             MenuItem clear = new MenuItem()
             {
                 Header = "清空列表",
             };
             clear.Click += delegate
-              {
-                  musicInfo.Clear();
-              };
+            {
+                musicInfo.Clear();
+            };
             menu.Items.Add(openFile);
             menu.Items.Add(openFolder);
             menu.Items.Add(openAllFolder);
@@ -1031,7 +1121,11 @@ namespace EasyMuisc
             }
             menu.Items.Add(clear);
         }
-
+        /// <summary>
+        ///  选项按钮鼠标进入动画事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnAnimitionMouseEnterEventHandler(object sender, MouseEventArgs e)
         {
             Button btn = sender as Button;
@@ -1047,7 +1141,11 @@ namespace EasyMuisc
             story.Children.Add(ani);
             story.Begin(btn);
         }
-
+        /// <summary>
+        /// 选项按钮鼠标离开动画事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnAnimitionMouseLeaveEventHandler(object sender, MouseEventArgs e)
         {
             Button btn = sender as Button;
@@ -1063,7 +1161,11 @@ namespace EasyMuisc
             story.Children.Add(ani);
             story.Begin(btn);
         }
-
+        /// <summary>
+        /// 单击歌词选项按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnLrcOptionClickEventHanlder(object sender, RoutedEventArgs e)
         {
             ContextMenu menu = new ContextMenu()
@@ -1099,7 +1201,7 @@ namespace EasyMuisc
                     new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=textLrcFontSize.ToString()},
                 }
             },
-                            
+
         },
                 IsOpen = true
             };
@@ -1108,62 +1210,149 @@ namespace EasyMuisc
                 Header = "确定",
             };
             menuOK.Click += delegate
-              {
-                  for(int i=0;i<3;i++)
-                  {
-                      string text = ((menu.Items[i] as StackPanel).Children[1] as TextBox).Text;
-                      if (double.TryParse(text, out double newValue))
-                      {
-                          switch(i)
-                          {
-                              case 0:normalLrcFontSize = newValue;break;
-                              case 1: highlightLrcFontSize = newValue; break;
-                              case 2: textLrcFontSize = newValue;txtLrc.FontSize = textLrcFontSize; break;
-                          }
-                      }
-                  }
-              };
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    string text = ((menu.Items[i] as StackPanel).Children[1] as TextBox).Text;
+                    if (double.TryParse(text, out double newValue))
+                    {
+                        switch (i)
+                        {
+                            case 0: normalLrcFontSize = newValue; break;
+                            case 1: highlightLrcFontSize = newValue; break;
+                            case 2: textLrcFontSize = newValue; txtLrc.FontSize = textLrcFontSize; break;
+                        }
+                    }
+                }
+            };
             menu.Items.Add(menuOK);
         }
-        private void btnListSwitcher_Click(object sender, RoutedEventArgs e)
+        #endregion
+        #region 进度条与音量条
+        /// <summary>
+        /// 进度条鼠标按下事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SldProgressPreviewMouseDownEventHandler(object sender, MouseButtonEventArgs e)
         {
-                ThicknessAnimation ani = new ThicknessAnimation
-                {
-                    Duration = new Duration(TimeSpan.FromSeconds(0.5)),//动画时间1秒
-                    DecelerationRatio = 0.3
-                };
-                Storyboard.SetTargetName(ani, grdList.Name);
-                Storyboard.SetTargetProperty(ani, new PropertyPath(MarginProperty));
-                Storyboard story = new Storyboard();
-                
-                story.Children.Add(ani);
-                if (grdList.Margin.Left < 0)
-                {
-                    ani.To = new Thickness(0, 0, 0, 0);
-                }
-                else
-                {
-                    ani.To = new Thickness(-lvw.ActualWidth, 0, 0, 0);
-                }
-                story.Begin(grdList);
-            
-
+            var pt = e.GetPosition(sldProcess);
+            sldProcess.Value = (pt.X / sldProcess.ActualWidth) * sldProcess.Maximum;
+            changingPosition = true;
         }
-
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        /// <summary>
+        /// 进度条值改变事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SldProcessValueChangedEventHandler(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-
-            double marginLeft = grdList.Margin.Left;
-              
-                if (ActualWidth < 500 && marginLeft==0)
-                {
-                    btnListSwitcher_Click(null, null);
-                }
-                else if (ActualWidth >= 500 && marginLeft==-lvw.ActualWidth)
-                {
-                    btnListSwitcher_Click(null, null);
-                }
+            if (changingPosition)
+            {
+                Bass.BASS_ChannelSetPosition(stream, sldProcess.Value);
             }
         }
-    
+        /// <summary>
+        /// 进度条鼠标松开事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SldProcessPreviewMouseUpEventHandler(object sender, MouseButtonEventArgs e)
+        {
+            changingPosition = false;
+        }
+        /// <summary>
+        /// 滚进度条鼠标移动事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SldProcessMouseMoveEventHandler(object sender, MouseEventArgs e)
+        {
+            if (changingPosition)
+            {
+                //如果正在拖动进度条，那么更新歌词
+                UpdatePositionOfLrcPanel();
+            }
+        }
+        /// <summary>
+        /// 拖动或点击音量滑杆事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SldVolumnValueChangedEventHandler(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Volumn = sldVolumn.Value;
+            imgVolumn.Opacity = 0.2 + 0.6 * sldVolumn.Value;
+        }
+        #endregion
+        /// <summary>
+        /// 显示错误信息
+        /// </summary>
+        /// <param name="message"></param>
+        private bool ShowAlert(string message, MessageBoxButton button = MessageBoxButton.OK)
+        {
+            if (button == MessageBoxButton.YesNo)
+            {
+                if (MessageBox.Show(message, "错误", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
+                {
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                MessageBox.Show(message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return true;
+        }
+        #region 快捷键
+        /// <summary>
+        /// 执行下一曲快捷键
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HotKeyNextEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnNextClickEventHandler(null, null);
+        }
+        /// <summary>
+        /// 执行上一曲快捷键
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HotKeyLastEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnLastClickEventHandler(null, null);
+        }
+        /// <summary>
+        /// 执行播放暂停快捷键
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HotKeyPlayAndPauseEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (btnPause.Visibility == Visibility.Visible)
+            {
+                BtnPauseClickEventHandler(null, null);
+            }
+            else
+            {
+                BtnPlayClickEventHandler(null, null);
+            }
+        }
+        /// <summary>
+        /// 在文本歌词和列表按空格同样有效
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TxtLrcAndLvwPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Space)
+            {
+                HotKeyPlayAndPauseEventHandler(null, null);
+            }
+        }
+        #endregion
+    }
+
 }

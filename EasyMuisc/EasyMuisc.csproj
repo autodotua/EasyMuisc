@@ -105,6 +105,11 @@
       <HintPath>Properties\Bass.Net.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Interop.Shell32, Version=1.2.107.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>Properties\Interop.Shell32.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -176,17 +181,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="Shell32">
-      <Guid>{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="日志.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +198,8 @@
   <ItemGroup>
     <Content Include="Properties\bass.dll" />
     <Content Include="Properties\Bass.Net.dll" />
+    <Resource Include="Properties\Images\volume.png" />
+    <Content Include="Properties\Interop.Shell32.dll" />
     <Resource Include="Properties\Images\add.png" />
     <Resource Include="Properties\Images\icon.ico" />
     <Resource Include="Properties\Images\icon.png" />

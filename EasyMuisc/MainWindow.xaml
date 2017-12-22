@@ -8,12 +8,20 @@
         Title="EasyMusic" 
         Height="600" 
         Width="1000"
-        SizeChanged="Window_SizeChanged"
+        SizeChanged="WindowSizeChangedEventHandler"
         Loaded="WindowLoadedEventHandler" 
         AllowDrop="True"
+         DragEnter="OpenAndPlayMusicDragEnterEventHandler"
         Closing="WindowClosingEventHandler" 
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" Cursor="Wait">
+
     <Window.Resources>
+
+                <RoutedUICommand x:Key="NextMusic"/>
+                <RoutedUICommand x:Key="LastMusic"/>
+        <RoutedUICommand x:Key="PlayAndPauseMusic"  />
+
+
         <!--Textbox-->
         <Style x:Key="txtStyle" TargetType="{x:Type TextBox}">
             <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
@@ -141,7 +149,18 @@
         
 
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Gesture="Right" Command="{StaticResource NextMusic}"/>
+        <KeyBinding Gesture="Left" Command="{StaticResource LastMusic}"/>
+        <KeyBinding Gesture="Space" Command="{StaticResource PlayAndPauseMusic}"/>
 
+    </Window.InputBindings>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource NextMusic}" Executed="HotKeyNextEventHandler"/>
+        <CommandBinding Command="{StaticResource LastMusic}" Executed="HotKeyLastEventHandler"/>
+        <CommandBinding Command="{StaticResource PlayAndPauseMusic}" Executed="HotKeyPlayAndPauseEventHandler"/>
+
+    </Window.CommandBindings>
     <Grid x:Name="grdMain" Margin="4">
 
         <Grid.RowDefinitions>
@@ -155,7 +174,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid x:Name="grdList">
-            <ListView x:Name="lvw" ItemsSource="{Binding}" DragEnter="LvwDragEnterEventHandler" Foreground="Black" BorderThickness="0">
+            <ListView x:Name="lvw" ItemsSource="{Binding}" DragEnter="LvwDragEnterEventHandler" Foreground="Black" BorderThickness="0" PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}">
                         <Style.Setters>
@@ -218,8 +237,8 @@
         <Grid Grid.Column="2">
 
             <StackPanel x:Name="stkLrc" Visibility="Hidden" Background="Transparent"/>
-            <TextBox x:Name="txtLrc"  TextAlignment="Center" IsReadOnly="True" BorderThickness="0" VerticalScrollBarVisibility="Auto" Visibility="Hidden"/>
-            <Grid x:Name="grdLrc"  IsHitTestVisible="False" Margin="0,-4,0,-4">
+            <TextBox x:Name="txtLrc"  TextAlignment="Center" IsReadOnly="True" BorderThickness="0" VerticalScrollBarVisibility="Auto" Visibility="Hidden" PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown"/>
+            <Grid x:Name="grdLrc"  IsHitTestVisible="False" Margin="0,-4,0,-4" >
                 <Grid.Background>
                     <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                         <GradientStop Color="White" Offset="0"/>
@@ -244,7 +263,7 @@
                     </Style>
                 </Button.Style>
             </Button>
-            <Button x:Name="btnListSwitcher" Width="24" Height="128" MouseEnter="BtnAnimitionMouseEnterEventHandler" MouseLeave="BtnAnimitionMouseLeaveEventHandler" Click="btnListSwitcher_Click"  VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="0.2" >
+            <Button x:Name="btnListSwitcher" Width="24" Height="128" MouseEnter="BtnAnimitionMouseEnterEventHandler" MouseLeave="BtnAnimitionMouseLeaveEventHandler" Click="BtnListSwitcherClickEventHandler"  VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="0.2" >
                 <Button.Style>
                     <Style  TargetType="{x:Type Button}">
                         <Setter Property="Template">
@@ -261,7 +280,7 @@
         </Grid>
 
         <!--播放控制区-->
-        <Grid x:Name="grdControl" Grid.Row="2" Grid.ColumnSpan="3">
+        <Grid x:Name="grdControl" Grid.Row="2" Grid.ColumnSpan="3" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="4"/>
@@ -270,9 +289,19 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <!--<ScrollBar x:Name="scb" Orientation="Horizontal" PreviewMouseDown="ScbPreviewMouseDownEventHandler" ValueChanged="ScbValueChangedEventHandler"  PreviewMouseUp="ScbPreviewMouseUpEventHandler" MouseMove="ScbMouseMoveEventHandler" SmallChange="1" LargeChange="10"/>-->
-            <Slider x:Name="sldProcess" Orientation="Horizontal" PreviewMouseDown="ScbPreviewMouseDownEventHandler" ValueChanged="SldValueChangedEventHandler"  PreviewMouseUp="SldPreviewMouseUpEventHandler" MouseMove="SldMouseMoveEventHandler" >
-            
-            </Slider>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="4"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="4"/>
+                    <ColumnDefinition Width="72"/>
+                </Grid.ColumnDefinitions>
+                <Slider x:Name="sldProcess" Orientation="Horizontal" PreviewMouseDown="SldProgressPreviewMouseDownEventHandler" ValueChanged="SldProcessValueChangedEventHandler"  PreviewMouseUp="SldProcessPreviewMouseUpEventHandler" MouseMove="SldProcessMouseMoveEventHandler" VerticalAlignment="Center" />
+                <Image x:Name="imgVolumn" Source="Properties/Images/volume.png" Grid.Column="2" Width="12" Opacity="0.8"/>
+                <Slider x:Name="sldVolumn" Orientation="Horizontal"  ValueChanged="SldVolumnValueChangedEventHandler" IsMoveToPointEnabled="True" Value="1"  Grid.Column="4" VerticalAlignment="Center" Maximum="1" />
+            </Grid>
+
             <!--按钮控制区-->
             <Grid Grid.Row="2" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
