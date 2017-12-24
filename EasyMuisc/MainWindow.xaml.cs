@@ -47,6 +47,45 @@ namespace EasyMuisc
             ListCycle,
             Shuffle,
         }
+        #region 模板
+        System.Windows.Shapes.Line SeparatorLine = new System.Windows.Shapes.Line()
+        {
+            X1 = 0,
+            X2 = 100,
+            Y1 = 0,
+            Y2 = 0,
+            Stroke = System.Windows.Media.Brushes.LightGray,
+        };
+        /// <summary>
+        /// 创建并启动一个新的浮点数据类型动画
+        /// </summary>
+        /// <param name="obj">动画主体</param>
+        /// <param name="property">更改的属性</param>
+        /// <param name="to">目标值</param>
+        /// <param name="duration">时间</param>
+        /// <param name="decelerationRatio">减缓时间</param>
+        /// <param name="completed">完成以后的事件</param>
+        /// <returns></returns>
+        private Storyboard NewDoubleAnimation(FrameworkElement obj, DependencyProperty property, double to, double duration, double decelerationRatio, EventHandler completed = null)
+        {
+            DoubleAnimation ani = new DoubleAnimation
+            {
+                To = to,
+                Duration = new Duration(TimeSpan.FromSeconds(duration)),//动画时间1秒
+                DecelerationRatio = decelerationRatio
+            };
+            Storyboard.SetTargetName(ani, obj.Name);
+            Storyboard.SetTargetProperty(ani, new PropertyPath(property));
+            Storyboard story = new Storyboard();
+            story.Children.Add(ani);
+            if (completed != null)
+            {
+                story.Completed += completed;
+            }
+            story.Begin(obj);
+            return story;
+        }
+        #endregion
         bool error = false;
         /// <summary>
         /// 每秒钟检测次数
@@ -155,6 +194,38 @@ namespace EasyMuisc
             }
         }
         /// <summary>
+        /// 自动收放列表
+        /// </summary>
+        private bool AutoFurl
+        {
+            get
+            {
+                return GetConfig("autoFurl", "True") == "True" ? true : false;
+            }
+            set
+            {
+                SetConfig("autoFurl", value.ToString());
+            }
+        }
+        /// <summary>
+        /// 显示歌词
+        /// </summary>
+        private bool ShowLrc
+        {
+            get
+            {
+                return GetConfig("showLrc", "True") == "True" ? true : false;
+            }
+            set
+            {
+                SetConfig("showLrc", value.ToString());
+            }
+        }
+        /// <summary>
+        /// 是否正在关闭
+        /// </summary>
+        bool closing = false;
+        /// <summary>
         /// 继续播放渐响定时器
         /// </summary>
         DispatcherTimer playTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(1000 / 60) };
@@ -177,15 +248,10 @@ namespace EasyMuisc
             try
             {
                 var devices = Bass.BASS_GetDeviceInfos();
-                for (int i=1;i<devices.Length;i++)
+                for (int i = 1; i < devices.Length; i++)
                 {
                     Bass.BASS_Init(i, 44100, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle);
                 }
-                //if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
-                //{
-                //    ShowAlert("无法初始化音乐引擎。");
-                //    Application.Current.Shutdown();
-                //}
             }
             catch
             {
@@ -221,6 +287,10 @@ namespace EasyMuisc
                 {
                     Bass.BASS_ChannelPause(stream);
                     pauseTimer.Stop();
+                    if(closing)
+                    {
+                        Application.Current.Shutdown();
+                    }
                     return;
                 }
                 Volumn -= 0.05;
@@ -284,16 +354,16 @@ namespace EasyMuisc
                                 AddNewMusic(i);
                             }));
                         }
-                       // MenuItem menuDelete = new MenuItem() { Header = "删除" };
-                       //menuDelete.Click+=delegate { musicInfo.RemoveAt(lvw.SelectedIndex); };
-                       // lvw.ContextMenu = new ContextMenu()
-                       // {
-                       //     Items =
-                       //         {
-                       //         menuDelete,
-                       //         }
-                       // };
-                        
+                        // MenuItem menuDelete = new MenuItem() { Header = "删除" };
+                        //menuDelete.Click+=delegate { musicInfo.RemoveAt(lvw.SelectedIndex); };
+                        // lvw.ContextMenu = new ContextMenu()
+                        // {
+                        //     Items =
+                        //         {
+                        //         menuDelete,
+                        //         }
+                        // };
+
                     }
                     if (path == null)
                     {
@@ -439,7 +509,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void WindowClosingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if(error)
+            if (error)
             {
                 Bass.BASS_Stop();
                 return;
@@ -461,8 +531,12 @@ namespace EasyMuisc
             SetConfig("highlightLrcFontSize", highlightLrcFontSize.ToString());
             SetConfig("textLrcFontSize", textLrcFontSize.ToString());
             SetConfig("lastMusic", path);
-            Bass.BASS_Stop();
+            //Bass.BASS_Stop();
             cfa.Save();
+            e.Cancel = true;
+            closing = true;
+            Hide();
+            pauseTimer.Start();
         }
         #endregion
         #region 音乐相关
@@ -539,9 +613,9 @@ namespace EasyMuisc
             }
             else if ((file = new FileInfo(file.FullName.Replace(file.Extension, ".txt"))).Exists)
             {
-                
+
                 txtLrc.Text = File.ReadAllText(file.FullName, EncodingType.GetType(file.FullName));
-             for(int i=0;i<txtLrc.LineCount;i++)
+                for (int i = 0; i < txtLrc.LineCount; i++)
                 {
                     lrcContent.Add(txtLrc.GetLineText(i));
                 }
@@ -643,19 +717,6 @@ namespace EasyMuisc
         /// <param name="lrcIndex"></param>
         private void LrcAnimition(int lrcIndex)
         {
-            //svwLrc.ScrollToVerticalOffset();
-            //DoubleAnimation ani = new DoubleAnimation
-            //{
-            //    To =lrcIndex * normalFontSize * FontFamily.LineSpacing + ActualHeight / 2
-            //    Duration = new Duration(TimeSpan.FromSeconds(1)),//动画时间1秒
-            //    DecelerationRatio = 0.5
-            //};
-            //Storyboard.SetTargetName(ani, svwLrc.Name);
-            //Storyboard.SetTargetProperty(ani, new PropertyPath(ScrollViewer.));
-            //Storyboard story = new Storyboard();
-            //story.Children.Add(ani);
-            //story.Begin(stkLrc);
-
             double top = 0.5 * ActualHeight - lrcIndex * normalLrcFontSize * FontFamily.LineSpacing/*歌词数量乘每行字的高度*/- normalLrcFontSize - highlightLrcFontSize;// 0.5 * ActualHeight - stkLrcHeight * lrcIndex / (stkLrc.Children.Count - 1)-highlightFontSize ;
             ThicknessAnimation ani = new ThicknessAnimation
             {
@@ -711,7 +772,7 @@ namespace EasyMuisc
                 }
                 return false;
             }
-            
+
             currentMusicIndex = index;//指定当前的索引
             path = musicInfo[currentMusicIndex].Path;//获取歌曲地址
             currentLrcIndex = -1;//删除歌词索引
@@ -1004,7 +1065,10 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void WindowSizeChangedEventHandler(object sender, SizeChangedEventArgs e)
         {
-
+            if (!AutoFurl || !ShowLrc)
+            {
+                return;
+            }
             double marginLeft = grdList.Margin.Left;
 
             if (ActualWidth < 500 && marginLeft == 0)
@@ -1070,16 +1134,10 @@ namespace EasyMuisc
                 Placement = PlacementMode.Top,
                 IsOpen = true
             };
-            MenuItem openFile = new MenuItem()
-            {
-                Header = "文件",
-                //Icon = new System.Windows.Controls.Image()
-                //{
-                //   Source= new BitmapImage(new Uri("Images\\icon.png", UriKind.RelativeOrAbsolute))
-                //},
-                //new System.Windows.Controls.Image() { Source = new BitmapImage(new Uri("Images\\add.png", UriKind.Relative)) },
-            };
-            openFile.Click += delegate
+
+
+            MenuItem menuOpenFile = new MenuItem() { Header = "文件" };
+            menuOpenFile.Click += delegate
             {
                 OpenFileDialog opd = new OpenFileDialog()
                 {
@@ -1095,11 +1153,8 @@ namespace EasyMuisc
                     }
                 }
             };
-            MenuItem openFolder = new MenuItem()
-            {
-                Header = "文件夹",
-            };
-            openFolder.Click += delegate
+            MenuItem menuOpenFolder = new MenuItem() { Header = "文件夹" };
+            menuOpenFolder.Click += delegate
             {
                 System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog()
                 {
@@ -1116,11 +1171,9 @@ namespace EasyMuisc
                     }
                 }
             };
-            MenuItem openAllFolder = new MenuItem()
-            {
-                Header = "文件夹及子文件夹",
-            };
-            openAllFolder.Click += delegate
+
+            MenuItem menuOpenAllFolder = new MenuItem() { Header = "文件夹及子文件夹" };
+            menuOpenAllFolder.Click += delegate
             {
                 System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog()
                 {
@@ -1137,31 +1190,50 @@ namespace EasyMuisc
                     }
                 }
             };
-            MenuItem delete = new MenuItem()
+
+            MenuItem menuDelete = new MenuItem() { Header = "删除选中项" };
+            menuDelete.Click += delegate
+            { musicInfo.RemoveAt(lvw.SelectedIndex); };
+
+            MenuItem menuClear = new MenuItem() { Header = "清空列表", };
+            menuClear.Click += delegate
+            { musicInfo.Clear(); };
+
+            MenuItem menuAutoFurl = new MenuItem() { Header = (AutoFurl ? "√" : "×") + "自动收放列表" };
+            menuAutoFurl.Click += delegate
             {
-                Header = "删除选中项"
+                AutoFurl = !AutoFurl;
+                WindowSizeChangedEventHandler(null, null);
             };
-            delete.Click += delegate
+            MenuItem menuShowLrc = new MenuItem() { Header = "显示歌词" };
+            menuShowLrc.Click += delegate
             {
-                musicInfo.RemoveAt(lvw.SelectedIndex);
+                ShowLrc = true;
+                grdLrcArea.Visibility = Visibility.Visible;
+                MaxWidth = double.PositiveInfinity;
+                MinWidth = 0;
+                NewDoubleAnimation(this, WidthProperty, 1000, 0.5, 0.3);
+                
             };
-            MenuItem clear = new MenuItem()
-            {
-                Header = "清空列表",
-            };
-            clear.Click += delegate
-            {
-                musicInfo.Clear();
-            };
-            menu.Items.Add(openFile);
-            menu.Items.Add(openFolder);
-            menu.Items.Add(openAllFolder);
+
+            menu.Items.Add(menuOpenFile);
+            menu.Items.Add(menuOpenFolder);
+            menu.Items.Add(menuOpenAllFolder);
+            menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
             if (lvw.SelectedIndex != -1)
             {
-                menu.Items.Add(delete);
-
+                menu.Items.Add(menuDelete);
             }
-            menu.Items.Add(clear);
+            menu.Items.Add(menuClear);
+            menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
+            if (ShowLrc)
+            {
+                menu.Items.Add(menuAutoFurl);
+            }
+            else
+            {
+                menu.Items.Add(menuShowLrc);
+            }
         }
         /// <summary>
         ///  选项按钮鼠标进入动画事件
@@ -1170,18 +1242,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnAnimitionMouseEnterEventHandler(object sender, MouseEventArgs e)
         {
-            Button btn = sender as Button;
-            DoubleAnimation ani = new DoubleAnimation
-            {
-                To = 1,
-                Duration = new Duration(TimeSpan.FromSeconds(0.5)),//动画时间1秒
-                DecelerationRatio = 0.3
-            };
-            Storyboard.SetTargetName(ani, btn.Name);
-            Storyboard.SetTargetProperty(ani, new PropertyPath(OpacityProperty));
-            Storyboard story = new Storyboard();
-            story.Children.Add(ani);
-            story.Begin(btn);
+            NewDoubleAnimation(sender as Button, OpacityProperty, 0.8, 0.5, 0.3);
         }
         /// <summary>
         /// 选项按钮鼠标离开动画事件
@@ -1190,18 +1251,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnAnimitionMouseLeaveEventHandler(object sender, MouseEventArgs e)
         {
-            Button btn = sender as Button;
-            DoubleAnimation ani = new DoubleAnimation
-            {
-                To = 0.2,
-                Duration = new Duration(TimeSpan.FromSeconds(0.5)),//动画时间1秒
-                DecelerationRatio = 0.3
-            };
-            Storyboard.SetTargetName(ani, btn.Name);
-            Storyboard.SetTargetProperty(ani, new PropertyPath(OpacityProperty));
-            Storyboard story = new Storyboard();
-            story.Children.Add(ani);
-            story.Begin(btn);
+            NewDoubleAnimation(sender as Button, OpacityProperty, 0.2, 0.5, 0.3);
         }
         /// <summary>
         /// 单击歌词选项按钮事件
@@ -1249,14 +1299,14 @@ namespace EasyMuisc
 
             MenuItem menuCopyLrc = new MenuItem()
             {
-                Header="复制歌词"
+                Header = "复制歌词"
             };
             menuCopyLrc.Click += delegate
               {
-                  if(lrcContent.Count!=0)
+                  if (lrcContent.Count != 0)
                   {
                       StringBuilder str = new StringBuilder();
-                  for(int i=0;i<lrcContent.Count-1;i++)
+                      for (int i = 0; i < lrcContent.Count - 1; i++)
                       {
                           str.Append(lrcContent[i] + Environment.NewLine);
                       }
@@ -1264,10 +1314,25 @@ namespace EasyMuisc
                       Clipboard.SetText(str.ToString());
                   }
               };
-            if(lrcContent.Count != 0)
+            if (lrcContent.Count != 0)
             {
-                menu.Items.Insert(0,menuCopyLrc);
+                menu.Items.Insert(0, menuCopyLrc);
             }
+
+            MenuItem menuShowLrc = new MenuItem() { Header = "不显示歌词" };
+            menuShowLrc.Click += delegate
+              {
+                  ShowLrc = false;
+                  grdLrcArea.Visibility = Visibility.Collapsed;
+                  AutoFurl = false;
+                  NewDoubleAnimation(this, WidthProperty, grdList.ActualWidth + 24, 0.5, 0.3, delegate
+                   {
+                       MaxWidth = MinWidth = grdList.ActualWidth + 24;
+                   });
+                  
+              };
+            menu.Items.Insert(0, menuShowLrc);
+
 
             MenuItem menuOK = new MenuItem()
             {
@@ -1282,9 +1347,16 @@ namespace EasyMuisc
                     {
                         switch (i)
                         {
-                            case 0: normalLrcFontSize = newValue; break;
-                            case 1: highlightLrcFontSize = newValue; break;
-                            case 2: textLrcFontSize = newValue; txtLrc.FontSize = textLrcFontSize; break;
+                            case 0:
+                                normalLrcFontSize = newValue;
+                                break;
+                            case 1:
+                                highlightLrcFontSize = newValue;
+                                break;
+                            case 2:
+                                textLrcFontSize = newValue;
+                                txtLrc.FontSize = textLrcFontSize;
+                                break;
                         }
                     }
                 }
@@ -1417,10 +1489,14 @@ namespace EasyMuisc
             }
         }
         #endregion
-
+        /// <summary>
+        /// 单击切换播放设备按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnDeviceSwitchClickEventHandler(object sender, RoutedEventArgs e)
         {
-            if(Bass.BASS_GetDeviceCount()-2<=0)
+            if (Bass.BASS_GetDeviceCount() - 2 <= 0)
             {
                 return;
             }
@@ -1430,29 +1506,33 @@ namespace EasyMuisc
                 Placement = PlacementMode.Top,
                 IsOpen = true
             };
-                var devices = Bass.BASS_GetDeviceInfos();
+            var devices = Bass.BASS_GetDeviceInfos();
             int n = -1;
             foreach (var i in devices)
             {
                 n++;
-                if(n==0 || n==Bass.BASS_ChannelGetDevice(stream))
+                if (n == 0 || n == Bass.BASS_ChannelGetDevice(stream))
                 {
                     continue;
                 }
-                MenuItem menuItem = new MenuItem() { Header =i.name, Tag = n };
+                MenuItem menuItem = new MenuItem() { Header = i.name, Tag = n };
                 menuItem.Click += MenuDeviceClickEventHandler;
                 menu.Items.Add(menuItem);
-            } 
+            }
         }
-
+        /// <summary>
+        /// 单击播放设备菜单项事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MenuDeviceClickEventHandler(object sender, RoutedEventArgs e)
         {
             int device = int.Parse((sender as MenuItem).Tag.ToString());
 
-            if(!Bass.BASS_ChannelSetDevice(stream, device)
-            ||!Bass.BASS_SetDevice(device))
+            if (!Bass.BASS_ChannelSetDevice(stream, device)
+            || !Bass.BASS_SetDevice(device))
             {
-               
+
                 ShowAlert(Bass.BASS_ErrorGetCode().ToString());
             }
         }

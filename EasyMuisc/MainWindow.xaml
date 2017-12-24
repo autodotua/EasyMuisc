@@ -1,4 +1,4 @@
-﻿<Window x:Class="EasyMuisc.MainWindow"
+﻿<Window x:Name="winMain" x:Class="EasyMuisc.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -20,6 +20,7 @@
                 <RoutedUICommand x:Key="NextMusic"/>
                 <RoutedUICommand x:Key="LastMusic"/>
         <RoutedUICommand x:Key="PlayAndPauseMusic"  />
+
 
 
         <!--Textbox-->
@@ -147,6 +148,7 @@
             </Setter>
         </Style>
         
+        
 
     </Window.Resources>
     <Window.InputBindings>
@@ -234,7 +236,7 @@
                 </Button.Style>
             </Button>
         </Grid>
-        <Grid Grid.Column="2">
+        <Grid x:Name="grdLrcArea" Grid.Column="2">
 
             <StackPanel x:Name="stkLrc" Visibility="Hidden" Background="Transparent"/>
             <TextBox x:Name="txtLrc"  TextAlignment="Center" IsReadOnly="True" BorderThickness="0" VerticalScrollBarVisibility="Auto" Visibility="Hidden" PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown"/>
@@ -289,7 +291,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <!--<ScrollBar x:Name="scb" Orientation="Horizontal" PreviewMouseDown="ScbPreviewMouseDownEventHandler" ValueChanged="ScbValueChangedEventHandler"  PreviewMouseUp="ScbPreviewMouseUpEventHandler" MouseMove="ScbMouseMoveEventHandler" SmallChange="1" LargeChange="10"/>-->
-            <Grid >
+            <Grid Margin="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="4"/>
