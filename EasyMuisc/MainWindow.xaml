@@ -298,7 +298,19 @@
                     <ColumnDefinition Width="72"/>
                 </Grid.ColumnDefinitions>
                 <Slider x:Name="sldProcess" Orientation="Horizontal" PreviewMouseDown="SldProgressPreviewMouseDownEventHandler" ValueChanged="SldProcessValueChangedEventHandler"  PreviewMouseUp="SldProcessPreviewMouseUpEventHandler" MouseMove="SldProcessMouseMoveEventHandler" VerticalAlignment="Center" />
-                <Image x:Name="imgVolumn" Source="Properties/Images/volume.png" Grid.Column="2" Width="12" Opacity="0.8"/>
+                <Button x:Name="btnDevice" Grid.Column="2" Width="12"  Click="BtnDeviceSwitchClickEventHandler"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Opacity="0.8">
+                    <Button.Style>
+                        <Style  TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Image  x:Name="btnImg" Source="Properties/Images/volume.png"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
                 <Slider x:Name="sldVolumn" Orientation="Horizontal"  ValueChanged="SldVolumnValueChangedEventHandler" IsMoveToPointEnabled="True" Value="1"  Grid.Column="4" VerticalAlignment="Center" Maximum="1" />
             </Grid>
 

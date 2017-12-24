@@ -47,6 +47,7 @@ namespace EasyMuisc
             ListCycle,
             Shuffle,
         }
+        bool error = false;
         /// <summary>
         /// 每秒钟检测次数
         /// </summary>
@@ -83,6 +84,10 @@ namespace EasyMuisc
         /// 歌词列表
         /// </summary>
         List<double> lrcTime = new List<double>();
+        /// <summary>
+        /// 歌词内容
+        /// </summary>
+        List<string> lrcContent = new List<string>();
         /// <summary>
         /// 当前歌词索引
         /// </summary>
@@ -171,15 +176,21 @@ namespace EasyMuisc
             }
             try
             {
-                if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_CPSPEAKERS, new WindowInteropHelper(this).Handle))
+                var devices = Bass.BASS_GetDeviceInfos();
+                for (int i=1;i<devices.Length;i++)
                 {
-                    ShowAlert("无法初始化音乐引擎。");
-                    Application.Current.Shutdown();
+                    Bass.BASS_Init(i, 44100, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle);
                 }
+                //if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
+                //{
+                //    ShowAlert("无法初始化音乐引擎。");
+                //    Application.Current.Shutdown();
+                //}
             }
             catch
             {
                 ShowAlert("无法初始化音乐引擎。");
+                error = true;
                 Application.Current.Shutdown();
             }
             musicInfo = new ObservableCollection<MusicInfo>();
@@ -273,6 +284,16 @@ namespace EasyMuisc
                                 AddNewMusic(i);
                             }));
                         }
+                       // MenuItem menuDelete = new MenuItem() { Header = "删除" };
+                       //menuDelete.Click+=delegate { musicInfo.RemoveAt(lvw.SelectedIndex); };
+                       // lvw.ContextMenu = new ContextMenu()
+                       // {
+                       //     Items =
+                       //         {
+                       //         menuDelete,
+                       //         }
+                       // };
+                        
                     }
                     if (path == null)
                     {
@@ -418,6 +439,11 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void WindowClosingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if(error)
+            {
+                Bass.BASS_Stop();
+                return;
+            }
             SaveMusicListFromConfig();
             switch (CurrentCycleMode)
             {
@@ -450,7 +476,7 @@ namespace EasyMuisc
             try
             {
                 stream = Bass.BASS_StreamCreateFile(path, 0, 0, BASSFlag.BASS_SAMPLE_FLOAT);//获取歌曲句柄
-                Title = new FileInfo(path).Name.Replace(new FileInfo(path).Extension, "");//将窗体标题改为歌曲名
+                Title = new FileInfo(path).Name.Replace(new FileInfo(path).Extension, "") + " - EasyMusic";//将窗体标题改为歌曲名
                 string[] length = musicInfo[currentMusicIndex].Length.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                 double musicLength = length.Length == 2 ?//如果不到一个小时
                     int.Parse(length[0]) * 60 + int.Parse(length[1]) ://得到秒钟
@@ -492,6 +518,7 @@ namespace EasyMuisc
                     {
                         break;
                     }
+                    lrcContent.Add(i.Value);
                     var tbk = new TextBlock()
                     {
                         FontSize = normalLrcFontSize,
@@ -512,7 +539,12 @@ namespace EasyMuisc
             }
             else if ((file = new FileInfo(file.FullName.Replace(file.Extension, ".txt"))).Exists)
             {
+                
                 txtLrc.Text = File.ReadAllText(file.FullName, EncodingType.GetType(file.FullName));
+             for(int i=0;i<txtLrc.LineCount;i++)
+                {
+                    lrcContent.Add(txtLrc.GetLineText(i));
+                }
                 txtLrc.FontSize = textLrcFontSize;
                 grdLrc.Visibility = Visibility.Hidden;
                 txtLrc.Visibility = Visibility.Visible;
@@ -558,7 +590,7 @@ namespace EasyMuisc
                     PlayNew(r.Next(musicInfo.Count));
                     break;
                 case CycleMode.SingleCycle:
-                    PlayNew(currentMusicIndex);
+                    PlayNew(currentMusicIndex == musicInfo.Count - 1 ? 0 : currentMusicIndex + 1);
                     break;
             }
         }
@@ -679,10 +711,12 @@ namespace EasyMuisc
                 }
                 return false;
             }
+            
             currentMusicIndex = index;//指定当前的索引
             path = musicInfo[currentMusicIndex].Path;//获取歌曲地址
             currentLrcIndex = -1;//删除歌词索引
             lrcTime.Clear();//清空歌词时间
+            lrcContent.Clear();//清除歌词内容
             stkLrc.Children.Clear();//清空歌词表
             lvw.SelectedIndex = index;//选中列表中的歌曲
             lvw.ScrollIntoView(lvw.SelectedItem);
@@ -933,26 +967,34 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnListSwitcherClickEventHandler(object sender, RoutedEventArgs e)
         {
-            ThicknessAnimation ani = new ThicknessAnimation
+            ThicknessAnimation aniMargin = new ThicknessAnimation
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.5)),//动画时间1秒
                 DecelerationRatio = 0.3
             };
-            Storyboard.SetTargetName(ani, grdList.Name);
-            Storyboard.SetTargetProperty(ani, new PropertyPath(MarginProperty));
+            DoubleAnimation aniOpacity = new DoubleAnimation
+            {
+                Duration = new Duration(TimeSpan.FromSeconds(0.5)),//动画时间1秒
+                DecelerationRatio = 0.3
+            };
+            Storyboard.SetTargetName(aniMargin, grdList.Name);
+            Storyboard.SetTargetProperty(aniMargin, new PropertyPath(MarginProperty));
+            Storyboard.SetTargetProperty(aniOpacity, new PropertyPath(OpacityProperty));
             Storyboard story = new Storyboard();
+            story.Children.Add(aniMargin);
+            story.Children.Add(aniOpacity);
 
-            story.Children.Add(ani);
             if (grdList.Margin.Left < 0)
             {
-                ani.To = new Thickness(0, 0, 0, 0);
+                aniMargin.To = new Thickness(0, 0, 0, 0);
+                aniOpacity.To = 1;
             }
             else
             {
-                ani.To = new Thickness(-lvw.ActualWidth, 0, 0, 0);
+                aniMargin.To = new Thickness(-lvw.ActualWidth, 0, 0, 0);
+                aniOpacity.To = 0;
             }
             story.Begin(grdList);
-
 
         }
         /// <summary>
@@ -1192,7 +1234,7 @@ namespace EasyMuisc
                     new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=highlightLrcFontSize.ToString()},
                 }
             },
-                              new StackPanel()
+                     new StackPanel()
             {
                 Orientation=Orientation.Horizontal,
                 Children =
@@ -1201,10 +1243,32 @@ namespace EasyMuisc
                     new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=textLrcFontSize.ToString()},
                 }
             },
-
-        },
+                 },
                 IsOpen = true
             };
+
+            MenuItem menuCopyLrc = new MenuItem()
+            {
+                Header="复制歌词"
+            };
+            menuCopyLrc.Click += delegate
+              {
+                  if(lrcContent.Count!=0)
+                  {
+                      StringBuilder str = new StringBuilder();
+                  for(int i=0;i<lrcContent.Count-1;i++)
+                      {
+                          str.Append(lrcContent[i] + Environment.NewLine);
+                      }
+                      str.Append(lrcContent[lrcContent.Count - 1]);
+                      Clipboard.SetText(str.ToString());
+                  }
+              };
+            if(lrcContent.Count != 0)
+            {
+                menu.Items.Insert(0,menuCopyLrc);
+            }
+
             MenuItem menuOK = new MenuItem()
             {
                 Header = "确定",
@@ -1282,7 +1346,7 @@ namespace EasyMuisc
         private void SldVolumnValueChangedEventHandler(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Volumn = sldVolumn.Value;
-            imgVolumn.Opacity = 0.2 + 0.6 * sldVolumn.Value;
+            btnDevice.Opacity = 0.2 + 0.6 * sldVolumn.Value;
         }
         #endregion
         /// <summary>
@@ -1353,6 +1417,45 @@ namespace EasyMuisc
             }
         }
         #endregion
+
+        private void BtnDeviceSwitchClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            if(Bass.BASS_GetDeviceCount()-2<=0)
+            {
+                return;
+            }
+            ContextMenu menu = new ContextMenu()
+            {
+                PlacementTarget = sender as UIElement,
+                Placement = PlacementMode.Top,
+                IsOpen = true
+            };
+                var devices = Bass.BASS_GetDeviceInfos();
+            int n = -1;
+            foreach (var i in devices)
+            {
+                n++;
+                if(n==0 || n==Bass.BASS_ChannelGetDevice(stream))
+                {
+                    continue;
+                }
+                MenuItem menuItem = new MenuItem() { Header =i.name, Tag = n };
+                menuItem.Click += MenuDeviceClickEventHandler;
+                menu.Items.Add(menuItem);
+            } 
+        }
+
+        private void MenuDeviceClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            int device = int.Parse((sender as MenuItem).Tag.ToString());
+
+            if(!Bass.BASS_ChannelSetDevice(stream, device)
+            ||!Bass.BASS_SetDevice(device))
+            {
+               
+                ShowAlert(Bass.BASS_ErrorGetCode().ToString());
+            }
+        }
     }
 
 }
