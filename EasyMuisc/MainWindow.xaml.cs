@@ -18,6 +18,7 @@ using System.Windows.Controls.Primitives;
 using System.Drawing;
 using System.Windows.Data;
 using System.Runtime.InteropServices;
+using System.Windows.Media;
 
 namespace EasyMuisc
 {
@@ -34,6 +35,7 @@ namespace EasyMuisc
             public string MusicName { get; internal set; }
             public string Singer { get; internal set; }
             public string Length { get; internal set; }
+            public string Album { get; internal set; }
             public string Path { get; internal set; }
             public bool Enable { get; internal set; }
         }
@@ -48,6 +50,26 @@ namespace EasyMuisc
             Shuffle,
         }
         #region 模板
+        /// <summary>
+        /// 显示错误信息
+        /// </summary>
+        /// <param name="message"></param>
+        public bool ShowAlert(string message, MessageBoxButton button = MessageBoxButton.OK)
+        {
+            if (button == MessageBoxButton.YesNo)
+            {
+                if (MessageBox.Show(message, "错误", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
+                {
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                MessageBox.Show(message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return true;
+        }
         System.Windows.Shapes.Line SeparatorLine = new System.Windows.Shapes.Line()
         {
             X1 = 0,
@@ -68,6 +90,7 @@ namespace EasyMuisc
         /// <returns></returns>
         private Storyboard NewDoubleAnimation(FrameworkElement obj, DependencyProperty property, double to, double duration, double decelerationRatio, EventHandler completed = null)
         {
+
             DoubleAnimation ani = new DoubleAnimation
             {
                 To = to,
@@ -86,11 +109,14 @@ namespace EasyMuisc
             return story;
         }
         #endregion
+        /// <summary>
+        /// 是否产生了不可挽救错误
+        /// </summary>
         bool error = false;
         /// <summary>
         /// 每秒钟检测次数
         /// </summary>
-        double fps = 20;
+        const double fps = 20;
         /// <summary>
         /// 音乐文件路径
         /// </summary>
@@ -114,7 +140,7 @@ namespace EasyMuisc
         /// <summary>
         /// 当前音乐在列表中的索引
         /// </summary>
-        int currentMusicIndex = 0;
+        public int currentMusicIndex = 0;
         /// <summary>
         /// 是否正在拖动进度条
         /// </summary>
@@ -233,7 +259,14 @@ namespace EasyMuisc
         /// 暂停播放渐隐定时器
         /// </summary>
         DispatcherTimer pauseTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(1000 / 60) };
+        /// <summary>
+        /// 主定时器
+        /// </summary>
+        DispatcherTimer mainTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000 / fps) };
         #endregion
+
+
+
         #region 初始化和配置
         /// <summary>
         /// 构造函数
@@ -287,7 +320,7 @@ namespace EasyMuisc
                 {
                     Bass.BASS_ChannelPause(stream);
                     pauseTimer.Stop();
-                    if(closing)
+                    if (closing)
                     {
                         Application.Current.Shutdown();
                     }
@@ -354,15 +387,6 @@ namespace EasyMuisc
                                 AddNewMusic(i);
                             }));
                         }
-                        // MenuItem menuDelete = new MenuItem() { Header = "删除" };
-                        //menuDelete.Click+=delegate { musicInfo.RemoveAt(lvw.SelectedIndex); };
-                        // lvw.ContextMenu = new ContextMenu()
-                        // {
-                        //     Items =
-                        //         {
-                        //         menuDelete,
-                        //         }
-                        // };
 
                     }
                     if (path == null)
@@ -404,11 +428,12 @@ namespace EasyMuisc
                 }
                 musicInfo.Add(new MusicInfo
                 {
-                    Enable = GetMusicInfo(path, out string name, out string singer, out string length) ? true : false,
+                    Enable = GetMusicInfo(path, out string name, out string singer, out string length, out string album) ? true : false,
                     MusicName = name,
                     Singer = singer,
                     Length = length.StartsWith("00:") ? length.Remove(0, 3) : length,
                     Path = path,
+                    Album = album,
                 });
                 return musicInfo[musicInfo.Count - 1];
             }
@@ -425,13 +450,14 @@ namespace EasyMuisc
         /// <param name="name">音乐的标题，若没有则返回无扩展名的文件名</param>
         /// <param name="singer">歌手</param>
         /// <param name="length">时长</param>
-        private bool GetMusicInfo(string path, out string name, out string singer, out string length)
+        private bool GetMusicInfo(string path, out string name, out string singer, out string length, out string album)
         {
             if (!File.Exists(path))
             {
                 name = new FileInfo(path).Name.Replace(new FileInfo(path).Extension, "");
                 singer = "";
                 length = "";
+                album = "";
                 return false;
             }
             ShellClass sh = new ShellClass();
@@ -444,8 +470,10 @@ namespace EasyMuisc
             }
             singer = dir.GetDetailsOf(item, 13);
             length = dir.GetDetailsOf(item, 27);
+            album = dir.GetDetailsOf(item, 14);
             return true;
         }
+
         /// <summary>
         /// 保存音乐列表到配置文件中
         /// </summary>
@@ -563,12 +591,10 @@ namespace EasyMuisc
                 ShowAlert("初始化失败!");
                 return;
             }
-            DispatcherTimer timer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(1000 / fps)
-            };
-            timer.Tick += Update;
-            timer.Start();
+            ReadMp3(musicInfo[currentMusicIndex].Path);
+
+            mainTimer.Tick += Update;
+            mainTimer.Start();
 
         }
         /// <summary>
@@ -632,6 +658,11 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void Update(object sender, EventArgs e)
         {
+            if (stream == int.MinValue)
+            {
+                mainTimer.Stop();
+                return;
+            }
             if (!changingPosition)
             {
                 double currentPosition = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetPosition(stream));
@@ -657,16 +688,26 @@ namespace EasyMuisc
             switch (CurrentCycleMode)
             {
                 case CycleMode.ListCycle:
-                    PlayNew(currentMusicIndex == musicInfo.Count - 1 ? 0 : currentMusicIndex + 1);
+                    PlayListNext();
                     break;
                 case CycleMode.Shuffle:
                     Random r = new Random();
-                    PlayNew(r.Next(musicInfo.Count));
+                    int index;
+                    while ((index = r.Next(musicInfo.Count)) == currentMusicIndex)
+                        ;
+                    PlayNew(index);
                     break;
                 case CycleMode.SingleCycle:
-                    PlayNew(currentMusicIndex == musicInfo.Count - 1 ? 0 : currentMusicIndex + 1);
+                    PlayNew(currentMusicIndex);
                     break;
             }
+        }
+        /// <summary>
+        /// 播放列表中的下一首歌
+        /// </summary>
+        private void PlayListNext()
+        {
+            PlayNew(currentMusicIndex == musicInfo.Count - 1 ? 0 : currentMusicIndex + 1);
         }
         /// <summary>
         /// 更新当前时间的歌词
@@ -896,7 +937,14 @@ namespace EasyMuisc
         {
             if (currentHistoryIndex == history.Count - 1)
             {
-                PlayNext();
+                if (CurrentCycleMode == CycleMode.SingleCycle)
+                {
+                    PlayListNext();
+                }
+                else
+                {
+                    PlayNext();
+                }
             }
             else
             {
@@ -1132,7 +1180,8 @@ namespace EasyMuisc
             {
                 PlacementTarget = btnListOption,
                 Placement = PlacementMode.Top,
-                IsOpen = true
+                IsOpen = true,
+               // Style=Resources["ctmStyle"] as Style
             };
 
 
@@ -1191,13 +1240,65 @@ namespace EasyMuisc
                 }
             };
 
+            MenuItem menuOpenMusicFolder = new MenuItem() { Header = "打开所在文件夹" };
+            menuOpenMusicFolder.Click += delegate
+              {
+                  System.Diagnostics.Process.Start("Explorer.exe", @"/select," + musicInfo[lvw.SelectedIndex].Path);
+              };
+
+            MenuItem menuShowMusicInfo = new MenuItem() { Header = "显示音乐信息" };
+            menuShowMusicInfo.Click += delegate
+              {
+                  MusicInfo music = musicInfo[lvw.SelectedIndex];
+                  FileInfo fileInfo = new FileInfo(music.Path);
+                  string l = Environment.NewLine;
+                  string info = fileInfo.Name + l
+                  + music.Path + l
+                  + Math.Round(fileInfo.Length / 1024d) + "KB" + l
+                  + music.MusicName + l
+                  + music.Length + l
+                  + music.Singer + l
+                  + music.Album
+                  ;
+                  WinMusicInfo winMusicInfo = new WinMusicInfo()
+                  {
+                      Title = fileInfo.Name + "-音乐信息",
+                  };
+                  winMusicInfo.txt.Text = info;
+                  winMusicInfo.ShowDialog();
+              };
             MenuItem menuDelete = new MenuItem() { Header = "删除选中项" };
             menuDelete.Click += delegate
-            { musicInfo.RemoveAt(lvw.SelectedIndex); };
+            {
+                int needDeleteIndex = lvw.SelectedIndex;
+                if (currentMusicIndex == needDeleteIndex)
+                {
+                    PlayListNext();
+                }
+                musicInfo.RemoveAt(needDeleteIndex);
+                if (musicInfo.Count == 0)
+                {
+                    AfterClearList();
+                }
+            };
 
             MenuItem menuClear = new MenuItem() { Header = "清空列表", };
             menuClear.Click += delegate
-            { musicInfo.Clear(); };
+            {
+                musicInfo.Clear();
+                AfterClearList();
+            };
+            void AfterClearList()
+            {
+                currentMusicIndex = -1;
+                stkLrc.Visibility = Visibility.Hidden;
+                txtLrc.Visibility = Visibility.Hidden;
+                Title = "EasyMusic";
+                btnPlay.Visibility = Visibility.Visible;
+                btnPause.Visibility = Visibility.Hidden;
+                Bass.BASS_ChannelStop(stream);
+                stream = int.MinValue;
+            }
 
             MenuItem menuAutoFurl = new MenuItem() { Header = (AutoFurl ? "√" : "×") + "自动收放列表" };
             menuAutoFurl.Click += delegate
@@ -1213,19 +1314,29 @@ namespace EasyMuisc
                 MaxWidth = double.PositiveInfinity;
                 MinWidth = 0;
                 NewDoubleAnimation(this, WidthProperty, 1000, 0.5, 0.3);
-                
             };
 
             menu.Items.Add(menuOpenFile);
             menu.Items.Add(menuOpenFolder);
             menu.Items.Add(menuOpenAllFolder);
             menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
+
             if (lvw.SelectedIndex != -1)
             {
-                menu.Items.Add(menuDelete);
+                menu.Items.Add(menuOpenMusicFolder);
+                menu.Items.Add(menuShowMusicInfo);
+                menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
             }
-            menu.Items.Add(menuClear);
-            menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
+
+            if (musicInfo.Count > 0)
+            {
+                if (lvw.SelectedIndex != -1)
+                {
+                    menu.Items.Add(menuDelete);
+                }
+                menu.Items.Add(menuClear);
+                menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
+            }
             if (ShowLrc)
             {
                 menu.Items.Add(menuAutoFurl);
@@ -1329,7 +1440,7 @@ namespace EasyMuisc
                    {
                        MaxWidth = MinWidth = grdList.ActualWidth + 24;
                    });
-                  
+
               };
             menu.Items.Insert(0, menuShowLrc);
 
@@ -1421,26 +1532,7 @@ namespace EasyMuisc
             btnDevice.Opacity = 0.2 + 0.6 * sldVolumn.Value;
         }
         #endregion
-        /// <summary>
-        /// 显示错误信息
-        /// </summary>
-        /// <param name="message"></param>
-        private bool ShowAlert(string message, MessageBoxButton button = MessageBoxButton.OK)
-        {
-            if (button == MessageBoxButton.YesNo)
-            {
-                if (MessageBox.Show(message, "错误", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
-                {
-                    return true;
-                }
-                return false;
-            }
-            else
-            {
-                MessageBox.Show(message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            return true;
-        }
+
         #region 快捷键
         /// <summary>
         /// 执行下一曲快捷键
@@ -1507,6 +1599,10 @@ namespace EasyMuisc
                 IsOpen = true
             };
             var devices = Bass.BASS_GetDeviceInfos();
+            for (int i = 1; i < devices.Length; i++)
+            {
+                Bass.BASS_Init(i, 44100, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle);
+            }
             int n = -1;
             foreach (var i in devices)
             {
@@ -1535,6 +1631,113 @@ namespace EasyMuisc
 
                 ShowAlert(Bass.BASS_ErrorGetCode().ToString());
             }
+        }
+
+        private void ReadMp3(string path)//copy
+        {
+            string[] tags = new string[6];
+            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+            byte[] buffer = new byte[10];
+            string mp3ID = "";
+            fs.Seek(0, SeekOrigin.Begin);
+            fs.Read(buffer, 0, 10);
+            int size = (buffer[6] & 0x7F) * 0x200000 + (buffer[7] & 0x7F) * 0x400 + (buffer[8] & 0x7F) * 0x80 + (buffer[9] & 0x7F);
+            mp3ID = Encoding.Default.GetString(buffer, 0, 3);
+            if (mp3ID.Equals("ID3", StringComparison.OrdinalIgnoreCase))
+            {
+                //如果有扩展标签头就跨过 10个字节
+                if ((buffer[5] & 0x40) == 0x40)
+                {
+                    fs.Seek(10, SeekOrigin.Current);
+                    size -= 10;
+                }
+                ReadFrame(fs, size);
+            }
+            
+        }
+        private void ReadFrame(FileStream fs, int size)//copy
+        {
+            byte[] buffer = new byte[10];
+            while (size > 0)
+            {
+                //读取标签帧头的10个字节
+                fs.Read(buffer, 0, 10);
+                size -= 10;
+                //得到标签帧ID
+                string FramID = Encoding.Default.GetString(buffer, 0, 4);
+                //计算标签帧大小，第一个字节代表帧的编码方式
+                int frmSize = 0;
+
+                frmSize = buffer[4] * 0x1000000 + buffer[5] * 0x10000 + buffer[6] * 0x100 + buffer[7];
+                if (frmSize == 0)
+                {
+                    //就说明真的没有信息了
+                    break;
+                }
+                //bFrame 用来保存帧的信息
+                byte[] bFrame = new byte[frmSize];
+                fs.Read(bFrame, 0, frmSize);
+                size -= frmSize;
+                string str = GetFrameInfoByEcoding(bFrame, bFrame[0], frmSize - 1);
+                imgAlbum.Source = null;
+               if (FramID.CompareTo("APIC") == 0)
+                {
+                    try
+                    {
+                        int i = 0;
+                        while (true)
+                        {
+                            if (255 == bFrame[i] && 216 == bFrame[i + 1])
+                            {
+                                break;
+                            }
+                            i++;
+                        }
+                        byte[] imge = new byte[frmSize - i];
+                        fs.Seek(-frmSize + i, SeekOrigin.Current);
+                        fs.Read(imge, 0, imge.Length);
+                        MemoryStream ms = new MemoryStream(imge);
+                        System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
+                        string path = Path.GetTempFileName();
+                        FileStream save = new FileStream(path, FileMode.Create);
+                        img.Save(save, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        save.Close();
+                        imgAlbum.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(path));
+                    }
+                    catch
+                    {
+                        imgAlbum.Source = null;
+                    }
+                }
+            }
+            
+        }
+        private string GetFrameInfoByEcoding(byte[] b, byte conde, int length)
+        {
+            string str = "";
+            switch (conde)
+            {
+                case 0:
+                    str = Encoding.GetEncoding("ISO-8859-1").GetString(b, 1, length);
+                    break;
+                case 1:
+                    str = Encoding.GetEncoding("UTF-16LE").GetString(b, 1, length);
+                    break;
+                case 2:
+                    str = Encoding.GetEncoding("UTF-16BE").GetString(b, 1, length);
+                    break;
+                case 3:
+                    str = Encoding.UTF8.GetString(b, 1, length);
+                    break;
+            }
+            return str;
+        }
+
+        private void imgAlbum_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            WinAlbumPicture win = new WinAlbumPicture(this);
+            win.img.Source = imgAlbum.Source;
+            win.ShowDialog();
         }
     }
 
