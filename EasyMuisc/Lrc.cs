@@ -34,7 +34,7 @@ namespace EasyMuisc
         /// <summary>
         /// 歌词
         /// </summary>
-        public Dictionary<double, string> LrcWord { get; set; }
+        public Dictionary<double, string> LrcContent { get; set; }
 
         /// <summary>
         /// 获得歌词信息
@@ -43,7 +43,11 @@ namespace EasyMuisc
         /// <returns>返回歌词信息(Lrc实例)</returns>
         public Lrc(string LrcPath)
         {
-            LrcWord = new Dictionary<double, string>();
+            Regex regex = new Regex(@"(?<time>\[[0-9.:\]\[\s]*\])(?<value>.*)", RegexOptions.Compiled);
+            Regex timeRegex = new Regex(@"\[(?<time>[0-9.:]*)\]\s*", RegexOptions.Compiled);
+
+            LrcContent = new Dictionary<double, string>();
+            var tempDic = new Dictionary<double, string>();
             using (FileStream fs = new FileStream(LrcPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 string line;
@@ -75,17 +79,24 @@ namespace EasyMuisc
                         {
                             try
                             {
-                                Regex regex = new Regex(@"\[([0-9.:]*)\]+(.*)", RegexOptions.Compiled);
-                                MatchCollection mc = regex.Matches(line);
-                                double time = TimeSpan.Parse("00:" + mc[0].Groups[1].Value).TotalSeconds;
-                                string word = mc[0].Groups[2].Value;
-                                LrcWord.Add(time, word);
+                                Match match = regex.Match(line);//分割时间和内容
+                                string word = match.Groups["value"].Value;
+                                MatchCollection timeMatch = timeRegex.Matches(match.Groups["time"].Value);//分割多个时间
+                                foreach (var i in timeMatch)
+                                {
+                                    double time = TimeSpan.Parse("00:" + (i as Match).Groups["time"].Value).TotalSeconds;
+                                    tempDic.Add(time, word);
+                                }
                             }
-                            catch { }
+                            catch (Exception ex)
+                            {
+                            }
                         }
                     }
                 }
             }
+            LrcContent = tempDic.OrderBy(p => p.Key).ToDictionary(p => p.Key, o => o.Value);
+
         }
 
         /// <summary>

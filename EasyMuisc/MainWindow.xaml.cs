@@ -19,6 +19,7 @@ using System.Drawing;
 using System.Windows.Data;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
+using System.Security.Permissions;
 
 namespace EasyMuisc
 {
@@ -50,6 +51,23 @@ namespace EasyMuisc
             Shuffle,
         }
         #region 模板
+        public static class DispatcherHelper
+        {
+            [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+            public static void DoEvents()
+            {
+                DispatcherFrame frame = new DispatcherFrame();
+                Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, new DispatcherOperationCallback(ExitFrames), frame);
+                try
+                { Dispatcher.PushFrame(frame); }
+                catch (InvalidOperationException) { }
+            }
+            private static object ExitFrames(object frame)
+            {
+                ((DispatcherFrame)frame).Continue = false;
+                return null;
+            }
+        }
         /// <summary>
         /// 显示错误信息
         /// </summary>
@@ -156,7 +174,7 @@ namespace EasyMuisc
         /// <summary>
         /// 当前歌词索引
         /// </summary>
-        int currentLrcIndex = -1;
+        int currentLrcIndex = 0;
         /// <summary>
         /// 歌词字体大小
         /// </summary>
@@ -435,6 +453,7 @@ namespace EasyMuisc
                     Path = path,
                     Album = album,
                 });
+                DispatcherHelper.DoEvents();
                 return musicInfo[musicInfo.Count - 1];
             }
             catch
@@ -473,7 +492,6 @@ namespace EasyMuisc
             album = dir.GetDetailsOf(item, 14);
             return true;
         }
-
         /// <summary>
         /// 保存音乐列表到配置文件中
         /// </summary>
@@ -610,7 +628,7 @@ namespace EasyMuisc
                 grdLrc.Visibility = Visibility.Visible;
                 txtLrc.Visibility = Visibility.Hidden;
                 stkLrc.Visibility = Visibility.Visible;
-                var lrc = new Lrc(file.FullName).LrcWord;//获取歌词信息
+                var lrc = new Lrc(file.FullName).LrcContent;//获取歌词信息
                 int index = 0;//用于赋值Tag
                 foreach (var i in lrc)
                 {
@@ -648,6 +666,12 @@ namespace EasyMuisc
                 txtLrc.FontSize = textLrcFontSize;
                 grdLrc.Visibility = Visibility.Hidden;
                 txtLrc.Visibility = Visibility.Visible;
+                stkLrc.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                grdLrc.Visibility = Visibility.Hidden;
+                txtLrc.Visibility = Visibility.Hidden;
                 stkLrc.Visibility = Visibility.Hidden;
             }
         }
@@ -728,7 +752,7 @@ namespace EasyMuisc
             }
             else
             {
-                for (int i = 0; i < lrcTime.Count; i++)//从第一个循环到倒数第二个歌词时间
+                for (int i = currentLrcIndex; i < lrcTime.Count; i++)//从第一个循环到倒数第二个歌词时间
                 {
                     if (lrcTime[i] < position)//如果当前的播放时间夹在两个歌词时间之间
                     {
@@ -816,7 +840,7 @@ namespace EasyMuisc
 
             currentMusicIndex = index;//指定当前的索引
             path = musicInfo[currentMusicIndex].Path;//获取歌曲地址
-            currentLrcIndex = -1;//删除歌词索引
+            currentLrcIndex =0;//删除歌词索引
             lrcTime.Clear();//清空歌词时间
             lrcContent.Clear();//清除歌词内容
             stkLrc.Children.Clear();//清空歌词表
@@ -1045,7 +1069,7 @@ namespace EasyMuisc
         {
             if (currentHistoryIndex < history.Count - 1)
             {
-                history.RemoveRange(currentHistoryIndex + 1, history.Count - currentHistoryIndex);
+                history.RemoveRange(currentHistoryIndex + 1, history.Count - currentHistoryIndex-1);
             }
             currentMusicIndex = lvw.SelectedIndex;
             PlayNew();
