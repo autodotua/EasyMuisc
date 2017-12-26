@@ -142,7 +142,7 @@ namespace EasyMuisc
         /// <summary>
         /// 音乐播放句柄
         /// </summary>
-        int stream = int.MinValue;
+        int stream = 0;
         /// <summary>
         /// 配置文件
         /// </summary>
@@ -232,7 +232,7 @@ namespace EasyMuisc
             }
             get
             {
-                float value = 0;
+                float value=0;
                 Bass.BASS_ChannelGetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, ref value);
                 return value;
             }
@@ -296,20 +296,14 @@ namespace EasyMuisc
             {
                 File.WriteAllBytes("bass.dll", Properties.Resources.bass);
             }
-            try
-            {
-                var devices = Bass.BASS_GetDeviceInfos();
-                for (int i = 1; i < devices.Length; i++)
+
+                if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
                 {
-                    Bass.BASS_Init(i, 44100, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle);
+                    ShowAlert("无法初始化音乐引擎。");
+                    error = true;
+                    Application.Current.Shutdown();
                 }
-            }
-            catch
-            {
-                ShowAlert("无法初始化音乐引擎。");
-                error = true;
-                Application.Current.Shutdown();
-            }
+
             musicInfo = new ObservableCollection<MusicInfo>();
             lvw.DataContext = musicInfo;
             InitialiazeTimer();
@@ -324,7 +318,7 @@ namespace EasyMuisc
             playTimer.Tick += delegate
             {
 
-                if (Volumn >= 1)
+                if (Volumn >=sldVolumn.Value )
                 {
                     playTimer.Stop();
                     return;
@@ -592,10 +586,11 @@ namespace EasyMuisc
         private void InitialiazeMusic()
         {
             Stop();//停止正在播放的歌曲
-
+            
             try
             {
                 stream = Bass.BASS_StreamCreateFile(path, 0, 0, BASSFlag.BASS_SAMPLE_FLOAT);//获取歌曲句柄
+                Volumn = sldVolumn.Value;
                 Title = new FileInfo(path).Name.Replace(new FileInfo(path).Extension, "") + " - EasyMusic";//将窗体标题改为歌曲名
                 string[] length = musicInfo[currentMusicIndex].Length.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                 double musicLength = length.Length == 2 ?//如果不到一个小时
@@ -682,7 +677,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void Update(object sender, EventArgs e)
         {
-            if (stream == int.MinValue)
+            if (stream ==0)
             {
                 mainTimer.Stop();
                 return;
@@ -706,7 +701,7 @@ namespace EasyMuisc
         {
             if (currentHistoryIndex < history.Count - 1)
             {
-                history.RemoveRange(currentHistoryIndex + 1, history.Count - currentHistoryIndex);
+                history.RemoveRange(currentHistoryIndex + 1, history.Count - currentHistoryIndex-1);
             }
 
             switch (CurrentCycleMode)
@@ -752,7 +747,7 @@ namespace EasyMuisc
             }
             else
             {
-                for (int i = currentLrcIndex; i < lrcTime.Count; i++)//从第一个循环到倒数第二个歌词时间
+                for (int i = 0; i < lrcTime.Count; i++)//从第一个循环到倒数第二个歌词时间
                 {
                     if (lrcTime[i] < position)//如果当前的播放时间夹在两个歌词时间之间
                     {
@@ -862,7 +857,6 @@ namespace EasyMuisc
             }
             //Debug.WriteLine(currentHistoryIndex);
             InitialiazeMusic();//初始化歌曲
-            Volumn = 1;
             if (playAtOnce)
             {
                 Play();
@@ -916,7 +910,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnPlayClickEventHandler(object sender, RoutedEventArgs e)
         {
-            if (stream == int.MinValue)
+            if (stream ==0)
             {
                 if (musicInfo.Count != 0)
                 {
@@ -1321,7 +1315,7 @@ namespace EasyMuisc
                 btnPlay.Visibility = Visibility.Visible;
                 btnPause.Visibility = Visibility.Hidden;
                 Bass.BASS_ChannelStop(stream);
-                stream = int.MinValue;
+                stream =0;
             }
 
             MenuItem menuAutoFurl = new MenuItem() { Header = (AutoFurl ? "√" : "×") + "自动收放列表" };
