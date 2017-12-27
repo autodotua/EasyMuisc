@@ -110,6 +110,7 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>Properties\Interop.Shell32.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />

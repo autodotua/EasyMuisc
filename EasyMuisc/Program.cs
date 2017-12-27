@@ -23,7 +23,7 @@ namespace EasyMuisc
             }
             App app = new App();
             //app.InitializeComponent();
-            app.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            //app.DispatcherUnhandledException += App_DispatcherUnhandledException;
                 app.Run(new MainWindow() { path = args.Length != 0 ? args[0] : null });
 
         }
