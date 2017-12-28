@@ -12,6 +12,7 @@
         SizeChanged="WindowSizeChangedEventHandler"
         Loaded="WindowLoadedEventHandler" 
         AllowDrop="True"
+    
          DragEnter="OpenAndPlayMusicDragEnterEventHandler"
         Closing="WindowClosingEventHandler" 
         WindowStartupLocation="CenterScreen" Cursor="Wait">
@@ -389,6 +390,8 @@
 
 
 
+        
+        
 
     </Window.Resources>
     <Window.InputBindings>
@@ -404,7 +407,6 @@
 
     </Window.CommandBindings>
     <Grid x:Name="grdMain" Margin="4">
-
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="4"/>
@@ -415,6 +417,7 @@
             <ColumnDefinition Width="8"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+
         <Grid x:Name="grdList">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -427,7 +430,7 @@
                     <ColumnDefinition Width="4"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="搜索："/>
+                <TextBlock Text="搜索：" VerticalAlignment="Center"/>
                 <ComboBox x:Name="cbbSearch" Grid.Column="2" IsEditable="True" VerticalAlignment="Center" IsSynchronizedWithCurrentItem="False" IsTextSearchEnabled="False"/>
 
             </Grid>
@@ -437,6 +440,8 @@
                     <Style TargetType="{x:Type ListViewItem}">
                         <EventSetter Event="UIElement.PreviewKeyDown" Handler="LvwItemPreviewKeyDownEventHandler"/>
                         <EventSetter Event="Control.MouseDoubleClick" Handler="LvwItemPreviewMouseDoubleClickEventHandler"/>
+                        <EventSetter Event="MouseRightButtonUp" Handler="ListViewItem_MouseRightButtonUp"/>
+                        <EventSetter Event="KeyUp" Handler="ListViewItem_KeyUp"/>
                         <Setter Property="SnapsToDevicePixels" Value="True"/>
                         <Setter Property="Template">
                             <Setter.Value>
@@ -753,5 +758,7 @@
                 </Button>
             </Grid>
         </Grid>
+        <ProgressBar x:Name="pgb" Visibility="Hidden" Margin="-4" Grid.ColumnSpan="3" Grid.RowSpan="3" Height="{Binding ElementName=winMain, Path=ActualHeight, Mode=OneWay}" Width="{Binding ElementName=winMain, Path=ActualWidth, Mode=OneWay}" Opacity="0.5"/>
+
     </Grid>
 </Window>

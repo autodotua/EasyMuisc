@@ -43,7 +43,6 @@ namespace EasyMuisc
             public string Path { get; internal set; }
             public bool Enable { get; internal set; }
         }
-        #region 枚举、属性、字段
         /// <summary>
         /// 循环模式
         /// </summary>
@@ -132,6 +131,9 @@ namespace EasyMuisc
             return story;
         }
         #endregion
+
+
+        #region 字段
         /// <summary>
         /// 是否产生了不可挽救错误
         /// </summary>
@@ -193,6 +195,22 @@ namespace EasyMuisc
         /// </summary>
         double textLrcFontSize = 28;
         /// <summary>
+        /// 历史记录
+        /// </summary>
+        private List<MusicInfo> history = new List<MusicInfo>();
+        /// <summary>
+        /// 当前播放历史索引
+        /// </summary>
+        int currentHistoryIndex = -1;
+        /// <summary>
+        /// 是否正在关闭
+        /// </summary>
+        bool closing = false;
+        #endregion
+
+
+        #region 属性
+        /// <summary>
         /// 获取当前的播放循环模式
         /// </summary>
         private CycleMode CurrentCycleMode
@@ -211,16 +229,9 @@ namespace EasyMuisc
             }
         }
         /// <summary>
-        /// 历史记录
-        /// </summary>
-        private List<MusicInfo> history = new List<MusicInfo>();
-        /// <summary>
-        /// 当前播放历史索引
-        /// </summary>
-        int currentHistoryIndex = -1;
-        /// <summary>
         /// 内部音量
         /// </summary>
+
         private double Volumn
         {
             set
@@ -270,10 +281,10 @@ namespace EasyMuisc
                 SetConfig("showLrc", value.ToString());
             }
         }
-        /// <summary>
-        /// 是否正在关闭
-        /// </summary>
-        bool closing = false;
+
+        #endregion
+
+        #region 定时器
         /// <summary>
         /// 继续播放渐响定时器
         /// </summary>
@@ -286,9 +297,8 @@ namespace EasyMuisc
         /// 主定时器
         /// </summary>
         DispatcherTimer mainTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000 / fps) };
+
         #endregion
-
-
 
         #region 初始化和配置
         /// <summary>
@@ -312,7 +322,13 @@ namespace EasyMuisc
             musicInfo = new ObservableCollection<MusicInfo>();
             lvw.DataContext = musicInfo;
             InitialiazeTimer();
-
+            if (cfa.AppSettings.Settings["MusicList"] != null)
+            {
+                if (cfa.AppSettings.Settings["MusicList"].Value != "")
+                {
+                    pgb.Visibility = Visibility.Visible;
+                }
+            }
 
         }
         /// <summary>
@@ -320,7 +336,7 @@ namespace EasyMuisc
         /// </summary>
         private void InitialiazeTimer()
         {
-            playTimer.Tick += delegate
+            playTimer.Tick += (p1, p2) =>
             {
 
                 if (Volumn >= sldVolumn.Value)
@@ -330,7 +346,7 @@ namespace EasyMuisc
                 }
                 Volumn += 0.05;
             };
-            pauseTimer.Tick += delegate
+            pauseTimer.Tick += (p1, p2) =>
             {
 
                 if (Volumn <= 0.05)
@@ -355,6 +371,7 @@ namespace EasyMuisc
         {
             try
             {
+
                 GetMusicListFromConfig();
                 Cursor = Cursors.Arrow;
                 switch (GetConfig("CycleMode", "1"))
@@ -394,29 +411,47 @@ namespace EasyMuisc
             {
                 Thread t = new Thread(() =>
                 {
-                    if (cfa.AppSettings.Settings["MusicList"] != null)
+                    Dispatcher.Invoke(new Action(() =>
                     {
-                        string[] musics = cfa.AppSettings.Settings["MusicList"].Value.Split(new string[] { split }, StringSplitOptions.RemoveEmptyEntries);
-                        foreach (var i in musics)
+                        if (cfa.AppSettings.Settings["MusicList"] != null)
                         {
-                            Dispatcher.Invoke(new Action(() =>
+                            string[] musics = cfa.AppSettings.Settings["MusicList"].Value.Split(new string[] { split }, StringSplitOptions.RemoveEmptyEntries);
+
+                            pgb.Maximum = musics.Length;
+                            pgb.Value = 0;
+
+                            foreach (var i in musics)
                             {
                                 AddNewMusic(i);
-                            }));
-                        }
+                                pgb.Value++;
+                            }
 
-                    }
-                    if (path == null)
-                    {
-                        string tempPath = GetConfig("lastMusic", "");
-                        if (File.Exists(tempPath))
+                        }
+                        if (path == null)
                         {
-                            Dispatcher.Invoke(new Action(() =>
+                            string tempPath = GetConfig("lastMusic", "");
+                            if (File.Exists(tempPath))
                             {
                                 PlayNew(AddNewMusic(tempPath), false);
-                            }));
+
+                            }
                         }
-                    }
+                        NewDoubleAnimation(pgb, OpacityProperty, 0, 0.5, 0.3, (a1, a2) => { pgb.Visibility = Visibility.Hidden; });
+                        if (!ShowLrc)
+                        {
+                            ShowLrc = false;
+                            grdLrcArea.Visibility = Visibility.Collapsed;
+                            AutoFurl = false;
+                            NewDoubleAnimation(this, WidthProperty, grdMain.ColumnDefinitions[0].ActualWidth + 32, 0.5, 0.3, (p1, p2) =>
+                              {
+                                  grdMain.ColumnDefinitions[2].Width = new GridLength(0);
+
+                                  grdMain.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
+
+                                  //MaxWidth = MinWidth = Width;
+                              });
+                        }
+                    }));
                 });
                 t.Start();
                 return true;
@@ -584,6 +619,8 @@ namespace EasyMuisc
             pauseTimer.Start();
         }
         #endregion
+
+
         #region 音乐相关
         /// <summary>
         /// 初始化新的歌曲
@@ -609,7 +646,7 @@ namespace EasyMuisc
                 ShowAlert("初始化失败!");
                 return;
             }
-            ReadMp3(musicInfo[currentMusicIndex].Path);
+            ReadMp3Info(musicInfo[currentMusicIndex].Path);
 
             mainTimer.Tick += Update;
             mainTimer.Start();
@@ -645,7 +682,7 @@ namespace EasyMuisc
                         Tag = index++,//标签用于定位
                         Cursor = Cursors.Hand,
                     };
-                    tbk.MouseLeftButtonUp += delegate
+                    tbk.MouseLeftButtonUp += (p1, p2) =>
                     {
                         //单击歌词跳转到当前歌词
                         Bass.BASS_ChannelSetPosition(stream, lrcTime[(int)tbk.Tag]);
@@ -743,7 +780,7 @@ namespace EasyMuisc
                 return;
             }
             double position = Bass.BASS_ChannelBytes2Seconds(stream,
-                Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
+Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
             bool changed = false;//是否
             if (position == 0)
             {
@@ -907,6 +944,8 @@ namespace EasyMuisc
             return Bass.BASS_StreamFree(stream);
         }
         #endregion
+
+
         #region 播放控制
         /// <summary>
         /// 单击播放按钮
@@ -1024,6 +1063,9 @@ namespace EasyMuisc
             }
         }
         #endregion
+
+
+
         #region 列表相关
         /// <summary>
         /// 将文件拖到列表上方事件
@@ -1041,23 +1083,23 @@ namespace EasyMuisc
                 e.Effects = DragDropEffects.None;
             }
 
-            lvw.Drop += delegate
-              {
-                  string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-                  if (files == null)
-                  {
-                      return;
-                  }
-                  foreach (var i in files)
-                  {
-                      string extension = new FileInfo(i).Extension;
-                      if (extension == ".mp3" || extension == ".wav")
-                      {
-                          AddNewMusic(i);
-                      }
-                  }
+            lvw.Drop += (p1, p2) =>
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+                if (files == null)
+                {
+                    return;
+                }
+                foreach (var i in files)
+                {
+                    string extension = new FileInfo(i).Extension;
+                    if (extension == ".mp3" || extension == ".wav")
+                    {
+                        AddNewMusic(i);
+                    }
+                }
 
-              };
+            };
         }
         /// <summary>
         /// 双击列表项事件
@@ -1167,7 +1209,7 @@ namespace EasyMuisc
                 e.Effects = DragDropEffects.None;
             }
 
-            (sender as UIElement).Drop += delegate
+            (sender as UIElement).Drop += (p1, p2) =>
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
                 if (files == null)
@@ -1191,6 +1233,9 @@ namespace EasyMuisc
             };
         }
         #endregion
+
+
+
         #region 列表与歌词选项
         /// <summary>
         /// 单击列表选项事件
@@ -1201,15 +1246,15 @@ namespace EasyMuisc
         {
             ContextMenu menu = new ContextMenu()
             {
-                PlacementTarget = btnListOption,
-                Placement = PlacementMode.Top,
+                PlacementTarget = sender as UIElement,
+
                 IsOpen = true,
                 // Style=Resources["ctmStyle"] as Style
             };
 
 
             MenuItem menuOpenFile = new MenuItem() { Header = "文件" };
-            menuOpenFile.Click += delegate
+            menuOpenFile.Click += (p1, p2) =>
             {
                 OpenFileDialog opd = new OpenFileDialog()
                 {
@@ -1226,7 +1271,7 @@ namespace EasyMuisc
                 }
             };
             MenuItem menuOpenFolder = new MenuItem() { Header = "文件夹" };
-            menuOpenFolder.Click += delegate
+            menuOpenFolder.Click += (p1, p2) =>
             {
                 System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog()
                 {
@@ -1245,7 +1290,7 @@ namespace EasyMuisc
             };
 
             MenuItem menuOpenAllFolder = new MenuItem() { Header = "文件夹及子文件夹" };
-            menuOpenAllFolder.Click += delegate
+            menuOpenAllFolder.Click += (p1, p2) =>
             {
                 System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog()
                 {
@@ -1264,34 +1309,32 @@ namespace EasyMuisc
             };
 
             MenuItem menuOpenMusicFolder = new MenuItem() { Header = "打开所在文件夹" };
-            menuOpenMusicFolder.Click += delegate
-              {
-                  System.Diagnostics.Process.Start("Explorer.exe", @"/select," + musicInfo[lvw.SelectedIndex].Path);
-              };
+            menuOpenMusicFolder.Click += (p1, p2) =>
+  Process.Start("Explorer.exe", @"/select," + musicInfo[lvw.SelectedIndex].Path);
 
             MenuItem menuShowMusicInfo = new MenuItem() { Header = "显示音乐信息" };
-            menuShowMusicInfo.Click += delegate
-              {
-                  MusicInfo music = musicInfo[lvw.SelectedIndex];
-                  FileInfo fileInfo = new FileInfo(music.Path);
-                  string l = Environment.NewLine;
-                  string info = fileInfo.Name + l
-                  + music.Path + l
-                  + Math.Round(fileInfo.Length / 1024d) + "KB" + l
-                  + music.MusicName + l
-                  + music.Length + l
-                  + music.Singer + l
-                  + music.Album
-                  ;
-                  WinMusicInfo winMusicInfo = new WinMusicInfo()
-                  {
-                      Title = fileInfo.Name + "-音乐信息",
-                  };
-                  winMusicInfo.txt.Text = info;
-                  winMusicInfo.ShowDialog();
-              };
+            menuShowMusicInfo.Click += (p1, p2) =>
+            {
+                MusicInfo music = musicInfo[lvw.SelectedIndex];
+                FileInfo fileInfo = new FileInfo(music.Path);
+                string l = Environment.NewLine;
+                string info = fileInfo.Name + l
+                + music.Path + l
+                + Math.Round(fileInfo.Length / 1024d) + "KB" + l
+                + music.MusicName + l
+                + music.Length + l
+                + music.Singer + l
+                + music.Album
+                ;
+                WinMusicInfo winMusicInfo = new WinMusicInfo()
+                {
+                    Title = fileInfo.Name + "-音乐信息",
+                };
+                winMusicInfo.txt.Text = info;
+                winMusicInfo.ShowDialog();
+            };
             MenuItem menuDelete = new MenuItem() { Header = "删除选中项" };
-            menuDelete.Click += delegate
+            menuDelete.Click += (p1, p2) =>
             {
                 int needDeleteIndex = lvw.SelectedIndex;
                 if (currentMusicIndex == needDeleteIndex)
@@ -1306,7 +1349,7 @@ namespace EasyMuisc
             };
 
             MenuItem menuClear = new MenuItem() { Header = "清空列表", };
-            menuClear.Click += delegate
+            menuClear.Click += (p1, p2) =>
             {
                 musicInfo.Clear();
                 AfterClearList();
@@ -1324,19 +1367,23 @@ namespace EasyMuisc
             }
 
             MenuItem menuAutoFurl = new MenuItem() { Header = (AutoFurl ? "√" : "×") + "自动收放列表" };
-            menuAutoFurl.Click += delegate
+            menuAutoFurl.Click += (p1, p2) =>
             {
                 AutoFurl = !AutoFurl;
                 WindowSizeChangedEventHandler(null, null);
             };
             MenuItem menuShowLrc = new MenuItem() { Header = "显示歌词" };
-            menuShowLrc.Click += delegate
+            menuShowLrc.Click += (p1, p2) =>
             {
                 ShowLrc = true;
                 grdLrcArea.Visibility = Visibility.Visible;
-                MaxWidth = double.PositiveInfinity;
-                MinWidth = 0;
+                //MaxWidth = double.PositiveInfinity;
+                //MinWidth = 0;
+                grdMain.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
+                grdMain.ColumnDefinitions[0].Width = GridLength.Auto;
+
                 NewDoubleAnimation(this, WidthProperty, 1000, 0.5, 0.3);
+
             };
 
             menu.Items.Add(menuOpenFile);
@@ -1370,6 +1417,40 @@ namespace EasyMuisc
             }
         }
         /// <summary>
+        /// 在列表项上单击鼠标右键事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListViewItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (lvw.SelectedIndex != -1)
+            {
+                BtnListOptionClickEventHanlder(sender, null);
+
+            }
+        }
+        /// <summary>
+        /// 在列表项上按下按钮事件（Enter、Del）
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListViewItem_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (lvw.SelectedIndex != 1)
+            {
+                switch (e.Key)
+                {
+                    case Key.Enter:
+                        LvwItemPreviewMouseDoubleClickEventHandler(null, null);
+                        break;
+                    case Key.Delete:
+                        musicInfo.RemoveAt(lvw.SelectedIndex);
+                        break;
+                }
+            }
+
+        }
+        /// <summary>
         ///  选项按钮鼠标进入动画事件
         /// </summary>
         /// <param name="sender"></param>
@@ -1397,37 +1478,36 @@ namespace EasyMuisc
             ContextMenu menu = new ContextMenu()
             {
                 PlacementTarget = btnLrcOption,
-                Placement = PlacementMode.Top,
                 Items =
-                {
-                     new StackPanel()
+{
+     new StackPanel()
             {
-                Orientation=Orientation.Horizontal,
-                Children =
-                {
-                    new TextBlock(){Text="正常歌词字体大小："},
-                    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=normalLrcFontSize.ToString()},
-                }
+Orientation=Orientation.Horizontal,
+Children =
+{
+    new TextBlock(){Text="正常歌词字体大小："},
+    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=normalLrcFontSize.ToString()},
+}
             },
-                     new StackPanel()
+     new StackPanel()
             {
-                Orientation=Orientation.Horizontal,
-                Children =
-                {
-                    new TextBlock(){Text="当前歌词字体大小："},
-                    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=highlightLrcFontSize.ToString()},
-                }
+Orientation=Orientation.Horizontal,
+Children =
+{
+    new TextBlock(){Text="当前歌词字体大小："},
+    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=highlightLrcFontSize.ToString()},
+}
             },
-                     new StackPanel()
+     new StackPanel()
             {
-                Orientation=Orientation.Horizontal,
-                Children =
-                {
-                    new TextBlock(){Text="文本歌词字体大小："},
-                    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=textLrcFontSize.ToString()},
-                }
+Orientation=Orientation.Horizontal,
+Children =
+{
+    new TextBlock(){Text="文本歌词字体大小："},
+    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=textLrcFontSize.ToString()},
+}
             },
-                 },
+ },
                 IsOpen = true
             };
 
@@ -1435,36 +1515,37 @@ namespace EasyMuisc
             {
                 Header = "复制歌词"
             };
-            menuCopyLrc.Click += delegate
-              {
-                  if (lrcContent.Count != 0)
-                  {
-                      StringBuilder str = new StringBuilder();
-                      for (int i = 0; i < lrcContent.Count - 1; i++)
-                      {
-                          str.Append(lrcContent[i] + Environment.NewLine);
-                      }
-                      str.Append(lrcContent[lrcContent.Count - 1]);
-                      Clipboard.SetText(str.ToString());
-                  }
-              };
+            menuCopyLrc.Click += (p1, p2) =>
+            {
+                if (lrcContent.Count != 0)
+                {
+                    StringBuilder str = new StringBuilder();
+                    for (int i = 0; i < lrcContent.Count - 1; i++)
+                    {
+                        str.Append(lrcContent[i] + Environment.NewLine);
+                    }
+                    str.Append(lrcContent[lrcContent.Count - 1]);
+                    Clipboard.SetText(str.ToString());
+                }
+            };
             if (lrcContent.Count != 0)
             {
                 menu.Items.Insert(0, menuCopyLrc);
             }
 
             MenuItem menuShowLrc = new MenuItem() { Header = "不显示歌词" };
-            menuShowLrc.Click += delegate
-              {
-                  ShowLrc = false;
-                  grdLrcArea.Visibility = Visibility.Collapsed;
-                  AutoFurl = false;
-                  NewDoubleAnimation(this, WidthProperty, grdList.ActualWidth + 24, 0.5, 0.3, delegate
-                   {
-                       MaxWidth = MinWidth = grdList.ActualWidth + 24;
-                   });
+            menuShowLrc.Click += (p1, p2) =>
+            {
+                ShowLrc = false;
+                grdLrcArea.Visibility = Visibility.Collapsed;
+                AutoFurl = false;
+                NewDoubleAnimation(this, WidthProperty, grdMain.ColumnDefinitions[0].ActualWidth + 32, 0.5, 0.3, (p3, p4) =>
+                {
+                    grdMain.ColumnDefinitions[2].Width = new GridLength(0);
 
-              };
+                    grdMain.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
+                });
+            };
             menu.Items.Insert(0, menuShowLrc);
 
 
@@ -1472,11 +1553,11 @@ namespace EasyMuisc
             {
                 Header = "确定",
             };
-            menuOK.Click += delegate
+            menuOK.Click += (p1, p2) =>
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    string text = ((menu.Items[i] as StackPanel).Children[1] as TextBox).Text;
+                    string text = ((menu.Items[menu.Items.Count - 4 + i] as StackPanel).Children[1] as TextBox).Text;
                     if (double.TryParse(text, out double newValue))
                     {
                         switch (i)
@@ -1498,6 +1579,8 @@ namespace EasyMuisc
             menu.Items.Add(menuOK);
         }
         #endregion
+
+
         #region 进度条与音量条
         /// <summary>
         /// 进度条鼠标按下事件
@@ -1604,6 +1687,8 @@ namespace EasyMuisc
             }
         }
         #endregion
+
+        #region 音频硬件
         /// <summary>
         /// 单击切换播放设备按钮事件
         /// </summary>
@@ -1618,7 +1703,6 @@ namespace EasyMuisc
             ContextMenu menu = new ContextMenu()
             {
                 PlacementTarget = sender as UIElement,
-                Placement = PlacementMode.Top,
                 IsOpen = true
             };
             var devices = Bass.BASS_GetDeviceInfos();
@@ -1655,11 +1739,14 @@ namespace EasyMuisc
                 ShowAlert(Bass.BASS_ErrorGetCode().ToString());
             }
         }
+        #endregion
+
+        #region 专辑图
         /// <summary>
         /// 读取Mp3信息
         /// </summary>
         /// <param name="path"></param>
-        private void ReadMp3(string path)//copy
+        private void ReadMp3Info(string path)//copy
         {
             string[] tags = new string[6];
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -1756,8 +1843,6 @@ namespace EasyMuisc
                 return str;
             }
         }
-
-
         /// <summary>
         /// 单击专辑图事件
         /// </summary>
@@ -1769,8 +1854,14 @@ namespace EasyMuisc
             win.img.Source = imgAlbum.Source;
             win.ShowDialog();
         }
+        #endregion
 
-
+        #region 歌曲搜索
+        /// <summary>
+        /// 搜索框内容改变事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ComboBoxTextBoxTextChangedEventHandler(object sender, TextChangedEventArgs e)
         {
             TextBox txt = sender as TextBox;
@@ -1789,7 +1880,7 @@ namespace EasyMuisc
                 if (IsInfoMatch(value, i))
                 {
                     ComboBoxItem cbbItem = new ComboBoxItem() { Content = i.MusicName, Tag = index };
-                    cbbItem.PreviewMouseLeftButtonUp += (o, e2) =>
+                    cbbItem.PreviewMouseLeftButtonUp += (p1, p2) =>
                     {
                         PlayNew((int)cbbItem.Tag, false);
                         cbbSearch.IsDropDownOpen = false;
@@ -1797,19 +1888,23 @@ namespace EasyMuisc
                     };
 
                     cbbSearch.Items.Add(cbbItem);
-                    cbbSearch.DropDownOpened += (o, e2) =>
-                      {
+                    cbbSearch.DropDownOpened += (p1, p2) =>
+                    {
 
-                          txt.SelectionLength = 0;
-                          txt.SelectionStart = (txt.Text.Length);
-                      };
-                   cbbSearch.IsDropDownOpen = true;
+                        txt.SelectionLength = 0;
+                        txt.SelectionStart = (txt.Text.Length);
+                    };
+                    cbbSearch.IsDropDownOpen = true;
 
                 }
             }
 
         }
-
+        /// <summary>
+        /// 搜索框按下按键事件（回车键）
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ComboBoxTextBoxKeyDownEventHandler(object sender, KeyEventArgs e)
         {
             string value = (sender as TextBox).Text;
@@ -1823,7 +1918,7 @@ namespace EasyMuisc
                 foreach (var i in musicInfo)
                 {
                     index++;
-                    if (IsInfoMatch(value,i))
+                    if (IsInfoMatch(value, i))
                     {
                         PlayNew(index, false);
                         cbbSearch.IsDropDownOpen = false;
@@ -1832,12 +1927,17 @@ namespace EasyMuisc
                 }
             }
         }
-
-        private bool IsInfoMatch(string str,MusicInfo info)
+        /// <summary>
+        /// 信息匹配判断
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        private bool IsInfoMatch(string str, MusicInfo info)
         {
             str = str.ToLower();
             string musicName = (info.MusicName + new FileInfo(info.Path).Name).ToLower();
-            if(musicName.Contains(str))
+            if (musicName.Contains(str))
             {
                 return true;
             }
@@ -1845,12 +1945,12 @@ namespace EasyMuisc
             {
                 return true;
             }
-            if(info.Album.ToLower().Contains(str))
+            if (info.Album.ToLower().Contains(str))
             {
                 return true;
             }
 
-            if(ConvertChToPinYin(musicName).ToLower().Contains(str))
+            if (ConvertChToPinYin(musicName).ToLower().Contains(str))
             {
                 return true;
             }
@@ -1859,7 +1959,7 @@ namespace EasyMuisc
                 return true;
             }
 
-            var namePinYinTitle = new string(ConvertChToPinYin(musicName).Select(x => (x >= 'A' && x <= 'Z') ? x : ' ').Select(x => x).ToArray()).Replace(" ","");
+            var namePinYinTitle = new string(ConvertChToPinYin(musicName).Select(x => (x >= 'A' && x <= 'Z') ? x : ' ').Select(x => x).ToArray()).Replace(" ", "");
             if (namePinYinTitle.ToLower().Contains(str))
             {
                 return true;
@@ -1874,83 +1974,14 @@ namespace EasyMuisc
             // Debug.WriteLine(PYTitle);
             return false;
         }
-
-        //定义拼音区编码数组
-        private int[] wordCode = new int[]
-            {
-                -20319,-20317,-20304,-20295,-20292,-20283,-20265,-20257,-20242,-20230,-20051,-20036,
-                -20032,-20026,-20002,-19990,-19986,-19982,-19976,-19805,-19784,-19775,-19774,-19763,
-                -19756,-19751,-19746,-19741,-19739,-19728,-19725,-19715,-19540,-19531,-19525,-19515,
-                -19500,-19484,-19479,-19467,-19289,-19288,-19281,-19275,-19270,-19263,-19261,-19249,
-                -19243,-19242,-19238,-19235,-19227,-19224,-19218,-19212,-19038,-19023,-19018,-19006,
-                -19003,-18996,-18977,-18961,-18952,-18783,-18774,-18773,-18763,-18756,-18741,-18735,
-                -18731,-18722,-18710,-18697,-18696,-18526,-18518,-18501,-18490,-18478,-18463,-18448,
-                -18447,-18446,-18239,-18237,-18231,-18220,-18211,-18201,-18184,-18183, -18181,-18012,
-                -17997,-17988,-17970,-17964,-17961,-17950,-17947,-17931,-17928,-17922,-17759,-17752,
-                -17733,-17730,-17721,-17703,-17701,-17697,-17692,-17683,-17676,-17496,-17487,-17482,
-                -17468,-17454,-17433,-17427,-17417,-17202,-17185,-16983,-16970,-16942,-16915,-16733,
-                -16708,-16706,-16689,-16664,-16657,-16647,-16474,-16470,-16465,-16459,-16452,-16448,
-                -16433,-16429,-16427,-16423,-16419,-16412,-16407,-16403,-16401,-16393,-16220,-16216,
-                -16212,-16205,-16202,-16187,-16180,-16171,-16169,-16158,-16155,-15959,-15958,-15944,
-                -15933,-15920,-15915,-15903,-15889,-15878,-15707,-15701,-15681,-15667,-15661,-15659,
-                -15652,-15640,-15631,-15625,-15454,-15448,-15436,-15435,-15419,-15416,-15408,-15394,
-                -15385,-15377,-15375,-15369,-15363,-15362,-15183,-15180,-15165,-15158,-15153,-15150,
-                -15149,-15144,-15143,-15141,-15140,-15139,-15128,-15121,-15119,-15117,-15110,-15109,
-                -14941,-14937,-14933,-14930,-14929,-14928,-14926,-14922,-14921,-14914,-14908,-14902,
-                -14894,-14889,-14882,-14873,-14871,-14857,-14678,-14674,-14670,-14668,-14663,-14654,
-                -14645,-14630,-14594,-14429,-14407,-14399,-14384,-14379,-14368,-14355,-14353,-14345,
-                -14170,-14159,-14151,-14149,-14145,-14140,-14137,-14135,-14125,-14123,-14122,-14112,
-                -14109,-14099,-14097,-14094,-14092,-14090,-14087,-14083,-13917,-13914,-13910,-13907,
-                -13906,-13905,-13896,-13894,-13878,-13870,-13859,-13847,-13831,-13658,-13611,-13601,
-                -13406,-13404,-13400,-13398,-13395,-13391,-13387,-13383,-13367,-13359,-13356,-13343,
-                -13340,-13329,-13326,-13318,-13147,-13138,-13120,-13107,-13096,-13095,-13091,-13076,
-                -13068,-13063,-13060,-12888,-12875,-12871,-12860,-12858,-12852,-12849,-12838,-12831,
-                -12829,-12812,-12802,-12607,-12597,-12594,-12585,-12556,-12359,-12346,-12320,-12300,
-                -12120,-12099,-12089,-12074,-12067,-12058,-12039,-11867,-11861,-11847,-11831,-11798,
-                -11781,-11604,-11589,-11536,-11358,-11340,-11339,-11324,-11303,-11097,-11077,-11067,
-                -11055,-11052,-11045,-11041,-11038,-11024,-11020,-11019,-11018,-11014,-10838,-10832,
-                -10815,-10800,-10790,-10780,-10764,-10587,-10544,-10533,-10519,-10331,-10329,-10328,
-                -10322,-10315,-10309,-10307,-10296,-10281,-10274,-10270,-10262,-10260,-10256,-10254
-            };
-        //定义拼音数组
-        private string[] pinYin = new string[]
-            {
-                "A","Ai","An","Ang","Ao","Ba","Bai","Ban","Bang","Bao","Bei","Ben",
-                "Beng","Bi","Bian","Biao","Bie","Bin","Bing","Bo","Bu","Ba","Cai","Can",
-                "Cang","Cao","Ce","Ceng","Cha","Chai","Chan","Chang","Chao","Che","Chen","Cheng",
-                "Chi","Chong","Chou","Chu","Chuai","Chuan","Chuang","Chui","Chun","Chuo","Ci","Cong",
-                "Cou","Cu","Cuan","Cui","Cun","Cuo","Da","Dai","Dan","Dang","Dao","De",
-                "Deng","Di","Dian","Diao","Die","Ding","Diu","Dong","Dou","Du","Duan","Dui",
-                "Dun","Duo","E","En","Er","Fa","Fan","Fang","Fei","Fen","Feng","Fo",
-                "Fou","Fu","Ga","Gai","Gan","Gang","Gao","Ge","Gei","Gen","Geng","Gong",
-                "Gou","Gu","Gua","Guai","Guan","Guang","Gui","Gun","Guo","Ha","Hai","Han",
-                "Hang","Hao","He","Hei","Hen","Heng","Hong","Hou","Hu","Hua","Huai","Huan",
-                "Huang","Hui","Hun","Huo","Ji","Jia","Jian","Jiang","Jiao","Jie","Jin","Jing",
-                "Jiong","Jiu","Ju","Juan","Jue","Jun","Ka","Kai","Kan","Kang","Kao","Ke",
-                "Ken","Keng","Kong","Kou","Ku","Kua","Kuai","Kuan","Kuang","Kui","Kun","Kuo",
-                "La","Lai","Lan","Lang","Lao","Le","Lei","Leng","Li","Lia","Lian","Liang",
-                "Liao","Lie","Lin","Ling","Liu","Long","Lou","Lu","Lv","Luan","Lue","Lun",
-                "Luo","Ma","Mai","Man","Mang","Mao","Me","Mei","Men","Meng","Mi","Mian",
-                "Miao","Mie","Min","Ming","Miu","Mo","Mou","Mu","Na","Nai","Nan","Nang",
-                "Nao","Ne","Nei","Nen","Neng","Ni","Nian","Niang","Niao","Nie","Nin","Ning",
-                "Niu","Nong","Nu","Nv","Nuan","Nue","Nuo","O","Ou","Pa","Pai","Pan",
-                "Pang","Pao","Pei","Pen","Peng","Pi","Pian","Piao","Pie","Pin","Ping","Po",
-                "Pu","Qi","Qia","Qian","Qiang","Qiao","Qie","Qin","Qing","Qiong","Qiu","Qu",
-                "Quan","Que","Qun","Ran","Rang","Rao","Re","Ren","Reng","Ri","Rong","Rou",
-                "Ru","Ruan","Rui","Run","Ruo","Sa","Sai","San","Sang","Sao","Se","Sen",
-                "Seng","Sha","Shai","Shan","Shang","Shao","She","Shen","Sheng","Shi","Shou","Shu",
-                "Shua","Shuai","Shuan","Shuang","Shui","Shun","Shuo","Si","Song","Sou","Su","Suan",
-                "Sui","Sun","Suo","Ta","Tai","Tan","Tang","Tao","Te","Teng","Ti","Tian",
-                "Tiao","Tie","Ting","Tong","Tou","Tu","Tuan","Tui","Tun","Tuo","Wa","Wai",
-                "Wan","Wang","Wei","Wen","Weng","Wo","Wu","Xi","Xia","Xian","Xiang","Xiao",
-                "Xie","Xin","Xing","Xiong","Xiu","Xu","Xuan","Xue","Xun","Ya","Yan","Yang",
-                "Yao","Ye","Yi","Yin","Ying","Yo","Yong","You","Yu","Yuan","Yue","Yun",
-                "Za", "Zai","Zan","Zang","Zao","Ze","Zei","Zen","Zeng","Zha","Zhai","Zhan",
-                "Zhang","Zhao","Zhe","Zhen","Zheng","Zhi","Zhong","Zhou","Zhu","Zhua","Zhuai","Zhuan",
-                "Zhuang","Zhui","Zhun","Zhuo","Zi","Zong","Zou","Zu","Zuan","Zui","Zun","Zuo"
-           };
-        //建立一个convertCh方法用于将汉字转换成全拼的拼音，其中，参数代表汉字字符串，此方法的返回值是转换后的拼音字符串
-
+        /// <summary>
+        /// 拼音区编码数组
+        /// </summary>
+        private int[] wordCode = new int[] { -20319, -20317, -20304, -20295, -20292, -20283, -20265, -20257, -20242, -20230, -20051, -20036, -20032, -20026, -20002, -19990, -19986, -19982, -19976, -19805, -19784, -19775, -19774, -19763, -19756, -19751, -19746, -19741, -19739, -19728, -19725, -19715, -19540, -19531, -19525, -19515, -19500, -19484, -19479, -19467, -19289, -19288, -19281, -19275, -19270, -19263, -19261, -19249, -19243, -19242, -19238, -19235, -19227, -19224, -19218, -19212, -19038, -19023, -19018, -19006, -19003, -18996, -18977, -18961, -18952, -18783, -18774, -18773, -18763, -18756, -18741, -18735, -18731, -18722, -18710, -18697, -18696, -18526, -18518, -18501, -18490, -18478, -18463, -18448, -18447, -18446, -18239, -18237, -18231, -18220, -18211, -18201, -18184, -18183, -18181, -18012, -17997, -17988, -17970, -17964, -17961, -17950, -17947, -17931, -17928, -17922, -17759, -17752, -17733, -17730, -17721, -17703, -17701, -17697, -17692, -17683, -17676, -17496, -17487, -17482, -17468, -17454, -17433, -17427, -17417, -17202, -17185, -16983, -16970, -16942, -16915, -16733, -16708, -16706, -16689, -16664, -16657, -16647, -16474, -16470, -16465, -16459, -16452, -16448, -16433, -16429, -16427, -16423, -16419, -16412, -16407, -16403, -16401, -16393, -16220, -16216, -16212, -16205, -16202, -16187, -16180, -16171, -16169, -16158, -16155, -15959, -15958, -15944, -15933, -15920, -15915, -15903, -15889, -15878, -15707, -15701, -15681, -15667, -15661, -15659, -15652, -15640, -15631, -15625, -15454, -15448, -15436, -15435, -15419, -15416, -15408, -15394, -15385, -15377, -15375, -15369, -15363, -15362, -15183, -15180, -15165, -15158, -15153, -15150, -15149, -15144, -15143, -15141, -15140, -15139, -15128, -15121, -15119, -15117, -15110, -15109, -14941, -14937, -14933, -14930, -14929, -14928, -14926, -14922, -14921, -14914, -14908, -14902, -14894, -14889, -14882, -14873, -14871, -14857, -14678, -14674, -14670, -14668, -14663, -14654, -14645, -14630, -14594, -14429, -14407, -14399, -14384, -14379, -14368, -14355, -14353, -14345, -14170, -14159, -14151, -14149, -14145, -14140, -14137, -14135, -14125, -14123, -14122, -14112, -14109, -14099, -14097, -14094, -14092, -14090, -14087, -14083, -13917, -13914, -13910, -13907, -13906, -13905, -13896, -13894, -13878, -13870, -13859, -13847, -13831, -13658, -13611, -13601, -13406, -13404, -13400, -13398, -13395, -13391, -13387, -13383, -13367, -13359, -13356, -13343, -13340, -13329, -13326, -13318, -13147, -13138, -13120, -13107, -13096, -13095, -13091, -13076, -13068, -13063, -13060, -12888, -12875, -12871, -12860, -12858, -12852, -12849, -12838, -12831, -12829, -12812, -12802, -12607, -12597, -12594, -12585, -12556, -12359, -12346, -12320, -12300, -12120, -12099, -12089, -12074, -12067, -12058, -12039, -11867, -11861, -11847, -11831, -11798, -11781, -11604, -11589, -11536, -11358, -11340, -11339, -11324, -11303, -11097, -11077, -11067, -11055, -11052, -11045, -11041, -11038, -11024, -11020, -11019, -11018, -11014, -10838, -10832, -10815, -10800, -10790, -10780, -10764, -10587, -10544, -10533, -10519, -10331, -10329, -10328, -10322, -10315, -10309, -10307, -10296, -10281, -10274, -10270, -10262, -10260, -10256, -10254 };
+        /// <summary>
+        /// 拼音数组
+        /// </summary>
+        private string[] pinYin = new string[] { "A", "Ai", "An", "Ang", "Ao", "Ba", "Bai", "Ban", "Bang", "Bao", "Bei", "Ben", "Beng", "Bi", "Bian", "Biao", "Bie", "Bin", "Bing", "Bo", "Bu", "Ba", "Cai", "Can", "Cang", "Cao", "Ce", "Ceng", "Cha", "Chai", "Chan", "Chang", "Chao", "Che", "Chen", "Cheng", "Chi", "Chong", "Chou", "Chu", "Chuai", "Chuan", "Chuang", "Chui", "Chun", "Chuo", "Ci", "Cong", "Cou", "Cu", "Cuan", "Cui", "Cun", "Cuo", "Da", "Dai", "Dan", "Dang", "Dao", "De", "Deng", "Di", "Dian", "Diao", "Die", "Ding", "Diu", "Dong", "Dou", "Du", "Duan", "Dui", "Dun", "Duo", "E", "En", "Er", "Fa", "Fan", "Fang", "Fei", "Fen", "Feng", "Fo", "Fou", "Fu", "Ga", "Gai", "Gan", "Gang", "Gao", "Ge", "Gei", "Gen", "Geng", "Gong", "Gou", "Gu", "Gua", "Guai", "Guan", "Guang", "Gui", "Gun", "Guo", "Ha", "Hai", "Han", "Hang", "Hao", "He", "Hei", "Hen", "Heng", "Hong", "Hou", "Hu", "Hua", "Huai", "Huan", "Huang", "Hui", "Hun", "Huo", "Ji", "Jia", "Jian", "Jiang", "Jiao", "Jie", "Jin", "Jing", "Jiong", "Jiu", "Ju", "Juan", "Jue", "Jun", "Ka", "Kai", "Kan", "Kang", "Kao", "Ke", "Ken", "Keng", "Kong", "Kou", "Ku", "Kua", "Kuai", "Kuan", "Kuang", "Kui", "Kun", "Kuo", "La", "Lai", "Lan", "Lang", "Lao", "Le", "Lei", "Leng", "Li", "Lia", "Lian", "Liang", "Liao", "Lie", "Lin", "Ling", "Liu", "Long", "Lou", "Lu", "Lv", "Luan", "Lue", "Lun", "Luo", "Ma", "Mai", "Man", "Mang", "Mao", "Me", "Mei", "Men", "Meng", "Mi", "Mian", "Miao", "Mie", "Min", "Ming", "Miu", "Mo", "Mou", "Mu", "Na", "Nai", "Nan", "Nang", "Nao", "Ne", "Nei", "Nen", "Neng", "Ni", "Nian", "Niang", "Niao", "Nie", "Nin", "Ning", "Niu", "Nong", "Nu", "Nv", "Nuan", "Nue", "Nuo", "O", "Ou", "Pa", "Pai", "Pan", "Pang", "Pao", "Pei", "Pen", "Peng", "Pi", "Pian", "Piao", "Pie", "Pin", "Ping", "Po", "Pu", "Qi", "Qia", "Qian", "Qiang", "Qiao", "Qie", "Qin", "Qing", "Qiong", "Qiu", "Qu", "Quan", "Que", "Qun", "Ran", "Rang", "Rao", "Re", "Ren", "Reng", "Ri", "Rong", "Rou", "Ru", "Ruan", "Rui", "Run", "Ruo", "Sa", "Sai", "San", "Sang", "Sao", "Se", "Sen", "Seng", "Sha", "Shai", "Shan", "Shang", "Shao", "She", "Shen", "Sheng", "Shi", "Shou", "Shu", "Shua", "Shuai", "Shuan", "Shuang", "Shui", "Shun", "Shuo", "Si", "Song", "Sou", "Su", "Suan", "Sui", "Sun", "Suo", "Ta", "Tai", "Tan", "Tang", "Tao", "Te", "Teng", "Ti", "Tian", "Tiao", "Tie", "Ting", "Tong", "Tou", "Tu", "Tuan", "Tui", "Tun", "Tuo", "Wa", "Wai", "Wan", "Wang", "Wei", "Wen", "Weng", "Wo", "Wu", "Xi", "Xia", "Xian", "Xiang", "Xiao", "Xie", "Xin", "Xing", "Xiong", "Xiu", "Xu", "Xuan", "Xue", "Xun", "Ya", "Yan", "Yang", "Yao", "Ye", "Yi", "Yin", "Ying", "Yo", "Yong", "You", "Yu", "Yuan", "Yue", "Yun", "Za", "Zai", "Zan", "Zang", "Zao", "Ze", "Zei", "Zen", "Zeng", "Zha", "Zhai", "Zhan", "Zhang", "Zhao", "Zhe", "Zhen", "Zheng", "Zhi", "Zhong", "Zhou", "Zhu", "Zhua", "Zhuai", "Zhuan", "Zhuang", "Zhui", "Zhun", "Zhuo", "Zi", "Zong", "Zou", "Zu", "Zuan", "Zui", "Zun", "Zuo" };
         /// <summary>
         /// 汉字转换成全拼的拼音
         /// </summary>
@@ -2033,6 +2064,8 @@ namespace EasyMuisc
             }
             return pystr;//返回获取到的汉字拼音
         }
+        #endregion
+
     }
 
 }
