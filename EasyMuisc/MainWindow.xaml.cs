@@ -23,6 +23,7 @@ using System.Security.Permissions;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Shell;
 
 namespace EasyMuisc
 {
@@ -206,6 +207,7 @@ namespace EasyMuisc
         /// 是否正在关闭
         /// </summary>
         bool closing = false;
+
         #endregion
 
 
@@ -244,13 +246,13 @@ namespace EasyMuisc
                 {
                     value = 0;
                 }
-                Bass.BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, (float)value);
+                Bass.BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, (float)Math.Pow(value,2));
             }
             get
             {
                 float value = 0;
                 Bass.BASS_ChannelGetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, ref value);
-                return value;
+                return Math.Sqrt(value);
             }
         }
         /// <summary>
@@ -279,6 +281,22 @@ namespace EasyMuisc
             set
             {
                 SetConfig("showLrc", value.ToString());
+            }
+        }
+        private bool LoadingSpinner
+        {
+            set
+            {
+                if (value)
+                {
+                    grdLoading.Visibility = Visibility.Visible;
+                    NewDoubleAnimation(grdLoading, OpacityProperty, 0.5, 0.5, 0);
+
+                }
+                else
+                {
+                    NewDoubleAnimation(grdLoading, OpacityProperty, 0, 0.5, 0, (p1, p2) => grdLoading.Visibility = Visibility.Hidden);
+                }
             }
         }
 
@@ -322,13 +340,6 @@ namespace EasyMuisc
             musicInfo = new ObservableCollection<MusicInfo>();
             lvw.DataContext = musicInfo;
             InitialiazeTimer();
-            if (cfa.AppSettings.Settings["MusicList"] != null)
-            {
-                if (cfa.AppSettings.Settings["MusicList"].Value != "")
-                {
-                    pgb.Visibility = Visibility.Visible;
-                }
-            }
 
         }
         /// <summary>
@@ -373,7 +384,6 @@ namespace EasyMuisc
             {
 
                 GetMusicListFromConfig();
-                Cursor = Cursors.Arrow;
                 switch (GetConfig("CycleMode", "1"))
                 {
                     case "1":
@@ -389,9 +399,8 @@ namespace EasyMuisc
                 normalLrcFontSize = double.Parse(GetConfig("normalLrcFontSize", normalLrcFontSize.ToString()));
                 highlightLrcFontSize = double.Parse(GetConfig("highlightLrcFontSize", highlightLrcFontSize.ToString()));
                 textLrcFontSize = double.Parse(GetConfig("textLrcFontSize", textLrcFontSize.ToString()));
-
-
-
+                sldVolumn.Value = double.Parse(GetConfig("Volumn", "1"));
+                Topmost = bool.Parse(GetConfig("AlwaysOnTop", "false"));
             }
             catch
             {
@@ -407,51 +416,66 @@ namespace EasyMuisc
         /// <returns></returns>
         private bool GetMusicListFromConfig()
         {
+            return AddNewMusics(cfa.AppSettings.Settings["MusicList"].Value.Split(new string[] { split }, StringSplitOptions.RemoveEmptyEntries), true);
+        }
+        /// <summary>
+        /// 增加一组歌曲到列表中
+        /// </summary>
+        /// <param name="musics"></param>
+        /// <param name="firstLoad"></param>
+        /// <returns></returns>
+        private bool AddNewMusics(string[] musics, bool firstLoad = false)
+        {
             try
             {
+                taskBar.ProgressValue = 0;
+                taskBar.ProgressState = TaskbarItemProgressState.Normal;
+                Cursor = Cursors.Wait;
+                LoadingSpinner = true;
                 Thread t = new Thread(() =>
                 {
                     Dispatcher.Invoke(new Action(() =>
                     {
                         if (cfa.AppSettings.Settings["MusicList"] != null)
                         {
-                            string[] musics = cfa.AppSettings.Settings["MusicList"].Value.Split(new string[] { split }, StringSplitOptions.RemoveEmptyEntries);
-
-                            pgb.Maximum = musics.Length;
-                            pgb.Value = 0;
-
+                            int n = 1;
                             foreach (var i in musics)
                             {
                                 AddNewMusic(i);
-                                pgb.Value++;
+                                taskBar.ProgressValue = 1.0 * (n++) / musics.Length;
                             }
 
                         }
-                        if (path == null)
+                        taskBar.ProgressState = TaskbarItemProgressState.None;
+
+                        if (firstLoad)
                         {
-                            string tempPath = GetConfig("lastMusic", "");
-                            if (File.Exists(tempPath))
+                            if (path == null)
                             {
-                                PlayNew(AddNewMusic(tempPath), false);
+                                string tempPath = GetConfig("lastMusic", "");
+                                if (File.Exists(tempPath))
+                                {
+                                    PlayNew(AddNewMusic(tempPath), false);
 
+                                }
+                            }
+                            if (!ShowLrc)
+                            {
+                                ShowLrc = false;
+                                grdLrcArea.Visibility = Visibility.Collapsed;
+                                AutoFurl = false;
+                                NewDoubleAnimation(this, WidthProperty, grdMain.ColumnDefinitions[0].ActualWidth + 32, 0.5, 0.3, (p1, p2) =>
+                                {
+                                    grdMain.ColumnDefinitions[2].Width = new GridLength(0);
+                                    grdMain.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
+                                });
                             }
                         }
-                        NewDoubleAnimation(pgb, OpacityProperty, 0, 0.5, 0.3, (a1, a2) => { pgb.Visibility = Visibility.Hidden; });
-                        if (!ShowLrc)
-                        {
-                            ShowLrc = false;
-                            grdLrcArea.Visibility = Visibility.Collapsed;
-                            AutoFurl = false;
-                            NewDoubleAnimation(this, WidthProperty, grdMain.ColumnDefinitions[0].ActualWidth + 32, 0.5, 0.3, (p1, p2) =>
-                              {
-                                  grdMain.ColumnDefinitions[2].Width = new GridLength(0);
+                        Cursor = Cursors.Arrow;
+                        LoadingSpinner = false;
 
-                                  grdMain.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
-
-                                  //MaxWidth = MinWidth = Width;
-                              });
-                        }
                     }));
+
                 });
                 t.Start();
                 return true;
@@ -478,9 +502,11 @@ namespace EasyMuisc
                         return i;
                     }
                 }
+                Stopwatch sw = new Stopwatch();
+                bool info = GetMusicInfo(path, out string name, out string singer, out string length, out string album);
                 musicInfo.Add(new MusicInfo
                 {
-                    Enable = GetMusicInfo(path, out string name, out string singer, out string length, out string album) ? true : false,
+                    Enable = info,
                     MusicName = name,
                     Singer = singer,
                     Length = length.StartsWith("00:") ? length.Remove(0, 3) : length,
@@ -611,6 +637,8 @@ namespace EasyMuisc
             SetConfig("highlightLrcFontSize", highlightLrcFontSize.ToString());
             SetConfig("textLrcFontSize", textLrcFontSize.ToString());
             SetConfig("lastMusic", path);
+            SetConfig("Volumn", sldVolumn.Value.ToString());
+            SetConfig("AlwaysOnTop", Topmost.ToString());
             //Bass.BASS_Stop();
             cfa.Save();
             e.Cancel = true;
@@ -1090,15 +1118,16 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 {
                     return;
                 }
+                List<string> musics = new List<string>();
                 foreach (var i in files)
                 {
                     string extension = new FileInfo(i).Extension;
                     if (extension == ".mp3" || extension == ".wav")
                     {
-                        AddNewMusic(i);
+                        musics.Add(i);
                     }
                 }
-
+                AddNewMusics(musics.ToArray());
             };
         }
         /// <summary>
@@ -1200,6 +1229,7 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
         /// <param name="e"></param>
         private void OpenAndPlayMusicDragEnterEventHandler(object sender, DragEventArgs e)
         {
+
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effects = DragDropEffects.All;
@@ -1212,23 +1242,21 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
             (sender as UIElement).Drop += (p1, p2) =>
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-                if (files == null)
+                if (files == null || files.Length > 1)
                 {
                     return;
                 }
                 int currentCount = musicInfo.Count;
-                foreach (var i in files)
+                string extension = new FileInfo(files[0]).Extension;
+                if (extension == ".mp3" || extension == ".wav")
                 {
-                    string extension = new FileInfo(i).Extension;
-                    if (extension == ".mp3" || extension == ".wav")
+                    AddNewMusic(files[0]);
+                    if (musicInfo.Count > currentCount)
                     {
-                        AddNewMusic(i);
+                        PlayNew(currentCount);
                     }
                 }
-                if (musicInfo.Count > currentCount)
-                {
-                    PlayNew(currentCount);
-                }
+
 
             };
         }
@@ -1264,9 +1292,14 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 };
                 if (opd.ShowDialog() == true && opd.FileNames != null)
                 {
+                    List<string> musics = new List<string>();
                     foreach (var i in opd.FileNames)
                     {
-                        AddNewMusic(i);
+                        musics.Add(i);
+                    }
+                    if (musics.Count >= 1)
+                    {
+                        AddNewMusics(musics.ToArray());
                     }
                 }
             };
@@ -1279,12 +1312,17 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 };
                 if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
+                    List<string> musics = new List<string>();
                     foreach (var extension in new string[] { "*.mp3", "*.wav" })
                     {
                         foreach (var i in Directory.EnumerateFiles(fbd.SelectedPath, extension, SearchOption.TopDirectoryOnly))
                         {
-                            AddNewMusic(i);
+                            musics.Add(i);
                         }
+                    }
+                    if (musics.Count >= 1)
+                    {
+                        AddNewMusics(musics.ToArray());
                     }
                 }
             };
@@ -1298,12 +1336,17 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 };
                 if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
+                    List<string> musics = new List<string>();
                     foreach (var extension in new string[] { "*.mp3", "*.wav" })
                     {
                         foreach (var i in Directory.EnumerateFiles(fbd.SelectedPath, extension, SearchOption.AllDirectories))
                         {
-                            AddNewMusic(i);
+                            musics.Add(i);
                         }
+                    }
+                    if (musics.Count >= 1)
+                    {
+                        AddNewMusics(musics.ToArray());
                     }
                 }
             };
@@ -1421,7 +1464,7 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ListViewItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        private void ListViewItemMouseRightButtonUpEvetnHandler(object sender, MouseButtonEventArgs e)
         {
             if (lvw.SelectedIndex != -1)
             {
@@ -1434,7 +1477,7 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ListViewItem_KeyUp(object sender, KeyEventArgs e)
+        private void ListViewItemKeyUpEventHandler(object sender, KeyEventArgs e)
         {
             if (lvw.SelectedIndex != 1)
             {
@@ -1511,6 +1554,15 @@ Children =
                 IsOpen = true
             };
 
+            MenuItem menuTop = new MenuItem()
+            {
+                Header = Topmost ? "取消置顶" : "置顶"
+            };
+            menuTop.Click += (p1, p2) =>
+              {
+                  Topmost = !Topmost;
+              };
+            menu.Items.Insert(0, menuTop);
             MenuItem menuCopyLrc = new MenuItem()
             {
                 Header = "复制歌词"

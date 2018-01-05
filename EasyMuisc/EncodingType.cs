@@ -19,7 +19,7 @@ namespace EasyMuisc
         /// </summary>
         /// <param name="FILE_NAME">文件路径</param>
         /// <returns>文件的编码类型</returns>
-        public static System.Text.Encoding GetType(string FILE_NAME)
+        public static Encoding GetType(string FILE_NAME)
         {
             FileStream fs = new FileStream(FILE_NAME, FileMode.Open, FileAccess.Read);
             Encoding r = GetType(fs);
@@ -41,7 +41,7 @@ namespace EasyMuisc
             Encoding reVal = Encoding.Default;
 
 
-            BinaryReader r = new BinaryReader(fs, System.Text.Encoding.Default);
+            BinaryReader r = new BinaryReader(fs, Encoding.Default);
             int i;
             int.TryParse(fs.Length.ToString(), out i);
             byte[] ss = r.ReadBytes(i);

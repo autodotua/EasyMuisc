@@ -12,7 +12,6 @@
         SizeChanged="WindowSizeChangedEventHandler"
         Loaded="WindowLoadedEventHandler" 
         AllowDrop="True"
-    
          DragEnter="OpenAndPlayMusicDragEnterEventHandler"
         Closing="WindowClosingEventHandler" 
         WindowStartupLocation="CenterScreen" Cursor="Wait">
@@ -390,8 +389,8 @@
 
 
 
-        
-        
+
+
 
     </Window.Resources>
     <Window.InputBindings>
@@ -406,6 +405,16 @@
         <CommandBinding Command="{StaticResource PlayAndPauseMusic}" Executed="HotKeyPlayAndPauseEventHandler"/>
 
     </Window.CommandBindings>
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskBar"/>
+    </Window.TaskbarItemInfo>
+
+
+
+
+
+
+
     <Grid x:Name="grdMain" Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -430,7 +439,7 @@
                     <ColumnDefinition Width="4"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="搜索：" VerticalAlignment="Center"/>
+                <TextBlock Text=" 搜索：" VerticalAlignment="Center"/>
                 <ComboBox x:Name="cbbSearch" Grid.Column="2" IsEditable="True" VerticalAlignment="Center" IsSynchronizedWithCurrentItem="False" IsTextSearchEnabled="False"/>
 
             </Grid>
@@ -440,8 +449,8 @@
                     <Style TargetType="{x:Type ListViewItem}">
                         <EventSetter Event="UIElement.PreviewKeyDown" Handler="LvwItemPreviewKeyDownEventHandler"/>
                         <EventSetter Event="Control.MouseDoubleClick" Handler="LvwItemPreviewMouseDoubleClickEventHandler"/>
-                        <EventSetter Event="MouseRightButtonUp" Handler="ListViewItem_MouseRightButtonUp"/>
-                        <EventSetter Event="KeyUp" Handler="ListViewItem_KeyUp"/>
+                        <EventSetter Event="MouseRightButtonUp" Handler="ListViewItemMouseRightButtonUpEvetnHandler"/>
+                        <EventSetter Event="KeyUp" Handler="ListViewItemKeyUpEventHandler"/>
                         <Setter Property="SnapsToDevicePixels" Value="True"/>
                         <Setter Property="Template">
                             <Setter.Value>
@@ -758,7 +767,8 @@
                 </Button>
             </Grid>
         </Grid>
-        <ProgressBar x:Name="pgb" Visibility="Hidden" Margin="-4" Grid.ColumnSpan="3" Grid.RowSpan="3" Height="{Binding ElementName=winMain, Path=ActualHeight, Mode=OneWay}" Width="{Binding ElementName=winMain, Path=ActualWidth, Mode=OneWay}" Opacity="0.5"/>
-
+        <Grid x:Name="grdLoading" Background="White" Opacity="0.5" Grid.ColumnSpan="3" Grid.RowSpan="3">
+            <local:UcSpinnerDotCircle HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Grid>
     </Grid>
 </Window>

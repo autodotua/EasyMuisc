@@ -88,7 +88,7 @@ namespace EasyMuisc
                                     tempDic.Add(time, word);
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                             }
                         }
@@ -100,7 +100,7 @@ namespace EasyMuisc
         }
 
         /// <summary>
-        /// 处理信息(私有方法)
+        /// 处理信息
         /// </summary>
         /// <param name="line"></param>
         /// <returns>返回基础信息</returns>
