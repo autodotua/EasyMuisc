@@ -54,6 +54,8 @@ namespace EasyMuisc
             Shuffle,
         }
         #region 模板
+        private string[] supportExtension = { ".mp3", ".MP3", ".wav", ".WAV" };
+        private string supportExtensionWithSplit;
         public static class DispatcherHelper
         {
             [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
@@ -131,6 +133,24 @@ namespace EasyMuisc
             story.Begin(obj);
             return story;
         }
+        /// <summary>
+        /// 支持多个过滤器的枚举
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="searchPattern"></param>
+        /// <param name="searchOption"></param>
+        /// <returns></returns>
+        public static string[] EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
+        {
+            string[] searchPatterns = searchPattern.Split('|');
+            List<string> files = new List<string>();
+            foreach (string i in searchPatterns)
+            {
+                files.AddRange(Directory.EnumerateFiles(path, i, searchOption));
+            }
+            return files.ToArray();
+        }
+
         #endregion
 
 
@@ -179,6 +199,10 @@ namespace EasyMuisc
         /// 歌词内容
         /// </summary>
         List<string> lrcContent = new List<string>();
+        /// <summary>
+        /// 到某一条歌词一共有多少行
+        /// </summary>
+        List<int> lrcLineSumToIndex = new List<int>();
         /// <summary>
         /// 当前歌词索引
         /// </summary>
@@ -339,13 +363,13 @@ namespace EasyMuisc
 
             musicInfo = new ObservableCollection<MusicInfo>();
             lvw.DataContext = musicInfo;
-            InitialiazeTimer();
+            InitialiazeField();
 
         }
         /// <summary>
         /// 初始化定时器事件
         /// </summary>
-        private void InitialiazeTimer()
+        private void InitialiazeField()
         {
             playTimer.Tick += (p1, p2) =>
             {
@@ -372,6 +396,14 @@ namespace EasyMuisc
                 }
                 Volumn -= 0.05;
             };
+
+            StringBuilder str = new StringBuilder();
+            foreach (var i in supportExtension)
+            {
+                str.Append($"*{i}|");
+            }
+            str.Remove(str.Length - 1, 1);
+            supportExtensionWithSplit = str.ToString();
         }
         /// <summary>
         /// 窗体载入事件，获取音乐列表
@@ -674,7 +706,7 @@ namespace EasyMuisc
                 ShowAlert("初始化失败!");
                 return;
             }
-            ReadMp3Info(musicInfo[currentMusicIndex].Path);
+            ReadMusicSourceInfo(musicInfo[currentMusicIndex].Path);
 
             mainTimer.Tick += Update;
             mainTimer.Start();
@@ -693,9 +725,9 @@ namespace EasyMuisc
                 grdLrc.Visibility = Visibility.Visible;
                 txtLrc.Visibility = Visibility.Hidden;
                 stkLrc.Visibility = Visibility.Visible;
-                var lrc = new Lrc(file.FullName).LrcContent;//获取歌词信息
+                var lrc = new Lrc(file.FullName);//获取歌词信息
                 int index = 0;//用于赋值Tag
-                foreach (var i in lrc)
+                foreach (var i in lrc.LrcContent)
                 {
                     if (i.Key > musicLength)//如果歌词文件有误，长度超过了歌曲的长度，那么超过部分就不管了
                     {
@@ -709,6 +741,7 @@ namespace EasyMuisc
                         HorizontalAlignment = HorizontalAlignment.Center,
                         Tag = index++,//标签用于定位
                         Cursor = Cursors.Hand,
+                        TextAlignment=TextAlignment.Center,
                     };
                     tbk.MouseLeftButtonUp += (p1, p2) =>
                     {
@@ -717,7 +750,10 @@ namespace EasyMuisc
                     };
                     stkLrc.Children.Add(tbk);
                     lrcTime.Add(i.Key);
-
+                }
+                foreach (var i in lrc.LineIndex)
+                {
+                    lrcLineSumToIndex.Add(i.Value);
                 }
             }
             else if ((file = new FileInfo(file.FullName.Replace(file.Extension, ".txt"))).Exists)
@@ -847,7 +883,7 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
         /// <param name="lrcIndex"></param>
         private void LrcAnimition(int lrcIndex)
         {
-            double top = 0.5 * ActualHeight - lrcIndex * normalLrcFontSize * FontFamily.LineSpacing/*歌词数量乘每行字的高度*/- normalLrcFontSize - highlightLrcFontSize;// 0.5 * ActualHeight - stkLrcHeight * lrcIndex / (stkLrc.Children.Count - 1)-highlightFontSize ;
+            double top = 0.5 * ActualHeight - lrcLineSumToIndex[lrcIndex]/*第一行到当前行的总行数*/ * normalLrcFontSize * FontFamily.LineSpacing/*歌词数量乘每行字的高度*/ - highlightLrcFontSize;// 0.5 * ActualHeight - stkLrcHeight * lrcIndex / (stkLrc.Children.Count - 1)-highlightFontSize ;
             ThicknessAnimation ani = new ThicknessAnimation
             {
                 To = new Thickness(0, top, 0, 0),
@@ -902,7 +938,7 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 }
                 return false;
             }
-
+            lrcLineSumToIndex.Clear();
             currentMusicIndex = index;//指定当前的索引
             path = musicInfo[currentMusicIndex].Path;//获取歌曲地址
             currentLrcIndex = 0;//删除歌词索引
@@ -1121,10 +1157,27 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 List<string> musics = new List<string>();
                 foreach (var i in files)
                 {
-                    string extension = new FileInfo(i).Extension;
-                    if (extension == ".mp3" || extension == ".wav")
+                    FileInfo file=new FileInfo(i);
+                    if (file.Attributes == FileAttributes.Directory)
                     {
-                        musics.Add(i);
+                        foreach (var j in EnumerateFiles(i, supportExtensionWithSplit, SearchOption.AllDirectories))
+                        {
+                            if (!musics.Contains(j))
+                            {
+                                musics.Add(j);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string extension = file.Extension;
+                        if (supportExtension.Contains(extension))
+                        {
+                            if (!musics.Contains(i))
+                            {
+                                musics.Add(i);
+                            }
+                        }
                     }
                 }
                 AddNewMusics(musics.ToArray());
@@ -1248,7 +1301,7 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 }
                 int currentCount = musicInfo.Count;
                 string extension = new FileInfo(files[0]).Extension;
-                if (extension == ".mp3" || extension == ".wav")
+                if (supportExtension.Contains(extension))
                 {
                     AddNewMusic(files[0]);
                     if (musicInfo.Count > currentCount)
@@ -1313,13 +1366,12 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     List<string> musics = new List<string>();
-                    foreach (var extension in new string[] { "*.mp3", "*.wav" })
-                    {
-                        foreach (var i in Directory.EnumerateFiles(fbd.SelectedPath, extension, SearchOption.TopDirectoryOnly))
+                    
+                        foreach (var i in EnumerateFiles(fbd.SelectedPath, supportExtensionWithSplit, SearchOption.TopDirectoryOnly))
                         {
                             musics.Add(i);
                         }
-                    }
+                    
                     if (musics.Count >= 1)
                     {
                         AddNewMusics(musics.ToArray());
@@ -1337,13 +1389,12 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     List<string> musics = new List<string>();
-                    foreach (var extension in new string[] { "*.mp3", "*.wav" })
-                    {
-                        foreach (var i in Directory.EnumerateFiles(fbd.SelectedPath, extension, SearchOption.AllDirectories))
+                    
+                        foreach (var i in EnumerateFiles(fbd.SelectedPath, supportExtensionWithSplit, SearchOption.AllDirectories))
                         {
                             musics.Add(i);
                         }
-                    }
+                    
                     if (musics.Count >= 1)
                     {
                         AddNewMusics(musics.ToArray());
@@ -1798,7 +1849,7 @@ Children =
         /// 读取Mp3信息
         /// </summary>
         /// <param name="path"></param>
-        private void ReadMp3Info(string path)//copy
+        private void ReadMusicSourceInfo(string path)//copy
         {
             string[] tags = new string[6];
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);

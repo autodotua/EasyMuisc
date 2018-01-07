@@ -35,7 +35,7 @@ namespace EasyMuisc
         /// 歌词
         /// </summary>
         public Dictionary<double, string> LrcContent { get; set; }
-
+        public Dictionary<double, int> LineIndex { get; set; }
         /// <summary>
         /// 获得歌词信息
         /// </summary>
@@ -48,6 +48,7 @@ namespace EasyMuisc
 
             LrcContent = new Dictionary<double, string>();
             var tempDic = new Dictionary<double, string>();
+            LineIndex = new Dictionary<double, int>();
             using (FileStream fs = new FileStream(LrcPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 string line;
@@ -85,7 +86,16 @@ namespace EasyMuisc
                                 foreach (var i in timeMatch)
                                 {
                                     double time = TimeSpan.Parse("00:" + (i as Match).Groups["time"].Value).TotalSeconds;
-                                    tempDic.Add(time, word);
+                                    if (tempDic.ContainsKey(time))//如果是双文歌词，两个歌词时间相同
+                                    {
+                                        tempDic[time] += Environment.NewLine + word;//将原来的歌词下面加一行新的歌词
+                                        LineIndex[time]++;//当前时间的歌词行数加1
+                                    }
+                                    else//第一次出现这个时间的歌词
+                                    {
+                                        tempDic.Add(time, word);
+                                        LineIndex.Add(time, 1);
+                                    }
                                 }
                             }
                             catch (Exception)
@@ -95,8 +105,13 @@ namespace EasyMuisc
                     }
                 }
             }
-            LrcContent = tempDic.OrderBy(p => p.Key).ToDictionary(p => p.Key, o => o.Value);
-
+            LrcContent = tempDic.OrderBy(p => p.Key).ToDictionary(p => p.Key, o => o.Value);//将歌词排序
+            LineIndex= LineIndex.OrderBy(p => p.Key).ToDictionary(p => p.Key, o => o.Value);//将每一个时间的歌词的行数排序
+            for(int i=1; i<LineIndex.Count;i++)
+            {
+                //本来是每一时间自己的行数，这里要累加起来
+                LineIndex[LineIndex.Keys.ElementAt(i)] += LineIndex[LineIndex.Keys.ElementAt(i-1)];
+            }
         }
 
         /// <summary>
