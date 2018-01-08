@@ -32,18 +32,13 @@ namespace EasyMuisc
     /// </summary>
     public partial class MainWindow : Window
     {
+
+
+
         /// <summary>
         /// 单曲信息
         /// </summary>
-        public class MusicInfo
-        {
-            public string MusicName { get; internal set; }
-            public string Singer { get; internal set; }
-            public string Length { get; internal set; }
-            public string Album { get; internal set; }
-            public string Path { get; internal set; }
-            public bool Enable { get; internal set; }
-        }
+
         /// <summary>
         /// 循环模式
         /// </summary>
@@ -113,7 +108,7 @@ namespace EasyMuisc
         /// <param name="decelerationRatio">减缓时间</param>
         /// <param name="completed">完成以后的事件</param>
         /// <returns></returns>
-        private Storyboard NewDoubleAnimation(FrameworkElement obj, DependencyProperty property, double to, double duration, double decelerationRatio, EventHandler completed = null)
+        private Storyboard NewDoubleAnimation(FrameworkElement obj, DependencyProperty property, double to, double duration, double decelerationRatio = 0, EventHandler completed = null)
         {
 
             DoubleAnimation ani = new DoubleAnimation
@@ -122,6 +117,7 @@ namespace EasyMuisc
                 Duration = new Duration(TimeSpan.FromSeconds(duration)),//动画时间1秒
                 DecelerationRatio = decelerationRatio
             };
+            ani.FillBehavior = FillBehavior.Stop;
             Storyboard.SetTargetName(ani, obj.Name);
             Storyboard.SetTargetProperty(ani, new PropertyPath(property));
             Storyboard story = new Storyboard();
@@ -155,6 +151,7 @@ namespace EasyMuisc
 
 
         #region 字段
+        double actualHeight;
         /// <summary>
         /// 是否产生了不可挽救错误
         /// </summary>
@@ -270,7 +267,7 @@ namespace EasyMuisc
                 {
                     value = 0;
                 }
-                Bass.BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, (float)Math.Pow(value,2));
+                Bass.BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, (float)Math.Pow(value, 2));
             }
             get
             {
@@ -360,10 +357,11 @@ namespace EasyMuisc
                 error = true;
                 Application.Current.Shutdown();
             }
-
+            WindowHelper.RepairWindowBehavior(this);
             musicInfo = new ObservableCollection<MusicInfo>();
             lvw.DataContext = musicInfo;
             InitialiazeField();
+
 
         }
         /// <summary>
@@ -677,6 +675,7 @@ namespace EasyMuisc
             closing = true;
             Hide();
             pauseTimer.Start();
+
         }
         #endregion
 
@@ -693,7 +692,9 @@ namespace EasyMuisc
             {
                 stream = Bass.BASS_StreamCreateFile(path, 0, 0, BASSFlag.BASS_SAMPLE_FLOAT);//获取歌曲句柄
                 Volumn = sldVolumn.Value;
-                Title = new FileInfo(path).Name.Replace(new FileInfo(path).Extension, "") + " - EasyMusic";//将窗体标题改为歌曲名
+                txtMusicName.Text = new FileInfo(path).Name.Replace(new FileInfo(path).Extension, "");
+                Title = txtMusicName.Text + " - EasyMusic";//将窗体标题改为歌曲名
+
                 string[] length = musicInfo[currentMusicIndex].Length.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                 double musicLength = length.Length == 2 ?//如果不到一个小时
                     int.Parse(length[0]) * 60 + int.Parse(length[1]) ://得到秒钟
@@ -741,7 +742,7 @@ namespace EasyMuisc
                         HorizontalAlignment = HorizontalAlignment.Center,
                         Tag = index++,//标签用于定位
                         Cursor = Cursors.Hand,
-                        TextAlignment=TextAlignment.Center,
+                        TextAlignment = TextAlignment.Center,
                     };
                     tbk.MouseLeftButtonUp += (p1, p2) =>
                     {
@@ -1157,7 +1158,7 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 List<string> musics = new List<string>();
                 foreach (var i in files)
                 {
-                    FileInfo file=new FileInfo(i);
+                    FileInfo file = new FileInfo(i);
                     if (file.Attributes == FileAttributes.Directory)
                     {
                         foreach (var j in EnumerateFiles(i, supportExtensionWithSplit, SearchOption.AllDirectories))
@@ -1260,6 +1261,11 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
         /// <param name="e"></param>
         private void WindowSizeChangedEventHandler(object sender, SizeChangedEventArgs e)
         {
+            if (ActualHeight > SystemParameters.WorkArea.Height || ActualWidth > SystemParameters.WorkArea.Width)
+            {
+                //WindowState = WindowState.Normal;
+                //ToFullScreen();
+            }
             if (!AutoFurl || !ShowLrc)
             {
                 return;
@@ -1274,6 +1280,8 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
             {
                 BtnListSwitcherClickEventHandler(null, null);
             }
+
+
         }
         /// <summary>
         /// 将文件拖到列表上方事件
@@ -1366,12 +1374,12 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     List<string> musics = new List<string>();
-                    
-                        foreach (var i in EnumerateFiles(fbd.SelectedPath, supportExtensionWithSplit, SearchOption.TopDirectoryOnly))
-                        {
-                            musics.Add(i);
-                        }
-                    
+
+                    foreach (var i in EnumerateFiles(fbd.SelectedPath, supportExtensionWithSplit, SearchOption.TopDirectoryOnly))
+                    {
+                        musics.Add(i);
+                    }
+
                     if (musics.Count >= 1)
                     {
                         AddNewMusics(musics.ToArray());
@@ -1389,12 +1397,12 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     List<string> musics = new List<string>();
-                    
-                        foreach (var i in EnumerateFiles(fbd.SelectedPath, supportExtensionWithSplit, SearchOption.AllDirectories))
-                        {
-                            musics.Add(i);
-                        }
-                    
+
+                    foreach (var i in EnumerateFiles(fbd.SelectedPath, supportExtensionWithSplit, SearchOption.AllDirectories))
+                    {
+                        musics.Add(i);
+                    }
+
                     if (musics.Count >= 1)
                     {
                         AddNewMusics(musics.ToArray());
@@ -1454,6 +1462,7 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 stkLrc.Visibility = Visibility.Hidden;
                 txtLrc.Visibility = Visibility.Hidden;
                 Title = "EasyMusic";
+                txtMusicName .Text= "";
                 btnPlay.Visibility = Visibility.Visible;
                 btnPause.Visibility = Visibility.Hidden;
                 Bass.BASS_ChannelStop(stream);
@@ -1893,6 +1902,7 @@ Children =
                     size -= frmSize;
                     string str = GetFrameInfoByEcoding(bFrame, bFrame[0], frmSize - 1);
                     imgAlbum.Source = null;
+                    imgAlbum.Visibility = Visibility.Collapsed;
                     if (FramID.CompareTo("APIC") == 0)
                     {
                         try
@@ -1916,10 +1926,10 @@ Children =
                             img.Save(save, System.Drawing.Imaging.ImageFormat.Jpeg);
                             save.Close();
                             imgAlbum.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imgPath));
+                            imgAlbum.Visibility = Visibility.Visible;
                         }
                         catch
                         {
-                            imgAlbum.Source = null;
                         }
                     }
                 }
@@ -1946,17 +1956,7 @@ Children =
                 return str;
             }
         }
-        /// <summary>
-        /// 单击专辑图事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ImgAlbumPreviewMouseUpEventHandler(object sender, MouseButtonEventArgs e)
-        {
-            WinAlbumPicture win = new WinAlbumPicture(this);
-            win.img.Source = imgAlbum.Source;
-            win.ShowDialog();
-        }
+
         #endregion
 
         #region 歌曲搜索
@@ -2169,6 +2169,81 @@ Children =
         }
         #endregion
 
+        private void grdHeader_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+
+
+        private void Button_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            WindowState = (WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
+
+        }
+        bool headerMouseDowning = false;
+        private void Button_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            headerMouseDowning = true;
+        }
+
+        private void Button_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            headerMouseDowning = false;
+        }
+
+        private void Button_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+
+
+        }
+
+        private void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void btnMaxmize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = (WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
+        }
+
+        private void btnMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            actualHeight = ActualHeight;
+            NewDoubleAnimation(this, TopProperty, SystemParameters.FullPrimaryScreenHeight, 0.2, 0, (p1, p2) =>
+              {
+                  Height = actualHeight;
+                  WindowState = WindowState.Minimized;
+              });
+        }
+
+        bool imgAlbumMousePress = false;
+        /// <summary>
+        /// 单击专辑图事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgAlbumPreviewMouseUpEventHandler(object sender, MouseButtonEventArgs e)
+        {
+            if (imgAlbumMousePress)
+            {
+                WinAlbumPicture win = new WinAlbumPicture(this);
+                win.img.Source = imgAlbum.Source;
+                win.ShowDialog();
+                imgAlbumMousePress = false;
+            }
+
+        }
+
+        private void imgAlbum_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            imgAlbumMousePress = true;
+        }
+
+        private void imgAlbum_MouseLeave(object sender, MouseEventArgs e)
+        {
+            imgAlbumMousePress = false;
+        }
     }
 
 }

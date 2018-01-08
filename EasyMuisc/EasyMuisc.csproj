@@ -134,12 +134,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MusicInfo.cs" />
     <Compile Include="UcSpinnerDotCircle.xaml.cs">
       <DependentUpon>UcSpinnerDotCircle.xaml</DependentUpon>
     </Compile>
     <Compile Include="WinAlbumPicture.xaml.cs">
       <DependentUpon>WinAlbumPicture.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowHelper.cs" />
     <Compile Include="WinMusicInfo.xaml.cs">
       <DependentUpon>WinMusicInfo.xaml</DependentUpon>
     </Compile>

@@ -28,8 +28,8 @@ namespace EasyMuisc
         {
             winMain = win;
             InitializeComponent();
-            Left = win.Left + 12;
-            Top = win.Top + win.ActualHeight - win.imgAlbum.Height - 16;
+            Left = win.Left ; // + 12;
+            Top = win.Top;// + win.ActualHeight - win.imgAlbum.Height - 16;
             Width = win.imgAlbum.Width;
             Height = win.imgAlbum.Height;
         }
@@ -85,7 +85,7 @@ namespace EasyMuisc
             Storyboard story1 = new Storyboard();
             story1.Children.Add(aniTop);
             story1.Children.Add(aniLeft);
-            story1.Completed += delegate
+            story1.Completed += (p1,p2)=>
               {
                   Storyboard story2 = new Storyboard();
                   story2.Children.Add(aniHeigth);
