@@ -15,9 +15,11 @@
          DragEnter="OpenAndPlayMusicDragEnterEventHandler"
         Closing="WindowClosingEventHandler" 
         WindowStartupLocation="CenterScreen" 
+    StateChanged="WinMainStateChangedEventHandler"
     Cursor="Wait" 
     WindowStyle="None"
-    FocusVisualStyle="{x:Null}"
+    AllowsTransparency="True"
+      PreviewMouseWheel="MouseWheelEventHandler"
 >
 
     <Window.Resources>
@@ -412,9 +414,9 @@
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="taskBar"/>
     </Window.TaskbarItemInfo>
-    <WindowChrome.WindowChrome>
+    <!--<WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="4" />
-    </WindowChrome.WindowChrome>
+    </WindowChrome.WindowChrome>-->
 
 
 
@@ -436,112 +438,6 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid x:Name="grdHeader" Height="32" Grid.ColumnSpan="3" Margin="-4,-4,-4,0">
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="4"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="4"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="4"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Grid.ColumnSpan="8" >
-                <Button.Style>
-                    <Style TargetType="{x:Type Button}">
-                        <EventSetter Event="PreviewMouseDoubleClick" Handler="Button_MouseDoubleClick"/>
-                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="grdHeader_PreviewMouseLeftButtonDown"/>
-                        <EventSetter Event="PreviewMouseDown" Handler="Button_PreviewMouseDown"/>
-                        <EventSetter Event="PreviewMouseUp" Handler="Button_PreviewMouseUp"/>
-                        <EventSetter Event="PreviewMouseMove" Handler="Button_PreviewMouseMove"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Canvas Background="White"/>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Button.Style>
-            </Button>
-
-
-            <Image x:Name="imgAlbum" Width="32" Height="32" MouseLeave="imgAlbum_MouseLeave"  PreviewMouseDown="imgAlbum_PreviewMouseDown" PreviewMouseUp="ImgAlbumPreviewMouseUpEventHandler"/>
-            <Viewbox Grid.Column="2" IsHitTestVisible="False" HorizontalAlignment="Left" >
-                <TextBlock x:Name="txtMusicName"  />
-
-            </Viewbox>
-            <Button x:Name="btnMinimize" Grid.Column="4" Width="24" Height="24"  VerticalAlignment="Top" Click="btnMinimize_Click" HorizontalAlignment="Left">
-                <Button.Style>
-                    <Style  TargetType="{x:Type Button}">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Canvas x:Name="btnCvs" Background="White">
-                                        <Line x:Name="btnLine" X1="4" X2="20" Y1="12" Y2=" 12" Stroke="Black" StrokeThickness="2" />
-                                    </Canvas>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#EEEEEE" TargetName="btnCvs" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Button.Style>
-            </Button>
-
-            <Button x:Name="btnMaxmize" Grid.Column="6" Width="24" Height="24"  VerticalAlignment="Top" Click="btnMaxmize_Click"> 
-                <Button.Style>
-                    <Style  TargetType="{x:Type Button}">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Canvas x:Name="btnCvs" Background="White">
-                                        <Rectangle Margin="4" Width="16" Height="16" Stroke="Black" StrokeThickness="2"/>
-                                    </Canvas>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#EEEEEE"  TargetName="btnCvs" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Button.Style>
-            </Button>
-            <Button x:Name="btnClose" Grid.Column="8" Width="24" Height="24"  VerticalAlignment="Top" Click="btnClose_Click">
-                <Button.Style>
-                    <Style  TargetType="{x:Type Button}">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Canvas x:Name="btnCvs" Background="White">
-                                        <Line x:Name="btnLine1" X1="4" X2="20" Y1="4" Y2=" 20" Stroke="Black" StrokeThickness="2" />
-                                        <Line x:Name="btnLine2" X1="20" X2="4" Y1="4" Y2=" 20" Stroke="Black" StrokeThickness="2" />
-                                    </Canvas>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#FFE81123" TargetName="btnCvs" />
-                                            <Setter Property="Stroke" Value="White" TargetName="btnLine1"/>
-                                            <Setter Property="Stroke" Value="White" TargetName="btnLine2"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Button.Style>
-            </Button>
-
-
-
-        </Grid>
 
 
         <!--播放列表区-->
@@ -562,7 +458,7 @@
 
             </Grid>
 
-            <ListView x:Name="lvw" ItemsSource="{Binding}" DragEnter="LvwDragEnterEventHandler" Foreground="Black" BorderThickness="0" PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown" Grid.Row="2">
+            <ListView x:Name="lvw" ItemsSource="{Binding}" DragEnter="LvwDragEnterEventHandler" Foreground="Black" BorderThickness="0" PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown" Grid.Row="2" MouseEnter="LvwMouseEnterEventHandler" MouseLeave="LvwMouseLeaveEventHandler">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}">
                         <EventSetter Event="UIElement.PreviewKeyDown" Handler="LvwItemPreviewKeyDownEventHandler"/>
@@ -619,11 +515,11 @@
             </Button>
         </Grid>
         <!--歌词区-->
-        <Grid x:Name="grdLrcArea" Grid.Column="2" Grid.Row="2">
+        <Grid x:Name="grdLrcArea" Grid.Column="2" Grid.Row="2" MouseEnter="GrdLrcAreaMouseEnterEventHandler" MouseLeave="GrdLrcAreaMouseLeaveEventHandler">
 
             <StackPanel x:Name="stkLrc" Visibility="Hidden" Background="Transparent"/>
-            <TextBox x:Name="txtLrc"  TextAlignment="Center" IsReadOnly="True" BorderThickness="0" VerticalScrollBarVisibility="Auto" Visibility="Hidden" PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown"/>
-            <Grid x:Name="grdLrc"  IsHitTestVisible="False" Margin="0,-4,0,-4" >
+            <TextBox x:Name="txtLrc"  TextAlignment="Center" IsReadOnly="True" BorderThickness="0" VerticalScrollBarVisibility="Auto" Visibility="Hidden" PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown" />
+            <Grid x:Name="grdLrc"  IsHitTestVisible="False" Margin="0,-4,0,-4">
                 <Grid.Background>
                     <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                         <GradientStop Color="White" Offset="0"/>
@@ -661,7 +557,7 @@
                     </Style>
                 </Button.Style>
             </Button>
-
+            <TextBlock x:Name="tbkOffset" HorizontalAlignment="Right" VerticalAlignment="Top"/>
         </Grid>
         <!--播放控制区-->
         <Grid x:Name="grdControl" Grid.Row="4" Grid.ColumnSpan="3" >
@@ -885,8 +781,141 @@
             </Grid>
         </Grid>
         <!--加载动画-->
-        <Grid x:Name="grdLoading" Background="White" Opacity="0.5" Grid.ColumnSpan="3" Grid.RowSpan="53" Margin="-4">
+        <Grid x:Name="grdLoading" Background="White" Visibility="Hidden" Opacity="0.5" Grid.ColumnSpan="3" Grid.RowSpan="53" Margin="-4">
             <local:UcSpinnerDotCircle HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
+        <Grid x:Name="grdHeader" Cursor="Arrow" Height="32" Background="White" Grid.ColumnSpan="3" Margin="-4">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Grid.ColumnSpan="8" >
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <EventSetter Event="PreviewMouseDoubleClick" Handler="HeaderMouseDoubleClickEventHandler"/>
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="HeaderPreviewMouseLeftButtonDownEventHandler"/>
+                        <EventSetter Event="PreviewMouseDown" Handler="HeaderPreviewMouseDownEventHandler"/>
+                        <EventSetter Event="PreviewMouseUp" Handler="HeaderPreviewMouseUpEventHandler"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Canvas Background="White"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+
+            <Image x:Name="imgAlbum" Width="32" Height="32" MouseLeave="ImgAlbumMouseLeaveEventHandler"  PreviewMouseDown="ImgAlbumPreviewMouseDownEventHandler" PreviewMouseUp="ImgAlbumPreviewMouseUpEventHandler" HorizontalAlignment="Left"/>
+            <Viewbox Grid.Column="2" IsHitTestVisible="False" HorizontalAlignment="Left" >
+                <TextBlock x:Name="txtMusicName"  />
+
+            </Viewbox>
+
+            <Button x:Name="btnSettings" Grid.Column="4" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnSettingsClickEventHandler"  HorizontalAlignment="Left">
+                <Button.Style>
+                    <Style  TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Canvas x:Name="btnCvs" Background="White">
+                                        <Line x:Name="btnLine1" X1="4" X2="20" Y1="6" Y2=" 6" Stroke="Gray" StrokeThickness="2" />
+                                        <Line x:Name="btnLine2" X1="4" X2="20" Y1="12" Y2=" 12" Stroke="Gray" StrokeThickness="2" />
+                                        <Line x:Name="btnLine3" X1="4" X2="20" Y1="18" Y2=" 18" Stroke="Gray" StrokeThickness="2" />
+
+                                    </Canvas>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#EEEEEE" TargetName="btnCvs" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button x:Name="btnMinimize" Grid.Column="6" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnMinimizeClickEventHandler" HorizontalAlignment="Left">
+                <Button.Style>
+                    <Style  TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Canvas x:Name="btnCvs" Background="White">
+                                        <Line x:Name="btnLine" X1="4" X2="20" Y1="12" Y2=" 12" Stroke="Black" StrokeThickness="2" />
+                                    </Canvas>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#EEEEEE" TargetName="btnCvs" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button x:Name="btnMaxmize" Grid.Column="8" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnMaxmizeClickEventHandler">
+                <Button.Style>
+                    <Style  TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Canvas x:Name="btnCvs" Background="White">
+                                        <Rectangle Margin="4" Width="16" Height="16" Stroke="Black" StrokeThickness="2"/>
+                                    </Canvas>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#EEEEEE"  TargetName="btnCvs" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button x:Name="btnClose" Grid.Column="10" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnCloseClickEventHandler">
+                <Button.Style>
+                    <Style  TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Canvas x:Name="btnCvs" Background="White">
+                                        <Line x:Name="btnLine1"  X1="4" X2="20" Y1="4" Y2=" 20" Stroke="Black" StrokeThickness="2" />
+                                        <Line x:Name="btnLine2"  X1="20" X2="4" Y1="4" Y2=" 20" Stroke="Black" StrokeThickness="2" />
+                                    </Canvas>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#FFE81123" TargetName="btnCvs" />
+                                            <Setter Property="Stroke" Value="White" TargetName="btnLine1"/>
+                                            <Setter Property="Stroke" Value="White" TargetName="btnLine2"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+
+
+        </Grid>
+
     </Grid>
 </Window>

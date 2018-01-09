@@ -145,6 +145,9 @@
     <Compile Include="WinMusicInfo.xaml.cs">
       <DependentUpon>WinMusicInfo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WinSettings.xaml.cs">
+      <DependentUpon>WinSettings.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -168,6 +171,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WinMusicInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WinSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -33,12 +33,6 @@ namespace EasyMuisc
     public partial class MainWindow : Window
     {
 
-
-
-        /// <summary>
-        /// 单曲信息
-        /// </summary>
-
         /// <summary>
         /// 循环模式
         /// </summary>
@@ -49,8 +43,33 @@ namespace EasyMuisc
             Shuffle,
         }
         #region 模板
+        /// <summary>
+        /// 延时定时器
+        /// </summary>
+        DispatcherTimer waitTimer = new DispatcherTimer();
+        /// <summary>
+        /// 延时
+        /// </summary>
+        /// <param name="millisecond">延时时间</param>
+        /// <param name="tick">延时结束后的事件</param>
+        private void Sleep(int millisecond,EventHandler tick)
+        {
+            waitTimer.Interval = new TimeSpan(10000 * millisecond);
+            waitTimer.Tick += tick;
+            waitTimer.Tick += (p1, p2) => waitTimer.Stop();
+            waitTimer.Start();
+        }
+        /// <summary>
+        /// 支持的格式
+        /// </summary>
         private string[] supportExtension = { ".mp3", ".MP3", ".wav", ".WAV" };
+        /// <summary>
+        /// 支持的格式，过滤器格式
+        /// </summary>
         private string supportExtensionWithSplit;
+        /// <summary>
+        /// 处理事件
+        /// </summary>
         public static class DispatcherHelper
         {
             [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
@@ -71,6 +90,18 @@ namespace EasyMuisc
             }
         }
         /// <summary>
+        /// 显示不重要的信息
+        /// </summary>
+        /// <param name="info"></param>
+        private void ShowInfo(string info)
+        {
+            tbkOffset.Text = info;
+            tbkOffset.Opacity = 1;
+            waitTimer.Stop();
+            Sleep(1000, (p1, p2) => NewDoubleAnimation(tbkOffset, OpacityProperty, 0, 0.5, 0, (p3, p4) => tbkOffset.Opacity = 0));
+        }
+
+        /// <summary>
         /// 显示错误信息
         /// </summary>
         /// <param name="message"></param>
@@ -90,6 +121,9 @@ namespace EasyMuisc
             }
             return true;
         }
+        /// <summary>
+        /// 菜单分隔栏
+        /// </summary>
         System.Windows.Shapes.Line SeparatorLine = new System.Windows.Shapes.Line()
         {
             X1 = 0,
@@ -151,11 +185,11 @@ namespace EasyMuisc
 
 
         #region 字段
+        
+       /// <summary>
+       /// 窗体高度
+       /// </summary>
         double actualHeight;
-        /// <summary>
-        /// 是否产生了不可挽救错误
-        /// </summary>
-        bool error = false;
         /// <summary>
         /// 每秒钟检测次数
         /// </summary>
@@ -168,66 +202,7 @@ namespace EasyMuisc
         /// 音乐播放句柄
         /// </summary>
         int stream = 0;
-        /// <summary>
-        /// 配置文件
-        /// </summary>
-        Configuration cfa = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-        /// <summary>
-        /// 分隔符
-        /// </summary>
-        const string split = "#Split#";
-        /// <summary>
-        /// 音乐信息，与列表绑定
-        /// </summary>
-        public ObservableCollection<MusicInfo> musicInfo;
-        /// <summary>
-        /// 当前音乐在列表中的索引
-        /// </summary>
-        public int currentMusicIndex = 0;
-        /// <summary>
-        /// 是否正在拖动进度条
-        /// </summary>
-        bool changingPosition = false;
-        /// <summary>
-        /// 歌词列表
-        /// </summary>
-        List<double> lrcTime = new List<double>();
-        /// <summary>
-        /// 歌词内容
-        /// </summary>
-        List<string> lrcContent = new List<string>();
-        /// <summary>
-        /// 到某一条歌词一共有多少行
-        /// </summary>
-        List<int> lrcLineSumToIndex = new List<int>();
-        /// <summary>
-        /// 当前歌词索引
-        /// </summary>
-        int currentLrcIndex = 0;
-        /// <summary>
-        /// 歌词字体大小
-        /// </summary>
-        double normalLrcFontSize = 18;
-        /// <summary>
-        /// 当前歌词字体大小
-        /// </summary>
-        double highlightLrcFontSize = 36;
-        /// <summary>
-        /// txt格式的歌词的字体大小
-        /// </summary>
-        double textLrcFontSize = 28;
-        /// <summary>
-        /// 历史记录
-        /// </summary>
-        private List<MusicInfo> history = new List<MusicInfo>();
-        /// <summary>
-        /// 当前播放历史索引
-        /// </summary>
-        int currentHistoryIndex = -1;
-        /// <summary>
-        /// 是否正在关闭
-        /// </summary>
-        bool closing = false;
+
 
         #endregion
 
@@ -254,7 +229,6 @@ namespace EasyMuisc
         /// <summary>
         /// 内部音量
         /// </summary>
-
         private double Volumn
         {
             set
@@ -276,6 +250,29 @@ namespace EasyMuisc
                 return Math.Sqrt(value);
             }
         }
+        /// <summary>
+        /// 是否显示加载动画
+        /// </summary>
+        private bool LoadingSpinner
+        {
+            set
+            {
+                if (value)
+                {
+                    grdLoading.Visibility = Visibility.Visible;
+                    NewDoubleAnimation(grdLoading, OpacityProperty, 0.5, 0.5, 0);
+
+                }
+                else
+                {
+                    NewDoubleAnimation(grdLoading, OpacityProperty, 0, 0.5, 0, (p1, p2) => grdLoading.Visibility = Visibility.Hidden);
+                }
+            }
+        }
+
+        #endregion
+
+        #region 设置
         /// <summary>
         /// 自动收放列表
         /// </summary>
@@ -304,23 +301,28 @@ namespace EasyMuisc
                 SetConfig("showLrc", value.ToString());
             }
         }
-        private bool LoadingSpinner
+        public bool SaveLrcOffsetByTag
         {
+            get
+            {
+                return bool.Parse(GetConfig("saveLrcOffsetByTag", "False"));
+            }
             set
             {
-                if (value)
-                {
-                    grdLoading.Visibility = Visibility.Visible;
-                    NewDoubleAnimation(grdLoading, OpacityProperty, 0.5, 0.5, 0);
-
-                }
-                else
-                {
-                    NewDoubleAnimation(grdLoading, OpacityProperty, 0, 0.5, 0, (p1, p2) => grdLoading.Visibility = Visibility.Hidden);
-                }
+                SetConfig("saveLrcOffsetByTag", value.ToString());
             }
         }
-
+        public bool PreferMusicInfo
+        {
+            get
+            {
+                return bool.Parse(GetConfig("preferMusicInfo", "False"));
+            }
+            set
+            {
+                SetConfig("preferMusicInfo", value.ToString());
+            }
+        }
         #endregion
 
         #region 定时器
@@ -341,15 +343,35 @@ namespace EasyMuisc
 
         #region 初始化和配置
         /// <summary>
+        /// 配置文件
+        /// </summary>
+        Configuration cfa = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        /// <summary>
+        /// 是否正在关闭
+        /// </summary>
+        bool closing = false;
+        /// <summary>
+        /// 分隔符
+        /// </summary>
+        const string split = "#Split#";
+        /// <summary>
+        /// 音乐信息，与列表绑定
+        /// </summary>
+        public ObservableCollection<MusicInfo> musicInfo;
+        /// <summary>
+        /// 是否产生了不可挽救错误
+        /// </summary>
+        bool error = false;
+        /// <summary>
         /// 构造函数
         /// </summary>
         public MainWindow()
         {
-            InitializeComponent();
             if (!File.Exists("bass.dll"))
             {
                 File.WriteAllBytes("bass.dll", Properties.Resources.bass);
             }
+            InitializeComponent();
 
             if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
             {
@@ -360,6 +382,13 @@ namespace EasyMuisc
             WindowHelper.RepairWindowBehavior(this);
             musicInfo = new ObservableCollection<MusicInfo>();
             lvw.DataContext = musicInfo;
+
+            WindowChrome.SetWindowChrome(this, new WindowChrome()
+            {
+                CaptionHeight = 0,
+                ResizeBorderThickness = new Thickness(4),
+            });
+
             InitialiazeField();
 
 
@@ -680,27 +709,40 @@ namespace EasyMuisc
         #endregion
 
 
-        #region 音乐相关
+        #region 播放控制
+        /// <summary>
+        /// 当前音乐在列表中的索引
+        /// </summary>
+        public int currentMusicIndex = 0;
+        /// <summary>
+        /// 历史记录
+        /// </summary>
+        private List<MusicInfo> history = new List<MusicInfo>();
+        /// <summary>
+        /// 当前播放历史索引
+        /// </summary>
+        int currentHistoryIndex = -1;
+        /// <summary>
+        /// 歌曲时长
+        /// </summary>
+        double musicLength;
+
         /// <summary>
         /// 初始化新的歌曲
         /// </summary>
         private void InitialiazeMusic()
         {
             Stop();//停止正在播放的歌曲
-
             try
             {
                 stream = Bass.BASS_StreamCreateFile(path, 0, 0, BASSFlag.BASS_SAMPLE_FLOAT);//获取歌曲句柄
                 Volumn = sldVolumn.Value;
                 txtMusicName.Text = new FileInfo(path).Name.Replace(new FileInfo(path).Extension, "");
                 Title = txtMusicName.Text + " - EasyMusic";//将窗体标题改为歌曲名
-
                 string[] length = musicInfo[currentMusicIndex].Length.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-                double musicLength = length.Length == 2 ?//如果不到一个小时
-                    int.Parse(length[0]) * 60 + int.Parse(length[1]) ://得到秒钟
-                     int.Parse(length[0]) * 3600 + int.Parse(length[1]) * 60 + int.Parse(length[2]);
+                musicLength = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetLength(stream));
                 sldProcess.Maximum = musicLength;
-                InitialiazeLrc(musicLength);
+                InitialiazeLrc();
             }
             catch
             {
@@ -717,7 +759,7 @@ namespace EasyMuisc
         /// 初始化歌词
         /// </summary>
         /// <param name="musicLength"></param>
-        private void InitialiazeLrc(double musicLength)
+        private void InitialiazeLrc()
         {
             FileInfo file = new FileInfo(path);
             file = new FileInfo(file.FullName.Replace(file.Extension, ".lrc"));
@@ -726,14 +768,19 @@ namespace EasyMuisc
                 grdLrc.Visibility = Visibility.Visible;
                 txtLrc.Visibility = Visibility.Hidden;
                 stkLrc.Visibility = Visibility.Visible;
-                var lrc = new Lrc(file.FullName);//获取歌词信息
+                 lrc = new Lrc(file.FullName);//获取歌词信息
+                if(!double.TryParse(lrc.Offset, out offset))
+                {
+                    offset = 0;
+                }
+                offset /= 1000.0;
                 int index = 0;//用于赋值Tag
                 foreach (var i in lrc.LrcContent)
                 {
-                    if (i.Key > musicLength)//如果歌词文件有误，长度超过了歌曲的长度，那么超过部分就不管了
-                    {
-                        break;
-                    }
+                    //if (i.Key > musicLength)//如果歌词文件有误，长度超过了歌曲的长度，那么超过部分就不管了
+                    //{
+                    //    break;
+                    //}
                     lrcContent.Add(i.Value);
                     var tbk = new TextBlock()
                     {
@@ -778,30 +825,6 @@ namespace EasyMuisc
             }
         }
         /// <summary>
-        /// 定时更新各项数据
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Update(object sender, EventArgs e)
-        {
-            if (stream == 0)
-            {
-                mainTimer.Stop();
-                return;
-            }
-            if (!changingPosition)
-            {
-                double currentPosition = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetPosition(stream));
-                sldProcess.Value = currentPosition;
-                if (Bass.BASS_ChannelGetPosition(stream) == Bass.BASS_ChannelGetLength(stream))
-                {
-                    //如果一首歌放完了
-                    PlayNext();
-                }
-                UpdatePositionOfLrcPanel();
-            }
-        }
-        /// <summary>
         /// 根据不同的播放循环模式播放下一首
         /// </summary>
         private void PlayNext()
@@ -834,69 +857,6 @@ namespace EasyMuisc
         private void PlayListNext()
         {
             PlayNew(currentMusicIndex == musicInfo.Count - 1 ? 0 : currentMusicIndex + 1);
-        }
-        /// <summary>
-        /// 更新当前时间的歌词
-        /// </summary>
-        private void UpdatePositionOfLrcPanel()
-        {
-            if (lrcTime.Count == 0)
-            {
-                return;
-            }
-            double position = Bass.BASS_ChannelBytes2Seconds(stream,
-Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
-            bool changed = false;//是否
-            if (position == 0)
-            {
-                changed = true;
-                currentLrcIndex = 0;
-            }
-            else
-            {
-                for (int i = 0; i < lrcTime.Count; i++)//从第一个循环到倒数第二个歌词时间
-                {
-                    if (lrcTime[i] < position)//如果当前的播放时间夹在两个歌词时间之间
-                    {
-                        if (currentLrcIndex != i)//如果上一次不是这一句歌词
-                        {
-                            changed = true;
-                            currentLrcIndex = i;
-                        }
-                    }
-                }
-            }
-
-            if (changed)
-            {
-                foreach (var i in stkLrc.Children)
-                {
-                    //首先把所有的歌词都改为正常大小
-                    (i as TextBlock).FontSize = normalLrcFontSize;
-                }
-            (stkLrc.Children[currentLrcIndex] as TextBlock).FontSize = highlightLrcFontSize;//当前歌词改为高亮
-                LrcAnimition(currentLrcIndex);//歌词转变动画
-            }
-        }
-        /// <summary>
-        /// 歌词转变动画
-        /// </summary>
-        /// <param name="lrcIndex"></param>
-        private void LrcAnimition(int lrcIndex)
-        {
-            double top = 0.5 * ActualHeight - lrcLineSumToIndex[lrcIndex]/*第一行到当前行的总行数*/ * normalLrcFontSize * FontFamily.LineSpacing/*歌词数量乘每行字的高度*/ - highlightLrcFontSize;// 0.5 * ActualHeight - stkLrcHeight * lrcIndex / (stkLrc.Children.Count - 1)-highlightFontSize ;
-            ThicknessAnimation ani = new ThicknessAnimation
-            {
-                To = new Thickness(0, top, 0, 0),
-                Duration = new Duration(TimeSpan.FromSeconds(0.8)),//动画时间1秒
-                DecelerationRatio = 0.5
-            };
-            Storyboard.SetTargetName(ani, stkLrc.Name);
-            Storyboard.SetTargetProperty(ani, new PropertyPath(MarginProperty));
-            Storyboard story = new Storyboard();
-            story.Children.Add(ani);
-            story.Begin(stkLrc);
-
         }
         /// <summary>
         /// （暂停后）播放
@@ -942,7 +902,7 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
             lrcLineSumToIndex.Clear();
             currentMusicIndex = index;//指定当前的索引
             path = musicInfo[currentMusicIndex].Path;//获取歌曲地址
-            currentLrcIndex = 0;//删除歌词索引
+            currentLrcIndex = -1;//删除歌词索引
             lrcTime.Clear();//清空歌词时间
             lrcContent.Clear();//清除歌词内容
             stkLrc.Children.Clear();//清空歌词表
@@ -1010,8 +970,132 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
         }
         #endregion
 
+        #region 定时更新
+        /// <summary>
+        /// 歌词列表
+        /// </summary>
+        List<double> lrcTime = new List<double>();
+        /// <summary>
+        /// 歌词内容
+        /// </summary>
+        List<string> lrcContent = new List<string>();
+        /// <summary>
+        /// 到某一条歌词一共有多少行
+        /// </summary>
+        List<int> lrcLineSumToIndex = new List<int>();
+        /// <summary>
+        /// 歌词对象
+        /// </summary>
+        Lrc lrc;
+        /// <summary>
+        /// 当前歌词索引
+        /// </summary>
+        int currentLrcIndex = 0;
+        /// <summary>
+        /// 歌词时间偏移量
+        /// </summary>
+        double offset;
 
-        #region 播放控制
+        /// <summary>
+        /// 定时更新各项数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Update(object sender, EventArgs e)
+        {
+            if (stream == 0)
+            {
+                mainTimer.Stop();
+                return;
+            }
+            if (!changingPosition)
+            {
+                double currentPosition = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetPosition(stream));
+                sldProcess.Value = currentPosition;
+                if (Bass.BASS_ChannelGetPosition(stream) == Bass.BASS_ChannelGetLength(stream))
+                {
+                    //如果一首歌放完了
+                    PlayNext();
+                }
+                UpdatePositionOfLrcPanel();
+            }
+        }
+        /// <summary>
+        /// 更新当前时间的歌词
+        /// </summary>
+        private void UpdatePositionOfLrcPanel()
+        {
+            if (lrcTime.Count == 0)
+            {
+                return;
+            }
+            double position = Bass.BASS_ChannelBytes2Seconds(stream,Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
+            bool changed = false;//是否
+            if (position == 0 && currentLrcIndex!=0)//如果还没播放并且没有更新位置
+            {
+                changed = true;
+                currentLrcIndex = 0;
+            }
+            else
+            {
+                for (int i = 0; i < lrcTime.Count-1; i++)//从第一个循环到最后一个歌词时间
+                {
+                    if (lrcTime[i+1] > position + offset)//如果下一条歌词的时间比当前时间要后面（因为增序判断所以这一条歌词时间肯定小于的）
+                    {
+                        if (currentLrcIndex != i)//如果上一次不是这一句歌词
+                        {
+                            changed = true;
+                            currentLrcIndex = i;
+                        }
+                        break;
+                    }
+                    else if(i==lrcTime.Count-2 && lrcTime[i+1] < position + offset)
+                    {
+                        if (currentLrcIndex != i+1)//如果上一次不是这一句歌词
+                        {
+                            changed = true;
+                            currentLrcIndex = i+1;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (changed)
+            {
+                foreach (var i in stkLrc.Children)
+                {
+                    //首先把所有的歌词都改为正常大小
+                    (i as TextBlock).FontSize = normalLrcFontSize;
+                }
+            (stkLrc.Children[currentLrcIndex] as TextBlock).FontSize = highlightLrcFontSize;//当前歌词改为高亮
+                LrcAnimition(currentLrcIndex);//歌词转变动画
+            }
+        }
+        /// <summary>
+        /// 歌词转变动画
+        /// </summary>
+        /// <param name="lrcIndex"></param>
+        private void LrcAnimition(int lrcIndex)
+        {
+            double top = 0.5 * ActualHeight - lrcLineSumToIndex[lrcIndex]/*第一行到当前行的总行数*/ * normalLrcFontSize * FontFamily.LineSpacing/*歌词数量乘每行字的高度*/ - highlightLrcFontSize;// 0.5 * ActualHeight - stkLrcHeight * lrcIndex / (stkLrc.Children.Count - 1)-highlightFontSize ;
+            ThicknessAnimation ani = new ThicknessAnimation
+            {
+                To = new Thickness(0, top, 0, 0),
+                Duration = new Duration(TimeSpan.FromSeconds(0.8)),//动画时间1秒
+                DecelerationRatio = 0.5
+            };
+            Storyboard.SetTargetName(ani, stkLrc.Name);
+            Storyboard.SetTargetProperty(ani, new PropertyPath(MarginProperty));
+            Storyboard story = new Storyboard();
+            story.Children.Add(ani);
+            story.Begin(stkLrc);
+
+        }
+        #endregion
+
+
+        #region 播放控制事件
         /// <summary>
         /// 单击播放按钮
         /// </summary>
@@ -1132,6 +1216,18 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
 
 
         #region 列表相关
+        /// <summary>
+        /// 歌词字体大小
+        /// </summary>
+        double normalLrcFontSize = 18;
+        /// <summary>
+        /// 当前歌词字体大小
+        /// </summary>
+        double highlightLrcFontSize = 36;
+        /// <summary>
+        /// txt格式的歌词的字体大小
+        /// </summary>
+        double textLrcFontSize = 28;
         /// <summary>
         /// 将文件拖到列表上方事件
         /// </summary>
@@ -1261,11 +1357,7 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
         /// <param name="e"></param>
         private void WindowSizeChangedEventHandler(object sender, SizeChangedEventArgs e)
         {
-            if (ActualHeight > SystemParameters.WorkArea.Height || ActualWidth > SystemParameters.WorkArea.Width)
-            {
-                //WindowState = WindowState.Normal;
-                //ToFullScreen();
-            }
+
             if (!AutoFurl || !ShowLrc)
             {
                 return;
@@ -1462,7 +1554,7 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
                 stkLrc.Visibility = Visibility.Hidden;
                 txtLrc.Visibility = Visibility.Hidden;
                 Title = "EasyMusic";
-                txtMusicName .Text= "";
+                txtMusicName.Text = "";
                 btnPlay.Visibility = Visibility.Visible;
                 btnPause.Visibility = Visibility.Hidden;
                 Bass.BASS_ChannelStop(stream);
@@ -1578,72 +1670,34 @@ Bass.BASS_ChannelGetPosition(stream));//获取当前播放的位置
         /// <param name="e"></param>
         private void BtnLrcOptionClickEventHanlder(object sender, RoutedEventArgs e)
         {
-            ContextMenu menu = new ContextMenu()
+            StackPanel menuNormalFontSizeSetting = new StackPanel()
             {
-                PlacementTarget = btnLrcOption,
-                Items =
-{
-     new StackPanel()
+                Orientation = Orientation.Horizontal,
+                Children =
+           {
+               new TextBlock(){Text="正常歌词字体大小："},
+               new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=normalLrcFontSize.ToString()},
+           }
+            };
+            StackPanel menuHighlightFontSizeSetting = new StackPanel()
             {
-Orientation=Orientation.Horizontal,
-Children =
-{
-    new TextBlock(){Text="正常歌词字体大小："},
-    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=normalLrcFontSize.ToString()},
-}
-            },
-     new StackPanel()
+                Orientation = Orientation.Horizontal,
+                Children =
+           {
+               new TextBlock(){Text="当前歌词字体大小："},
+               new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=highlightLrcFontSize.ToString()},
+           }
+            };
+            StackPanel menuTextFontSizeSetting = new StackPanel()
             {
-Orientation=Orientation.Horizontal,
-Children =
-{
-    new TextBlock(){Text="当前歌词字体大小："},
-    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=highlightLrcFontSize.ToString()},
-}
-            },
-     new StackPanel()
-            {
-Orientation=Orientation.Horizontal,
-Children =
-{
-    new TextBlock(){Text="文本歌词字体大小："},
-    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=textLrcFontSize.ToString()},
-}
-            },
- },
-                IsOpen = true
+                Orientation = Orientation.Horizontal,
+                Children =
+           {
+               new TextBlock(){Text="文本歌词字体大小："},
+               new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=textLrcFontSize.ToString()},
+           }
             };
 
-            MenuItem menuTop = new MenuItem()
-            {
-                Header = Topmost ? "取消置顶" : "置顶"
-            };
-            menuTop.Click += (p1, p2) =>
-              {
-                  Topmost = !Topmost;
-              };
-            menu.Items.Insert(0, menuTop);
-            MenuItem menuCopyLrc = new MenuItem()
-            {
-                Header = "复制歌词"
-            };
-            menuCopyLrc.Click += (p1, p2) =>
-            {
-                if (lrcContent.Count != 0)
-                {
-                    StringBuilder str = new StringBuilder();
-                    for (int i = 0; i < lrcContent.Count - 1; i++)
-                    {
-                        str.Append(lrcContent[i] + Environment.NewLine);
-                    }
-                    str.Append(lrcContent[lrcContent.Count - 1]);
-                    Clipboard.SetText(str.ToString());
-                }
-            };
-            if (lrcContent.Count != 0)
-            {
-                menu.Items.Insert(0, menuCopyLrc);
-            }
 
             MenuItem menuShowLrc = new MenuItem() { Header = "不显示歌词" };
             menuShowLrc.Click += (p1, p2) =>
@@ -1658,8 +1712,49 @@ Children =
                     grdMain.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
                 });
             };
-            menu.Items.Insert(0, menuShowLrc);
 
+
+            MenuItem menuCopyLrc = new MenuItem(){Header = "复制歌词"};
+            menuCopyLrc.Click += (p1, p2) =>
+            {
+                if (lrcContent.Count != 0)
+                {
+                    StringBuilder str = new StringBuilder();
+                    for (int i = 0; i < lrcContent.Count - 1; i++)
+                    {
+                        str.Append(lrcContent[i] + Environment.NewLine);
+                    }
+                    str.Append(lrcContent[lrcContent.Count - 1]);
+                    Clipboard.SetText(str.ToString());
+                }
+            };
+            MenuItem menuSave = new MenuItem() { Header = "保存歌词" };
+            menuSave.Click += (p1,p2) => SaveLrc(false);
+            MenuItem menuSaveAs = new MenuItem() { Header = "另存为歌词" };
+            menuSaveAs.Click += (p1,p2) => SaveLrc(true);
+
+
+
+            ContextMenu menu = new ContextMenu()
+            {
+                PlacementTarget = btnLrcOption,
+                IsOpen = true
+            };
+
+            menu.Items.Add(menuShowLrc);
+            
+            if (lrcContent.Count != 0)
+            {
+                menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
+                menu.Items.Add(menuCopyLrc);
+                menu.Items.Add(menuSave);
+                menu.Items.Add(menuSaveAs);
+            }
+
+            menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
+            menu.Items.Add(menuNormalFontSizeSetting);
+            menu.Items.Add(menuHighlightFontSizeSetting);
+            menu.Items.Add(menuTextFontSizeSetting);
 
             MenuItem menuOK = new MenuItem()
             {
@@ -1688,12 +1783,118 @@ Children =
                     }
                 }
             };
+
             menu.Items.Add(menuOK);
+        }
+        /// <summary>
+        /// 保存歌词
+        /// </summary>
+        /// <param name="saveAs"></param>
+        private void SaveLrc(bool saveAs)
+        {
+            StringBuilder str = new StringBuilder();
+            if (PreferMusicInfo)
+            {
+                if (musicInfo[currentMusicIndex].MusicName != "")
+                {
+                    str.Append("[ti:" + musicInfo[currentMusicIndex].MusicName + "]" + Environment.NewLine);
+                }
+                if (musicInfo[currentMusicIndex].Singer != "")
+                {
+                    str.Append("[ar:" + musicInfo[currentMusicIndex].Singer + "]" + Environment.NewLine);
+                }
+                if (musicInfo[currentMusicIndex].Album != "")
+                {
+                    str.Append("[al:" + musicInfo[currentMusicIndex].Album + "]" + Environment.NewLine);
+                }
+            }
+            else
+            {
+                if (lrc.Title != "")
+                {
+                    str.Append("[ti:" + lrc.Title + "]" + Environment.NewLine);
+                }
+                if (lrc.Artist != "")
+                {
+                    str.Append("[ar:" + lrc.Artist + "]" + Environment.NewLine);
+                }
+                if (lrc.Album != "")
+                {
+                    str.Append("[al:" + lrc.Album + "]" + Environment.NewLine);
+                }
+                if (lrc.LrcBy != "")
+                {
+                    str.Append("[by:" + lrc.LrcBy + "]" + Environment.NewLine);
+                }
+            }
+            if (SaveLrcOffsetByTag && offset!=0)
+            {
+                str.Append("[offset:" + (int)Math.Round(offset*1000) + "]" + Environment.NewLine);
+            }
+            List<double> lrcTime = new List<double>();
+            foreach (var i in this.lrcTime)
+            {
+                lrcTime.Add((SaveLrcOffsetByTag) ? i : i + offset);
+            }
+            
+            FileInfo file = new FileInfo(path);
+            for (int i=0; i< lrcTime.Count; i++)
+            {
+                double time = lrcTime[i];
+                string word = lrcContent[i];
+                int intMinute = (int)time / 60;
+                string minute = string.Format("{0:00}", intMinute);
+                string second = string.Format("{0:00.00}", time - 60 * intMinute);
+                foreach (var j in word.Split(new string[] { Environment.NewLine },StringSplitOptions.RemoveEmptyEntries))
+                {
+                    str.Append("[" + minute + ":" +second  + "]" + j + Environment.NewLine);
+                }
+              
+            }
+            if(saveAs)
+            { 
+            SaveFileDialog sfd = new SaveFileDialog()
+            {
+                AddExtension = true,
+                InitialDirectory =file.DirectoryName,
+                Title = "请选择目标文件夹",
+                Filter = "歌词文件（*.lrc）|*.lrc",
+                FileName=file.Name.Replace(file.Extension,".lrc"),
+            };
+                if (sfd.ShowDialog() == true)
+                {
+                    try
+                    {
+                        File.WriteAllText(sfd.FileName, str.ToString());
+                        ShowInfo("歌词保存成功");
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowAlert("无法保存文件：" + Environment.NewLine + ex.Message);
+                    }
+                }
+            }
+            else
+            {
+                try
+                {
+                    File.WriteAllText(path.Replace(file.Extension,"")+".lrc", str.ToString());
+                    ShowInfo("歌词保存成功");
+                }
+                catch (Exception ex)
+                {
+                    ShowAlert("无法保存文件：" + Environment.NewLine + ex.Message);
+                }
+            }
         }
         #endregion
 
 
         #region 进度条与音量条
+        /// <summary>
+        /// 是否正在拖动进度条
+        /// </summary>
+        bool changingPosition = false;
         /// <summary>
         /// 进度条鼠标按下事件
         /// </summary>
@@ -1851,112 +2052,6 @@ Children =
                 ShowAlert(Bass.BASS_ErrorGetCode().ToString());
             }
         }
-        #endregion
-
-        #region 专辑图
-        /// <summary>
-        /// 读取Mp3信息
-        /// </summary>
-        /// <param name="path"></param>
-        private void ReadMusicSourceInfo(string path)//copy
-        {
-            string[] tags = new string[6];
-            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-            byte[] buffer = new byte[10];
-            string mp3ID = "";
-            fs.Seek(0, SeekOrigin.Begin);
-            fs.Read(buffer, 0, 10);
-            int size = (buffer[6] & 0x7F) * 0x200000 + (buffer[7] & 0x7F) * 0x400 + (buffer[8] & 0x7F) * 0x80 + (buffer[9] & 0x7F);
-            mp3ID = Encoding.Default.GetString(buffer, 0, 3);
-            if (mp3ID.Equals("ID3", StringComparison.OrdinalIgnoreCase))
-            {
-                //如果有扩展标签头就跨过 10个字节
-                if ((buffer[5] & 0x40) == 0x40)
-                {
-                    fs.Seek(10, SeekOrigin.Current);
-                    size -= 10;
-                }
-                ReadFrame();
-            }
-            void ReadFrame()//copy
-            {
-                while (size > 0)
-                {
-                    //读取标签帧头的10个字节
-                    fs.Read(buffer, 0, 10);
-                    size -= 10;
-                    //得到标签帧ID
-                    string FramID = Encoding.Default.GetString(buffer, 0, 4);
-                    //计算标签帧大小，第一个字节代表帧的编码方式
-                    int frmSize = 0;
-
-                    frmSize = buffer[4] * 0x1000000 + buffer[5] * 0x10000 + buffer[6] * 0x100 + buffer[7];
-                    if (frmSize == 0)
-                    {
-                        //就说明真的没有信息了
-                        break;
-                    }
-                    //bFrame 用来保存帧的信息
-                    byte[] bFrame = new byte[frmSize];
-                    fs.Read(bFrame, 0, frmSize);
-                    size -= frmSize;
-                    string str = GetFrameInfoByEcoding(bFrame, bFrame[0], frmSize - 1);
-                    imgAlbum.Source = null;
-                    imgAlbum.Visibility = Visibility.Collapsed;
-                    if (FramID.CompareTo("APIC") == 0)
-                    {
-                        try
-                        {
-                            int i = 0;
-                            while (true)
-                            {
-                                if (255 == bFrame[i] && 216 == bFrame[i + 1])
-                                {
-                                    break;
-                                }
-                                i++;
-                            }
-                            byte[] imge = new byte[frmSize - i];
-                            fs.Seek(-frmSize + i, SeekOrigin.Current);
-                            fs.Read(imge, 0, imge.Length);
-                            MemoryStream ms = new MemoryStream(imge);
-                            System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
-                            string imgPath = Path.GetTempFileName();
-                            FileStream save = new FileStream(imgPath, FileMode.Create);
-                            img.Save(save, System.Drawing.Imaging.ImageFormat.Jpeg);
-                            save.Close();
-                            imgAlbum.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imgPath));
-                            imgAlbum.Visibility = Visibility.Visible;
-                        }
-                        catch
-                        {
-                        }
-                    }
-                }
-
-            }
-            string GetFrameInfoByEcoding(byte[] b, byte conde, int length)//copy
-            {
-                string str = "";
-                switch (conde)
-                {
-                    case 0:
-                        str = Encoding.GetEncoding("ISO-8859-1").GetString(b, 1, length);
-                        break;
-                    case 1:
-                        str = Encoding.GetEncoding("UTF-16LE").GetString(b, 1, length);
-                        break;
-                    case 2:
-                        str = Encoding.GetEncoding("UTF-16BE").GetString(b, 1, length);
-                        break;
-                    case 3:
-                        str = Encoding.UTF8.GetString(b, 1, length);
-                        break;
-                }
-                return str;
-            }
-        }
-
         #endregion
 
         #region 歌曲搜索
@@ -2169,45 +2264,97 @@ Children =
         }
         #endregion
 
-        private void grdHeader_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+
+        #region 标题栏
+        private void BtnSettingsClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuTop = new MenuItem()
+            {
+                Header = Topmost ? "取消置顶" : "置顶"
+            };
+            menuTop.Click += (p1, p2) =>
+            {
+                Topmost = !Topmost;
+            };
+            MenuItem menuSettings = new MenuItem()
+            {
+                Header = "设置"
+            };
+            menuSettings.Click += (p1, p2) =>
+            {
+                new WinSettings(this).ShowDialog();
+            };
+            ContextMenu menu = new ContextMenu()
+            {
+                PlacementTarget = btnSettings,
+                IsOpen = true,
+                Items = { menuTop, menuSettings },
+            };
+        }
+        /// <summary>
+        /// 鼠标左键在标题栏上按下事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HeaderPreviewMouseLeftButtonDownEventHandler(object sender, MouseButtonEventArgs e)
         {
             DragMove();
         }
-
-
-        private void Button_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// 双击标题栏事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HeaderMouseDoubleClickEventHandler(object sender, MouseButtonEventArgs e)
         {
             WindowState = (WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
-
         }
+        /// <summary>
+        /// 鼠标是否正在标题栏上且按下
+        /// </summary>
         bool headerMouseDowning = false;
-        private void Button_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// 鼠标在标题栏上按下事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HeaderPreviewMouseDownEventHandler(object sender, MouseButtonEventArgs e)
         {
             headerMouseDowning = true;
         }
-
-        private void Button_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// 鼠标在标题栏上抬起事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HeaderPreviewMouseUpEventHandler(object sender, MouseButtonEventArgs e)
         {
             headerMouseDowning = false;
         }
-
-        private void Button_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-
-
-        }
-
-        private void btnClose_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 单击关闭按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnCloseClickEventHandler(object sender, RoutedEventArgs e)
         {
             Close();
         }
-
-        private void btnMaxmize_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 单击最大化按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnMaxmizeClickEventHandler(object sender, RoutedEventArgs e)
         {
             WindowState = (WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
         }
-
-        private void btnMinimize_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 单击最小化按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnMinimizeClickEventHandler(object sender, RoutedEventArgs e)
         {
             actualHeight = ActualHeight;
             NewDoubleAnimation(this, TopProperty, SystemParameters.FullPrimaryScreenHeight, 0.2, 0, (p1, p2) =>
@@ -2216,7 +2363,9 @@ Children =
                   WindowState = WindowState.Minimized;
               });
         }
-
+        /// <summary>
+        /// 鼠标是否在专辑图上按下了
+        /// </summary>
         bool imgAlbumMousePress = false;
         /// <summary>
         /// 单击专辑图事件
@@ -2232,18 +2381,222 @@ Children =
                 win.ShowDialog();
                 imgAlbumMousePress = false;
             }
-
         }
-
-        private void imgAlbum_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// 鼠标按下专辑图事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgAlbumPreviewMouseDownEventHandler(object sender, MouseButtonEventArgs e)
         {
+            //不知什么原因，鼠标在Header上按下会出发DragMove然后触发了鼠标在专辑图上抬起事件，所以写此事件确保鼠标确实是在专辑图上
             imgAlbumMousePress = true;
         }
-
-        private void imgAlbum_MouseLeave(object sender, MouseEventArgs e)
+        /// <summary>
+        /// 鼠标离开专辑图事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImgAlbumMouseLeaveEventHandler(object sender, MouseEventArgs e)
         {
             imgAlbumMousePress = false;
         }
+        /// <summary>
+        /// 读取Mp3信息
+        /// </summary>
+        /// <param name="path"></param>
+        private void ReadMusicSourceInfo(string path)//copy
+        {
+            string[] tags = new string[6];
+            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+            byte[] buffer = new byte[10];
+            string mp3ID = "";
+            fs.Seek(0, SeekOrigin.Begin);
+            fs.Read(buffer, 0, 10);
+            int size = (buffer[6] & 0x7F) * 0x200000 + (buffer[7] & 0x7F) * 0x400 + (buffer[8] & 0x7F) * 0x80 + (buffer[9] & 0x7F);
+            mp3ID = Encoding.Default.GetString(buffer, 0, 3);
+            if (mp3ID.Equals("ID3", StringComparison.OrdinalIgnoreCase))
+            {
+                //如果有扩展标签头就跨过 10个字节
+                if ((buffer[5] & 0x40) == 0x40)
+                {
+                    fs.Seek(10, SeekOrigin.Current);
+                    size -= 10;
+                }
+                ReadFrame();
+            }
+            void ReadFrame()//copy
+            {
+                while (size > 0)
+                {
+                    //读取标签帧头的10个字节
+                    fs.Read(buffer, 0, 10);
+                    size -= 10;
+                    //得到标签帧ID
+                    string FramID = Encoding.Default.GetString(buffer, 0, 4);
+                    //计算标签帧大小，第一个字节代表帧的编码方式
+                    int frmSize = 0;
+
+                    frmSize = buffer[4] * 0x1000000 + buffer[5] * 0x10000 + buffer[6] * 0x100 + buffer[7];
+                    if (frmSize == 0)
+                    {
+                        //就说明真的没有信息了
+                        break;
+                    }
+                    //bFrame 用来保存帧的信息
+                    byte[] bFrame = new byte[frmSize];
+                    fs.Read(bFrame, 0, frmSize);
+                    size -= frmSize;
+                    string str = GetFrameInfoByEcoding(bFrame, bFrame[0], frmSize - 1);
+                    imgAlbum.Source = null;
+                    imgAlbum.Visibility = Visibility.Collapsed;
+                    if (FramID.CompareTo("APIC") == 0)
+                    {
+                        try
+                        {
+                            int i = 0;
+                            while (true)
+                            {
+                                if (255 == bFrame[i] && 216 == bFrame[i + 1])
+                                {
+                                    break;
+                                }
+                                i++;
+                            }
+                            byte[] imge = new byte[frmSize - i];
+                            fs.Seek(-frmSize + i, SeekOrigin.Current);
+                            fs.Read(imge, 0, imge.Length);
+                            MemoryStream ms = new MemoryStream(imge);
+                            System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
+                            string imgPath = Path.GetTempFileName();
+                            FileStream save = new FileStream(imgPath, FileMode.Create);
+                            img.Save(save, System.Drawing.Imaging.ImageFormat.Jpeg);
+                            save.Close();
+                            imgAlbum.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(imgPath));
+                            imgAlbum.Visibility = Visibility.Visible;
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+
+            }
+            string GetFrameInfoByEcoding(byte[] b, byte conde, int length)//copy
+            {
+                string str = "";
+                switch (conde)
+                {
+                    case 0:
+                        str = Encoding.GetEncoding("ISO-8859-1").GetString(b, 1, length);
+                        break;
+                    case 1:
+                        str = Encoding.GetEncoding("UTF-16LE").GetString(b, 1, length);
+                        break;
+                    case 2:
+                        str = Encoding.GetEncoding("UTF-16BE").GetString(b, 1, length);
+                        break;
+                    case 3:
+                        str = Encoding.UTF8.GetString(b, 1, length);
+                        break;
+                }
+                return str;
+            }
+        }
+        /// <summary>
+        /// 窗体状态改变事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WinMainStateChangedEventHandler(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(0);
+            }
+            else
+            {
+                WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(4);
+            }
+        }
+        #endregion
+        #region 鼠标滚轮
+        /// <summary>
+        /// 鼠标滚轮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MouseWheelEventHandler(object sender, MouseWheelEventArgs e)
+        {
+            if (mouseInLrcArea)
+            {
+                if (e.Delta > 0)
+                {
+                    offset -= 1d / 4;
+                }
+                else
+                {
+                    offset+= 1d / 4;
+                }
+                ShowInfo("当前歌词偏移量：" + (offset > 0 ? "+" : "") + Math.Round(offset, 2).ToString() + "秒");
+            }
+            else if(!mouseInList)
+            {
+                if(e.Delta>0)
+                {
+                    sldVolumn.Value += 0.05;
+                }
+                else
+                {
+                    sldVolumn.Value -= 0.05;
+                }
+            }
+        }
+        /// <summary>
+        /// 鼠标是否在歌词区域
+        /// </summary>
+        bool mouseInLrcArea = false;
+        /// <summary>
+        /// 鼠标进入歌词区域事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GrdLrcAreaMouseEnterEventHandler(object sender, MouseEventArgs e)
+        {
+            mouseInLrcArea = true;
+        }
+        /// <summary>
+        /// 鼠标离开歌词区域事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GrdLrcAreaMouseLeaveEventHandler(object sender, MouseEventArgs e)
+        {
+            mouseInLrcArea = false;
+        }
+        /// <summary>
+        /// 鼠标是否在列表上
+        /// </summary>
+        bool mouseInList=false;
+        /// <summary>
+        /// 鼠标进入列表事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LvwMouseEnterEventHandler(object sender, MouseEventArgs e)
+        {
+            mouseInList = true;
+        }
+        /// <summary>
+        /// 鼠标离开列表事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LvwMouseLeaveEventHandler(object sender, MouseEventArgs e)
+        {
+            mouseInList = false;
+        }
+        #endregion
     }
 
 }
