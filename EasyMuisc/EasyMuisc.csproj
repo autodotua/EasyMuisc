@@ -105,6 +105,9 @@
       <HintPath>Properties\Bass.Net.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="CustomWPFColorPicker">
+      <HintPath>Properties\CustomWPFColorPicker.dll</HintPath>
+    </Reference>
     <Reference Include="Interop.Shell32, Version=1.2.107.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -134,21 +137,36 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="HotKey.cs" />
     <Compile Include="MusicInfo.cs" />
     <Compile Include="UcSpinnerDotCircle.xaml.cs">
       <DependentUpon>UcSpinnerDotCircle.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WinAbout.xaml.cs">
+      <DependentUpon>WinAbout.xaml</DependentUpon>
     </Compile>
     <Compile Include="WinAlbumPicture.xaml.cs">
       <DependentUpon>WinAlbumPicture.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowHelper.cs" />
+    <Compile Include="WinHelp.xaml.cs">
+      <DependentUpon>WinHelp.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinMusicInfo.xaml.cs">
       <DependentUpon>WinMusicInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="WinSettings.xaml.cs">
       <DependentUpon>WinSettings.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
+    <Page Include="WinAbout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WinHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WinMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -158,8 +176,8 @@
     </Compile>
     <Compile Include="EncodingType.cs" />
     <Compile Include="Lrc.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="WinMain.xaml.cs">
+      <DependentUpon>WinMain.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UcSpinnerDotCircle.xaml">
