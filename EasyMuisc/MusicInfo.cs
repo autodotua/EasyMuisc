@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace EasyMuisc
 {
+    [Serializable]
     public class MusicInfo
     {
         public string MusicName { get; internal set; }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMuisc"
         mc:Ignorable="d"
+        Closing="WinAlbumPicClosingEventHandler"
         Title="专辑图" SizeToContent="Height" Width="500" ResizeMode="NoResize"  WindowStyle="None" Loaded="WindowLoadedEventHandler" KeyDown="WinAlbumPicKeyDownEventHandler">
     <Window.Resources>
         <!--ContextMenu-->

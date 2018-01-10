@@ -42,7 +42,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ContextMenu}">
-                        <Border x:Name="Border" Background="#FFEEEEEE"  BorderThickness="0">
+                        <Border x:Name="Border" Background="{DynamicResource darker1BrushColor}"  BorderThickness="0">
                             <ItemsPresenter/>
                         </Border>
                     </ControlTemplate>
@@ -405,7 +405,10 @@
 
             </Grid>
 
-            <ListView x:Name="lvw" ItemsSource="{Binding}" DragEnter="LvwDragEnterEventHandler" Background="{DynamicResource backgroundBrushColor}" Foreground="Black" BorderThickness="0" PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown" Grid.Row="2" MouseEnter="LvwMouseEnterEventHandler" MouseLeave="LvwMouseLeaveEventHandler">
+            <ListView x:Name="lvw" ItemsSource="{Binding}" DragEnter="LvwDragEnterEventHandler"
+                      Background="{DynamicResource backgroundBrushColor}" Foreground="Black" BorderThickness="0"
+                      PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown" Grid.Row="2" MouseEnter="LvwMouseEnterEventHandler"
+                      MouseLeave="LvwMouseLeaveEventHandler" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}">
                         <EventSetter Event="UIElement.PreviewKeyDown" Handler="LvwItemPreviewKeyDownEventHandler"/>
@@ -728,7 +731,7 @@
             </Grid>
         </Grid>
         <!--加载动画-->
-        <Grid x:Name="grdLoading" Background="White" Visibility="Hidden" Opacity="0.5" Grid.ColumnSpan="3" Grid.RowSpan="53" Margin="-4">
+        <Grid x:Name="grdLoading" Background="{DynamicResource backgroundBrushColor}" Visibility="Hidden" Opacity="0.5" Grid.ColumnSpan="3" Grid.RowSpan="53" Margin="-4">
             <local:UcSpinnerDotCircle HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
         <Grid x:Name="grdHeader" Cursor="Arrow" Height="32" Background="White" Grid.ColumnSpan="3" Margin="-4">
@@ -766,9 +769,8 @@
 
 
             <Image x:Name="imgAlbum"  Height="32" MouseLeave="ImgAlbumMouseLeaveEventHandler"  PreviewMouseDown="ImgAlbumPreviewMouseDownEventHandler" PreviewMouseUp="ImgAlbumPreviewMouseUpEventHandler" HorizontalAlignment="Left"/>
-            <Viewbox Grid.Column="2" IsHitTestVisible="False" HorizontalAlignment="Left"   MaxWidth="550" >
+            <Viewbox Grid.Column="2" IsHitTestVisible="False" HorizontalAlignment="Left"    >
                 <TextBlock x:Name="txtMusicName"/>
-
             </Viewbox>
 
             <Button x:Name="btnSettings" Grid.Column="4" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnSettingsClickEventHandler"  HorizontalAlignment="Left">

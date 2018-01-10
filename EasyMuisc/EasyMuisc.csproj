@@ -139,6 +139,7 @@
     </ApplicationDefinition>
     <Compile Include="HotKey.cs" />
     <Compile Include="MusicInfo.cs" />
+    <Compile Include="SerializationUnit.cs" />
     <Compile Include="UcSpinnerDotCircle.xaml.cs">
       <DependentUpon>UcSpinnerDotCircle.xaml</DependentUpon>
     </Compile>

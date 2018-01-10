@@ -23,15 +23,19 @@ namespace EasyMuisc
     public partial class WinAlbumPicture : Window
     {
         MainWindow winMain;
-
+        bool winMainTopMost = false;
         public WinAlbumPicture(MainWindow win)
         {
             winMain = win;
             InitializeComponent();
             Left = win.Left ; // + 12;
             Top = win.Top;// + win.ActualHeight - win.imgAlbum.Height - 16;
-            Width = win.imgAlbum.Width;
-            Height = win.imgAlbum.Height;
+            Width = win.imgAlbum.ActualWidth;
+            Height = win.imgAlbum.ActualHeight;
+            if(win.Topmost)
+            {
+                winMainTopMost = true;
+            }
         }
         
         private void ImgPreviewMouseLeftButtonDownEventHandler(object sender, MouseButtonEventArgs e)
@@ -138,6 +142,11 @@ namespace EasyMuisc
             {
                 Close();
             }
+        }
+
+        private void WinAlbumPicClosingEventHandler(object sender, EventArgs e)
+        {
+            winMain.Topmost = winMainTopMost;
         }
     }
 }
