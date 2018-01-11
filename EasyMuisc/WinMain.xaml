@@ -30,6 +30,9 @@
         <RoutedUICommand x:Key="HotKeyFoward"/>
         <RoutedUICommand x:Key="HotKeyBack"/>
         <RoutedUICommand x:Key="HotKeyPlayAndPauseMusic"  />
+        <RoutedUICommand x:Key="HotKeyNext"/>
+        <RoutedUICommand x:Key="HotKeyLast"/>
+
 
         <Style x:Key="controlButton" TargetType="{x:Type Button}">
             <Setter Property="Template">
@@ -373,14 +376,18 @@
         <KeyBinding Gesture="Right" Command="{StaticResource HotKeyFoward}"/>
         <KeyBinding Gesture="Left" Command="{StaticResource HotKeyBack}"/>
         <KeyBinding Gesture="Space" Command="{StaticResource HotKeyPlayAndPauseMusic}"/>
+        <KeyBinding Gesture="PageUp" Command="{StaticResource HotKeyLast}"/>
+        <KeyBinding Gesture="PageDown" Command="{StaticResource HotKeyNext}"/>
 
     </Window.InputBindings>
     <Window.CommandBindings>
         <CommandBinding Command="{StaticResource HotKeyFoward}" Executed="HotKeyFowardEventHandler"/>
         <CommandBinding Command="{StaticResource HotKeyBack}" Executed="HotKeyBackEventHandler"/>
         <CommandBinding Command="{StaticResource HotKeyPlayAndPauseMusic}" Executed="HotKeyPlayAndPauseEventHandler"/>
+                <CommandBinding Command="{StaticResource HotKeyNext}" Executed="HotKeyNextEventHandler"/>
 
-    </Window.CommandBindings>
+                <CommandBinding Command="{StaticResource HotKeyLast}" Executed="HotKeyLastEventHandler"/>
+            </Window.CommandBindings>
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="taskBar">
             <TaskbarItemInfo.ThumbButtonInfos>
@@ -434,7 +441,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text=" 搜索：" VerticalAlignment="Center"/>
-                <ComboBox x:Name="cbbSearch"  Grid.Column="2" IsEditable="True" VerticalAlignment="Center" IsSynchronizedWithCurrentItem="False" IsTextSearchEnabled="False" Template="{StaticResource ComboBoxEditableTemplate}"/>
+                <ComboBox x:Name="cbbSearch" FocusVisualStyle="{x:Null}"  Grid.Column="2" IsEditable="True" VerticalAlignment="Center" IsSynchronizedWithCurrentItem="False" IsTextSearchEnabled="False" Template="{StaticResource ComboBoxEditableTemplate}"/>
 
             </Grid>
 
@@ -478,7 +485,7 @@
                 </ListView.View>
 
             </ListView>
-            <local:ControlButton x:Name="btnListOption" Width="32" Height="32"  Click="BtnListOptionClickEventHanlder"  VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="0,0,20,1" Grid.Row="2" NormalSize="28" PressedSize="24" MouseOverSize="28"  OpacityAnimation="True" 
+            <local:ControlButton x:Name="btnListOption" Width="32" Height="32"  Click="BtnListOptionClickEventHanlder"  VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="0,0,20,1" Grid.Row="2" NormalSize="28" PressedSize="24" MouseOverSize="28"  OpacityAnimation="True"  FocusVisualStyle="{x:Null}"
                              PathData="F1 M 24.173,26.110 L 2.198,26.110 C 0.989,26.110 0.000,25.121 0.000,23.912 C 0.000,22.704 0.989,21.715 2.198,21.715 L 24.170,21.715 C 25.379,21.715 26.368,22.704 26.368,23.912 C 26.371,25.121 25.382,26.110 24.173,26.110 Z M 24.173,15.155 L 2.328,15.155 C 1.120,15.155 0.130,14.166 0.130,12.957 C 0.130,11.748 1.120,10.759 2.328,10.759 L 24.173,10.759 C 25.382,10.759 26.371,11.748 26.371,12.957 C 26.371,14.166 25.382,15.155 24.173,15.155 Z M 24.173,4.396 L 2.198,4.396 C 0.989,4.396 0.000,3.407 0.000,2.198 C 0.000,0.989 0.989,0.000 2.198,0.000 L 24.170,0.000 C 25.379,0.000 26.368,0.989 26.368,2.198 C 26.371,3.407 25.382,4.396 24.173,4.396 Z"/>
 
         </Grid>
@@ -500,10 +507,10 @@
                     </LinearGradientBrush>
                 </Grid.Background>
             </Grid>
-            <local:ControlButton x:Name="btnLrcOption" Width="32" Height="32"  Click="BtnLrcOptionClickEventHanlder"  VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="0,0,20,1"  NormalSize="28" PressedSize="24" MouseOverSize="28"  OpacityAnimation="True" 
+            <local:ControlButton x:Name="btnLrcOption" Width="32" Height="32"  Click="BtnLrcOptionClickEventHanlder"  VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="0,0,20,1"  NormalSize="28" PressedSize="24" MouseOverSize="28"  OpacityAnimation="True"  FocusVisualStyle="{x:Null}"
                                                  PathData="F1 M 24.173,26.110 L 2.198,26.110 C 0.989,26.110 0.000,25.121 0.000,23.912 C 0.000,22.704 0.989,21.715 2.198,21.715 L 24.170,21.715 C 25.379,21.715 26.368,22.704 26.368,23.912 C 26.371,25.121 25.382,26.110 24.173,26.110 Z M 24.173,15.155 L 2.328,15.155 C 1.120,15.155 0.130,14.166 0.130,12.957 C 0.130,11.748 1.120,10.759 2.328,10.759 L 24.173,10.759 C 25.382,10.759 26.371,11.748 26.371,12.957 C 26.371,14.166 25.382,15.155 24.173,15.155 Z M 24.173,4.396 L 2.198,4.396 C 0.989,4.396 0.000,3.407 0.000,2.198 C 0.000,0.989 0.989,0.000 2.198,0.000 L 24.170,0.000 C 25.379,0.000 26.368,0.989 26.368,2.198 C 26.371,3.407 25.382,4.396 24.173,4.396 Z"/>
 
-            <local:ControlButton x:Name="btnListSwitcher"   Click="BtnListSwitcherClickEventHandler"  VerticalAlignment="Center" HorizontalAlignment="Left" OpacityAnimation="True" NormalSize="9" MouseOverSize="9" PressedSize="9"
+            <local:ControlButton x:Name="btnListSwitcher"   Click="BtnListSwitcherClickEventHandler"  VerticalAlignment="Center" HorizontalAlignment="Left" OpacityAnimation="True" NormalSize="9" MouseOverSize="9" PressedSize="9" FocusVisualStyle="{x:Null}"
                PathData="F1 M 0.000,24.043 L 0.000,2.198 C 0.000,0.989 0.585,0.000 1.300,0.000 C 2.015,0.000 2.601,0.989 2.601,2.198 L 2.601,24.043 C 2.601,25.252 2.015,26.241 1.300,26.241 C 0.585,26.241 0.000,25.252 0.000,24.043 Z"/>
             <TextBlock x:Name="tbkOffset" HorizontalAlignment="Right" VerticalAlignment="Top"/>
         </Grid>
@@ -528,12 +535,12 @@
                     <ColumnDefinition Width="72"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock x:Name="tbkCurrentPosition" Text="00:00"/>
-                <Slider x:Name="sldProcess" Grid.Column="2" Orientation="Horizontal" Template="{StaticResource SliderHorizontal}" 
+                <Slider x:Name="sldProcess" Grid.Column="2" Orientation="Horizontal" Template="{StaticResource SliderHorizontal}"  FocusVisualStyle="{x:Null}"
                         PreviewMouseDown="SldProgressPreviewMouseDownEventHandler" ValueChanged="SldProcessValueChangedEventHandler"  
                         PreviewMouseUp="SldProcessPreviewMouseUpEventHandler" VerticalAlignment="Center" />
-                <local:ControlButton x:Name="btnDevice" Grid.Column="4" Opacity="0.8"  Click="BtnDeviceSwitchClickEventHandler"  VerticalAlignment="Center" HorizontalAlignment="Right"  NormalSize="16" MouseOverSize="14" PressedSize="12"
+                <local:ControlButton x:Name="btnDevice" Grid.Column="4" Opacity="0.8"  Click="BtnDeviceSwitchClickEventHandler"  VerticalAlignment="Center" HorizontalAlignment="Right"  NormalSize="16" MouseOverSize="14" PressedSize="12" FocusVisualStyle="{x:Null}"
                                      PathData="F1 M 23.106,5.415 C 22.660,4.687 21.710,4.458 20.982,4.900 C 20.254,5.345 20.025,6.296 20.467,7.024 C 21.475,8.674 22.008,10.572 22.008,12.514 C 22.008,14.481 21.465,16.398 20.436,18.061 C 19.987,18.785 20.210,19.739 20.935,20.188 C 21.189,20.345 21.468,20.420 21.747,20.420 C 22.265,20.420 22.770,20.160 23.062,19.689 C 24.392,17.537 25.098,15.058 25.098,12.517 C 25.098,10.001 24.408,7.548 23.106,5.415 Z M 11.887,0.806 L 6.968,6.271 L 4.982,6.271 C 2.243,6.271 0.000,8.577 0.000,11.394 L 0.000,13.706 C 0.000,16.524 2.240,18.829 4.982,18.829 L 6.977,18.829 L 11.887,24.282 C 13.396,25.819 15.689,25.142 15.689,22.588 L 15.689,2.500 C 15.689,-0.079 13.365,-0.697 11.887,0.806 Z"/>
-                <Slider x:Name="sldVolumn" Template="{StaticResource SliderHorizontal}" Orientation="Horizontal"  ValueChanged="SldVolumnValueChangedEventHandler" IsMoveToPointEnabled="True" Value="1"  Grid.Column="6" VerticalAlignment="Center" Maximum="1" />
+                <Slider x:Name="sldVolumn" FocusVisualStyle="{x:Null}" Template="{StaticResource SliderHorizontal}" Orientation="Horizontal"  ValueChanged="SldVolumnValueChangedEventHandler" IsMoveToPointEnabled="True" Value="1"  Grid.Column="6" VerticalAlignment="Center" Maximum="1" />
             </Grid>
 
             <!--按钮控制区-->
@@ -589,7 +596,7 @@
                 <ColumnDefinition Width="4"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Grid.ColumnSpan="10"  >
+            <Button Grid.Column="1" Grid.ColumnSpan="10"  FocusVisualStyle="{x:Null}">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <EventSetter Event="PreviewMouseDoubleClick" Handler="HeaderMouseDoubleClickEventHandler"/>
@@ -613,7 +620,7 @@
                 <TextBlock x:Name="txtMusicName"/>
             </Viewbox>
 
-            <Button x:Name="btnSettings" Grid.Column="4" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnSettingsClickEventHandler"  HorizontalAlignment="Left">
+            <Button x:Name="btnSettings" FocusVisualStyle="{x:Null}" Grid.Column="4" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnSettingsClickEventHandler"  HorizontalAlignment="Left">
                 <Button.Style>
                     <Style  TargetType="{x:Type Button}">
                         <Setter Property="Template">
@@ -637,7 +644,7 @@
                 </Button.Style>
             </Button>
 
-            <Button x:Name="btnMinimize" Grid.Column="6" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnMinimizeClickEventHandler" HorizontalAlignment="Left">
+            <Button x:Name="btnMinimize" FocusVisualStyle="{x:Null}" Grid.Column="6" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnMinimizeClickEventHandler" HorizontalAlignment="Left">
                 <Button.Style>
                     <Style  TargetType="{x:Type Button}">
                         <Setter Property="Template">
@@ -658,7 +665,7 @@
                 </Button.Style>
             </Button>
 
-            <Button x:Name="btnMaxmize" Grid.Column="8" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnMaxmizeClickEventHandler">
+            <Button x:Name="btnMaxmize" FocusVisualStyle="{x:Null}" Grid.Column="8" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnMaxmizeClickEventHandler">
                 <Button.Style>
                     <Style  TargetType="{x:Type Button}">
                         <Setter Property="Template">
@@ -678,7 +685,7 @@
                     </Style>
                 </Button.Style>
             </Button>
-            <Button x:Name="btnClose" Grid.Column="10" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnCloseClickEventHandler">
+            <Button x:Name="btnClose" FocusVisualStyle="{x:Null}" Grid.Column="10" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnCloseClickEventHandler">
                 <Button.Style>
                     <Style  TargetType="{x:Type Button}">
                         <Setter Property="Template">

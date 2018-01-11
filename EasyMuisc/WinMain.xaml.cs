@@ -1946,7 +1946,7 @@ namespace EasyMuisc
 
         #region 快捷键
         /// <summary>
-        /// 执行下一曲快捷键
+        /// 执行前进快捷键
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1961,7 +1961,7 @@ namespace EasyMuisc
             Bass.BASS_ChannelSetPosition(stream, position);
         }
         /// <summary>
-        /// 执行上一曲快捷键
+        /// 执行后退快捷键
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1990,6 +1990,25 @@ namespace EasyMuisc
                 BtnPlayClickEventHandler(null, null);
             }
         }
+        /// <summary>
+        /// 执行下一曲快捷键
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HotKeyNextEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnNextClickEventHandler(null, null);
+        }
+        /// <summary>
+        /// 执行上一曲快捷键
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HotKeyLastEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnLastClickEventHandler(null, null);
+        }
+
         /// <summary>
         /// 在文本歌词和列表按空格同样有效
         /// </summary>
@@ -2723,6 +2742,8 @@ namespace EasyMuisc
             BtnNextClickEventHandler(null, null);
         }
         #endregion
+
+
     }
 
 }
