@@ -61,35 +61,6 @@ namespace EasyMuisc.Properties {
         }
         
         /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] bass {
-            get {
-                object obj = ResourceManager.GetObject("bass", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] Bass_Net {
-            get {
-                object obj = ResourceManager.GetObject("Bass_Net", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似  的本地化字符串。
-        /// </summary>
-        internal static string ChangeLog {
-            get {
-                return ResourceManager.GetString("ChangeLog", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
         /// </summary>
         internal static System.Drawing.Icon icon {

@@ -137,8 +137,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ControlButton.xaml.cs">
+      <DependentUpon>ControlButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HotKey.cs" />
     <Compile Include="MusicInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SerializationUnit.cs" />
     <Compile Include="UcSpinnerDotCircle.xaml.cs">
       <DependentUpon>UcSpinnerDotCircle.xaml</DependentUpon>
@@ -159,6 +167,10 @@
     <Compile Include="WinSettings.xaml.cs">
       <DependentUpon>WinSettings.xaml</DependentUpon>
     </Compile>
+    <Page Include="ControlButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WinAbout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -203,11 +215,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -215,8 +222,8 @@
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.manifest">
       <SubType>Designer</SubType>
@@ -246,32 +253,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Properties\bass.dll" />
-    <Content Include="Properties\Bass.Net.dll" />
-    <Resource Include="Properties\Images\volume.png" />
-    <Content Include="Properties\Interop.Shell32.dll" />
-    <Resource Include="Properties\Images\add.png" />
     <Resource Include="Properties\Images\icon.ico" />
     <Resource Include="Properties\Images\icon.png" />
-    <Resource Include="Properties\Images\last_mouseOver.png" />
-    <Resource Include="Properties\Images\last_normal.png" />
-    <Resource Include="Properties\Images\listCircle_mouseOver.png" />
-    <Resource Include="Properties\Images\listCircle_normal.png" />
-    <Resource Include="Properties\Images\menu_normal.png" />
-    <Resource Include="Properties\Images\next_mouseOver.png" />
-    <Resource Include="Properties\Images\next_normal.png" />
-    <Resource Include="Properties\Images\open_mouseOver.png" />
-    <Resource Include="Properties\Images\open_normal.png" />
-    <Resource Include="Properties\Images\pause_mouseOver.png" />
-    <Resource Include="Properties\Images\pause_normal.png" />
-    <Resource Include="Properties\Images\play_mouseOver.png" />
-    <Resource Include="Properties\Images\play_normal.png" />
-    <Resource Include="Properties\Images\shuffle_mouseOver.png" />
-    <Resource Include="Properties\Images\shuffle_normal.png" />
-    <Resource Include="Properties\Images\singleCircle_mouseOver.png" />
-    <Resource Include="Properties\Images\singleCircle_normal.png" />
-    <Resource Include="Properties\Images\song_115.83269961977px_1146829_easyicon.net.png" />
-    <Resource Include="Properties\Images\verticalBar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Properties\Images\play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Properties\Images\last.png" />
+    <Resource Include="Properties\Images\next.png" />
+    <Resource Include="Properties\Images\pause.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

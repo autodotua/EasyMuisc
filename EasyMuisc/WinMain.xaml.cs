@@ -116,7 +116,7 @@ namespace EasyMuisc
         /// <summary>
         /// 菜单分隔栏
         /// </summary>
-       private System.Windows.Shapes.Line SeparatorLine
+        private System.Windows.Shapes.Line SeparatorLine
         {
             get
             {
@@ -149,7 +149,7 @@ namespace EasyMuisc
                 Duration = new Duration(TimeSpan.FromSeconds(duration)),//动画时间1秒
                 DecelerationRatio = decelerationRatio,
                 FillBehavior = stopAfterComplete ? FillBehavior.Stop : FillBehavior.HoldEnd,
-        };
+            };
             Storyboard.SetTargetName(ani, obj.Name);
             Storyboard.SetTargetProperty(ani, new PropertyPath(property));
             Storyboard story = new Storyboard();
@@ -371,18 +371,20 @@ namespace EasyMuisc
         /// 是否产生了不可挽救错误
         /// </summary>
         bool error = false;
+        /// <summary>
+        /// 歌单二进制文件名
+        /// </summary>
         string MusicListName = "EasyMusicList.bin";
-
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public MainWindow()
         {
-            if (!File.Exists("bass.dll"))
-            {
-                File.WriteAllBytes("bass.dll", Properties.Resources.bass);
-            }
+            //if (!File.Exists("bass.dll"))
+            //{
+            //    File.WriteAllBytes("bass.dll", Properties.Resources.bass);
+            //}
             InitializeComponent();
 
             if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
@@ -408,9 +410,6 @@ namespace EasyMuisc
             InitializeLrcAnimation();
 
         }
-
-
-
         /// <summary>
         /// 初始化定时器事件
         /// </summary>
@@ -840,7 +839,8 @@ namespace EasyMuisc
         /// <returns></returns>
         private void Play()
         {
-
+            tbiPlay.Visibility = Visibility.Collapsed;
+            tbiPause.Visibility = Visibility.Visible;
             btnPlay.Visibility = Visibility.Hidden;
             btnPause.Visibility = Visibility.Visible;
             if (pauseTimer.IsEnabled)
@@ -904,7 +904,7 @@ namespace EasyMuisc
             {
                 Play();
             }
-            if(WindowState==WindowState.Normal)
+            if (WindowState == WindowState.Normal)
             {
                 Width += 0.01;
                 Width -= 0.01;
@@ -933,6 +933,9 @@ namespace EasyMuisc
         /// <returns></returns>
         private void Pause()
         {
+
+            tbiPause.Visibility = Visibility.Collapsed;
+            tbiPlay.Visibility = Visibility.Visible;
             btnPause.Visibility = Visibility.Hidden;
             btnPlay.Visibility = Visibility.Visible;
             if (playTimer.IsEnabled)
@@ -1077,7 +1080,7 @@ namespace EasyMuisc
             storyLrc.Stop(stkLrc);
             aniLrc.To = new Thickness(0, top, 0, 0);
             aniLrc.Duration = new Duration(TimeSpan.FromSeconds(0.8));//动画时间1秒
-                aniLrc.DecelerationRatio = 0.5;
+            aniLrc.DecelerationRatio = 0.5;
             storyLrc.Begin(stkLrc);
 
         }
@@ -1159,8 +1162,8 @@ namespace EasyMuisc
         private void BtnCycleModeClickEventHandler(object sender, RoutedEventArgs e)
         {
             //将三个按钮的事件放到了一起
-            (sender as Button).Visibility = Visibility.Hidden;
-            switch ((sender as Button).Name)
+            ((sender as FrameworkElement).Parent as ControlButton).Visibility = Visibility.Hidden;
+            switch (((sender as FrameworkElement).Parent as ControlButton).Name)
             {
                 case "btnListCycle":
                     btnShuffle.Visibility = Visibility.Visible;
@@ -1541,12 +1544,12 @@ namespace EasyMuisc
             menuClearExceptCurrent.Click += (p1, p2) =>
             {
                 int index = lvw.SelectedIndex;
-                for(int i=0;i<index;i++)
+                for (int i = 0; i < index; i++)
                 {
                     musicInfo.RemoveAt(0);
                 }
                 int count = musicInfo.Count;
-                for (int i=1;i<count;i++)
+                for (int i = 1; i < count; i++)
                 {
                     musicInfo.RemoveAt(1);
                 }
@@ -1651,24 +1654,6 @@ namespace EasyMuisc
                 }
             }
 
-        }
-        /// <summary>
-        ///  选项按钮鼠标进入动画事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnAnimitionMouseEnterEventHandler(object sender, MouseEventArgs e)
-        {
-            NewDoubleAnimation(sender as Button, OpacityProperty, 0.8, 0.5, 0.3);
-        }
-        /// <summary>
-        /// 选项按钮鼠标离开动画事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnAnimitionMouseLeaveEventHandler(object sender, MouseEventArgs e)
-        {
-            NewDoubleAnimation(sender as Button, OpacityProperty, 0.2, 0.5, 0.3);
         }
         /// <summary>
         /// 单击歌词选项按钮事件
@@ -2030,6 +2015,9 @@ namespace EasyMuisc
             HotKey down = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Down);
             up.OnHotKey += () => sldVolumn.Value += 0.05;
             down.OnHotKey += () => sldVolumn.Value -= 0.05;
+            HotKey playAndPause = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.OemQuestion);
+            playAndPause.OnHotKey += () => HotKeyPlayAndPauseEventHandler(null, null);
+
         }
         #endregion
 
@@ -2316,8 +2304,12 @@ namespace EasyMuisc
             Resources["darker1BrushColor"] = new SolidColorBrush(System.Windows.Media.Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.9f, color.Color.ScG * 0.9f, color.Color.ScB * 0.9f));
             Resources["darker2BrushColor"] = new SolidColorBrush(System.Windows.Media.Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.8f, color.Color.ScG * 0.8f, color.Color.ScB * 0.8f));
             Resources["darker3BrushColor"] = new SolidColorBrush(System.Windows.Media.Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.7f, color.Color.ScG * 0.7f, color.Color.ScB * 0.7f));
+            Resources["darker4BrushColor"] = new SolidColorBrush(System.Windows.Media.Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.6f, color.Color.ScG * 0.6f, color.Color.ScB * 0.6f));
+
             Resources["backgroundColor"] = color.Color;
             Resources["backgroundTransparentColor"] = System.Windows.Media.Color.FromArgb(0, color.Color.R, color.Color.G, color.Color.B);
+
+            Resources["foregroundBrushColor"] = new SolidColorBrush(Colors.Black);
 
         }
         /// <summary>
@@ -2327,6 +2319,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnSettingsClickEventHandler(object sender, RoutedEventArgs e)
         {
+
             if (mainContextMenu != null)
             {
                 (mainContextMenu.Items[0] as MenuItem).Header = Topmost ? "取消置顶" : "置顶";
@@ -2685,6 +2678,49 @@ namespace EasyMuisc
         private void LvwMouseLeaveEventHandler(object sender, MouseEventArgs e)
         {
             mouseInList = false;
+        }
+        #endregion
+        #region 任务栏按钮
+        /// <summary>
+        /// 单击任务栏上的播放按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TbiPlayClickEventHandler(object sender, EventArgs e)
+        {
+            BtnPlayClickEventHandler(null, null);
+            tbiPlay.Visibility = Visibility.Collapsed;
+            tbiPause.Visibility = Visibility.Visible;
+
+        }
+        /// <summary>
+        /// 单击任务栏上的暂停按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TbiPauseClickEventHandler(object sender, EventArgs e)
+        {
+            BtnPauseClickEventHandler(null, null);
+            tbiPause.Visibility = Visibility.Collapsed;
+            tbiPlay.Visibility = Visibility.Visible;
+        }
+        /// <summary>
+        /// 单击任务栏上的上一曲按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TbiLastClickEventHandler(object sender, EventArgs e)
+        {
+            BtnLastClickEventHandler(null, null);
+        }
+        /// <summary>
+        /// 单击任务栏上的下一曲按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TbiNextClickEventHandler(object sender, EventArgs e)
+        {
+            BtnNextClickEventHandler(null, null);
         }
         #endregion
     }

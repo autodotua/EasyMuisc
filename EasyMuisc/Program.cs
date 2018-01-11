@@ -17,10 +17,7 @@ namespace EasyMuisc
         [STAThread]
         static void Main(string[] args)
         {
-            if (!File.Exists("Bass.Net.dll"))
-            {
-                File.WriteAllBytes("Bass.Net.dll", Properties.Resources.Bass_Net);
-            }
+
             App app = new App();
             //app.InitializeComponent();
             //app.DispatcherUnhandledException += App_DispatcherUnhandledException;
