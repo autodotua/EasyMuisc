@@ -397,6 +397,24 @@ namespace EasyMuisc
             //    File.WriteAllBytes("bass.dll", Properties.Resources.bass);
             //}
             InitializeComponent();
+            if (GetConfig("Top","")!="")
+                {
+                Top = double.Parse(GetConfig("Top", ""));
+                WindowStartupLocation = WindowStartupLocation.Manual;
+            }
+            if (GetConfig("Left", "") != "")
+            {
+                Left = double.Parse(GetConfig("Left", ""));
+            }
+            if (GetConfig("Width", "") != "")
+            {
+                Width = double.Parse(GetConfig("Width", ""));
+            }
+            if (GetConfig("Height", "") != "")
+            {
+                Height = double.Parse(GetConfig("Height", ""));
+            }
+
 
             if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
             {
@@ -688,6 +706,10 @@ namespace EasyMuisc
             SetConfig("Volumn", sldVolumn.Value.ToString());
             SetConfig("AlwaysOnTop", Topmost.ToString());
             SetConfig("BackgroundColor", colorPicker.CurrentColor.ToString());
+            SetConfig("Top", Top.ToString());
+            SetConfig("Left", Left.ToString());
+            SetConfig("Width", ActualWidth.ToString());
+            SetConfig("Height", ActualHeight.ToString());
             cfa.Save();
             e.Cancel = true;
             closing = true;
@@ -1748,7 +1770,8 @@ namespace EasyMuisc
             MenuItem menuSaveAs = new MenuItem() { Header = "另存为歌词" };
             menuSaveAs.Click += (p1, p2) => SaveLrc(true);
 
-
+            MenuItem menuSearchInNetEase = new MenuItem() { Header = "在网易云中搜索" };
+            menuSearchInNetEase.Click += (p1, p2) => Process.Start($"https://music.163.com/#/search/m/?s={musicInfo[currentMusicIndex].MusicName}");
 
             ContextMenu menu = new ContextMenu()
             {
@@ -1765,7 +1788,8 @@ namespace EasyMuisc
                 menu.Items.Add(menuSave);
                 menu.Items.Add(menuSaveAs);
             }
-
+            menu.Items.Add(SeparatorLine);
+            menu.Items.Add(menuSearchInNetEase);
             menu.Items.Add(SeparatorLine);
             menu.Items.Add(menuNormalFontSizeSetting);
             menu.Items.Add(menuHighlightFontSizeSetting);

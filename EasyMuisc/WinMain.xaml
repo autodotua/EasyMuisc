@@ -480,7 +480,7 @@
                     <GridView>
                         <GridViewColumn Header="歌名" Width="144" DisplayMemberBinding="{Binding MusicName}"/>
                         <GridViewColumn Header="歌手" Width="96" DisplayMemberBinding="{Binding Singer}"/>
-                        <GridViewColumn Header="时长" Width="96" DisplayMemberBinding="{Binding Length}"/>
+                        <GridViewColumn Header="时长" Width="64" DisplayMemberBinding="{Binding Length}"/>
                     </GridView>
                 </ListView.View>
 
