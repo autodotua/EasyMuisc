@@ -50,6 +50,23 @@
         <TextBlock FontSize="5"/>
         <CheckBox x:Name="chkPreferMusicInfo" Content="保存歌词时优先采用歌曲信息而非原歌词信息"/>
         <TextBlock FontSize="5"/>
+        <CheckBox x:Name="chkLrcAnimation" Content="歌词动画" />
+        <TextBlock FontSize="5"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="刷新检测速度（n/s）：   " />
+            <TextBox x:Name="txtUpdateSpeed" BorderThickness="0, 0,0,1" MinWidth="20"  />
+        </StackPanel>
+        <TextBlock FontSize="5"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="动画帧率（frame/s）：   " />
+            <TextBox x:Name="txtAnimationFps" BorderThickness="0, 0,0,1" MinWidth="20"  />
+        </StackPanel>
+        <TextBlock FontSize="5"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="歌词默认偏移（s）：     " />
+            <TextBox x:Name="txtOffset" BorderThickness="0, 0,0,1" MinWidth="20" />
+        </StackPanel>
+        <TextBlock FontSize="5"/>
         <Button Content="保存" Click="ButtonClickEventHandler"/>
     </StackPanel>
 </Window>
