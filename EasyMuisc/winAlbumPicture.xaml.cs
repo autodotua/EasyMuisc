@@ -122,7 +122,7 @@ namespace EasyMuisc
                   }
                   catch(Exception ex)
                   {
-                      winMain.ShowAlert("保存文件失败：" + Environment.NewLine + ex.Message.ToString());
+                      Tools.ShowAlert("保存文件失败：" + Environment.NewLine + ex.Message.ToString());
                   }
               };
             sfd.ShowDialog();

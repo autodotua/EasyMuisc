@@ -53,6 +53,10 @@
         <CheckBox x:Name="chkLrcAnimation" Content="歌词动画" />
         <TextBlock FontSize="5"/>
         <StackPanel Orientation="Horizontal">
+            <RadioButton x:Name="chkListBoxLrc" Content="ListBox歌词         "/>
+            <RadioButton x:Name="chkStackPanel" Content="StackPanel歌词"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
             <TextBlock Text="刷新检测速度（n/s）：   " />
             <TextBox x:Name="txtUpdateSpeed" BorderThickness="0, 0,0,1" MinWidth="20"  />
         </StackPanel>

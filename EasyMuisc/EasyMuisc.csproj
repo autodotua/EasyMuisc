@@ -142,6 +142,9 @@
       <DependentUpon>ControlButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="HotKey.cs" />
+    <Compile Include="LrcListView.xaml.cs">
+      <DependentUpon>LrcListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MusicInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -149,6 +152,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SerializationUnit.cs" />
+    <Compile Include="Tools.cs" />
     <Compile Include="UcSpinnerDotCircle.xaml.cs">
       <DependentUpon>UcSpinnerDotCircle.xaml</DependentUpon>
     </Compile>
@@ -169,6 +173,10 @@
       <DependentUpon>WinSettings.xaml</DependentUpon>
     </Compile>
     <Page Include="ControlButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LrcListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

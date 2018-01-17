@@ -25,6 +25,9 @@ namespace EasyMuisc
         {
             InitializeComponent();
         }
+        /// <summary>
+        /// 矢量形状路径信息
+        /// </summary>
         public string PathData
         {
             set
@@ -32,13 +35,21 @@ namespace EasyMuisc
                 Resources["pathG"] = Geometry.Parse(value);
             }
         }
-
+        /// <summary>
+        /// 正常情况下的透明度（需开启opacityAnimation）
+        /// </summary>
         double normalOpacity = 0.2;
-
+        /// <summary>
+        /// 鼠标在上空情况下的透明度（需开启opacityAnimation）
+        /// </summary>
         double mouseOverOpacity = 0.6;
-
+        /// <summary>
+        /// 透明度动画
+        /// </summary>
         bool opacityAnimation = false;
-
+        /// <summary>
+        /// 透明度动画
+        /// </summary>
         public bool OpacityAnimation {
             get=>opacityAnimation;
                 set
@@ -47,6 +58,9 @@ namespace EasyMuisc
                 opacityAnimation = value;
             }
         }
+        /// <summary>
+        /// 路径边框宽度
+        /// </summary>
         public double PathThickness
         {
             set
@@ -54,7 +68,9 @@ namespace EasyMuisc
                 Resources["pathThickness"] = value;
             }
         }
-
+        /// <summary>
+        /// 正常宽度
+        /// </summary>
         public double NormalSize
         {
             set
@@ -62,6 +78,9 @@ namespace EasyMuisc
                 Resources["viewWidth"] = value;
             }
         }
+        /// <summary>
+        /// 鼠标在上方的宽度
+        /// </summary>
         public double MouseOverSize
         {
             set
@@ -69,6 +88,9 @@ namespace EasyMuisc
                 Resources["tri1Width"] = value;
             }
         }
+        /// <summary>
+        /// 鼠标点击时的宽度
+        /// </summary>
         public double PressedSize
         {
             set
@@ -76,10 +98,17 @@ namespace EasyMuisc
                 Resources["tri2Width"] = value;
             }
         }
-
+        /// <summary>
+        /// 正常时的透明度
+        /// </summary>
         public double NormalOpacity { get => normalOpacity; set => normalOpacity = value; }
+        /// <summary>
+        /// 鼠标在上方时的透明度
+        /// </summary>
         public double MouseOverOpacity { get => mouseOverOpacity; set => mouseOverOpacity = value; }
-
+        /// <summary>
+        /// 单击事件
+        /// </summary>
         public event RoutedEventHandler Click
         {
             add
@@ -91,8 +120,6 @@ namespace EasyMuisc
                 btn.RemoveHandler(Button.ClickEvent, value);
             }
         }
-
-
         /// <summary>
         /// 创建并启动一个新的浮点数据类型动画
         /// </summary>

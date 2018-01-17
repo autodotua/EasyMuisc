@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EasyMuisc"
              mc:Ignorable="d" 
-xmlns:sys="clr-namespace:System;assembly=mscorlib"
+              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              d:DesignHeight="32" d:DesignWidth="32">
     <UserControl.Resources>
         <PathGeometry x:Key="pathG" />
@@ -25,8 +25,8 @@ xmlns:sys="clr-namespace:System;assembly=mscorlib"
                                     <Path x:Name="path" Stroke="{DynamicResource foregroundBrushColor}" StrokeThickness="{DynamicResource pathThickness}" Fill="{DynamicResource foregroundBrushColor}"   Data="{DynamicResource pathG}"/>
                                 </Viewbox >
                             </Grid>
-                            
-                                <ControlTemplate.Triggers>
+
+                            <ControlTemplate.Triggers>
 
                                 <Trigger Property="IsMouseOver" Value="true">
                                     <Setter Property="Width" Value="{DynamicResource tri1Width}" TargetName="view" />

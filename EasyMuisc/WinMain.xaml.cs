@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Shell;
 using CustomWPFColorPicker;
+using static EasyMuisc.Tools;
 namespace EasyMuisc
 {
     /// <summary>
@@ -93,91 +94,6 @@ namespace EasyMuisc
             Sleep(1000, (p1, p2) => NewDoubleAnimation(tbkOffset, OpacityProperty, 0, 0.5, 0, (p3, p4) => tbkOffset.Opacity = 0, true));
         }
 
-        /// <summary>
-        /// 显示错误信息
-        /// </summary>
-        /// <param name="message"></param>
-        public bool ShowAlert(string message, MessageBoxButton button = MessageBoxButton.OK)
-        {
-            if (button == MessageBoxButton.YesNo)
-            {
-                if (MessageBox.Show(message, "错误", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
-                {
-                    return true;
-                }
-                return false;
-            }
-            else
-            {
-                MessageBox.Show(message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            return true;
-        }
-        /// <summary>
-        /// 菜单分隔栏
-        /// </summary>
-        private System.Windows.Shapes.Line SeparatorLine
-        {
-            get
-            {
-                return new System.Windows.Shapes.Line()
-                {
-                    X1 = 0,
-                    X2 = 140,
-                    Y1 = 0,
-                    Y2 = 0,
-                    Stroke = System.Windows.Media.Brushes.LightGray,
-                };
-            }
-        }
-        /// <summary>
-        /// 创建并启动一个新的浮点数据类型动画
-        /// </summary>
-        /// <param name="obj">动画主体</param>
-        /// <param name="property">更改的属性</param>
-        /// <param name="to">目标值</param>
-        /// <param name="duration">时间</param>
-        /// <param name="decelerationRatio">减缓时间</param>
-        /// <param name="completed">完成以后的事件</param>
-        /// <returns></returns>
-        private Storyboard NewDoubleAnimation(FrameworkElement obj, DependencyProperty property, double to, double duration, double decelerationRatio = 0, EventHandler completed = null, bool stopAfterComplete = false)
-        {
-
-            DoubleAnimation ani = new DoubleAnimation
-            {
-                To = to,
-                Duration = new Duration(TimeSpan.FromSeconds(duration)),//动画时间1秒
-                DecelerationRatio = decelerationRatio,
-                FillBehavior = stopAfterComplete ? FillBehavior.Stop : FillBehavior.HoldEnd,
-            };
-            Storyboard.SetTargetName(ani, obj.Name);
-            Storyboard.SetTargetProperty(ani, new PropertyPath(property));
-            Storyboard story = new Storyboard();
-            story.Children.Add(ani);
-            if (completed != null)
-            {
-                story.Completed += completed;
-            }
-            story.Begin(obj);
-            return story;
-        }
-        /// <summary>
-        /// 支持多个过滤器的枚举
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="searchPattern"></param>
-        /// <param name="searchOption"></param>
-        /// <returns></returns>
-        public static string[] EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
-        {
-            string[] searchPatterns = searchPattern.Split('|');
-            List<string> files = new List<string>();
-            foreach (string i in searchPatterns)
-            {
-                files.AddRange(Directory.EnumerateFiles(path, i, searchOption));
-            }
-            return files.ToArray();
-        }
 
         #endregion
 
@@ -282,7 +198,7 @@ namespace EasyMuisc
         private bool AutoFurl
         {
             get => bool.Parse(GetConfig("AutoFurl", "True"));
-            set=>SetConfig("AutoFurl", value.ToString());
+            set => SetConfig("AutoFurl", value.ToString());
         }
         /// <summary>
         /// 显示歌词
@@ -290,23 +206,35 @@ namespace EasyMuisc
         private bool ShowLrc
         {
             get => bool.Parse(GetConfig("ShowLrc", "True"));
-            set=> SetConfig("ShowLrc", value.ToString());
+            set => SetConfig("ShowLrc", value.ToString());
         }
+        /// <summary>
+        /// 是否将歌词时间偏移量保存在Lrc标签中
+        /// </summary>
         public bool SaveLrcOffsetByTag
         {
-            get=> bool.Parse(GetConfig("SaveLrcOffsetByTag", "False"));   
-            set=>SetConfig("SaveLrcOffsetByTag", value.ToString());          
+            get => bool.Parse(GetConfig("SaveLrcOffsetByTag", "False"));
+            set => SetConfig("SaveLrcOffsetByTag", value.ToString());
         }
+        /// <summary>
+        /// 是否在保存歌词时优先选择歌曲信息代替原歌词信息
+        /// </summary>
         public bool PreferMusicInfo
         {
-            get=>bool.Parse(GetConfig("PreferMusicInfo", "False"));
-            set=>SetConfig("PreferMusicInfo", value.ToString());         
+            get => bool.Parse(GetConfig("PreferMusicInfo", "False"));
+            set => SetConfig("PreferMusicInfo", value.ToString());
         }
+        /// <summary>
+        /// 是否显示歌词动画
+        /// </summary>
         public bool LrcAnimation
         {
             get => bool.Parse(GetConfig("LrcAnimation", "True"));
             set => SetConfig("LrcAnimation", value.ToString());
         }
+        /// <summary>
+        /// 歌词默认偏移量
+        /// </summary>
         public double LrcDefautOffset
         {
             get => double.Parse(GetConfig("LrcDefautOffset", "0"));
@@ -324,6 +252,9 @@ namespace EasyMuisc
                 mainTimer.Interval = TimeSpan.FromMilliseconds(1000 / value);
             }
         }
+        /// <summary>
+        /// 动画帧率
+        /// </summary>
         public int AnimationFps
         {
             get => int.Parse(GetConfig("AnimationFps", "60"));
@@ -338,6 +269,18 @@ namespace EasyMuisc
                     SetConfig("AnimationFps", value.ToString());
                 }
             }
+        }
+        public bool UseListBoxLrcInsteadOfStackPanel
+        {
+            get => bool.Parse(GetConfig("UseListBoxLrcInsteadOfStackPanel", "False"));
+            set => SetConfig("UseListBoxLrcInsteadOfStackPanel", value.ToString());
+
+        }
+        public bool ShrinkMusicListManually
+        {
+            get => bool.Parse(GetConfig("ShrinkMusicListManually", "False"));
+            set => SetConfig("ShrinkMusicListManually", value.ToString());
+
         }
         #endregion
 
@@ -397,22 +340,29 @@ namespace EasyMuisc
             //    File.WriteAllBytes("bass.dll", Properties.Resources.bass);
             //}
             InitializeComponent();
-            if (GetConfig("Top","")!="")
+            if (GetConfig("MaxWindow", "False") == "True")
+            {
+                WindowState = WindowState.Maximized;
+            }
+            else
+            {
+                if (GetConfig("Top", "") != "")
                 {
-                Top = double.Parse(GetConfig("Top", ""));
-                WindowStartupLocation = WindowStartupLocation.Manual;
-            }
-            if (GetConfig("Left", "") != "")
-            {
-                Left = double.Parse(GetConfig("Left", ""));
-            }
-            if (GetConfig("Width", "") != "")
-            {
-                Width = double.Parse(GetConfig("Width", ""));
-            }
-            if (GetConfig("Height", "") != "")
-            {
-                Height = double.Parse(GetConfig("Height", ""));
+                    Top = double.Parse(GetConfig("Top", ""));
+                    WindowStartupLocation = WindowStartupLocation.Manual;
+                }
+                if (GetConfig("Left", "") != "")
+                {
+                    Left = double.Parse(GetConfig("Left", ""));
+                }
+                if (GetConfig("Width", "") != "")
+                {
+                    Width = double.Parse(GetConfig("Width", ""));
+                }
+                if (GetConfig("Height", "") != "")
+                {
+                    Height = double.Parse(GetConfig("Height", ""));
+                }
             }
 
 
@@ -546,6 +496,10 @@ namespace EasyMuisc
             textLrcFontSize = double.Parse(GetConfig("TextLrcFontSize", textLrcFontSize.ToString()));
             sldVolumn.Value = double.Parse(GetConfig("Volumn", "1"));
             Topmost = bool.Parse(GetConfig("AlwaysOnTop", "false"));
+            if (ShrinkMusicListManually)
+            {
+                Sleep(1000, (p1, p2) => BtnListSwitcherClickEventHandler(null, null));
+            }
         }
         /// <summary>
         /// 增加一组歌曲到列表中
@@ -710,6 +664,7 @@ namespace EasyMuisc
             SetConfig("Left", Left.ToString());
             SetConfig("Width", ActualWidth.ToString());
             SetConfig("Height", ActualHeight.ToString());
+            SetConfig("MaxWindow", (WindowState == WindowState.Maximized) ? "True" : "False");
             cfa.Save();
             e.Cancel = true;
             closing = true;
@@ -777,7 +732,17 @@ namespace EasyMuisc
             {
                 grdLrc.Visibility = Visibility.Visible;
                 txtLrc.Visibility = Visibility.Hidden;
-                stkLrc.Visibility = Visibility.Visible;
+                if(UseListBoxLrcInsteadOfStackPanel)
+                {
+                    lbxLrc.Visibility = Visibility.Visible;
+                    stkLrc.Visibility = Visibility.Hidden;
+
+                }
+                else
+                {
+                    stkLrc.Visibility = Visibility.Visible;
+                    lbxLrc.Visibility = Visibility.Hidden;
+                }
                 lrc = new Lrc(file.FullName);//获取歌词信息
                 if (!double.TryParse(lrc.Offset, out offset))
                 {
@@ -791,6 +756,12 @@ namespace EasyMuisc
                     //{
                     //    break;
                     //}
+                    //lbxLrc.Add(i.Value,index.ToString(),(p1,p2) =>
+                    //{
+                    //    var position = lrcTime[int.Parse(((p1 as FrameworkElement).Tag).ToString())] - offset - LrcDefautOffset;
+                    //    Bass.BASS_ChannelSetPosition(stream, position > 0 ? position : 0);
+                    //    });
+
                     lrcContent.Add(i.Value);
                     var tbk = new TextBlock()
                     {
@@ -804,9 +775,16 @@ namespace EasyMuisc
                     tbk.MouseLeftButtonUp += (p1, p2) =>
                     {
                         //单击歌词跳转到当前歌词
-                        Bass.BASS_ChannelSetPosition(stream, (lrcTime[(int)tbk.Tag] - offset - LrcDefautOffset)>0? lrcTime[(int)tbk.Tag] - offset - LrcDefautOffset:0);
+                        Bass.BASS_ChannelSetPosition(stream, (lrcTime[(int)tbk.Tag] - offset - LrcDefautOffset) > 0 ? lrcTime[(int)tbk.Tag] - offset - LrcDefautOffset : 0);
                     };
-                    stkLrc.Children.Add(tbk);
+                    if(UseListBoxLrcInsteadOfStackPanel)
+                    {
+                        lbxLrc.Add(tbk);
+                    }
+                    else
+                    {
+                        stkLrc.Children.Add(tbk);
+                    }
                     lrcTime.Add(i.Key);
                 }
                 foreach (var i in lrc.LineIndex)
@@ -826,12 +804,15 @@ namespace EasyMuisc
                 grdLrc.Visibility = Visibility.Hidden;
                 txtLrc.Visibility = Visibility.Visible;
                 stkLrc.Visibility = Visibility.Hidden;
+                lbxLrc.Visibility = Visibility.Hidden;
+
             }
             else
             {
                 grdLrc.Visibility = Visibility.Hidden;
                 txtLrc.Visibility = Visibility.Hidden;
                 stkLrc.Visibility = Visibility.Hidden;
+                lbxLrc.Visibility = Visibility.Hidden;
             }
         }
         /// <summary>
@@ -1022,7 +1003,7 @@ namespace EasyMuisc
         /// <summary>
         /// 歌词动画
         /// </summary>
-        ThicknessAnimation aniLrc = new ThicknessAnimation() {Duration = new Duration(TimeSpan.FromSeconds(0.8)),DecelerationRatio = 0.5 };
+        ThicknessAnimation aniLrc = new ThicknessAnimation() { Duration = new Duration(TimeSpan.FromSeconds(0.8)), DecelerationRatio = 0.5 };
         private void InitializeAnimation()
         {
             if (LrcAnimation)
@@ -1077,7 +1058,7 @@ namespace EasyMuisc
             {
                 for (int i = 0; i < lrcTime.Count - 1; i++)//从第一个循环到最后一个歌词时间
                 {
-                    if (lrcTime[i + 1] > position + offset+LrcDefautOffset)//如果下一条歌词的时间比当前时间要后面（因为增序判断所以这一条歌词时间肯定小于的）
+                    if (lrcTime[i + 1] > position + offset + LrcDefautOffset)//如果下一条歌词的时间比当前时间要后面（因为增序判断所以这一条歌词时间肯定小于的）
                     {
                         if (currentLrcIndex != i)//如果上一次不是这一句歌词
                         {
@@ -1086,7 +1067,7 @@ namespace EasyMuisc
                         }
                         break;
                     }
-                    else if (i == lrcTime.Count - 2 && lrcTime[i + 1] < position + offset+ LrcDefautOffset)
+                    else if (i == lrcTime.Count - 2 && lrcTime[i + 1] < position + offset + LrcDefautOffset)
                     {
                         if (currentLrcIndex != i + 1)//如果上一次不是这一句歌词
                         {
@@ -1105,8 +1086,17 @@ namespace EasyMuisc
                     //首先把所有的歌词都改为正常大小
                     (i as TextBlock).FontSize = normalLrcFontSize;
                 }
-            (stkLrc.Children[currentLrcIndex] as TextBlock).FontSize = highlightLrcFontSize;//当前歌词改为高亮
-                LrcAnimition(currentLrcIndex);//歌词转变动画
+                if(UseListBoxLrcInsteadOfStackPanel)
+                {
+                    lbxLrc.RefreshFontSize(normalLrcFontSize, highlightLrcFontSize, currentLrcIndex);
+                    lbxLrc.ScrollTo(lrcLineSumToIndex[currentLrcIndex]/*第一行到当前行的总行数*/ * normalLrcFontSize * FontFamily.LineSpacing);
+                }
+                else
+                {
+                    (stkLrc.Children[currentLrcIndex] as TextBlock).FontSize = highlightLrcFontSize;//当前歌词改为高亮
+                    LrcAnimition(currentLrcIndex);//歌词转变动画
+                }
+
             }
         }
         /// <summary>
@@ -1117,6 +1107,56 @@ namespace EasyMuisc
         {
             double top = 0.5 * ActualHeight - lrcLineSumToIndex[lrcIndex]/*第一行到当前行的总行数*/ * normalLrcFontSize * FontFamily.LineSpacing/*歌词数量乘每行字的高度*/ - highlightLrcFontSize;// 0.5 * ActualHeight - stkLrcHeight * lrcIndex / (stkLrc.Children.Count - 1)-highlightFontSize ;
 
+
+            //Storyboard storyboard = new Storyboard();
+            //TranslateTransform translateTransform = new TranslateTransform(0, top);
+            ////ScaleTransform scale = new ScaleTransform(1.0, 1.0, 1, 1);
+            //stkLrc.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
+            //TransformGroup myTransGroup = new TransformGroup();
+            //myTransGroup.Children.Add(translateTransform);
+            //stkLrc.RenderTransform = myTransGroup;
+
+            //DoubleAnimation growAnimation = new DoubleAnimation();
+            //growAnimation.Duration = TimeSpan.FromMilliseconds(1000);
+            ////growAnimation.From = 1;
+            //growAnimation.To = 1.1;
+            //storyboard.Children.Add(growAnimation);
+
+            //DependencyProperty[] propertyChain = new DependencyProperty[]
+            //{
+            //Button.RenderTransformProperty,
+            //TransformGroup.ChildrenProperty,
+            //TranslateTransform.YProperty
+            //};
+            //string thePath = "(0).(1)[0].(2)";
+            //PropertyPath myPropertyPath = new PropertyPath(thePath, propertyChain);
+            //Storyboard.SetTargetProperty(growAnimation, myPropertyPath);
+            //Storyboard.SetTarget(growAnimation, stkLrc);
+
+            //storyboard.Begin();
+
+
+
+
+
+
+
+
+
+            ////DoubleAnimationUsingKeyFrames ani = new DoubleAnimationUsingKeyFrames();
+            ////LinearDoubleKeyFrame first = new LinearDoubleKeyFrame(0, KeyTime.FromPercent(0));
+
+            ////LinearDoubleKeyFrame second = new LinearDoubleKeyFrame(10, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(500)));
+            ////ani.KeyFrames.Add(first);
+            ////ani.KeyFrames.Add(second);
+            ////stkLrc.RenderTransform .BeginAnimation(RenderTransform., ani);
+
+            //return;
+
+
+            //Canvas.SetTop(stkLrc, top);
+           // NewDoubleAnimation(stkLrc, Canvas.LeftProperty, top, 0.8, 0.5);
+            //return;
             if (LrcAnimation)
             {
                 storyLrc.Stop(stkLrc);
@@ -1125,7 +1165,7 @@ namespace EasyMuisc
             }
             else
             {
-                stkLrc.Margin= new Thickness(0, top, 0, 0); 
+                stkLrc.Margin = new Thickness(0, top, 0, 0);
             }
         }
         #endregion
@@ -1378,11 +1418,13 @@ namespace EasyMuisc
             {
                 aniMargin.To = new Thickness(0, 0, 0, 0);
                 aniOpacity.To = 1;
+                ShrinkMusicListManually = false;
             }
             else
             {
                 aniMargin.To = new Thickness(-lvw.ActualWidth, 0, 0, 0);
                 aniOpacity.To = 0;
+                ShrinkMusicListManually = true;
             }
             story.Begin(grdList);
 
@@ -1394,6 +1436,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void WindowSizeChangedEventHandler(object sender, SizeChangedEventArgs e)
         {
+            lbxLrc.RefreshPlaceholder(grdLrcArea.ActualHeight / 2, highlightLrcFontSize);
 
             if (!AutoFurl || !ShowLrc)
             {
@@ -1409,7 +1452,6 @@ namespace EasyMuisc
             {
                 BtnListSwitcherClickEventHandler(null, null);
             }
-
 
         }
         /// <summary>
@@ -2358,7 +2400,7 @@ namespace EasyMuisc
         /// <summary>
         /// 鼠标是否正在标题栏上且按下
         /// </summary>
-        bool headerMouseDowning = false;
+       private bool headerMouseDowning = false;
         /// <summary>
         /// 窗体上边界
         /// </summary>
@@ -2512,7 +2554,7 @@ namespace EasyMuisc
               {
                   Top = reservedTop;
                   WindowState = WindowState.Minimized;
-              },true);
+              }, true);
         }
         /// <summary>
         /// 鼠标是否在专辑图上按下了
@@ -2692,7 +2734,7 @@ namespace EasyMuisc
                 }
                 ShowInfo("当前歌词偏移量：" + (offset > 0 ? "+" : "") + Math.Round(offset, 2).ToString() + "秒");
             }
-            else if (!mouseInList)
+            else if (!(mouseInList || mouseInLrcArea))
             {
                 if (e.Delta > 0)
                 {

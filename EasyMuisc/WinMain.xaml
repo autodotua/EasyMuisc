@@ -163,7 +163,7 @@
                 <Rectangle Width="1.5" x:Name="rec" Fill="{DynamicResource darker2BrushColor}"/>
             </Border>
         </ControlTemplate>
-        <Style TargetType="{x:Type GridViewColumnHeader}">
+        <Style x:Key="musicListStyle" TargetType="{x:Type GridViewColumnHeader}">
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -445,10 +445,11 @@
 
             </Grid>
 
-            <ListView x:Name="lvw" ItemsSource="{Binding}" DragEnter="LvwDragEnterEventHandler"
+            <ListView x:Name="lvw" ItemsSource="{Binding}" DragEnter="LvwDragEnterEventHandler"  ScrollViewer.CanContentScroll="False"
                       Background="{DynamicResource backgroundBrushColor}" Foreground="Black" BorderThickness="0"
                       PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown" Grid.Row="2" MouseEnter="LvwMouseEnterEventHandler"
                       MouseLeave="LvwMouseLeaveEventHandler" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+              
                 <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}">
                         <EventSetter Event="UIElement.PreviewKeyDown" Handler="LvwItemPreviewKeyDownEventHandler"/>
@@ -477,8 +478,9 @@
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="歌名" Width="144" DisplayMemberBinding="{Binding MusicName}"/>
+                    <GridView ColumnHeaderContainerStyle="{StaticResource musicListStyle}">
+                        
+                        <GridViewColumn  Header="歌名" Width="144" DisplayMemberBinding="{Binding MusicName}"/>
                         <GridViewColumn Header="歌手" Width="96" DisplayMemberBinding="{Binding Singer}"/>
                         <GridViewColumn Header="时长" Width="64" DisplayMemberBinding="{Binding Length}"/>
                     </GridView>
@@ -494,6 +496,7 @@
         <Grid x:Name="grdLrcArea" Grid.Column="2" Grid.Row="2" Background="{DynamicResource backgroundBrushColor}" MouseEnter="GrdLrcAreaMouseEnterEventHandler" MouseLeave="GrdLrcAreaMouseLeaveEventHandler">
 
             <StackPanel x:Name="stkLrc" Visibility="Hidden" Background="{DynamicResource backgroundBrushColor}" SnapsToDevicePixels="True" />
+            <local:LrcListView x:Name="lbxLrc" Visibility="Hidden"/>
             <TextBox x:Name="txtLrc" Background="{DynamicResource backgroundBrushColor}" TextAlignment="Center" IsReadOnly="True" BorderThickness="0" VerticalScrollBarVisibility="Auto" Visibility="Hidden" PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown" />
             <Grid x:Name="grdLrc"  IsHitTestVisible="False" Margin="0,-4,0,-4">
                 <Grid.Background>
