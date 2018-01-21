@@ -37,63 +37,10 @@ namespace EasyMuisc
         /// <summary>
         /// 循环模式
         /// </summary>
-        private enum CycleMode
-        {
-            SingleCycle,
-            ListCycle,
-            Shuffle,
-        }
-        #region 模板
-        /// <summary>
-        /// 延时定时器
-        /// </summary>
-        DispatcherTimer waitTimer = new DispatcherTimer();
-        /// <summary>
-        /// 延时
-        /// </summary>
-        /// <param name="millisecond">延时时间</param>
-        /// <param name="tick">延时结束后的事件</param>
-        private void Sleep(double millisecond, EventHandler tick)
-        {
-            waitTimer.Interval = new TimeSpan(10000 * (long)millisecond);
-            waitTimer.Tick += tick;
-            waitTimer.Tick += (p1, p2) => waitTimer.Stop();
-            waitTimer.Start();
-        }
-        /// <summary>
-        /// 处理事件
-        /// </summary>
-        public static class DispatcherHelper
-        {
-            [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-            public static void DoEvents()
-            {
-                try
-                {
-                    DispatcherFrame frame = new DispatcherFrame();
-                    Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, new DispatcherOperationCallback(ExitFrames), frame);
-                    Dispatcher.PushFrame(frame);
-                }
-                catch (InvalidOperationException) { }
-            }
-            private static object ExitFrames(object frame)
-            {
-                ((DispatcherFrame)frame).Continue = false;
-                return null;
-            }
-        }
-        /// <summary>
-        /// 显示不重要的信息
-        /// </summary>
-        /// <param name="info"></param>
-        private void ShowInfo(string info)
-        {
-            tbkOffset.Text = info;
-            tbkOffset.Opacity = 1;
-            waitTimer.Stop();
-            Sleep(1000, (p1, p2) => NewDoubleAnimation(tbkOffset, OpacityProperty, 0, 0.5, 0, (p3, p4) => tbkOffset.Opacity = 0, true));
-        }
+        private enum CycleMode {SingleCycle,ListCycle, Shuffle}
 
+        #region 模板
+       
 
         #endregion
 
@@ -188,7 +135,6 @@ namespace EasyMuisc
                 }
             }
         }
-
         #endregion
 
         #region 设置
@@ -270,12 +216,18 @@ namespace EasyMuisc
                 }
             }
         }
+        /// <summary>
+        /// 使用列表框歌词栏来代替StackPanel
+        /// </summary>
         public bool UseListBoxLrcInsteadOfStackPanel
         {
             get => bool.Parse(GetConfig("UseListBoxLrcInsteadOfStackPanel", "False"));
             set => SetConfig("UseListBoxLrcInsteadOfStackPanel", value.ToString());
 
         }
+        /// <summary>
+        /// 是否手动收缩了歌曲列表
+        /// </summary>
         public bool ShrinkMusicListManually
         {
             get => bool.Parse(GetConfig("ShrinkMusicListManually", "False"));
@@ -440,7 +392,7 @@ namespace EasyMuisc
             RegistGolbalHotKey();
             if (File.Exists(programDirectory + "\\" + MusicListName))
             {
-                musicInfo = SerializationUnit.DeserializeObject(File.ReadAllBytes(programDirectory + "\\" + MusicListName)) as ObservableCollection<MusicInfo>;
+                musicInfo = DeserializeObject(File.ReadAllBytes(programDirectory + "\\" + MusicListName)) as ObservableCollection<MusicInfo>;
             }
             else
             {
@@ -498,7 +450,7 @@ namespace EasyMuisc
             Topmost = bool.Parse(GetConfig("AlwaysOnTop", "false"));
             if (ShrinkMusicListManually)
             {
-                Sleep(1000, (p1, p2) => BtnListSwitcherClickEventHandler(null, null));
+                SleepThenDo(1000, (p1, p2) => BtnListSwitcherClickEventHandler(null, null));
             }
         }
         /// <summary>
@@ -553,7 +505,7 @@ namespace EasyMuisc
                     Path = path,
                     Album = album,
                 });
-                DispatcherHelper.DoEvents();
+                DoEvents();
                 return musicInfo[musicInfo.Count - 1];
             }
             catch
@@ -640,7 +592,7 @@ namespace EasyMuisc
                 return;
             }
             //SaveMusicListFromConfig();
-            File.WriteAllBytes(programDirectory + "\\" + MusicListName, SerializationUnit.SerializeObject(musicInfo));
+            File.WriteAllBytes(programDirectory + "\\" + MusicListName, SerializeObject(musicInfo));
             switch (CurrentCycleMode)
             {
                 case CycleMode.ListCycle:
@@ -709,9 +661,9 @@ namespace EasyMuisc
                 sldProcess.Maximum = musicLength;
                 InitialiazeLrc();
             }
-            catch
+            catch(Exception ex)
             {
-                ShowAlert("初始化失败!");
+                ShowAlert("初始化失败!"+Environment.NewLine+ex.ToString());
                 return;
             }
             ReadMusicSourceInfo(musicInfo[currentMusicIndex].Path);
@@ -726,6 +678,13 @@ namespace EasyMuisc
         /// <param name="musicLength"></param>
         private void InitialiazeLrc()
         {
+            lrcLineSumToIndex.Clear();
+            lrcTime.Clear();//清空歌词时间
+            lrcContent.Clear();//清除歌词内容
+            currentLrcIndex = -1;//删除歌词索引
+            stkLrc.Children.Clear();//清空歌词表
+            lbxLrc.Clear();
+
             FileInfo file = new FileInfo(path);
             file = new FileInfo(file.FullName.Replace(file.Extension, ".lrc"));
             if (file.Exists)//判断是否存在歌词文件
@@ -750,7 +709,7 @@ namespace EasyMuisc
                 }
                 offset /= 1000.0;
                 int index = 0;//用于赋值Tag
-                foreach (var i in lrc.LrcContent)
+                    foreach (var i in lrc.LrcContent)
                 {
                     //if (i.Key > musicLength)//如果歌词文件有误，长度超过了歌曲的长度，那么超过部分就不管了
                     //{
@@ -765,12 +724,14 @@ namespace EasyMuisc
                     lrcContent.Add(i.Value);
                     var tbk = new TextBlock()
                     {
+                        Name = "tbk"+index.ToString(),
                         FontSize = normalLrcFontSize,
                         Text = i.Value,
                         HorizontalAlignment = HorizontalAlignment.Center,
                         Tag = index++,//标签用于定位
                         Cursor = Cursors.Hand,
                         TextAlignment = TextAlignment.Center,
+                        FocusVisualStyle = null,
                     };
                     tbk.MouseLeftButtonUp += (p1, p2) =>
                     {
@@ -783,10 +744,13 @@ namespace EasyMuisc
                     }
                     else
                     {
-                        stkLrc.Children.Add(tbk);
+                       stkLrc.Children.Add(tbk);
+                       //stkLrc.
                     }
                     lrcTime.Add(i.Key);
                 }
+                //lbxLrc.Add(lrc.LrcContent);
+                //lbxLrc.ChangeFontSize(normalLrcFontSize);
                 foreach (var i in lrc.LineIndex)
                 {
                     lrcLineSumToIndex.Add(i.Value);
@@ -832,7 +796,7 @@ namespace EasyMuisc
                     break;
                 case CycleMode.Shuffle:
                     Random r = new Random();
-                    Sleep(r.NextDouble() / 1000, null);
+                    SleepThenDo(r.NextDouble() / 1000, null);
                     int index;
                     while ((index = r.Next(musicInfo.Count)) == currentMusicIndex)
                         ;
@@ -892,13 +856,8 @@ namespace EasyMuisc
                 }
                 return false;
             }
-            lrcLineSumToIndex.Clear();
             currentMusicIndex = index;//指定当前的索引
             path = musicInfo[currentMusicIndex].Path;//获取歌曲地址
-            currentLrcIndex = -1;//删除歌词索引
-            lrcTime.Clear();//清空歌词时间
-            lrcContent.Clear();//清除歌词内容
-            stkLrc.Children.Clear();//清空歌词表
             lvw.SelectedIndex = index;//选中列表中的歌曲
             lvw.ScrollIntoView(lvw.SelectedItem);
             if (currentHistoryIndex == history.Count - 1)
@@ -1004,6 +963,10 @@ namespace EasyMuisc
         /// 歌词动画
         /// </summary>
         ThicknessAnimation aniLrc = new ThicknessAnimation() { Duration = new Duration(TimeSpan.FromSeconds(0.8)), DecelerationRatio = 0.5 };
+
+        /// <summary>
+        /// 初始化歌词动画
+        /// </summary>
         private void InitializeAnimation()
         {
             if (LrcAnimation)
@@ -1081,18 +1044,19 @@ namespace EasyMuisc
 
             if (changed)
             {
-                foreach (var i in stkLrc.Children)
-                {
-                    //首先把所有的歌词都改为正常大小
-                    (i as TextBlock).FontSize = normalLrcFontSize;
-                }
+
                 if(UseListBoxLrcInsteadOfStackPanel)
                 {
-                    lbxLrc.RefreshFontSize(normalLrcFontSize, highlightLrcFontSize, currentLrcIndex);
+                  lbxLrc.RefreshFontSize(normalLrcFontSize, highlightLrcFontSize, currentLrcIndex);
                     lbxLrc.ScrollTo(lrcLineSumToIndex[currentLrcIndex]/*第一行到当前行的总行数*/ * normalLrcFontSize * FontFamily.LineSpacing);
                 }
                 else
                 {
+                    foreach (var i in stkLrc.Children)
+                    {
+                        //首先把所有的歌词都改为正常大小
+                        (i as TextBlock).FontSize = normalLrcFontSize;
+                    }
                     (stkLrc.Children[currentLrcIndex] as TextBlock).FontSize = highlightLrcFontSize;//当前歌词改为高亮
                     LrcAnimition(currentLrcIndex);//歌词转变动画
                 }
@@ -1155,8 +1119,22 @@ namespace EasyMuisc
 
 
             //Canvas.SetTop(stkLrc, top);
-           // NewDoubleAnimation(stkLrc, Canvas.LeftProperty, top, 0.8, 0.5);
+            // NewDoubleAnimation(stkLrc, Canvas.LeftProperty, top, 0.8, 0.5);
             //return;
+
+            //DoubleAnimation ani = new DoubleAnimation()
+            //{
+            //    Duration = TimeSpan.FromMilliseconds(500),
+            //    To = top,
+            //};
+            ////  Storyboard.SetTargetProperty(aniLrc, new PropertyPath("(ListView.RenderTransform).(TranslateTransform.Y)"));
+            //Storyboard.SetTargetProperty(ani, new PropertyPath("(StackPanel.RenderTransform).(TranslateTransform.X)"));
+            //Storyboard.SetTarget(ani, stkLrc);
+            //Storyboard st = new Storyboard();
+            //st.Children.Add(ani);
+            //st.Begin(stkLrc);
+            //return;
+
             if (LrcAnimation)
             {
                 storyLrc.Stop(stkLrc);
@@ -1815,6 +1793,8 @@ namespace EasyMuisc
             MenuItem menuSearchInNetEase = new MenuItem() { Header = "在网易云中搜索" };
             menuSearchInNetEase.Click += (p1, p2) => Process.Start($"https://music.163.com/#/search/m/?s={musicInfo[currentMusicIndex].MusicName}");
 
+            MenuItem menuReload = new MenuItem() { Header = "重载歌词" };
+            menuReload.Click += (p1, p2) => InitialiazeLrc();
             ContextMenu menu = new ContextMenu()
             {
                 PlacementTarget = btnLrcOption,
@@ -1822,13 +1802,14 @@ namespace EasyMuisc
             };
 
             menu.Items.Add(menuShowLrc);
-
-            if (lrcContent.Count != 0 && stkLrc.Visibility == Visibility.Visible)
+            menu.Items.Add(menuReload);
+            if (lrcContent.Count != 0 &&(lbxLrc.Visibility==Visibility.Visible || stkLrc.Visibility == Visibility.Visible))
             {
                 menu.Items.Add(SeparatorLine);
                 menu.Items.Add(menuCopyLrc);
                 menu.Items.Add(menuSave);
                 menu.Items.Add(menuSaveAs);
+                
             }
             menu.Items.Add(SeparatorLine);
             menu.Items.Add(menuSearchInNetEase);
@@ -1968,6 +1949,21 @@ namespace EasyMuisc
                 }
             }
         }
+        /// <summary>
+        /// 用于暂时保存计时器
+        /// </summary>
+        DispatcherTimer infoWaitTimer;
+        /// <summary>
+        /// 显示不重要的信息
+        /// </summary>
+        /// <param name="info"></param>
+        private void ShowInfo(string info)
+        {
+            tbkOffset.Text = info;
+            tbkOffset.Opacity = 1;
+            infoWaitTimer?.Stop();
+            infoWaitTimer = SleepThenDo(1000, (p1, p2) => NewDoubleAnimation(tbkOffset, OpacityProperty, 0, 0.5, 0, (p3, p4) => tbkOffset.Opacity = 0, true));
+        }
         #endregion
 
 
@@ -2056,7 +2052,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void HotKeyBackEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            double position = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetPosition(stream)) + 4;
+            double position = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetPosition(stream)) - 4;
             if (position < 0)
             {
                 position = 0;
@@ -2722,7 +2718,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void MouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
-            if (mouseInLrcArea && stkLrc.Visibility == Visibility.Visible)
+            if (mouseInLrcArea &&( stkLrc.Visibility == Visibility.Visible || lbxLrc.Visibility==Visibility.Visible))
             {
                 if (e.Delta > 0)
                 {

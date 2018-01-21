@@ -9,6 +9,7 @@
              Loaded="UserControl_Loaded"
 >
     <UserControl.Resources>
+        <sys:Double x:Key="halfHeight">0</sys:Double>
         <SolidColorBrush x:Key="ListBox.Static.Background" Color="#FFFFFFFF"/>
         <SolidColorBrush x:Key="ListBox.Static.Border" Color="#FFABADB3"/>
         <SolidColorBrush x:Key="ListBox.Disabled.Background" Color="#FFFFFFFF"/>
@@ -28,7 +29,11 @@
                     <ControlTemplate TargetType="{x:Type ListBox}">
                         <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="true">
                             <ScrollViewer x:Name="svw" Focusable="false" Padding="{TemplateBinding Padding}"  local:ScrollAnimationBehavior.IsEnabled="True">
-                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                <StackPanel>
+                                    <Grid x:Name="HeaderGrid" Height="{DynamicResource halfHeight}"/>
+                                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                    <Grid x:Name="FootGrid" Height="{DynamicResource halfHeight}"/>
+                                </StackPanel>
                             </ScrollViewer>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -67,25 +72,49 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                        <Border x:Name="Bd" RenderTransformOrigin="0.5,0.5" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
                             <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
+                        <!--<ControlTemplate.Triggers>-->
+
+
+                            <!--<MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="Bd" Value="{StaticResource Item.SelectedActive.Background}"/>                            </MultiTrigger>
+
+                        </ControlTemplate.Triggers>-->
+                        <!--<ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+
+                                <Setter TargetName="Bd" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="2" ScaleY="2" >
+
+                                        </ScaleTransform>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="Bd" Property="Margin" Value="0,8,0,8"/>
+                            </Trigger>
+                           
+                        </ControlTemplate.Triggers>-->
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ListBox x:Name="lbx" HorizontalAlignment="Center"  PreviewMouseWheel="lbx_MouseWheel">
-            <ListBoxItem x:Name="item1" Height="333"/>
-
-            <ListBoxItem x:Name="item2" Height="333"/>
-
-
+        <ListBox x:Name="lbx" FontSize="209" HorizontalAlignment="Center"  PreviewMouseWheel="lbx_MouseWheel">
+            
         </ListBox>
     </Grid>
 </UserControl>

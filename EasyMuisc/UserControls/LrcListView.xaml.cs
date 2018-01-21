@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -27,14 +28,38 @@ namespace EasyMuisc
         {
             InitializeComponent();
         }
-        public void Add(object obj)
+
+        //public LrcListView(ObservableCollection<string> lrcs)
+        //{
+        //    lbx.ItemsSource = Lrcs;
+        //}
+
+        public void Add(TextBlock obj)
         {
-            lbx.Items.Insert(lbx.Items.Count - 1, new ListBoxItem() { Content = obj });
+            var item = new ListBoxItem() { Content = obj };
+            //TriggerActionCollection tac = new TriggerActionCollection();
+            //DoubleAnimation ta = new DoubleAnimation();
+            //Storyboard sb = new Storyboard();
+            //tac.Add(sb);
+            
+            //Trigger trigger = new Trigger()
+            //{
+            //    a
+            //};
+            lbx.Items.Add( item);
         }
 
+        public void ChangeFontSize(double size)
+        {
+            lbx.FontSize = size;
+        }
+        public void Clear()
+        {
+            lbx.Items.Clear();
+        }
         public void RefreshPlaceholder(double height, double highLightFontSize)
         {
-            item1.Height = item2.Height = height-highLightFontSize;
+           Resources["halfHeight"]= height-highLightFontSize;
         }
 
         private void lbx_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -49,29 +74,67 @@ namespace EasyMuisc
             //    lbx.sc
             //lbx.ScrollIntoView
 
-            Tools.NewDoubleAnimation(scroll, ScrollAnimationBehavior.VerticalOffsetProperty, index, 0.8, 0.2);
+            Tools.NewDoubleAnimation(scroll,
+                ScrollAnimationBehavior.VerticalOffsetProperty,
+                index,
+                0.8,
+                0,
+                null,
+                false,
+                new CubicEase()
+                {
+                    EasingMode = EasingMode.EaseInOut
+                }
+                );
+
         }
 
+        DoubleAnimation ani = new DoubleAnimation
+        {
+            Duration = new Duration(TimeSpan.FromSeconds(0.8)),//动画时间1秒
+            DecelerationRatio = 0.5,
+        };
         public void RefreshFontSize(double normal, double highlight, int index)
         {
-            for (int i = 1; i < lbx.Items.Count - 1; i++)
-            {
-                if (i == index + 1)
+        
+                //return;
+
+                for (int i = 0; i < lbx.Items.Count; i++)
                 {
-                    ((lbx.Items[i] as ListBoxItem).Content as TextBlock).FontSize = highlight;
+                    var txt = ((lbx.Items[i] as ListBoxItem).Content as TextBlock);
+                    if (i == index)
+                    {
+                    //    //txt.FontSize = highlight;
+                    //Tools.NewDoubleAnimation(
+                    //    txt,
+                    //    FontSizeProperty,
+                    //    highlight,
+                    //    0.8,0.5
+                    //    );
+                    ani.To = highlight;
+                    txt.BeginAnimation(TextBlock.FontSizeProperty, ani);
+                    //BeginStoryboard(story);
 
                 }
-                else
-                {
-                    ((lbx.Items[i] as ListBoxItem).Content as TextBlock).FontSize = normal;
+                else if (txt.FontSize != normal)
+                    {
+                    //txt.FontSize = normal;
+                    ani.To = normal;
+                    txt.BeginAnimation(TextBlock.FontSizeProperty, ani);
                 }
+                }
+
+
+
             }
-        }
 
+
+            
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
        scroll=
             FindVisualChildHelper.FindVisualChild<ScrollViewer>(lbx);
+          
         }
     }
 
@@ -479,4 +542,8 @@ namespace EasyMuisc
         }
 
     }
+
+
+
+
 }

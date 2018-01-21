@@ -138,53 +138,52 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ControlButton.xaml.cs">
+    <Compile Include="UserControls\ControlButton.xaml.cs">
       <DependentUpon>ControlButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HotKey.cs" />
-    <Compile Include="LrcListView.xaml.cs">
+    <Compile Include="Tools\HotKey.cs" />
+    <Compile Include="UserControls\LrcListView.xaml.cs">
       <DependentUpon>LrcListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MusicInfo.cs" />
+    <Compile Include="Windows\MusicInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SerializationUnit.cs" />
-    <Compile Include="Tools.cs" />
-    <Compile Include="UcSpinnerDotCircle.xaml.cs">
+    <Compile Include="Tools\Tools.cs" />
+    <Compile Include="UserControls\UcSpinnerDotCircle.xaml.cs">
       <DependentUpon>UcSpinnerDotCircle.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WinAbout.xaml.cs">
+    <Compile Include="Windows\WinAbout.xaml.cs">
       <DependentUpon>WinAbout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WinAlbumPicture.xaml.cs">
+    <Compile Include="Windows\WinAlbumPicture.xaml.cs">
       <DependentUpon>WinAlbumPicture.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowHelper.cs" />
-    <Compile Include="WinHelp.xaml.cs">
+    <Compile Include="Windows\WindowHelper.cs" />
+    <Compile Include="Windows\WinHelp.xaml.cs">
       <DependentUpon>WinHelp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WinMusicInfo.xaml.cs">
+    <Compile Include="Windows\WinMusicInfo.xaml.cs">
       <DependentUpon>WinMusicInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WinSettings.xaml.cs">
+    <Compile Include="Windows\WinSettings.xaml.cs">
       <DependentUpon>WinSettings.xaml</DependentUpon>
     </Compile>
-    <Page Include="ControlButton.xaml">
+    <Page Include="UserControls\ControlButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LrcListView.xaml">
+    <Page Include="UserControls\LrcListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WinAbout.xaml">
+    <Page Include="Windows\WinAbout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WinHelp.xaml">
+    <Page Include="Windows\WinHelp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -196,25 +195,25 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EncodingType.cs" />
-    <Compile Include="Lrc.cs" />
+    <Compile Include="Tools\EncodingType.cs" />
+    <Compile Include="Tools\Lrc.cs" />
     <Compile Include="WinMain.xaml.cs">
       <DependentUpon>WinMain.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UcSpinnerDotCircle.xaml">
+    <Page Include="UserControls\UcSpinnerDotCircle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WinAlbumPicture.xaml">
+    <Page Include="Windows\WinAlbumPicture.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WinMusicInfo.xaml">
+    <Page Include="Windows\WinMusicInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WinSettings.xaml">
+    <Page Include="Windows\WinSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -273,5 +272,6 @@
     <Resource Include="Properties\Images\next.png" />
     <Resource Include="Properties\Images\pause.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
