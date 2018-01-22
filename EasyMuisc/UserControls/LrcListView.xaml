@@ -24,12 +24,13 @@
             <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
             <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBox}">
                         <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="true">
-                            <ScrollViewer x:Name="svw" Focusable="false" Padding="{TemplateBinding Padding}"  local:ScrollAnimationBehavior.IsEnabled="True">
-                                <StackPanel>
+                            <ScrollViewer x:Name="svw" Focusable="false" Padding="{TemplateBinding Padding}"  ScrollChanged="svw_ScrollChanged" local:ScrollAnimationBehavior.IsEnabled="True">
+                                <StackPanel >
                                     <Grid x:Name="HeaderGrid" Height="{DynamicResource halfHeight}"/>
                                     <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                                     <Grid x:Name="FootGrid" Height="{DynamicResource halfHeight}"/>
@@ -76,7 +77,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Border x:Name="Bd" RenderTransformOrigin="0.5,0.5" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                        <Border x:Name="Bd"  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
                             <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <!--<ControlTemplate.Triggers>-->
@@ -113,7 +114,7 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ListBox x:Name="lbx" FontSize="209" HorizontalAlignment="Center"  PreviewMouseWheel="lbx_MouseWheel">
+        <ListBox x:Name="lbx"  HorizontalAlignment="Center"  PreviewMouseWheel="lbx_MouseWheel">
             
         </ListBox>
     </Grid>

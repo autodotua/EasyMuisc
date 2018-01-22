@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyMuisc.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using System.Windows.Controls;
 
 namespace EasyMuisc
 {
@@ -38,20 +40,7 @@ namespace EasyMuisc
         /// <summary>
         /// 菜单分隔栏
         /// </summary>
-        public static System.Windows.Shapes.Line SeparatorLine
-        {
-            get
-            {
-                return new System.Windows.Shapes.Line()
-                {
-                    X1 = 0,
-                    X2 = 140,
-                    Y1 = 0,
-                    Y2 = 0,
-                    Stroke = System.Windows.Media.Brushes.LightGray,
-                };
-            }
-        }
+        public static UserControls.SeparatorLine NewSeparatorLine => new UserControls.SeparatorLine();
         /// <summary>
         /// 创建并启动一个新的浮点数据类型动画
         /// </summary>

@@ -145,6 +145,9 @@
     <Compile Include="UserControls\LrcListView.xaml.cs">
       <DependentUpon>LrcListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\SeparatorLine.xaml.cs">
+      <DependentUpon>SeparatorLine.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\MusicInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -176,6 +179,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\LrcListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\SeparatorLine.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

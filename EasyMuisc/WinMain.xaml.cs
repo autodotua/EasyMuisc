@@ -26,6 +26,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Shell;
 using CustomWPFColorPicker;
 using static EasyMuisc.Tools;
+
 namespace EasyMuisc
 {
     /// <summary>
@@ -38,11 +39,6 @@ namespace EasyMuisc
         /// 循环模式
         /// </summary>
         private enum CycleMode {SingleCycle,ListCycle, Shuffle}
-
-        #region 模板
-       
-
-        #endregion
 
 
         #region 字段
@@ -1416,7 +1412,7 @@ namespace EasyMuisc
         {
             lbxLrc.RefreshPlaceholder(grdLrcArea.ActualHeight / 2, highlightLrcFontSize);
 
-            if (!AutoFurl || !ShowLrc)
+            if (!AutoFurl || !ShowLrc || ShrinkMusicListManually)
             {
                 return;
             }
@@ -1655,14 +1651,14 @@ namespace EasyMuisc
             menu.Items.Add(menuOpenFile);
             menu.Items.Add(menuOpenFolder);
             menu.Items.Add(menuOpenAllFolder);
-            menu.Items.Add(SeparatorLine);
+            menu.Items.Add(NewSeparatorLine);
             //menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
 
             if (lvw.SelectedIndex != -1)
             {
                 menu.Items.Add(menuOpenMusicFolder);
                 menu.Items.Add(menuShowMusicInfo);
-                menu.Items.Add(SeparatorLine);
+                menu.Items.Add(NewSeparatorLine);
 
                 //menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
             }
@@ -1675,7 +1671,7 @@ namespace EasyMuisc
                     menu.Items.Add(menuClearExceptCurrent);
                 }
                 menu.Items.Add(menuClear);
-                menu.Items.Add(SeparatorLine);
+                menu.Items.Add(NewSeparatorLine);
             }
             if (ShowLrc)
             {
@@ -1805,15 +1801,15 @@ namespace EasyMuisc
             menu.Items.Add(menuReload);
             if (lrcContent.Count != 0 &&(lbxLrc.Visibility==Visibility.Visible || stkLrc.Visibility == Visibility.Visible))
             {
-                menu.Items.Add(SeparatorLine);
+                menu.Items.Add(NewSeparatorLine);
                 menu.Items.Add(menuCopyLrc);
                 menu.Items.Add(menuSave);
                 menu.Items.Add(menuSaveAs);
                 
             }
-            menu.Items.Add(SeparatorLine);
+            menu.Items.Add(NewSeparatorLine);
             menu.Items.Add(menuSearchInNetEase);
-            menu.Items.Add(SeparatorLine);
+            menu.Items.Add(NewSeparatorLine);
             menu.Items.Add(menuNormalFontSizeSetting);
             menu.Items.Add(menuHighlightFontSizeSetting);
             menu.Items.Add(menuTextFontSizeSetting);

@@ -34,9 +34,9 @@ namespace EasyMuisc
         //    lbx.ItemsSource = Lrcs;
         //}
 
-        public void Add(TextBlock obj)
+        public void Add(TextBlock txt)
         {
-            var item = new ListBoxItem() { Content = obj };
+            var item = new ListBoxItem() { Content = txt };
             //TriggerActionCollection tac = new TriggerActionCollection();
             //DoubleAnimation ta = new DoubleAnimation();
             //Storyboard sb = new Storyboard();
@@ -49,17 +49,17 @@ namespace EasyMuisc
             lbx.Items.Add( item);
         }
 
-        public void ChangeFontSize(double size)
-        {
-            lbx.FontSize = size;
-        }
+        //public void ChangeFontSize(double size)
+        //{
+        //    lbx.FontSize = size;
+        //}
         public void Clear()
         {
             lbx.Items.Clear();
         }
         public void RefreshPlaceholder(double height, double highLightFontSize)
         {
-           Resources["halfHeight"]= height-highLightFontSize;
+           Resources["halfHeight"]= height-highLightFontSize/2;
         }
 
         private void lbx_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -84,9 +84,7 @@ namespace EasyMuisc
                 new CubicEase()
                 {
                     EasingMode = EasingMode.EaseInOut
-                }
-                );
-
+                });
         }
 
         DoubleAnimation ani = new DoubleAnimation
@@ -135,6 +133,12 @@ namespace EasyMuisc
        scroll=
             FindVisualChildHelper.FindVisualChild<ScrollViewer>(lbx);
           
+        }
+
+        private void svw_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            
+            scroll?.ScrollToHorizontalOffset(scroll.ScrollableWidth / 2);
         }
     }
 
