@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="EasyMuisc.UserControls.RradualChangedTextBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EasyMuisc.UserControls"
+Loaded="UserControl_Loaded"
+             Padding="8"
+             mc:Ignorable="d" >
+    <Grid x:Name="g">
+        <TextBlock x:Name="tbk1">
+
+            <TextBlock.Effect>
+
+                <DropShadowEffect Color="Black" BlurRadius="4"  ShadowDepth="0" Opacity="1" RenderingBias="Quality"/>
+
+            </TextBlock.Effect>
+        </TextBlock>
+        <TextBlock x:Name="tbk2" Opacity="0">
+
+            <TextBlock.Effect>
+
+                <DropShadowEffect Color="Black" BlurRadius="4"  ShadowDepth="0" Opacity="1" RenderingBias="Quality"/>
+
+            </TextBlock.Effect>
+  
+        </TextBlock>
+
+
+    </Grid>
+</UserControl>

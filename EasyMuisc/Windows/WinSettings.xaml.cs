@@ -2,27 +2,28 @@
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using static EasyMuisc.Tools;
+using static EasyMuisc.Tools.OtherTools;
+using EasyMuisc.Tools;
 
-namespace EasyMuisc
+namespace EasyMuisc.Windows
 {
     /// <summary>
     /// WinSettings.xaml 的交互逻辑
     /// </summary>
     public partial class WinSettings : Window
     {
-        MainWindow winMain;
-        public WinSettings(MainWindow winMain)
+        Properties.Settings set;
+        public WinSettings(Properties.Settings set)
         {
-            this.winMain = winMain;
+            this.set = set;
             InitializeComponent();
-            chkOffset.IsChecked = winMain.SaveLrcOffsetByTag;
-            chkPreferMusicInfo.IsChecked = winMain.PreferMusicInfo;
-            chkLrcAnimation.IsChecked = winMain.LrcAnimation;
-            txtAnimationFps .Text= winMain.AnimationFps.ToString();
-            txtOffset.Text = winMain.LrcDefautOffset.ToString();
-            txtUpdateSpeed.Text = winMain.UpdateSpeed.ToString();
-            switch (winMain.UseListBoxLrcInsteadOfStackPanel)
+            chkOffset.IsChecked = set.SaveLrcOffsetByTag;
+            chkPreferMusicInfo.IsChecked = set.PreferMusicInfo;
+            chkLrcAnimation.IsChecked = set.LrcAnimation;
+            txtAnimationFps .Text= set.AnimationFps.ToString();
+            txtOffset.Text = set.LrcDefautOffset.ToString();
+            txtUpdateSpeed.Text = set.UpdateSpeed.ToString();
+            switch (set.UseListBoxLrcInsteadOfStackPanel)
             {
                 case true:
                     chkListBoxLrc.IsChecked = true;
@@ -67,17 +68,17 @@ namespace EasyMuisc
 
 
 
-            winMain.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
-            winMain.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
-            winMain.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
-            winMain.UseListBoxLrcInsteadOfStackPanel = (bool)chkListBoxLrc.IsChecked;
-            if (fps!=winMain.AnimationFps)
+            set.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
+            set.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
+            set.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
+            set.UseListBoxLrcInsteadOfStackPanel = (bool)chkListBoxLrc.IsChecked;
+            if (fps!=set.AnimationFps)
             {
                 MessageBox.Show("动画帧率将在下次启动后生效", "提示", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                winMain.AnimationFps = fps;
+                set.AnimationFps = fps;
             }
-            winMain.UpdateSpeed = speed;
-            winMain.LrcDefautOffset = offset;
+            set.UpdateSpeed = speed;
+            set.LrcDefautOffset = offset;
             Close();
         }
         

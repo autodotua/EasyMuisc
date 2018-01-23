@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace EasyMuisc
+namespace EasyMuisc.UserControls
 {
     /// <summary>
     /// UcSpinnerDotCircle.xaml 的交互逻辑

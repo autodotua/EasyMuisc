@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EasyMuisc
+namespace EasyMuisc.Windows
 {
     [Serializable]
     public class MusicInfo

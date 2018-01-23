@@ -15,8 +15,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static EasyMuisc.Tools.OtherTools;
 
-namespace EasyMuisc
+namespace EasyMuisc.UserControls
 {
     /// <summary>
     /// LrcListView.xaml 的交互逻辑
@@ -59,7 +60,9 @@ namespace EasyMuisc
         }
         public void RefreshPlaceholder(double height, double highLightFontSize)
         {
-           Resources["halfHeight"]= height-highLightFontSize/2;
+           Resources["topHalfHeight"]= height-highLightFontSize/2;
+            Resources["bottomHalfHeight"] = height - highLightFontSize;
+
         }
 
         private void lbx_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -67,16 +70,14 @@ namespace EasyMuisc
             e.Handled = true;
         }
 
-        public void ScrollTo(double index)
+        public void ScrollTo(int index,List<int> indexArray,double fontSize)
         {
+            double height =( indexArray[index]-1) * fontSize * FontFamily.LineSpacing * (1+1.8/fontSize);//瞎几把乱写的公式
+            
 
-            //   Tools.NewDoubleAnimation(svw,)
-            //    lbx.sc
-            //lbx.ScrollIntoView
-
-            Tools.NewDoubleAnimation(scroll,
+           NewDoubleAnimation(scroll,
                 ScrollAnimationBehavior.VerticalOffsetProperty,
-                index,
+                height,
                 0.8,
                 0,
                 null,
@@ -92,7 +93,7 @@ namespace EasyMuisc
             Duration = new Duration(TimeSpan.FromSeconds(0.8)),//动画时间1秒
             DecelerationRatio = 0.5,
         };
-        public void RefreshFontSize(double normal, double highlight, int index)
+        public void RefreshFontSize( int index,Properties.Settings set)
         {
         
                 //return;
@@ -109,15 +110,15 @@ namespace EasyMuisc
                     //    highlight,
                     //    0.8,0.5
                     //    );
-                    ani.To = highlight;
+                    ani.To = set.HighlightLrcFontSize;
                     txt.BeginAnimation(TextBlock.FontSizeProperty, ani);
                     //BeginStoryboard(story);
 
                 }
-                else if (txt.FontSize != normal)
+                else if (txt.FontSize != set.NormalLrcFontSize)
                     {
                     //txt.FontSize = normal;
-                    ani.To = normal;
+                    ani.To = set.NormalLrcFontSize;
                     txt.BeginAnimation(TextBlock.FontSizeProperty, ani);
                 }
                 }
@@ -132,7 +133,7 @@ namespace EasyMuisc
         {
        scroll=
             FindVisualChildHelper.FindVisualChild<ScrollViewer>(lbx);
-          
+            //scroll.ScrollChanged += (p1, p2) => Debug.WriteLine(p2.VerticalOffset);
         }
 
         private void svw_ScrollChanged(object sender, ScrollChangedEventArgs e)

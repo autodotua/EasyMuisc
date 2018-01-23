@@ -7,7 +7,7 @@ using System.Text;
 /// <summary>
 /// FileEncoding 的摘要说明
 /// </summary>
-namespace EasyMuisc
+namespace EasyMuisc.Tools
 {
     /// <summary>
     /// 获取文件的编码格式

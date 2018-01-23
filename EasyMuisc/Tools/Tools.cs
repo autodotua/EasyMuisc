@@ -13,9 +13,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using System.Windows.Controls;
 
-namespace EasyMuisc
+namespace EasyMuisc.Tools
 {
-    public static class Tools
+    public static class OtherTools
     {
         /// <summary>
         /// 显示错误信息
@@ -66,7 +66,7 @@ namespace EasyMuisc
             Storyboard.SetTargetName(ani, obj.Name);
             Storyboard.SetTargetProperty(ani, new PropertyPath(property));
             Storyboard story = new Storyboard();
-            Debug.WriteLine(Timeline.GetDesiredFrameRate(story));
+            //Debug.WriteLine(Timeline.GetDesiredFrameRate(story));
 
             story.Children.Add(ani);
             if (completed != null)
@@ -157,6 +157,8 @@ namespace EasyMuisc
             return obj;
         }
 
+        public static double ScreenHight => SystemParameters.PrimaryScreenHeight;
+        public static double ScreenWidth => SystemParameters.PrimaryScreenWidth;
 
 
     }

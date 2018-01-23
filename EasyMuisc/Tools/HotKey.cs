@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace EasyMuisc
+namespace EasyMuisc.Tools
 {
     ///<summary>
     /// 直接构造类实例即可注册

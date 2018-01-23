@@ -22,7 +22,7 @@ namespace EasyMuisc
             //app.InitializeComponent();
             //app.DispatcherUnhandledException += App_DispatcherUnhandledException;
                 app.Run(new MainWindow() { path = args.Length != 0 ? args[0] : null });
-
+            //app.Run(new EasyMuisc.Windows.FloatLyrics());
         }
 
         private static void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

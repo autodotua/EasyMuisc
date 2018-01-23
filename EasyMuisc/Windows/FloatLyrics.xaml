@@ -1,0 +1,40 @@
+﻿<Window x:Class="EasyMuisc.Windows.FloatLyrics"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasyMuisc.Windows"
+                xmlns:uc="clr-namespace:EasyMuisc.UserControls"
+
+        mc:Ignorable="d"
+        x:Name="winFloatLyrics"
+        Title="悬浮歌词" 
+        Topmost="True"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="Transparent"
+        Height="100" 
+        BorderBrush="#FFCCCCCC"
+        Focusable="False"
+        ShowInTaskbar="False"
+        Foreground="White"
+        ResizeMode="NoResize"
+        IsHitTestVisible="False"
+        Closing="Window_Closing"
+        PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
+       MouseEnter="Window_MouseEnter"
+        MouseLeave="Window_MouseLeave"
+        PreviewMouseMove="winFloatLyrics_PreviewMouseMove"
+        Width="500">
+    <Grid IsHitTestVisible="False">
+
+        <StackPanel x:Name="stk" IsHitTestVisible="False">
+            <uc:RradualChangedTextBlock IsHitTestVisible="False" x:Name="tbkLeft" HorizontalAlignment="Left" FontSize="40"/>
+            <uc:RradualChangedTextBlock IsHitTestVisible="False" x:Name="tbkRight" HorizontalAlignment="Right" FontSize="30"/>
+        </StackPanel>
+        <Button BorderThickness="0" Visibility="Hidden" x:Name="btnOk" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="4" Content="确定" 
+                Click="btnOk_Click" MouseEnter="btnOk_MouseEnter"  MouseLeave="btnOk_MouseLeave"/>
+
+    </Grid>
+
+</Window>

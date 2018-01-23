@@ -14,8 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static EasyMuisc.Tools.OtherTools;
 
-namespace EasyMuisc
+namespace EasyMuisc.Windows
 {
     /// <summary>
     /// winAlbumPicture.xaml 的交互逻辑
@@ -122,7 +123,7 @@ namespace EasyMuisc
                   }
                   catch(Exception ex)
                   {
-                      Tools.ShowAlert("保存文件失败：" + Environment.NewLine + ex.Message.ToString());
+                      ShowAlert("保存文件失败：" + Environment.NewLine + ex.Message.ToString());
                   }
               };
             sfd.ShowDialog();
