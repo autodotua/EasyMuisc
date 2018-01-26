@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using static EasyMuisc.Tools.OtherTools;
+using static EasyMuisc.Tools.Tools;
 using EasyMuisc.Tools;
 
 namespace EasyMuisc.Windows

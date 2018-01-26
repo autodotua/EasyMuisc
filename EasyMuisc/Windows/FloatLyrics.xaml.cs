@@ -41,29 +41,88 @@ namespace EasyMuisc.Windows
                 CaptionHeight = 0,
                 ResizeBorderThickness = new Thickness(4),
             });
-            
+
 
             //sbdOpacity.Children.Add(aniOpacity);
         }
+        #region WindowsAPI
+        public const int WS_EX_TRANSPARENT = 0x00000020;
+        public const int GWL_EXSTYLE = (-20);
+        [DllImport("user32.dll")]
+        public static extern int GetWindowLong(IntPtr hwnd, int index);
+        [DllImport("user32.dll")]
+        public static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+        int extendedStyle;
+        #endregion
+        /// <summary>
+        /// 设置鼠标穿透
+        /// </summary>
+        private void SetToMouseThrough()
+        {
 
+            // Get this window's handle
+            IntPtr hwnd = new WindowInteropHelper(this).Handle;
 
+            // Change the extended window style to include WS_EX_TRANSPARENT
+            extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+        }
+        /// <summary>
+        /// 取消鼠标穿透
+        /// </summary>
+        private void SetToNoMouseThrough()
+        {
 
+            // Get this window's handle
+            IntPtr hwnd = new WindowInteropHelper(this).Handle;
+
+            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle);
+        }
+        /// <summary>
+        /// 在加载时设置鼠标穿透
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            SetToMouseThrough();
+        }
+        /// <summary>
+        /// 是否正在调整歌词位置、大小
+        /// </summary>
         private bool adjuesting;
+        /// <summary>
+        /// 调整歌词位置、大小
+        /// </summary>
         public bool Adjuest
         {
             set
             {
                 adjuesting = value;
-                   Background = new SolidColorBrush(value ? Colors.Gray : Colors.Transparent);
+                Background = new SolidColorBrush(value ? Colors.Gray : Colors.Transparent);
                 BorderThickness = new Thickness((value ? 4 : 0));
                 ResizeMode = value ? ResizeMode.CanResize : ResizeMode.NoResize;
                 IsHitTestVisible = value;
                 btnOk.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                if (value)
+                {
+                    SetToNoMouseThrough();
+                }
+                else
+                {
+                    SetToMouseThrough();
+                }
             }
             get => adjuesting;
         }
+        /// <summary>
+        /// 歌词列表
+        /// </summary>
         List<string> lrc;
-
+        /// <summary>
+        /// 加载歌词
+        /// </summary>
+        /// <param name="lrc"></param>
         public void ReLoadLrc(List<string> lrc)
         {
             this.lrc = new List<string>(lrc);
@@ -73,92 +132,76 @@ namespace EasyMuisc.Windows
                 tbkRight.Text = lrc[1];
             }
         }
-        int currentIndex = 0;
 
+        /// <summary>
+        /// 根据索引计算应该使用哪一个文本框
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private RradualChangedTextBlock GetTextBlock(int index)
         {
             return (stk.Children[index] as RradualChangedTextBlock);
         }
+        /// <summary>
+        /// 通知改变当前歌词
+        /// </summary>
+        /// <param name="index"></param>
         public void Update(int index)
         {
-            ChangeLrc(index);
-            currentIndex = index;
-        }
-        private void ChangeLrc(int index)
-        {
-            if (index < lrc.Count)
+            if (index < 0 || lrc == null)
             {
-                GetTextBlock((index+1) % 2).ToMinor(lrc[index + 1]);
+                Clear();
+                return;
+            }
+            if (index < lrc.Count - 1)
+            {
+                GetTextBlock((index + 1) % 2).ToMinor(lrc[index + 1]);
             }
             else
             {
                 GetTextBlock((index + 1) % 2).ToMinor("");
-
             }
             GetTextBlock(index % 2).ToMajor(lrc[index]);
+            //currentIndex = index;
         }
 
 
-        private void Window_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void WindowPreviewMouseLeftButtonDownEventHandler(object sender, MouseButtonEventArgs e)
         {
-            if(!mouseOverButton)
+            if (!mouseOverButton)
             {
                 DragMove();
             }
             //base.OnPreviewMouseLeftButtonDown(e);
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void WindowClosingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            set.FloatLyricsTop =Top;
-            set.FloatLyricsLeft =Left;
-            set.FloatLyricsHeight =Height;
-            set.FloatLyricsWidth =Width;
+            set.FloatLyricsTop = Top;
+            set.FloatLyricsLeft = Left;
+            set.FloatLyricsHeight = Height;
+            set.FloatLyricsWidth = Width;
         }
 
-        private void btnOk_Click(object sender, RoutedEventArgs e)
+        private void BtnOkClickEventHandler(object sender, RoutedEventArgs e)
         {
             Adjuest = false;
 
         }
         bool mouseOverButton = false;
-        private void btnOk_MouseEnter(object sender, MouseEventArgs e)
+        private void BtnOkMouseEnterEventHandler(object sender, MouseEventArgs e)
         {
             mouseOverButton = true;
         }
 
-        private void btnOk_MouseLeave(object sender, MouseEventArgs e)
+        private void BtnOkMouseLeaveEventHandler(object sender, MouseEventArgs e)
         {
             mouseOverButton = false;
         }
-        double lastHeight;
-        private void Window_MouseEnter(object sender, MouseEventArgs e)
-        {
-           
-            if(!adjuesting)
-            {
-                lastHeight = ActualHeight;
-                Height = Tools.OtherTools.ScreenHight - Top + ActualHeight;
-                ThicknessAnimation ani = new ThicknessAnimation(new Thickness(0, Tools.OtherTools.ScreenHight - Top,0,0), TimeSpan.FromSeconds(0.3));
-                stk.BeginAnimation(MarginProperty, ani);
-            }
-        }
 
-        private void Window_MouseLeave(object sender, MouseEventArgs e)
+        public void Clear()
         {
-            return;
-            if (!adjuesting)
-            {
-                Height = lastHeight;
-                   ThicknessAnimation ani = new ThicknessAnimation(new Thickness(0), TimeSpan.FromSeconds(0.3));
-                stk.BeginAnimation(MarginProperty, ani);
-
-            }
-        }
-
-        private void winFloatLyrics_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            Debug.WriteLine("safdas");
+            GetTextBlock(0).Text = GetTextBlock(1).Text = "";
         }
 
     }

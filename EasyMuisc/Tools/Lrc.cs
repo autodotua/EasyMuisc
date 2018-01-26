@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EasyMuisc.Tools
 {
-    public class Lrc
+    public class Lyric
     {
         /// <summary>
         /// 歌曲
@@ -42,7 +42,7 @@ namespace EasyMuisc.Tools
         /// </summary>
         /// <param name="LrcPath">歌词路径</param>
         /// <returns>返回歌词信息(Lrc实例)</returns>
-        public Lrc(string LrcPath)
+        public Lyric(string LrcPath)
         {
             Regex regex = new Regex(@"(?<time>\[[0-9.:\]\[\s]*\])(?<value>.*)", RegexOptions.Compiled);
             Regex timeRegex = new Regex(@"\[(?<time>[0-9.:]*)\]\s*", RegexOptions.Compiled);

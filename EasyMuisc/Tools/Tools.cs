@@ -12,10 +12,11 @@ using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using System.Windows.Controls;
+using System.Security.Cryptography;
 
 namespace EasyMuisc.Tools
 {
-    public static class OtherTools
+    public static class Tools
     {
         /// <summary>
         /// 显示错误信息
@@ -159,7 +160,13 @@ namespace EasyMuisc.Tools
 
         public static double ScreenHight => SystemParameters.PrimaryScreenHeight;
         public static double ScreenWidth => SystemParameters.PrimaryScreenWidth;
-
+        public static int GetRandomNumber(int from, int smallerThan)
+        {
+            RNGCryptoServiceProvider r = new RNGCryptoServiceProvider();
+            byte[] b = new byte[8];
+            r.GetBytes(b);
+            return (b[0] + b[1] + b[2] + b[3] + b[4] + b[5] + b[6] + b[7]) % (smallerThan - from) + from;
+        }
 
     }
 }

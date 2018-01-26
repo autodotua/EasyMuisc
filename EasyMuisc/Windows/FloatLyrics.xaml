@@ -19,21 +19,18 @@
         ShowInTaskbar="False"
         Foreground="White"
         ResizeMode="NoResize"
-        IsHitTestVisible="False"
-        Closing="Window_Closing"
-        PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
-       MouseEnter="Window_MouseEnter"
-        MouseLeave="Window_MouseLeave"
-        PreviewMouseMove="winFloatLyrics_PreviewMouseMove"
+        FocusVisualStyle="{x:Null}"
+        Closing="WindowClosingEventHandler"
+        PreviewMouseLeftButtonDown="WindowPreviewMouseLeftButtonDownEventHandler"
         Width="500">
-    <Grid IsHitTestVisible="False">
+    <Grid>
 
-        <StackPanel x:Name="stk" IsHitTestVisible="False">
-            <uc:RradualChangedTextBlock IsHitTestVisible="False" x:Name="tbkLeft" HorizontalAlignment="Left" FontSize="40"/>
-            <uc:RradualChangedTextBlock IsHitTestVisible="False" x:Name="tbkRight" HorizontalAlignment="Right" FontSize="30"/>
+        <StackPanel x:Name="stk">
+            <uc:RradualChangedTextBlock x:Name="tbkLeft" HorizontalAlignment="Left" FontSize="40"/>
+            <uc:RradualChangedTextBlock x:Name="tbkRight" HorizontalAlignment="Right" FontSize="30"/>
         </StackPanel>
         <Button BorderThickness="0" Visibility="Hidden" x:Name="btnOk" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="4" Content="确定" 
-                Click="btnOk_Click" MouseEnter="btnOk_MouseEnter"  MouseLeave="btnOk_MouseLeave"/>
+                Click="BtnOkClickEventHandler" MouseEnter="BtnOkMouseEnterEventHandler"  MouseLeave="BtnOkMouseLeaveEventHandler"/>
 
     </Grid>
 

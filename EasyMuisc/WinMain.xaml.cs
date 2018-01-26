@@ -28,7 +28,7 @@ using CustomWPFColorPicker;
 using EasyMuisc.Tools;
 using EasyMuisc.Windows;
 using EasyMuisc.UserControls;
-using static EasyMuisc.Tools.OtherTools;
+using static EasyMuisc.Tools.Tools;
 
 namespace EasyMuisc
 {
@@ -464,6 +464,7 @@ namespace EasyMuisc
             //textLrcFontSize = double.Parse(GetConfig("TextLrcFontSize", textLrcFontSize.ToString()));
             //sldVolumn.Value = double.Parse(GetConfig("Volumn", "1"));
             Volumn = set.Volumn;
+            sldVolumn.Value = set.Volumn;
             Topmost = set.Topmost;
             if (set.ShrinkMusicListManually)
             {
@@ -739,7 +740,7 @@ namespace EasyMuisc
                     stkLrc.Visibility = Visibility.Visible;
                     lbxLrc.Visibility = Visibility.Hidden;
                 }
-                lrc = new Lrc(file.FullName);//获取歌词信息
+                lrc = new Lyric(file.FullName);//获取歌词信息
                 if (!double.TryParse(lrc.Offset, out offset))
                 {
                     offset = 0;
@@ -815,6 +816,10 @@ namespace EasyMuisc
                 txtLrc.Visibility = Visibility.Hidden;
                 stkLrc.Visibility = Visibility.Hidden;
                 lbxLrc.Visibility = Visibility.Hidden;
+                if(set.ShowFloatLyric)
+                {
+                    floatLyric.Clear();
+                }
             }
         }
         /// <summary>
@@ -833,10 +838,8 @@ namespace EasyMuisc
                     PlayListNext();
                     break;
                 case CycleMode.Shuffle:
-                    Random r = new Random();
-                    SleepThenDo(r.NextDouble() / 1000, null);
                     int index;
-                    while ((index = r.Next(musicInfo.Count)) == currentMusicIndex)
+                    while ((index =GetRandomNumber(0,musicInfo.Count)) == currentMusicIndex)
                         ;
                     PlayNew(index);
                     break;
@@ -984,7 +987,7 @@ namespace EasyMuisc
         /// <summary>
         /// 歌词对象
         /// </summary>
-        Lrc lrc;
+        Lyric lrc;
         /// <summary>
         /// 当前歌词索引
         /// </summary>
@@ -1656,10 +1659,16 @@ namespace EasyMuisc
                 currentMusicIndex = -1;
                 stkLrc.Visibility = Visibility.Hidden;
                 txtLrc.Visibility = Visibility.Hidden;
+                lbxLrc.Visibility = Visibility.Hidden;
+                if(set.ShowFloatLyric)
+                {
+                    floatLyric.Clear(); 
+                }
                 Title = "EasyMusic";
                 txtMusicName.Text = "";
                 btnPlay.Visibility = Visibility.Visible;
                 btnPause.Visibility = Visibility.Hidden;
+                path = "";
                 Bass.BASS_ChannelStop(stream);
                 stream = 0;
             }

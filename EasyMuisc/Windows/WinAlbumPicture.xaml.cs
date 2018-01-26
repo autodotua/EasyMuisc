@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static EasyMuisc.Tools.OtherTools;
+using static EasyMuisc.Tools.Tools;
 
 namespace EasyMuisc.Windows
 {
