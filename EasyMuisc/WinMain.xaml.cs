@@ -62,6 +62,10 @@ namespace EasyMuisc
         /// </summary>
         int stream = 0;
         /// <summary>
+        /// 托盘图标
+        /// </summary>
+        private System.Windows.Forms.NotifyIcon notifyIcon = null;
+        /// <summary>
         /// 支持的格式
         /// </summary>
         private string[] supportExtension = { ".mp3", ".MP3", ".wav", ".WAV" };
@@ -348,6 +352,8 @@ namespace EasyMuisc
                 Width = set.FloatLyricsWidth,
             };
 
+            Tray();
+
         }
         /// <summary>
         /// 初始化定时器事件
@@ -566,41 +572,6 @@ namespace EasyMuisc
             album = dir.GetDetailsOf(item, 14);
             return true;
         }
-        ///// <summary>
-        ///// 设置配置项
-        ///// </summary>
-        ///// <param name="key"></param>
-        ///// <param name="value"></param>
-        ///// <returns></returns>
-        //private bool SetConfig(string key, string value)
-        //{
-        //    if (cfa.AppSettings.Settings[key] != null)
-        //    {
-        //        cfa.AppSettings.Settings[key].Value = value;
-        //    }
-        //    else
-        //    {
-        //        cfa.AppSettings.Settings.Add(key, value);
-        //    }
-        //    return true;
-        //}
-        ///// <summary>
-        ///// 获取配置项
-        ///// </summary>
-        ///// <param name="key"></param>
-        ///// <param name="defaultValue"></param>
-        ///// <returns></returns>
-        //private string GetConfig(string key, string defaultValue = "null")
-        //{
-        //    if (cfa.AppSettings.Settings[key] != null)
-        //    {
-        //        return cfa.AppSettings.Settings[key].Value;
-        //    }
-        //    else
-        //    {
-        //        return defaultValue;
-        //    }
-        //}
         /// <summary>
         /// 窗体关闭事件，保存配置项
         /// </summary>
@@ -661,6 +632,68 @@ namespace EasyMuisc
             Hide();
             pauseTimer.Start();
         }
+        private void Tray()
+        {
+            notifyIcon = new System.Windows.Forms.NotifyIcon
+            {
+                BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info,
+                BalloonTipText = "设置界面在任务栏托盘",
+                Text = "EasyMusic",
+                Icon = Properties.Resources.icon,
+                Visible = true,
+            };
+            if (!File.Exists(MusicListName))
+            {
+                notifyIcon.ShowBalloonTip(2000);
+            }
+            notifyIcon.MouseClick += (p1, p2) =>
+            {
+                if (p2.Button == System.Windows.Forms.MouseButtons.Left)
+                {
+                    if (Visibility == Visibility.Hidden)
+                    {
+                        Show();
+                        Topmost = true;
+                        Topmost = false;
+                        Activate();
+                    }
+                    else
+                    {
+                        Visibility = Visibility.Hidden;
+                    }
+                }
+                else if(p2.Button==System.Windows.Forms.MouseButtons.Right)
+                {
+                    TrayMenu(p1);
+                }
+            };
+        }
+
+        private void TrayMenu(object sender)
+        {
+            MenuItem menuFloat = new MenuItem() { Header = (set.ShowFloatLyric ? "√" : "×") + "悬浮歌词" };
+            menuFloat.PreviewMouseLeftButtonUp += (p1, p2) =>
+            {
+                set.ShowFloatLyric = !set.ShowFloatLyric;
+                floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+                floatLyric.Update(currentLrcIndex);
+            };
+          
+            menuFloat.PreviewMouseRightButtonDown += (p1, p2) =>ShowFloatLyricsMenu();
+            MenuItem menuExit = new MenuItem() { Header = "退出" };
+            menuExit.Click += (p1, p2) => Close();
+            ContextMenu menu = new ContextMenu()
+            {
+                IsOpen = true,
+                PlacementTarget =this,
+                Items =
+                {
+                   menuFloat,
+                   menuExit
+                }
+            };
+        }
+    
         #endregion
 
 
@@ -2649,7 +2682,18 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnCloseClickEventHandler(object sender, RoutedEventArgs e)
         {
-            Close();
+            if (set.TrayMode == 1)
+            {
+                NewDoubleAnimation(this, TopProperty, SystemParameters.FullPrimaryScreenHeight, 0.2, 0, (p1, p2) =>
+                {
+                    Top = reservedTop;
+                        Hide();
+                }, true);
+            }
+            else
+            {
+                Close();
+            }
         }
         /// <summary>
         /// 单击最大化按钮事件
@@ -2671,7 +2715,14 @@ namespace EasyMuisc
             NewDoubleAnimation(this, TopProperty, SystemParameters.FullPrimaryScreenHeight, 0.2, 0, (p1, p2) =>
               {
                   Top = reservedTop;
-                  WindowState = WindowState.Minimized;
+                  if (set.TrayMode == 2)
+                  {
+                      Hide();
+                  }
+                  else
+                  {
+                      WindowState = WindowState.Minimized;
+                  }
               }, true);
         }
         /// <summary>

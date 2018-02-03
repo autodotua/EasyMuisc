@@ -382,5 +382,17 @@ namespace EasyMuisc.Properties {
                 this["FloatLyricsLeft"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int TrayMode {
+            get {
+                return ((int)(this["TrayMode"]));
+            }
+            set {
+                this["TrayMode"] = value;
+            }
+        }
     }
 }

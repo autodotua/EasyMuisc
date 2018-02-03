@@ -32,6 +32,18 @@ namespace EasyMuisc.Windows
                     chkStackPanel.IsChecked = true;
                     return;
             }
+            switch (set.TrayMode)
+            {
+                case 1:
+                    chkCloseBtnToTray.IsChecked = true;
+                    break;
+                case 2:
+                    chkMinimunBtnToTray.IsChecked = true;
+                    break;
+                case 3:
+                    chkTrayBtnToTray.IsChecked = true;
+                    break;
+            }
         }
 
         private void ButtonClickEventHandler(object sender, RoutedEventArgs e)
@@ -79,6 +91,7 @@ namespace EasyMuisc.Windows
             }
             set.UpdateSpeed = speed;
             set.LrcDefautOffset = offset;
+            set.TrayMode = chkCloseBtnToTray.IsChecked.Value ? 1 : (chkMinimunBtnToTray.IsChecked.Value ? 2 : 3);
             Close();
         }
         

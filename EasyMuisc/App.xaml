@@ -5,6 +5,7 @@
              DispatcherUnhandledException="App_DispatcherUnhandledException"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        
         <DrawingBrush x:Key="backgroundBrushColor"  >White</DrawingBrush>
         <DrawingBrush x:Key="darker1BrushColor"  >#FFEEEEEE</DrawingBrush>
         <DrawingBrush x:Key="darker2BrushColor"  >#FFCCCCCC</DrawingBrush>
