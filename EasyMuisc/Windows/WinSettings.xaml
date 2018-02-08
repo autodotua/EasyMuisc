@@ -53,6 +53,7 @@
         <CheckBox x:Name="chkLrcAnimation" Content="歌词动画" />
         <TextBlock FontSize="5"/>
         <StackPanel Orientation="Horizontal">
+            <TextBlock Text="歌词界面显示类型：   "/>
             <RadioButton x:Name="chkListBoxLrc" Content="ListBox歌词         "/>
             <RadioButton x:Name="chkStackPanel" Content="StackPanel歌词"/>
         </StackPanel>
@@ -61,7 +62,6 @@
             <RadioButton x:Name="chkCloseBtnToTray" Content="关闭按钮         "/>
             <RadioButton x:Name="chkMinimunBtnToTray" Content="最小化按钮         "/>
             <RadioButton x:Name="chkTrayBtnToTray" Content="仅托盘图标按钮"/>
-
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="刷新检测速度（n/s）：   " />

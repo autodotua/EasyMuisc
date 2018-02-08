@@ -267,10 +267,6 @@ namespace EasyMuisc
         #endregion
 
         #region 初始化和配置
-        ///// <summary>
-        ///// 配置文件
-        ///// </summary>
-       // Configuration cfa = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         /// <summary>
         /// 是否正在关闭
         /// </summary>
@@ -1378,7 +1374,7 @@ namespace EasyMuisc
                 foreach (var i in files)
                 {
                     FileInfo file = new FileInfo(i);
-                    if (file.Attributes == FileAttributes.Directory)
+                    if (file.Attributes .HasFlag( FileAttributes.Directory))
                     {
                         foreach (var j in EnumerateFiles(i, supportExtensionWithSplit, SearchOption.AllDirectories))
                         {
@@ -1520,7 +1516,7 @@ namespace EasyMuisc
             (sender as UIElement).Drop += (p1, p2) =>
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-                if (files == null || files.Length > 1)
+                if (files == null || files.Length > 1 )
                 {
                     return;
                 }
@@ -1643,14 +1639,19 @@ namespace EasyMuisc
                 + music.MusicName + l
                 + music.Length + l
                 + music.Singer + l
-                + music.Album
-                ;
-                WinMusicInfo winMusicInfo = new WinMusicInfo()
-                {
-                    Title = fileInfo.Name + "-音乐信息",
-                };
+                + music.Album;
+                WinMusicInfo winMusicInfo = new WinMusicInfo() {Title = fileInfo.Name + "-音乐信息"};
                 winMusicInfo.txt.Text = info;
                 winMusicInfo.ShowDialog();
+            };
+            MenuItem menuPlayNext = new MenuItem() { Header = "下一首播放" };
+            menuPlayNext.Click += (p1, p2) =>
+            {
+                if (currentHistoryIndex < history.Count - 1)
+                {
+                    history.RemoveRange(currentHistoryIndex + 1, history.Count - currentHistoryIndex - 1);
+                }
+                history.Add(lvw.SelectedItem as MusicInfo);
             };
             MenuItem menuDelete = new MenuItem() { Header = "删除选中项" };
             menuDelete.Click += (p1, p2) =>
@@ -1736,6 +1737,7 @@ namespace EasyMuisc
             {
                 menu.Items.Add(menuOpenMusicFolder);
                 menu.Items.Add(menuShowMusicInfo);
+                menu.Items.Add(menuPlayNext);
                 menu.Items.Add(NewSeparatorLine);
 
                 //menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
@@ -2054,6 +2056,9 @@ namespace EasyMuisc
             infoWaitTimer?.Stop();
             infoWaitTimer = SleepThenDo(1000, (p1, p2) => NewDoubleAnimation(tbkOffset, OpacityProperty, 0, 0.5, 0, (p3, p4) => tbkOffset.Opacity = 0, true));
         }
+        /// <summary>
+        /// 显示悬浮菜单的菜单
+        /// </summary>
         private void ShowFloatLyricsMenu()
         {
             ContextMenu menu = new ContextMenu()
