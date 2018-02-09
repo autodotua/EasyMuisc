@@ -602,7 +602,7 @@ namespace EasyMuisc
             //SetConfig("Volumn", sldVolumn.Value.ToString());
             set.Volumn = sldVolumn.Value;
             //SetConfig("AlwaysOnTop", Topmost.ToString());
-            set.Topmost = Topmost;
+           // set.Topmost = Topmost;
             // SetConfig("BackgroundColor", colorPicker.CurrentColor.ToString());
             set.BackgroundColor = colorPicker.CurrentColor.ToString();
             //SetConfig("Top", Top.ToString());
@@ -628,6 +628,9 @@ namespace EasyMuisc
             Hide();
             pauseTimer.Start();
         }
+        /// <summary>
+        /// 托盘图标
+        /// </summary>
         private void Tray()
         {
             notifyIcon = new System.Windows.Forms.NotifyIcon
@@ -650,7 +653,7 @@ namespace EasyMuisc
                     {
                         Show();
                         Topmost = true;
-                        Topmost = false;
+                        Topmost = set.Topmost;
                         Activate();
                     }
                     else
@@ -664,7 +667,10 @@ namespace EasyMuisc
                 }
             };
         }
-
+        /// <summary>
+        /// 托盘图标菜单
+        /// </summary>
+        /// <param name="sender"></param>
         private void TrayMenu(object sender)
         {
             MenuItem menuFloat = new MenuItem() { Header = (set.ShowFloatLyric ? "√" : "×") + "悬浮歌词" };
@@ -2589,7 +2595,7 @@ namespace EasyMuisc
 
             if (mainContextMenu != null)
             {
-                (mainContextMenu.Items[0] as MenuItem).Header = Topmost ? "√" : "×"+"置顶";
+                (mainContextMenu.Items[0] as MenuItem).Header = Topmost ? "取消置顶" : "置顶";
                 mainContextMenu.IsOpen = true;
                 return;
             }
@@ -2600,6 +2606,7 @@ namespace EasyMuisc
             menuTop.Click += (p1, p2) =>
             {
                 Topmost = !Topmost;
+                set.Topmost = Topmost;
             };
             StackPanel menuColor = new StackPanel()
             {
