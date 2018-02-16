@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static EasyMuisc.Tools.Tools;
+using static EasyMuisc.ShareStaticResources;
 
 namespace EasyMuisc.UserControls
 {
@@ -93,7 +94,7 @@ namespace EasyMuisc.UserControls
             Duration = new Duration(TimeSpan.FromSeconds(0.8)),//动画时间1秒
             DecelerationRatio = 0.5,
         };
-        public void RefreshFontSize( int index,Properties.Settings set)
+        public void RefreshFontSize( int index)
         {
         
                 //return;

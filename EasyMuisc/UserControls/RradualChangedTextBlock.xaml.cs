@@ -14,6 +14,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static EasyMuisc.ShareStaticResources;
 
 namespace EasyMuisc.UserControls
 {
@@ -58,9 +59,7 @@ namespace EasyMuisc.UserControls
 
 
         }
-
-        public Properties.Settings set;
-
+        
         public string Text { get => tbk1.Text; set => tbk1.Text = value; }
 
         public void ToMinor(string text)

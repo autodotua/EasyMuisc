@@ -394,5 +394,41 @@ namespace EasyMuisc.Properties {
                 this["TrayMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MusicSettings {
+            get {
+                return ((bool)(this["MusicSettings"]));
+            }
+            set {
+                this["MusicSettings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Pitch {
+            get {
+                return ((int)(this["Pitch"]));
+            }
+            set {
+                this["Pitch"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int Tempo {
+            get {
+                return ((int)(this["Tempo"]));
+            }
+            set {
+                this["Tempo"] = value;
+            }
+        }
     }
 }

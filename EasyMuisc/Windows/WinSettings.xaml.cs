@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using static EasyMuisc.Tools.Tools;
+using static EasyMuisc.ShareStaticResources;
 using EasyMuisc.Tools;
 
 namespace EasyMuisc.Windows
@@ -12,10 +13,8 @@ namespace EasyMuisc.Windows
     /// </summary>
     public partial class WinSettings : Window
     {
-        Properties.Settings set;
-        public WinSettings(Properties.Settings set)
+        public WinSettings()
         {
-            this.set = set;
             InitializeComponent();
             chkOffset.IsChecked = set.SaveLrcOffsetByTag;
             chkPreferMusicInfo.IsChecked = set.PreferMusicInfo;
@@ -23,6 +22,7 @@ namespace EasyMuisc.Windows
             txtAnimationFps .Text= set.AnimationFps.ToString();
             txtOffset.Text = set.LrcDefautOffset.ToString();
             txtUpdateSpeed.Text = set.UpdateSpeed.ToString();
+            chkMusicSettings.IsChecked = set.MusicSettings;
             switch (set.UseListBoxLrcInsteadOfStackPanel)
             {
                 case true:
@@ -84,6 +84,7 @@ namespace EasyMuisc.Windows
             set.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
             set.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
             set.UseListBoxLrcInsteadOfStackPanel = (bool)chkListBoxLrc.IsChecked;
+            set.MusicSettings = chkMusicSettings.IsChecked.Value;
             if (fps!=set.AnimationFps)
             {
                 MessageBox.Show("动画帧率将在下次启动后生效", "提示", MessageBoxButton.OK, MessageBoxImage.Asterisk);

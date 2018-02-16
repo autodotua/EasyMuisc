@@ -14,7 +14,7 @@
         <sys:Double x:Key="tri2Width">16</sys:Double>
         <sys:Double x:Key="pathThickness">0</sys:Double>
     </UserControl.Resources>
-    <Button x:Name="btn" MouseEnter="BtnAnimitionMouseEnterEventHandler" MouseLeave="BtnAnimitionMouseLeaveEventHandler"  FocusVisualStyle="{x:Null}">
+    <Button x:Name="btn" Background="{DynamicResource backgroundBrushColor}" MouseEnter="BtnAnimitionMouseEnterEventHandler" MouseLeave="BtnAnimitionMouseLeaveEventHandler"  FocusVisualStyle="{x:Null}">
         <Button.Style>
             <Style TargetType="{x:Type Button}">
                 <Setter Property="Template">

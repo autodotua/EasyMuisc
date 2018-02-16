@@ -25,7 +25,9 @@
 
 
     <Window.Resources>
-
+        <Popup x:Key="pppMusicSettings"  AllowsTransparency="True" MouseLeave="Popup_MouseLeave">
+            <uc:MusicFxPopupContent/>
+        </Popup>
 
 
         <RoutedUICommand x:Key="HotKeyFoward"/>

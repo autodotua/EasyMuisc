@@ -17,6 +17,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Shell;
+using static EasyMuisc.ShareStaticResources;
 
 namespace EasyMuisc.Windows
 {
@@ -25,15 +26,10 @@ namespace EasyMuisc.Windows
     /// </summary>
     public partial class FloatLyrics : Window
     {
-        Properties.Settings set;
-
-        public FloatLyrics(Properties.Settings set)
+        public FloatLyrics()
         {
 
             InitializeComponent();
-            this.set = set;
-            tbkLeft.set = set;
-            tbkRight.set = set;
             tbkLeft.TextAlignment = TextAlignment.Left;
             tbkRight.TextAlignment = TextAlignment.Right;
             WindowChrome.SetWindowChrome(this, new WindowChrome()

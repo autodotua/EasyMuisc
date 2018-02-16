@@ -138,12 +138,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MainWindowPart\WinMainHeader.xaml.cs" />
+    <Compile Include="MainWindowPart\WinMainKeyAndMouse.xaml.cs" />
+    <Compile Include="MainWindowPart\WinMainListAndLrc.xaml.cs" />
+    <Compile Include="MainWindowPart\WinMainMenu.xaml.cs" />
+    <Compile Include="MainWindowPart\WinMainMusicControl.xaml.cs" />
+    <Compile Include="MainWindowPart\WinMainControlEvent.xaml.cs" />
+    <Compile Include="Tools\ShareStaticResources.cs" />
     <Compile Include="UserControls\ControlButton.xaml.cs">
       <DependentUpon>ControlButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tools\HotKey.cs" />
     <Compile Include="UserControls\LrcListView.xaml.cs">
       <DependentUpon>LrcListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\MusicFxPopupContent.xaml.cs">
+      <DependentUpon>MusicFxPopupContent.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\RradualChangedTextBlock.xaml.cs">
       <DependentUpon>RradualChangedTextBlock.xaml</DependentUpon>
@@ -161,8 +171,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Tools\Tools.cs" />
-    <Compile Include="UserControls\UcSpinnerDotCircle.xaml.cs">
-      <DependentUpon>UcSpinnerDotCircle.xaml</DependentUpon>
+    <Compile Include="UserControls\SpinnerDotCircle.xaml.cs">
+      <DependentUpon>SpinnerDotCircle.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\WinAbout.xaml.cs">
       <DependentUpon>WinAbout.xaml</DependentUpon>
@@ -185,6 +195,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\LrcListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MusicFxPopupContent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -222,7 +236,7 @@
       <DependentUpon>WinMain.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UserControls\UcSpinnerDotCircle.xaml">
+    <Page Include="UserControls\SpinnerDotCircle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
