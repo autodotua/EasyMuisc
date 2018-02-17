@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using EasyMuisc.Windows;
 using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
+using static EasyMuisc.MusicHelper;
 
 namespace EasyMuisc
 {
@@ -23,91 +24,7 @@ namespace EasyMuisc
     {
 
         #region 列表相关
-        /// <summary>
-        /// 将文件拖到列表上方事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LvwDragEnterEventHandler(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effects = DragDropEffects.All;
-            }
-            else
-            {
-                e.Effects = DragDropEffects.None;
-            }
 
-            lvw.Drop += (p1, p2) =>
-            {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-                if (files == null)
-                {
-                    return;
-                }
-                List<string> musics = new List<string>();
-                foreach (var i in files)
-                {
-                    FileInfo file = new FileInfo(i);
-                    if (file.Attributes.HasFlag(FileAttributes.Directory))
-                    {
-                        foreach (var j in EnumerateFiles(i, supportExtensionWithSplit, SearchOption.AllDirectories))
-                        {
-                            if (!musics.Contains(j))
-                            {
-                                musics.Add(j);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        string extension = file.Extension;
-                        if (supportExtension.Contains(extension))
-                        {
-                            if (!musics.Contains(i))
-                            {
-                                musics.Add(i);
-                            }
-                        }
-                    }
-                }
-                AddNewMusics(musics.ToArray());
-            };
-        }
-        /// <summary>
-        /// 双击列表项事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LvwItemPreviewMouseDoubleClickEventHandler(object sender, MouseButtonEventArgs e)
-        {
-            if (currentHistoryIndex < history.Count - 1)
-            {
-                history.RemoveRange(currentHistoryIndex + 1, history.Count - currentHistoryIndex - 1);
-            }
-            currentMusicIndex = lvw.SelectedIndex;
-            PlayNew();
-        }
-        /// <summary>
-        /// 在列表项上按下按钮事件，包括打开、删除
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LvwItemPreviewKeyDownEventHandler(object sender, KeyEventArgs e)
-        {
-
-            switch (e.Key)
-            {
-                case Key.Enter:
-                    LvwItemPreviewMouseDoubleClickEventHandler(null, null);
-                    break;
-                case Key.Delete:
-                    musicInfo.RemoveAt(lvw.SelectedIndex);
-                    break;
-            }
-
-        }
         /// <summary>
         /// 单击收放列表事件
         /// </summary>
@@ -140,7 +57,7 @@ namespace EasyMuisc
             }
             else
             {
-                aniMargin.To = new Thickness(-lvw.ActualWidth, 0, 0, 0);
+                aniMargin.To = new Thickness(-musicList.ActualWidth, 0, 0, 0);
                 aniOpacity.To = 0;
                 set.ShrinkMusicListManually = true;
             }
@@ -166,7 +83,7 @@ namespace EasyMuisc
             {
                 BtnListSwitcherClickEventHandler(null, null);
             }
-            else if (ActualWidth >= 500 && marginLeft == -lvw.ActualWidth)
+            else if (ActualWidth >= 500 && marginLeft == -musicList.ActualWidth)
             {
                 BtnListSwitcherClickEventHandler(null, null);
             }
@@ -177,9 +94,9 @@ namespace EasyMuisc
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OpenAndPlayMusicDragEnterEventHandler(object sender, DragEventArgs e)
+        private void WindowDragEnterEventHandler(object sender, DragEventArgs e)
         {
-
+     
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effects = DragDropEffects.All;
@@ -188,27 +105,61 @@ namespace EasyMuisc
             {
                 e.Effects = DragDropEffects.None;
             }
+            
+        }
 
-            (sender as UIElement).Drop += (p1, p2) =>
+        private void WindowDropEventHandler(object sender, DragEventArgs e)
+        {
+
+
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            if (files == null)
             {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-                if (files == null || files.Length > 1)
-                {
-                    return;
-                }
-                int currentCount = musicInfo.Count;
+                return;
+            }
+            if (files.Length == 1)
+            {
+                int currentCount = MusicCount;
                 string extension = new FileInfo(files[0]).Extension;
                 if (supportExtension.Contains(extension))
                 {
-                    AddNewMusic(files[0]);
-                    if (musicInfo.Count > currentCount)
+                    AddMusic(files[0]);
+                    if (MusicCount > currentCount)
                     {
                         PlayNew(currentCount);
                     }
                 }
-
-
-            };
+            }
+            else
+            {
+                List<string> musics = new List<string>();
+                foreach (var i in files)
+                {
+                    FileInfo file = new FileInfo(i);
+                    if (file.Attributes.HasFlag(FileAttributes.Directory))
+                    {
+                        foreach (var j in EnumerateFiles(i, supportExtensionWithSplit, SearchOption.AllDirectories))
+                        {
+                            if (!musics.Contains(j))
+                            {
+                                musics.Add(j);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string extension = file.Extension;
+                        if (supportExtension.Contains(extension))
+                        {
+                            if (!musics.Contains(i))
+                            {
+                                musics.Add(i);
+                            }
+                        }
+                    }
+                }
+                AddMusic(musics.ToArray());
+            }
         }
         #endregion
 
@@ -220,7 +171,7 @@ namespace EasyMuisc
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnListOptionClickEventHanlder(object sender, RoutedEventArgs e)
+        public void BtnListOptionClickEventHanlder(object sender, RoutedEventArgs e)
         {
             ContextMenu menu = new ContextMenu()
             {
@@ -249,7 +200,7 @@ namespace EasyMuisc
                     }
                     if (musics.Count >= 1)
                     {
-                        AddNewMusics(musics.ToArray());
+                        AddMusic(musics.ToArray());
                     }
                 }
             };
@@ -271,7 +222,7 @@ namespace EasyMuisc
 
                     if (musics.Count >= 1)
                     {
-                        AddNewMusics(musics.ToArray());
+                        AddMusic(musics.ToArray());
                     }
                 }
             };
@@ -294,19 +245,19 @@ namespace EasyMuisc
 
                     if (musics.Count >= 1)
                     {
-                        AddNewMusics(musics.ToArray());
+                        AddMusic(musics.ToArray());
                     }
                 }
             };
 
             MenuItem menuOpenMusicFolder = new MenuItem() { Header = "打开所在文件夹" };
             menuOpenMusicFolder.Click += (p1, p2) =>
-  Process.Start("Explorer.exe", @"/select," + musicInfo[lvw.SelectedIndex].Path);
+  Process.Start("Explorer.exe", @"/select," + GetMusic(musicList.SelectedIndex).Path);
 
             MenuItem menuShowMusicInfo = new MenuItem() { Header = "显示音乐信息" };
             menuShowMusicInfo.Click += (p1, p2) =>
             {
-                MusicInfo music = musicInfo[lvw.SelectedIndex];
+                MusicInfo music = GetMusic(musicList.SelectedIndex);
                 FileInfo fileInfo = new FileInfo(music.Path);
                 string l = Environment.NewLine;
                 string info = fileInfo.Name + l
@@ -323,22 +274,23 @@ namespace EasyMuisc
             MenuItem menuPlayNext = new MenuItem() { Header = "下一首播放" };
             menuPlayNext.Click += (p1, p2) =>
             {
-                if (currentHistoryIndex < history.Count - 1)
+                if (CurrentHistoryIndex < HistoryCount - 1)
                 {
-                    history.RemoveRange(currentHistoryIndex + 1, history.Count - currentHistoryIndex - 1);
+                    RemoveHistory(CurrentHistoryIndex + 1, HistoryCount - CurrentHistoryIndex - 1);
                 }
-                history.Add(lvw.SelectedItem as MusicInfo);
+               AddHistory(musicList.SelectedItem);
             };
             MenuItem menuDelete = new MenuItem() { Header = "删除选中项" };
             menuDelete.Click += (p1, p2) =>
             {
-                int needDeleteIndex = lvw.SelectedIndex;
-                if (currentMusicIndex == needDeleteIndex)
+                int needDeleteIndex = musicList.SelectedIndex;
+
+                if (CurrentMusicIndex == needDeleteIndex)
                 {
                     PlayListNext();
                 }
-                musicInfo.RemoveAt(needDeleteIndex);
-                if (musicInfo.Count == 0)
+                RemoveMusic(needDeleteIndex);
+                if (MusicCount== 0)
                 {
                     AfterClearList();
                 }
@@ -347,26 +299,26 @@ namespace EasyMuisc
             MenuItem menuClear = new MenuItem() { Header = "清空列表", };
             menuClear.Click += (p1, p2) =>
             {
-                musicInfo.Clear();
+                RemoveMusic();
                 AfterClearList();
             };
             MenuItem menuClearExceptCurrent = new MenuItem() { Header = "删除其他", };
             menuClearExceptCurrent.Click += (p1, p2) =>
             {
-                int index = lvw.SelectedIndex;
+                int index = musicList.SelectedIndex;
                 for (int i = 0; i < index; i++)
                 {
-                    musicInfo.RemoveAt(0);
+                    RemoveMusic(0);
                 }
-                int count = musicInfo.Count;
+                int count = MusicCount;
                 for (int i = 1; i < count; i++)
                 {
-                    musicInfo.RemoveAt(1);
+                    RemoveMusic(1);
                 }
             };
             void AfterClearList()
             {
-                currentMusicIndex = -1;
+                SetCurrent(-1);
                 stkLrc.Visibility = Visibility.Hidden;
                 txtLrc.Visibility = Visibility.Hidden;
                 lbxLrc.Visibility = Visibility.Hidden;
@@ -409,7 +361,7 @@ namespace EasyMuisc
             menu.Items.Add(NewSeparatorLine);
             //menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
 
-            if (lvw.SelectedIndex != -1)
+            if (musicList.SelectedIndex != -1)
             {
                 menu.Items.Add(menuOpenMusicFolder);
                 menu.Items.Add(menuShowMusicInfo);
@@ -419,9 +371,9 @@ namespace EasyMuisc
                 //menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
             }
 
-            if (musicInfo.Count > 0)
+            if (MusicCount> 0)
             {
-                if (lvw.SelectedIndex != -1)
+                if (musicList.SelectedIndex != -1)
                 {
                     menu.Items.Add(menuDelete);
                     menu.Items.Add(menuClearExceptCurrent);
@@ -438,40 +390,7 @@ namespace EasyMuisc
                 menu.Items.Add(menuShowLrc);
             }
         }
-        /// <summary>
-        /// 在列表项上单击鼠标右键事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ListViewItemMouseRightButtonUpEvetnHandler(object sender, MouseButtonEventArgs e)
-        {
-            if (lvw.SelectedIndex != -1)
-            {
-                BtnListOptionClickEventHanlder(sender, null);
 
-            }
-        }
-        /// <summary>
-        /// 在列表项上按下按钮事件（Enter、Del）
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ListViewItemKeyUpEventHandler(object sender, KeyEventArgs e)
-        {
-            if (lvw.SelectedIndex != 1)
-            {
-                switch (e.Key)
-                {
-                    case Key.Enter:
-                        LvwItemPreviewMouseDoubleClickEventHandler(null, null);
-                        break;
-                    case Key.Delete:
-                        musicInfo.RemoveAt(lvw.SelectedIndex);
-                        break;
-                }
-            }
-
-        }
         /// <summary>
         /// 单击歌词选项按钮事件
         /// </summary>
@@ -543,7 +462,7 @@ namespace EasyMuisc
             menuSaveAs.Click += (p1, p2) => SaveLrc(true);
 
             MenuItem menuSearchInNetEase = new MenuItem() { Header = "在网易云中搜索" };
-            menuSearchInNetEase.Click += (p1, p2) => Process.Start($"https://music.163.com/#/search/m/?s={musicInfo[currentMusicIndex].MusicName}");
+            menuSearchInNetEase.Click += (p1, p2) => Process.Start($"https://music.163.com/#/search/m/?s={CurrentMusic.MusicName}");
 
             MenuItem menuReload = new MenuItem() { Header = "重载歌词" };
             menuReload.Click += (p1, p2) => InitialiazeLrc();
@@ -625,17 +544,17 @@ namespace EasyMuisc
             StringBuilder str = new StringBuilder();
             if (set.PreferMusicInfo)
             {
-                if (musicInfo[currentMusicIndex].MusicName != "")
+                if (CurrentMusic.MusicName != "")
                 {
-                    str.Append("[ti:" + musicInfo[currentMusicIndex].MusicName + "]" + Environment.NewLine);
+                    str.Append("[ti:" + CurrentMusic.MusicName + "]" + Environment.NewLine);
                 }
-                if (musicInfo[currentMusicIndex].Singer != "")
+                if (CurrentMusic.Singer != "")
                 {
-                    str.Append("[ar:" + musicInfo[currentMusicIndex].Singer + "]" + Environment.NewLine);
+                    str.Append("[ar:" + CurrentMusic.Singer + "]" + Environment.NewLine);
                 }
-                if (musicInfo[currentMusicIndex].Album != "")
+                if (CurrentMusic.Album != "")
                 {
-                    str.Append("[al:" + musicInfo[currentMusicIndex].Album + "]" + Environment.NewLine);
+                    str.Append("[al:" + CurrentMusic.Album + "]" + Environment.NewLine);
                 }
             }
             else
@@ -819,7 +738,7 @@ namespace EasyMuisc
             }
             cbbSearch.Items.Clear();
             int index = -1;
-            foreach (var i in musicInfo)
+            foreach (var i in musicDatas)
             {
                 index++;
 
@@ -861,7 +780,7 @@ namespace EasyMuisc
             if (e.Key == Key.Enter)
             {
                 int index = -1;
-                foreach (var i in musicInfo)
+                foreach (var i in musicDatas)
                 {
                     index++;
                     if (IsInfoMatch(value, i))

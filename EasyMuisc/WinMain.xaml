@@ -13,8 +13,9 @@
         SizeChanged="WindowSizeChangedEventHandler"
         Loaded="WindowLoadedEventHandler" 
         AllowDrop="True"
-         DragEnter="OpenAndPlayMusicDragEnterEventHandler"
-        Closing="WindowClosingEventHandler" 
+         DragEnter="WindowDragEnterEventHandler"
+       Drop="WindowDropEventHandler"
+    Closing="WindowClosingEventHandler" 
         WindowStartupLocation="CenterScreen" 
     StateChanged="WinMainStateChangedEventHandler"
     WindowStyle="None"
@@ -160,27 +161,6 @@
 
 
 
-        <!--ListView-->
-        <ControlTemplate x:Key="tmpForThumb" TargetType="{x:Type Thumb}">
-            <Border>
-                <Rectangle Width="1.5" x:Name="rec" Fill="{DynamicResource darker2BrushColor}"/>
-            </Border>
-        </ControlTemplate>
-        <Style x:Key="musicListStyle" TargetType="{x:Type GridViewColumnHeader}">
-
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                        <Grid x:Name="g" Background="{DynamicResource backgroundBrushColor}">
-                            <Border x:Name="bd" Padding="{TemplateBinding Padding}">
-                                <ContentPresenter Margin="2"  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
-                            </Border>
-                            <Thumb x:Name="PART_HeaderGripper" Template="{StaticResource tmpForThumb}" HorizontalAlignment="Right" Margin="0"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
 
 
 
@@ -430,7 +410,7 @@
 
 
         <!--播放列表区-->
-        <Grid x:Name="grdList" Grid.Row="2">
+        <Grid x:Name="grdList" Grid.Row="2" MouseEnter="GrdLrcAreaMouseEnterEventHandler" MouseLeave="GrdLrcAreaMouseLeaveEventHandler">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="4"/>
@@ -446,49 +426,8 @@
                 <ComboBox x:Name="cbbSearch" FocusVisualStyle="{x:Null}"  Grid.Column="2" IsEditable="True" VerticalAlignment="Center" IsSynchronizedWithCurrentItem="False" IsTextSearchEnabled="False" Template="{StaticResource ComboBoxEditableTemplate}"/>
 
             </Grid>
+            <local:MusicList Grid.Row="2" x:Name="musicList"/>
 
-            <ListView x:Name="lvw" ItemsSource="{Binding}" DragEnter="LvwDragEnterEventHandler"  ScrollViewer.CanContentScroll="False"
-                      Background="{DynamicResource backgroundBrushColor}" Foreground="Black" BorderThickness="0"
-                      PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown" Grid.Row="2" MouseEnter="LvwMouseEnterEventHandler"
-                      MouseLeave="LvwMouseLeaveEventHandler" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-              
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}">
-                        <EventSetter Event="UIElement.PreviewKeyDown" Handler="LvwItemPreviewKeyDownEventHandler"/>
-                        <EventSetter Event="Control.MouseDoubleClick" Handler="LvwItemPreviewMouseDoubleClickEventHandler"/>
-                        <EventSetter Event="MouseRightButtonUp" Handler="ListViewItemMouseRightButtonUpEvetnHandler"/>
-                        <EventSetter Event="KeyUp" Handler="ListViewItemKeyUpEventHandler"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                    <Border x:Name="bd"  BorderThickness="1"   Padding="{TemplateBinding Padding}"  SnapsToDevicePixels="True">
-                                        <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
-                                                  Margin="3"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsSelected" Value="True" >
-                                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker2BrushColor}"/>
-                                        </Trigger>
-
-                                        <Trigger Property="IsMouseOver"  Value="True" >
-                                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker3BrushColor}"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <ListView.View>
-                    <GridView ColumnHeaderContainerStyle="{StaticResource musicListStyle}">
-                        
-                        <GridViewColumn  Header="歌名" Width="144" DisplayMemberBinding="{Binding MusicName}"/>
-                        <GridViewColumn Header="歌手" Width="96" DisplayMemberBinding="{Binding Singer}"/>
-                        <GridViewColumn Header="时长" Width="64" DisplayMemberBinding="{Binding Length}"/>
-                    </GridView>
-                </ListView.View>
-
-            </ListView>
             <uc:ControlButton x:Name="btnListOption" Width="32" Height="32"  Click="BtnListOptionClickEventHanlder"  VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="0,0,20,1" Grid.Row="2" NormalSize="28" PressedSize="24" MouseOverSize="28"  OpacityAnimation="True"  FocusVisualStyle="{x:Null}"
                              PathData="F1 M 24.173,26.110 L 2.198,26.110 C 0.989,26.110 0.000,25.121 0.000,23.912 C 0.000,22.704 0.989,21.715 2.198,21.715 L 24.170,21.715 C 25.379,21.715 26.368,22.704 26.368,23.912 C 26.371,25.121 25.382,26.110 24.173,26.110 Z M 24.173,15.155 L 2.328,15.155 C 1.120,15.155 0.130,14.166 0.130,12.957 C 0.130,11.748 1.120,10.759 2.328,10.759 L 24.173,10.759 C 25.382,10.759 26.371,11.748 26.371,12.957 C 26.371,14.166 25.382,15.155 24.173,15.155 Z M 24.173,4.396 L 2.198,4.396 C 0.989,4.396 0.000,3.407 0.000,2.198 C 0.000,0.989 0.989,0.000 2.198,0.000 L 24.170,0.000 C 25.379,0.000 26.368,0.989 26.368,2.198 C 26.371,3.407 25.382,4.396 24.173,4.396 Z"/>
 

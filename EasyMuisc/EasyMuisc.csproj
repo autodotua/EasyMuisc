@@ -155,6 +155,9 @@
     <Compile Include="UserControls\MusicFxPopupContent.xaml.cs">
       <DependentUpon>MusicFxPopupContent.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\MusicList.xaml.cs">
+      <DependentUpon>MusicList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\RradualChangedTextBlock.xaml.cs">
       <DependentUpon>RradualChangedTextBlock.xaml</DependentUpon>
     </Compile>
@@ -164,7 +167,6 @@
     <Compile Include="Windows\FloatLyrics.xaml.cs">
       <DependentUpon>FloatLyrics.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\MusicInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -199,6 +201,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\MusicFxPopupContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MusicList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

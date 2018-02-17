@@ -59,7 +59,7 @@ namespace EasyMuisc
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HotKeyPlayAndPauseEventHandler(object sender, ExecutedRoutedEventArgs e)
+        public void HotKeyPlayAndPauseEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             if (btnPause.Visibility == Visibility.Visible)
             {
@@ -97,7 +97,7 @@ namespace EasyMuisc
         {
             if (e.Key == Key.Space)
             {
-                HotKeyPlayAndPauseEventHandler(null, null);
+                mainWindow.HotKeyPlayAndPauseEventHandler(null, null);
             }
         }
         /// <summary>
@@ -140,7 +140,7 @@ namespace EasyMuisc
                 }
                 ShowInfo("当前歌词偏移量：" + (offset > 0 ? "+" : "") + Math.Round(offset, 2).ToString() + "秒");
             }
-            else if (!(mouseInList || mouseInLrcArea))
+            else if (!mouseInLrcArea && !mouseInMusicListArea)
             {
                 if (e.Delta > 0)
                 {
@@ -156,6 +156,7 @@ namespace EasyMuisc
         /// 鼠标是否在歌词区域
         /// </summary>
         bool mouseInLrcArea = false;
+        bool mouseInMusicListArea = false;
         /// <summary>
         /// 鼠标进入歌词区域事件
         /// </summary>
@@ -163,7 +164,14 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void GrdLrcAreaMouseEnterEventHandler(object sender, MouseEventArgs e)
         {
-            mouseInLrcArea = true;
+            if ((sender as FrameworkElement).Name == "grdList")
+            {
+                mouseInMusicListArea = true;
+            }
+            else
+            {
+                mouseInLrcArea = true;
+            }
         }
         /// <summary>
         /// 鼠标离开歌词区域事件
@@ -172,30 +180,16 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void GrdLrcAreaMouseLeaveEventHandler(object sender, MouseEventArgs e)
         {
-            mouseInLrcArea = false;
+            if ((sender as FrameworkElement).Name == "grdList")
+            {
+                mouseInMusicListArea = false;
+            }
+            else
+            {
+                mouseInLrcArea = false;
+            }
         }
-        /// <summary>
-        /// 鼠标是否在列表上
-        /// </summary>
-        bool mouseInList = false;
-        /// <summary>
-        /// 鼠标进入列表事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LvwMouseEnterEventHandler(object sender, MouseEventArgs e)
-        {
-            mouseInList = true;
-        }
-        /// <summary>
-        /// 鼠标离开列表事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LvwMouseLeaveEventHandler(object sender, MouseEventArgs e)
-        {
-            mouseInList = false;
-        }
+      
         #endregion
 
     }

@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using EasyMuisc.Tools;
+using Un4seen.Bass;
 
 namespace EasyMuisc.Windows
 {
@@ -23,6 +24,7 @@ namespace EasyMuisc.Windows
             txtOffset.Text = set.LrcDefautOffset.ToString();
             txtUpdateSpeed.Text = set.UpdateSpeed.ToString();
             chkMusicSettings.IsChecked = set.MusicSettings;
+            //txtSampleRate.Text = set.SampleRate.ToString();
             switch (set.UseListBoxLrcInsteadOfStackPanel)
             {
                 case true:
@@ -55,6 +57,11 @@ namespace EasyMuisc.Windows
               ShowAlert("输入的速度值不是正数！");
                 return;
             }
+            //if (!int.TryParse(txtSampleRate.Text, out int sampleRate) || sampleRate <= 0)
+            //{
+            //    ShowAlert("输入的采样率不是正数！");
+            //    return;
+            //}
             if (speed>60)
             {
               ShowAlert("输入的速度值过大！");
@@ -77,8 +84,12 @@ namespace EasyMuisc.Windows
                   ShowAlert("输入的偏移量不是数字！");
                 return;
                 }
-
-
+            //Bass.BASS_Free();
+            //if(!Bass.BASS_Init(-1,sampleRate,BASSInit.BASS_DEVICE_DEFAULT,windowHandle))
+            //{
+            //    ShowAlert("采样率不支持！");
+            //    return;
+            //}
 
             set.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
             set.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;

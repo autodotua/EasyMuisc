@@ -211,7 +211,7 @@ namespace EasyMuisc
         {
             if (imgAlbumMousePress)
             {
-                WinAlbumPicture win = new WinAlbumPicture(this);
+                WinAlbumPicture win = new WinAlbumPicture();
                 win.img.Source = imgAlbum.Source;
                 win.ShowDialog();
                 imgAlbumMousePress = false;

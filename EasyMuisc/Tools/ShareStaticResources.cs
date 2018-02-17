@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +15,14 @@ namespace EasyMuisc
         /// 音乐播放句柄
         /// </summary>
         public static int stream = 0;
-
+        /// <summary>
+        /// 支持的格式
+        /// </summary>
+        public static string[] supportExtension = { ".mp3", ".MP3", ".wav", ".WAV" };
+        /// <summary>
+        /// 支持的格式，过滤器格式
+        /// </summary>
+        public static string supportExtensionWithSplit;
         public static int Pitch
         {
             get
@@ -33,7 +42,7 @@ namespace EasyMuisc
                     value = 50;
                 }
                 Bass.BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_TEMPO_PITCH, value);
-
+                set.Pitch = value;
             }
         }
         public static int Tempo
@@ -42,7 +51,7 @@ namespace EasyMuisc
             {
                 float value = 0;
                 Bass.BASS_ChannelGetAttribute(stream, BASSAttribute.BASS_ATTRIB_TEMPO, ref value);
-                return (int)(value*100);
+                return (int)(value * 100);
             }
             set
             {
@@ -55,11 +64,21 @@ namespace EasyMuisc
                     value = 200;
                 }
                 Bass.BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_TEMPO, ((float)value));
-
+                set.Tempo = value;
             }
         }
-        public static  Properties.Settings set = new Properties.Settings();
+        public static Properties.Settings set = new Properties.Settings();
 
         public static IntPtr windowHandle;
+        /// <summary>
+        /// 托盘图标
+        /// </summary>
+        public static System.Windows.Forms.NotifyIcon trayIcon = null;
+        /// <summary>
+        /// 程序目录
+        /// </summary>
+       public static string programDirectory = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).DirectoryName;
+
+        public static MainWindow mainWindow;
     }
 }

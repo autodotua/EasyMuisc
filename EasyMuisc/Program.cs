@@ -20,8 +20,10 @@ namespace EasyMuisc
 
             App app = new App();
             //app.InitializeComponent();
-            //app.DispatcherUnhandledException += App_DispatcherUnhandledException;
-                app.Run(new MainWindow() { path = args.Length != 0 ? args[0] : null });
+            app.DispatcherUnhandledException += App_DispatcherUnhandledException;
+           ShareStaticResources. mainWindow = new MainWindow() { path = args.Length != 0 ? args[0] : null };
+            app.Run(ShareStaticResources.mainWindow);
+             ShareStaticResources.trayIcon.Visible = false;
             //app.Run(new EasyMuisc.Windows.FloatLyrics());
         }
 

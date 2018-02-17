@@ -71,17 +71,14 @@ namespace EasyMuisc.Properties {
         }
         
         /// <summary>
-        ///   查找类似 {\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset134 \&apos;b5\&apos;c8\&apos;cf\&apos;df;}}
+        ///   查找类似 {\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset134 \&apos;b5\&apos;c8\&apos;cf\&apos;df;}{\f1\fnil\fcharset134 \&apos;cb\&apos;ce\&apos;cc\&apos;e5;}}
+        ///{\colortbl ;\red0\green0\blue0;}
         ///{\*\generator Riched20 10.0.16299}\viewkind4\uc1 
-        ///\pard\sa200\sl276\slmult1\b\f0\fs40\lang2052\&apos;c8\&apos;c8\&apos;bc\&apos;fc\par
-        ///\fs32\&apos;c8\&apos;ab\&apos;be\&apos;d6\&apos;c8\&apos;c8\&apos;bc\&apos;fc\par
+        ///\pard\sa200\cf1\b\f0\fs40\lang2052\&apos;c8\&apos;c8\&apos;bc\&apos;fc\lang1033\par
+        ///\fs32\lang2052\&apos;c8\&apos;ab\&apos;be\&apos;d6\&apos;c8\&apos;c8\&apos;bc\&apos;fc\lang1033\par
         ///
-        ///\pard\fi426\sa200\sl240\slmult1\tx426\b0\fs22 Ctrl+\&apos;a1\&apos;fa\tab\&apos;cf\&apos;c2\&apos;d2\&apos;bb\&apos;c7\&apos;fa\par
-        ///Ctrl+\&apos;a1\&apos;fb\tab\&apos;c9\&apos;cf\&apos;d2\&apos;bb\&apos;c7\&apos;fa\par
-        ///Ctrl+\&apos;a1\&apos;fc\tab\&apos;d2\&apos;f4\&apos;c1\&apos;bf+\par
-        ///Ctrl+\&apos;a1\&apos;fd\tab\&apos;d2\&apos;f4\&apos;c1\&apos;bf-\b\fs32\par
-        ///
-        ///\par [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///\pard\fi426\sa200\b0\fs22\lang2052 Ctrl+\&apos;a1\&apos;fa\tab\&apos;cf\&apos;c2\&apos;d2\&apos;bb\&apos;c7\&apos;fa\lang1033\par
+        ///\lang2052 Ctrl+\&apos;a1\&apos;fb\tab\&apos;c9\&apos;cf\&apos;d2\&apos;bb\&apos;c7\&apos;fa [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string strHelp {
             get {

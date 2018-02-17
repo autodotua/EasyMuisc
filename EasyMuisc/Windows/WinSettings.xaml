@@ -6,9 +6,8 @@
         xmlns:local="clr-namespace:EasyMuisc.Windows"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        ShowInTaskbar="False"
         ResizeMode="NoResize"
-        Title="设置" SizeToContent="WidthAndHeight" WindowStyle="ToolWindow">
+        Title="设置" SizeToContent="WidthAndHeight" >
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Template">
@@ -67,19 +66,24 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="刷新检测速度（n/s）：   " />
-            <TextBox x:Name="txtUpdateSpeed" BorderThickness="0, 0,0,1" MinWidth="20"  />
+            <TextBox x:Name="txtUpdateSpeed" BorderThickness="0, 0,0,1" MinWidth="36"  />
         </StackPanel>
         <TextBlock FontSize="5"/>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="动画帧率（frame/s）：   " />
-            <TextBox x:Name="txtAnimationFps" BorderThickness="0, 0,0,1" MinWidth="20"  />
+            <TextBox x:Name="txtAnimationFps" BorderThickness="0, 0,0,1" MinWidth="36"  />
         </StackPanel>
         <TextBlock FontSize="5"/>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="歌词默认偏移（s）：     " />
-            <TextBox x:Name="txtOffset" BorderThickness="0, 0,0,1" MinWidth="20" />
+            <TextBox x:Name="txtOffset" BorderThickness="0, 0,0,1" MinWidth="36" />
         </StackPanel>
         <TextBlock FontSize="5"/>
+        <!--<StackPanel Orientation="Horizontal">
+            <TextBlock Text="采样率：     " />
+            <TextBox x:Name="txtSampleRate" BorderThickness="0, 0,0,1" MinWidth="36" />
+        </StackPanel>
+        <TextBlock FontSize="5"/>-->
         <Button Content="保存" Click="ButtonClickEventHandler"/>
     </StackPanel>
 </Window>

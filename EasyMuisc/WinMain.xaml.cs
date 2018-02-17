@@ -30,6 +30,7 @@ using EasyMuisc.Windows;
 using EasyMuisc.UserControls;
 using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
+using static EasyMuisc.MusicHelper;
 
 namespace EasyMuisc
 {
@@ -42,7 +43,7 @@ namespace EasyMuisc
         /// <summary>
         /// 循环模式
         /// </summary>
-        private enum CycleMode {SingleCycle,ListCycle, Shuffle}
+        private enum CycleMode { SingleCycle, ListCycle, Shuffle }
 
 
         #region 字段
@@ -58,18 +59,8 @@ namespace EasyMuisc
         /// 音乐文件路径
         /// </summary>
         public string path;
-        /// <summary>
-        /// 托盘图标
-        /// </summary>
-        private System.Windows.Forms.NotifyIcon notifyIcon = null;
-        /// <summary>
-        /// 支持的格式
-        /// </summary>
-        private string[] supportExtension = { ".mp3", ".MP3", ".wav", ".WAV" };
-        /// <summary>
-        /// 支持的格式，过滤器格式
-        /// </summary>
-        private string supportExtensionWithSplit;
+
+
 
 
         #endregion
@@ -122,7 +113,7 @@ namespace EasyMuisc
         /// <summary>
         /// 是否显示加载动画
         /// </summary>
-        private bool LoadingSpinner
+        public bool LoadingSpinner
         {
             set
             {
@@ -141,7 +132,7 @@ namespace EasyMuisc
         #endregion
 
         #region 设置
-        
+
         ///// <summary>
         ///// 自动收放列表
         ///// </summary>
@@ -220,38 +211,38 @@ namespace EasyMuisc
                 }
             }
         }
-            //}
-            ///// <summary>
-            ///// 使用列表框歌词栏来代替StackPanel
-            ///// </summary>
-            //public bool UseListBoxLrcInsteadOfStackPanel
-            //{
-            //    get => bool.Parse(GetConfig("UseListBoxLrcInsteadOfStackPanel", "False"));
-            //    set => SetConfig("UseListBoxLrcInsteadOfStackPanel", value.ToString());
+        //}
+        ///// <summary>
+        ///// 使用列表框歌词栏来代替StackPanel
+        ///// </summary>
+        //public bool UseListBoxLrcInsteadOfStackPanel
+        //{
+        //    get => bool.Parse(GetConfig("UseListBoxLrcInsteadOfStackPanel", "False"));
+        //    set => SetConfig("UseListBoxLrcInsteadOfStackPanel", value.ToString());
 
-            //}
-            ///// <summary>
-            ///// 是否手动收缩了歌曲列表
-            ///// </summary>
-            //public bool ShrinkMusicListManually
-            //{
-            //    get => bool.Parse(GetConfig("ShrinkMusicListManually", "False"));
-            //    set => SetConfig("ShrinkMusicListManually", value.ToString());
+        //}
+        ///// <summary>
+        ///// 是否手动收缩了歌曲列表
+        ///// </summary>
+        //public bool ShrinkMusicListManually
+        //{
+        //    get => bool.Parse(GetConfig("ShrinkMusicListManually", "False"));
+        //    set => SetConfig("ShrinkMusicListManually", value.ToString());
 
-            //}
-            //public bool ShowFloatLyric
-            //{
-            //    get => bool.Parse(GetConfig("ShowFloatLyric", "True"));
-            //    set => SetConfig("ShowFloatLyric", value.ToString());
+        //}
+        //public bool ShowFloatLyric
+        //{
+        //    get => bool.Parse(GetConfig("ShowFloatLyric", "True"));
+        //    set => SetConfig("ShowFloatLyric", value.ToString());
 
-            //}
-            #endregion
+        //}
+        #endregion
 
-            #region 定时器
-            /// <summary>
-            /// 继续播放渐响定时器
-            /// </summary>
-            DispatcherTimer playTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(1000 / 60) };
+        #region 定时器
+        /// <summary>
+        /// 继续播放渐响定时器
+        /// </summary>
+        DispatcherTimer playTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(1000 / 60) };
         /// <summary>
         /// 暂停播放渐隐定时器
         /// </summary>
@@ -272,22 +263,13 @@ namespace EasyMuisc
         /// 分隔符
         /// </summary>
         const string split = "#Split#";
-        /// <summary>
-        /// 音乐信息，与列表绑定
-        /// </summary>
-        public ObservableCollection<MusicInfo> musicInfo;
+   
         /// <summary>
         /// 是否产生了不可挽救错误
         /// </summary>
         bool error = false;
-        /// <summary>
-        /// 歌单二进制文件名
-        /// </summary>
-        string MusicListName = "EasyMusicList.bin";
-        /// <summary>
-        /// 程序目录
-        /// </summary>
-        string programDirectory = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).DirectoryName;
+
+
 
         /// <summary>
         /// 构造函数
@@ -319,11 +301,11 @@ namespace EasyMuisc
 
             Un4seen.Bass.AddOn.Fx.BassFx.LoadMe();
 
-            if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
+            if (!Bass.BASS_Init(-1, set.SampleRate/*无设置界面*/, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
             {
-                ShowAlert("无法初始化音乐引擎。");
+                ShowAlert("无法初始化音乐引擎，可能是采样率不支持。");
                 error = true;
-                Application.Current.Shutdown();
+                //Application.Current.Shutdown();
             }
             WindowHelper.RepairWindowBehavior(this);
 
@@ -401,23 +383,7 @@ namespace EasyMuisc
         {
 
             RegistGolbalHotKey();
-            if (File.Exists(programDirectory + "\\" + MusicListName))
-            {
-                try
-                {
-                    musicInfo = DeserializeObject(File.ReadAllBytes(programDirectory + "\\" + MusicListName)) as ObservableCollection<MusicInfo>;
-                }
-                catch
-                {
-                    ShowAlert("歌单存档已损坏，将重置歌单。");
-                    musicInfo = new ObservableCollection<MusicInfo>();
-                }
-            }
-            else
-            {
-                musicInfo = new ObservableCollection<MusicInfo>();
-            }
-            lvw.DataContext = musicInfo;
+     
 
 
 
@@ -426,13 +392,13 @@ namespace EasyMuisc
                 string tempPath = set.LastMusic;
                 if (File.Exists(tempPath))
                 {
-                    PlayNew(AddNewMusic(tempPath), false);
+                    PlayNew(AddMusic(tempPath), false);
 
                 }
             }
             else
             {
-                PlayNew(AddNewMusic(path), true);
+                PlayNew(AddMusic(path), true);
 
             }
 
@@ -473,102 +439,14 @@ namespace EasyMuisc
             {
                 SleepThenDo(1000, (p1, p2) => BtnListSwitcherClickEventHandler(null, null));
             }
-            if(set.ShowFloatLyric)
+            if (set.ShowFloatLyric)
             {
                 floatLyric.Show();
             }
         }
-        /// <summary>
-        /// 增加一组歌曲到列表中
-        /// </summary>
-        /// <param name="musics"></param>
-        /// <param name="firstLoad"></param>
-        /// <returns></returns>
-        private void AddNewMusics(string[] musics)
-        {
-            taskBar.ProgressValue = 0;
-            taskBar.ProgressState = TaskbarItemProgressState.Normal;
-            LoadingSpinner = true;
 
-            //if (cfa.AppSettings.Settings["MusicList"] != null)
-            //{
-               int n = 1;
-                foreach (var i in musics)
-                {
-                    AddNewMusic(i);
-                    taskBar.ProgressValue = 1.0 * (n++) / musics.Length;
-                }
-            //}
-            taskBar.ProgressState = TaskbarItemProgressState.None;
-            LoadingSpinner = false;
+     
 
-        }
-        /// <summary>
-        /// 增加新的歌曲到列表中
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private MusicInfo AddNewMusic(string path)
-        {
-
-            try
-            {
-                foreach (var i in musicInfo)
-                {
-                    if (path == i.Path)
-                    {
-                        return i;
-                    }
-                }
-                bool info = GetMusicInfo(path, out string name, out string singer, out string length, out string album);
-                musicInfo.Add(new MusicInfo
-                {
-                    Enable = info,
-                    MusicName = name,
-                    Singer = singer,
-                    Length = length.StartsWith("00:") ? length.Remove(0, 3) : length,
-                    Path = path,
-                    Album = album,
-                });
-                DoEvents();
-                return musicInfo[musicInfo.Count - 1];
-            }
-            catch
-            {
-                return null;
-            }
-
-        }
-        /// <summary>
-        /// 获取音乐的信息
-        /// </summary>
-        /// <param name="path">路径</param>
-        /// <param name="name">音乐的标题，若没有则返回无扩展名的文件名</param>
-        /// <param name="singer">歌手</param>
-        /// <param name="length">时长</param>
-        private bool GetMusicInfo(string path, out string name, out string singer, out string length, out string album)
-        {
-            if (!File.Exists(path))
-            {
-                name = path;
-                singer = "";
-                length = "";
-                album = "";
-                return false;
-            }
-            ShellClass sh = new ShellClass();
-            Folder dir = sh.NameSpace(Path.GetDirectoryName(path));
-            FolderItem item = dir.ParseName(Path.GetFileName(path));
-            name = dir.GetDetailsOf(item, 21);
-            if (name == "")
-            {
-                name = new FileInfo(path).Name.Replace(new FileInfo(path).Extension, "");
-            }
-            singer = dir.GetDetailsOf(item, 13);
-            length = dir.GetDetailsOf(item, 27);
-            album = dir.GetDetailsOf(item, 14);
-            return true;
-        }
         /// <summary>
         /// 窗体关闭事件，保存配置项
         /// </summary>
@@ -582,7 +460,7 @@ namespace EasyMuisc
                 return;
             }
             //SaveMusicListFromConfig();
-            File.WriteAllBytes(programDirectory + "\\" + MusicListName, SerializeObject(musicInfo));
+            MusicHelper.SaveListToFile();
             switch (CurrentCycleMode)
             {
                 case CycleMode.ListCycle:
@@ -603,7 +481,7 @@ namespace EasyMuisc
             //SetConfig("Volumn", sldVolumn.Value.ToString());
             set.Volumn = sldVolumn.Value;
             //SetConfig("AlwaysOnTop", Topmost.ToString());
-           // set.Topmost = Topmost;
+            // set.Topmost = Topmost;
             // SetConfig("BackgroundColor", colorPicker.CurrentColor.ToString());
             set.BackgroundColor = colorPicker.CurrentColor.ToString();
             //SetConfig("Top", Top.ToString());
@@ -617,7 +495,7 @@ namespace EasyMuisc
             set.Width = Width;
             set.MaxWindow = (WindowState == WindowState.Maximized);
 
-            if(set.ShowFloatLyric)
+            if (set.ShowFloatLyric)
             {
                 floatLyric.Close();
             }
@@ -634,7 +512,7 @@ namespace EasyMuisc
         /// </summary>
         private void Tray()
         {
-            notifyIcon = new System.Windows.Forms.NotifyIcon
+            trayIcon = new System.Windows.Forms.NotifyIcon
             {
                 BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info,
                 BalloonTipText = "设置界面在任务栏托盘",
@@ -642,11 +520,11 @@ namespace EasyMuisc
                 Icon = Properties.Resources.icon,
                 Visible = true,
             };
-            if (!File.Exists(MusicListName))
-            {
-                notifyIcon.ShowBalloonTip(2000);
-            }
-            notifyIcon.MouseClick += (p1, p2) =>
+            //if (!File.Exists(MusicListName))
+            //{
+            //    trayIcon.ShowBalloonTip(2000);
+            //}
+            trayIcon.MouseClick += (p1, p2) =>
             {
                 if (p2.Button == System.Windows.Forms.MouseButtons.Left)
                 {
@@ -662,7 +540,7 @@ namespace EasyMuisc
                         Visibility = Visibility.Hidden;
                     }
                 }
-                else if(p2.Button==System.Windows.Forms.MouseButtons.Right)
+                else if (p2.Button == System.Windows.Forms.MouseButtons.Right)
                 {
                     TrayMenu(p1);
                 }
@@ -681,14 +559,14 @@ namespace EasyMuisc
                 floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
                 floatLyric.Update(currentLrcIndex);
             };
-          
-            menuFloat.PreviewMouseRightButtonDown += (p1, p2) =>ShowFloatLyricsMenu();
+
+            menuFloat.PreviewMouseRightButtonDown += (p1, p2) => ShowFloatLyricsMenu();
             MenuItem menuExit = new MenuItem() { Header = "退出" };
             menuExit.Click += (p1, p2) => Close();
             ContextMenu menu = new ContextMenu()
             {
                 IsOpen = true,
-                PlacementTarget =this,
+                PlacementTarget = this,
                 Items =
                 {
                    menuFloat,
@@ -700,8 +578,13 @@ namespace EasyMuisc
 
 
 
+
         #endregion
-        
+
+        private void grdList_MouseEnter(object sender, MouseEventArgs e)
+        {
+
+        }
     }
 
 }

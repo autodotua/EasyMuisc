@@ -15,6 +15,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static EasyMuisc.Tools.Tools;
+using static EasyMuisc.ShareStaticResources;
 
 namespace EasyMuisc.Windows
 {
@@ -23,17 +24,15 @@ namespace EasyMuisc.Windows
     /// </summary>
     public partial class WinAlbumPicture : Window
     {
-        MainWindow winMain;
         bool winMainTopMost = false;
-        public WinAlbumPicture(MainWindow win)
+        public WinAlbumPicture()
         {
-            winMain = win;
             InitializeComponent();
-            Left = win.Left ; // + 12;
-            Top = win.Top;// + win.ActualHeight - win.imgAlbum.Height - 16;
-            Width = win.imgAlbum.ActualWidth;
-            Height = win.imgAlbum.ActualHeight;
-            if(win.Topmost)
+            Left = mainWindow.Left ; // + 12;
+            Top = mainWindow.Top;// + win.ActualHeight - win.imgAlbum.Height - 16;
+            Width = mainWindow.imgAlbum.ActualWidth;
+            Height = mainWindow.imgAlbum.ActualHeight;
+            if(mainWindow.Topmost)
             {
                 winMainTopMost = true;
             }
@@ -113,7 +112,7 @@ namespace EasyMuisc.Windows
                 DefaultExt = "jpg",
                 Title = "保存专辑图",
                 Filter = "JPG图片(*.jpg)|*.jpg",
-                FileName = winMain.musicInfo[winMain.currentMusicIndex].MusicName,
+                FileName = MusicHelper.CurrentMusic.MusicName,
             };
             sfd.FileOk += delegate
               {
@@ -147,7 +146,7 @@ namespace EasyMuisc.Windows
 
         private void WinAlbumPicClosingEventHandler(object sender, EventArgs e)
         {
-            winMain.Topmost = winMainTopMost;
+            mainWindow.Topmost = winMainTopMost;
         }
     }
 }

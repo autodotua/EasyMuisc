@@ -13,6 +13,7 @@ using Microsoft.Win32;
 using Un4seen.Bass;
 using System.Windows.Controls.Primitives;
 using static EasyMuisc.ShareStaticResources;
+using static EasyMuisc.MusicHelper;
 
 namespace EasyMuisc
 {
@@ -29,7 +30,7 @@ namespace EasyMuisc
         {
             if (stream == 0)
             {
-                if (musicInfo.Count != 0)
+                if (MusicCount!= 0)
                 {
                     PlayNew(0);
                 }
@@ -53,14 +54,14 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnLastClickEventHandler(object sender, RoutedEventArgs e)
         {
-            if (history.Count == 0)
+            if (HistoryCount == 0)
             {
-                PlayNew(currentMusicIndex == 0 ? musicInfo.Count - 1 : currentMusicIndex - 1);
+                PlayNew(CurrentMusicIndex == 0 ? MusicCount - 1 : CurrentMusicIndex - 1);
             }
             else
             {
-                currentHistoryIndex--;
-                PlayNew(currentHistoryIndex == -1 ? history[currentHistoryIndex = history.Count - 1] : history[currentHistoryIndex]);
+                CurrentHistoryIndex--;
+                PlayNew(CurrentHistoryIndex == -1 ? GetHistory(CurrentHistoryIndex = HistoryCount - 1) : GetHistory(CurrentHistoryIndex));
             }
         }
         /// <summary>
@@ -70,7 +71,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnNextClickEventHandler(object sender, RoutedEventArgs e)
         {
-            if (currentHistoryIndex == history.Count - 1)
+            if (CurrentHistoryIndex == HistoryCount - 1)
             {
                 if (CurrentCycleMode == CycleMode.SingleCycle)
                 {
@@ -83,7 +84,7 @@ namespace EasyMuisc
             }
             else
             {
-                PlayNew(history[++currentHistoryIndex]);
+                PlayNew(GetHistory(++CurrentHistoryIndex));
             }
         }
         /// <summary>
@@ -127,7 +128,7 @@ namespace EasyMuisc
             };
             if (opd.ShowDialog() == true && opd.FileNames != null)
             {
-                MusicInfo temp = AddNewMusic(opd.FileName);
+                MusicInfo temp = AddMusic(opd.FileName);
                 if (temp != null)
                 {
                     PlayNew(temp);

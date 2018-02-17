@@ -8,13 +8,13 @@
     WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Title="关于" SizeToContent="WidthAndHeight">
-    <Grid>
+    <Grid Margin="4">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="8"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Image Source="Properties/Images/icon.png" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Image Source="/EasyMuisc;component/Properties/Images/icon.ico" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <StackPanel Grid.Column="2" >
             <TextBlock FontSize="20">EasyMusic</TextBlock>
             <TextBox x:Name="txt1" IsReadOnly="True"   BorderThickness="0"/>

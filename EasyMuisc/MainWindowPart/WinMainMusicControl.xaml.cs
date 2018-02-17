@@ -17,24 +17,15 @@ using EasyMuisc.Windows;
 using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using EasyMuisc.Tools;
+using static EasyMuisc.MusicHelper;
 
 namespace EasyMuisc
 {
     public partial class MainWindow : Window
     {
         #region 播放控制
-        /// <summary>
-        /// 当前音乐在列表中的索引
-        /// </summary>
-        public int currentMusicIndex = 0;
-        /// <summary>
-        /// 历史记录
-        /// </summary>
-        private List<MusicInfo> history = new List<MusicInfo>();
-        /// <summary>
-        /// 当前播放历史索引
-        /// </summary>
-        int currentHistoryIndex = -1;
+
+
         /// <summary>
         /// 歌曲时长
         /// </summary>
@@ -62,7 +53,7 @@ namespace EasyMuisc
                 Volumn = sldVolumn.Value;
                 txtMusicName.Text = new FileInfo(path).Name.Replace(new FileInfo(path).Extension, "");
                 Title = txtMusicName.Text + " - EasyMusic";//将窗体标题改为歌曲名
-                string[] length = musicInfo[currentMusicIndex].Length.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+                string[] length = MusicHelper.CurrentMusic.Length.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                 musicLength = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetLength(stream));
                 sldProcess.Maximum = musicLength;
                 InitialiazeLrc();
@@ -72,7 +63,7 @@ namespace EasyMuisc
                 ShowAlert("初始化失败!" + Environment.NewLine + ex.ToString());
                 return;
             }
-            ReadMusicSourceInfo(musicInfo[currentMusicIndex].Path);
+            ReadMusicSourceInfo(MusicHelper.CurrentMusic.Path);
 
             mainTimer.Tick += UpdateTick;
             mainTimer.Start();
@@ -195,9 +186,9 @@ namespace EasyMuisc
         /// </summary>
         private void PlayNext()
         {
-            if (currentHistoryIndex < history.Count - 1)
+            if (CurrentHistoryIndex < HistoryCount - 1)
             {
-                history.RemoveRange(currentHistoryIndex + 1, history.Count - currentHistoryIndex - 1);
+                RemoveHistory(CurrentHistoryIndex + 1, MusicCount - CurrentHistoryIndex - 1);
             }
 
             switch (CurrentCycleMode)
@@ -207,12 +198,16 @@ namespace EasyMuisc
                     break;
                 case CycleMode.Shuffle:
                     int index;
-                    while ((index = GetRandomNumber(0, musicInfo.Count)) == currentMusicIndex)
-                        ;
+                    do
+                    {
+                        index = GetRandomNumber(0, MusicCount);
+                    }
+                    while(index== musicIndex)
+                         ;
                     PlayNew(index);
                     break;
                 case CycleMode.SingleCycle:
-                    PlayNew(currentMusicIndex);
+                    PlayCurrent();
                     break;
             }
         }
@@ -221,7 +216,7 @@ namespace EasyMuisc
         /// </summary>
         private void PlayListNext()
         {
-            PlayNew(currentMusicIndex == musicInfo.Count - 1 ? 0 : currentMusicIndex + 1);
+            PlayNew(CurrentMusicIndex == MusicCount- 1 ? 0 : CurrentMusicIndex + 1);
         }
         /// <summary>
         /// （暂停后）播放
@@ -247,10 +242,14 @@ namespace EasyMuisc
         /// 播放新的歌曲
         /// </summary>
         /// <returns></returns>
-        private bool PlayNew(bool playAtOnce = true)
+        private bool PlaySelection(bool playAtOnce = true)
         {
-            currentMusicIndex = lvw.SelectedIndex;
-            return PlayNew(currentMusicIndex, playAtOnce);
+          MusicHelper.  musicIndex = musicList.SelectedIndex;
+            return PlayNew(MusicHelper.musicIndex, playAtOnce);
+        }
+        public bool PlayCurrent()
+        {
+            return PlayNew(currentLrcIndex);
         }
         /// <summary>
         /// 播放新的歌曲
@@ -259,30 +258,22 @@ namespace EasyMuisc
         /// <returns></returns>
         private bool PlayNew(int index, bool playAtOnce = true)
         {
-            if (!File.Exists(musicInfo[index].Path))
+            if (!File.Exists(GetMusic(index).Path))
             {
                 if (ShowAlert("文件不存在！是否从列表中删除？", MessageBoxButton.YesNo))
                 {
-                    musicInfo.RemoveAt(index);
+                    RemoveMusic(index);
                 }
                 return false;
             }
-            currentMusicIndex = index;//指定当前的索引
-            path = musicInfo[currentMusicIndex].Path;//获取歌曲地址
-            lvw.SelectedIndex = index;//选中列表中的歌曲
-            lvw.ScrollIntoView(lvw.SelectedItem);
-            if (currentHistoryIndex == history.Count - 1)
+            SetCurrent(index);//指定当前的索引
+            path = CurrentMusic.Path;//获取歌曲地址
+            musicList.SelectAndScroll( index);//选中列表中的歌曲
+            if (CurrentHistoryIndex == HistoryCount - 1)
             {
-                if (currentHistoryIndex == -1)
+                if (CurrentHistoryIndex == -1 || CurrentHistory != CurrentMusic)
                 {
-                    history.Add(musicInfo[currentMusicIndex]);//加入历史记录
-                    currentHistoryIndex++;
-                }
-                else
-                if (history[currentHistoryIndex] != musicInfo[currentMusicIndex])
-                {
-                    history.Add(musicInfo[currentMusicIndex]);//加入历史记录
-                    currentHistoryIndex++;
+                    AddHistory(CurrentMusic);//加入历史记录
                 }
             }
             //Debug.WriteLine(currentHistoryIndex);
@@ -307,8 +298,8 @@ namespace EasyMuisc
         /// <returns></returns>
         private bool PlayNew(MusicInfo music, bool playAtOnce = true)
         {
-            int index = musicInfo.IndexOf(music);
-            if (index < 0 && index >= musicInfo.Count)
+            int index = GetMusic(music);
+            if (index < 0 && index >= MusicCount)
             {
                 return false;
             }
