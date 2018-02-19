@@ -137,9 +137,18 @@ namespace EasyMuisc
 
         }
 
-
+        /// <summary>
+        /// 选择的项的索引
+        /// </summary>
         public int SelectedIndex => lvw.SelectedIndex;
+        /// <summary>
+        /// 选择的项
+        /// </summary>
         public MusicInfo SelectedItem => lvw.SelectedItem as MusicInfo;
+        /// <summary>
+        /// 定位到
+        /// </summary>
+        /// <param name="index"></param>
         public void SelectAndScroll(int index)
         {
             lvw.SelectedIndex = index;
@@ -258,48 +267,108 @@ namespace EasyMuisc
             mainWindow.LoadingSpinner = false;
 
         }
-
+        /// <summary>
+        /// 保存歌曲列表到程序目录
+        /// </summary>
         public static void SaveListToFile()
         {
-            File.WriteAllBytes(programDirectory + "\\" + MusicListName, SerializeObject(musicDatas));
+            SaveListToFile(programDirectory + "\\" + MusicListName);
         }
-
+        /// <summary>
+        /// 保存歌曲列表到指定位置
+        /// </summary>
+        /// <param name="path"></param>
+        public static void SaveListToFile(string path)
+        {
+            File.WriteAllBytes(path, SerializeObject(musicDatas));
+        }
+        /// <summary>
+        /// 歌曲数量
+        /// </summary>
         public static int MusicCount => musicDatas.Count;
-
+        /// <summary>
+        /// 当前的歌曲实例
+        /// </summary>
         public static MusicInfo CurrentMusic => musicDatas[musicIndex];
+        /// <summary>
+        /// 当前歌曲索引
+        /// </summary>
         public static int CurrentMusicIndex => musicIndex;
+        /// <summary>
+        /// 删除所有歌曲
+        /// </summary>
         public static void RemoveMusic()
         {
             musicDatas.Clear();
         }
+        /// <summary>
+        /// 删除指定歌曲
+        /// </summary>
+        /// <param name="index"></param>
         public static void RemoveMusic(int index)
         {
             musicDatas.RemoveAt(index);
         }
+        /// <summary>
+        /// 获取指定索引的歌曲
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public static MusicInfo GetMusic(int index) => musicDatas[index];
+        /// <summary>
+        /// 根据歌曲实例获取歌曲的索引
+        /// </summary>
+        /// <param name="music"></param>
+        /// <returns></returns>
         public static int GetMusic(MusicInfo music) => musicDatas.IndexOf(music);
+        /// <summary>
+        /// 设置当前歌曲索引
+        /// </summary>
+        /// <param name="index"></param>
         public static void SetCurrent(int index)
         {
             musicIndex = index;
         }
-
+        /// <summary>
+        /// 歌曲历史总数
+        /// </summary>
         public static int HistoryCount => historyList.Count;
+        /// <summary>
+        /// 当前歌曲历史索引
+        /// </summary>
         public static int CurrentHistoryIndex
         {
             get => historyIndex;
             set => historyIndex = value;
         }
+        /// <summary>
+        /// 获取当前歌曲历史实例
+        /// </summary>
         public static MusicInfo CurrentHistory=>historyList[ historyIndex];
+        /// <summary>
+        /// 新增歌曲历史
+        /// </summary>
+        /// <param name="music"></param>
         public static void AddHistory(MusicInfo music)
         {
             historyList.Add(music);
             historyIndex++;
         }
+        /// <summary>
+        /// 移除一定的歌曲历史
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="count"></param>
         public static void RemoveHistory(int index,int count)
         {
             historyList.RemoveRange(index, count);
             historyIndex = index - 1;
         }
+        /// <summary>
+        /// 获取历史
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public static MusicInfo GetHistory(int index)
         {
             return historyList[index];

@@ -117,7 +117,7 @@ namespace EasyMuisc
             {
                 return;
             }
-            if (files.Length == 1)
+            if (files.Length == 1 && File.Exists(files[0]))
             {
                 int currentCount = MusicCount;
                 string extension = new FileInfo(files[0]).Extension;

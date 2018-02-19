@@ -82,6 +82,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="4"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -93,9 +95,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="4"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="4"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="4"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -108,17 +107,17 @@
             <Slider x:Name="sldPitch" ValueChanged="SldPitchValueChangedEventHandler" Grid.Column="2" Minimum="-50" Maximum="50" SmallChange="1" LargeChange="5" Value="0" Template="{StaticResource SliderHorizontal}"/>
             <TextBlock x:Name="txtPitch" Grid.Column="4">0</TextBlock>
             <TextBlock Grid.Row="2">速度：</TextBlock>
+
             <Slider x:Name="sldTempo" Grid.Row="2" ValueChanged="SldTempoValueChangedEventHandler" Grid.Column="2" Minimum="-95" Maximum="200" SmallChange="1" LargeChange="5" Value="0" Template="{StaticResource SliderHorizontal}"/>
+         
             <TextBlock x:Name="txtTempo" Grid.Row="2" Grid.Column="4">0%</TextBlock>
     
-            <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
-                <StackPanel x:Name="stkDevices" Orientation="Horizontal" >
-
-                </StackPanel>
-            </ScrollViewer>
+            
         </Grid>
-
-        <Button Grid.Row="2" Click="BtnOKEventHandler">关闭</Button>
-        <Button Grid.Row="2" Grid.Column="2" Click="BtnRecoverClickEventHandler">恢复</Button>
+        <ScrollViewer Grid.Row="2" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+            <StackPanel x:Name="stkDevices" Orientation="Horizontal"/>
+        </ScrollViewer>
+        <Button Grid.Row="4" Click="BtnCloseEventHandler">关闭</Button>
+        <Button Grid.Row="4" Grid.Column="2" Click="BtnRecoverClickEventHandler">恢复</Button>
     </Grid>
 </UserControl>

@@ -249,7 +249,7 @@ namespace EasyMuisc
         }
         public bool PlayCurrent()
         {
-            return PlayNew(currentLrcIndex);
+            return PlayNew(CurrentMusicIndex);
         }
         /// <summary>
         /// 播放新的歌曲
