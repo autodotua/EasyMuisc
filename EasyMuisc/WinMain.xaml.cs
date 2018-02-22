@@ -390,7 +390,7 @@ namespace EasyMuisc
             if (path == null)
             {
                 string tempPath = set.LastMusic;
-                if (File.Exists(tempPath))
+                if (File.Exists(tempPath) && musicDatas.Where(p=>p.Path.Equals(tempPath)).Count()!=0)
                 {
                     PlayNew(AddMusic(tempPath), false);
 
@@ -580,11 +580,7 @@ namespace EasyMuisc
 
 
         #endregion
-
-        private void grdList_MouseEnter(object sender, MouseEventArgs e)
-        {
-
-        }
+        
     }
 
 }

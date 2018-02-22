@@ -17,6 +17,7 @@ using EasyMuisc.Windows;
 using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using static EasyMuisc.MusicHelper;
+using System.Collections.ObjectModel;
 
 namespace EasyMuisc
 {
@@ -107,7 +108,11 @@ namespace EasyMuisc
             }
             
         }
-
+        /// <summary>
+        /// 将文件拖到窗体上释放事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WindowDropEventHandler(object sender, DragEventArgs e)
         {
 
@@ -283,24 +288,25 @@ namespace EasyMuisc
             MenuItem menuDelete = new MenuItem() { Header = "删除选中项" };
             menuDelete.Click += (p1, p2) =>
             {
-                int needDeleteIndex = musicList.SelectedIndex;
+                //int needDeleteIndex = musicList.SelectedIndex;
 
-                if (CurrentMusicIndex == needDeleteIndex)
-                {
-                    PlayListNext();
-                }
-                RemoveMusic(needDeleteIndex);
-                if (MusicCount== 0)
-                {
-                    AfterClearList();
-                }
+                //if (CurrentMusicIndex == needDeleteIndex)
+                //{
+                //    PlayListNext();
+                //}
+                //RemoveMusic(needDeleteIndex);
+                musicList.RemoveAllSelection();
+                //if (MusicCount== 0)
+                //{
+                //    AfterClearList();
+                //}
             };
 
             MenuItem menuClear = new MenuItem() { Header = "清空列表", };
             menuClear.Click += (p1, p2) =>
             {
                 RemoveMusic();
-                AfterClearList();
+                //AfterClearList();
             };
             MenuItem menuClearExceptCurrent = new MenuItem() { Header = "删除其他", };
             menuClearExceptCurrent.Click += (p1, p2) =>
@@ -316,24 +322,92 @@ namespace EasyMuisc
                     RemoveMusic(1);
                 }
             };
-            void AfterClearList()
+            //void AfterClearList()
+            //{
+            //    SetCurrent(-1);
+            //    stkLrc.Visibility = Visibility.Hidden;
+            //    txtLrc.Visibility = Visibility.Hidden;
+            //    lbxLrc.Visibility = Visibility.Hidden;
+            //    if (set.ShowFloatLyric)
+            //    {
+            //        floatLyric.Clear();
+            //    }
+            //    Title = "EasyMusic";
+            //    txtMusicName.Text = "";
+            //    btnPlay.Visibility = Visibility.Visible;
+            //    btnPause.Visibility = Visibility.Hidden;
+            //    path = "";
+            //    Bass.BASS_ChannelStop(stream);
+            //    stream = 0;
+            //}
+
+            MenuItem menuImport = new MenuItem() { Header = "导入歌单" };
+            menuImport.Click += (p1, p2) =>
+              {
+                  OpenFileDialog dialog = new OpenFileDialog()
+                  {
+                      DefaultExt = "bin",
+                      Filter = "BIN二进制文件|*.bin|所有文件|*.*",
+                  };
+                 if( dialog.ShowDialog()==true)
+                  {
+                      //byte[] bytes = null;
+                      //try
+                      //{
+                      //    bytes = File.ReadAllBytes(dialog.FileName);
+                      //}
+                      //catch(Exception ex)
+                      //{
+                      //    ShowAlert("无法打开文件：" + Environment.NewLine + ex.Message);
+                      //    return;
+                      //}
+
+                      //try
+                      //{
+                      //    musicDatas = DeserializeObject(bytes) as ObservableCollection<MusicInfo>;
+                      //    if(musicDatas==null)
+                      //    {
+                      //        throw new NullReferenceException();
+                      //    }
+                      //}
+                      //catch (Exception ex)
+                      //{
+                      //    ShowAlert("无法将文件转换为歌曲列表。");
+                      //}
+                      try
+                      {
+                          ReadFileToList(dialog.FileName);
+                          musicList.ResetItemsSource();
+                          }
+                      catch (Exception ex)
+                      {
+                          ShowAlert(ex.Message);
+                      }
+                  }
+              };
+
+            MenuItem menuExport = new MenuItem() { Header = "导出歌单" };
+            menuExport.Click += (p1, p2) =>
             {
-                SetCurrent(-1);
-                stkLrc.Visibility = Visibility.Hidden;
-                txtLrc.Visibility = Visibility.Hidden;
-                lbxLrc.Visibility = Visibility.Hidden;
-                if (set.ShowFloatLyric)
+                SaveFileDialog dialog = new SaveFileDialog()
                 {
-                    floatLyric.Clear();
+                    DefaultExt = "bin",
+                    Filter = "二进制文件|*.bin|所有文件|*.*",
+                };
+                if (dialog.ShowDialog() == true)
+                {
+                    byte[] bytes = SerializeObject(musicDatas);
+                    try
+                    {
+                        File.WriteAllBytes(dialog.FileName, bytes);
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowAlert("无法保存文件：" + Environment.NewLine + ex.Message);
+                    }
+                    
                 }
-                Title = "EasyMusic";
-                txtMusicName.Text = "";
-                btnPlay.Visibility = Visibility.Visible;
-                btnPause.Visibility = Visibility.Hidden;
-                path = "";
-                Bass.BASS_ChannelStop(stream);
-                stream = 0;
-            }
+            };
 
             MenuItem menuAutoFurl = new MenuItem() { Header = (set.AutoFurl ? "√" : "×") + "自动收放列表" };
             menuAutoFurl.Click += (p1, p2) =>
@@ -381,6 +455,8 @@ namespace EasyMuisc
                 menu.Items.Add(menuClear);
                 menu.Items.Add(NewSeparatorLine);
             }
+            menu.Items.Add(menuImport);
+            menu.Items.Add(menuExport);
             if (set.ShowLrc)
             {
                 menu.Items.Add(menuAutoFurl);

@@ -233,10 +233,10 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-    
 
-        
-        
+
+
+
         <ControlTemplate x:Key="scroll_background" TargetType="RepeatButton">
             <Border Background="Transparent"/>
         </ControlTemplate>
@@ -290,8 +290,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
-        
+
+
         <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
             <Setter Property="OverridesDefaultStyle" Value="true"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -305,7 +305,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <ControlTemplate x:Key="SliderThumbHorizontalDefault" TargetType="{x:Type Thumb}">
             <Grid HorizontalAlignment="Center" UseLayoutRounding="True" VerticalAlignment="Center">
                 <Path x:Name="grip" Data="M 0,0 C0,0 11,0 11,0 11,0 11,18 11,18 11,18 0,18 0,18 0,18 0,0 0,0 z" Fill="{DynamicResource darker2BrushColor}" Stretch="Fill" SnapsToDevicePixels="True"  StrokeThickness="0" UseLayoutRounding="True" VerticalAlignment="Center"/>
@@ -367,10 +367,10 @@
         <CommandBinding Command="{StaticResource HotKeyFoward}" Executed="HotKeyFowardEventHandler"/>
         <CommandBinding Command="{StaticResource HotKeyBack}" Executed="HotKeyBackEventHandler"/>
         <CommandBinding Command="{StaticResource HotKeyPlayAndPauseMusic}" Executed="HotKeyPlayAndPauseEventHandler"/>
-                <CommandBinding Command="{StaticResource HotKeyNext}" Executed="HotKeyNextEventHandler"/>
+        <CommandBinding Command="{StaticResource HotKeyNext}" Executed="HotKeyNextEventHandler"/>
 
-                <CommandBinding Command="{StaticResource HotKeyLast}" Executed="HotKeyLastEventHandler"/>
-            </Window.CommandBindings>
+        <CommandBinding Command="{StaticResource HotKeyLast}" Executed="HotKeyLastEventHandler"/>
+    </Window.CommandBindings>
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="taskBar">
             <TaskbarItemInfo.ThumbButtonInfos>

@@ -48,7 +48,7 @@ namespace EasyMuisc
             {
                 try
                 {
-                    musicDatas = DeserializeObject(File.ReadAllBytes(programDirectory + "\\" + MusicListName)) as ObservableCollection<MusicInfo>;
+                    ReadFileToList(programDirectory + "\\" + MusicListName);
                 }
                 catch
                 {
@@ -60,13 +60,10 @@ namespace EasyMuisc
             {
                 musicDatas = new ObservableCollection<MusicInfo>();
             }
-            lvw.DataContext = musicDatas;
+            ResetItemsSource();
         }
 
-        private void MusicListLoadedEventHandler(object sender, RoutedEventArgs e)
-        {
-          
-        }
+        public void ResetItemsSource() => lvw.ItemsSource = musicDatas;
 
         
         /// <summary>
@@ -90,14 +87,17 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void LvwItemPreviewKeyDownEventHandler(object sender, KeyEventArgs e)
         {
-
+            if(lvw.SelectedIndex==-1)
+            {
+                return;
+            }
             switch (e.Key)
             {
                 case Key.Enter:
                     LvwItemPreviewMouseDoubleClickEventHandler(null, null);
                     break;
                 case Key.Delete:
-                    musicDatas.RemoveAt(lvw.SelectedIndex);
+                    RemoveAllSelection();
                     break;
             }
 
@@ -116,27 +116,16 @@ namespace EasyMuisc
             }
         }
         /// <summary>
-        /// 在列表项上按下按钮事件（Enter、Del）
+        /// 删除所有选中的项
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ListViewItemKeyUpEventHandler(object sender, KeyEventArgs e)
+        public void RemoveAllSelection()
         {
-            if (lvw.SelectedIndex != 1)
+            MusicInfo[] list = lvw.SelectedItems.Cast<MusicInfo>().ToArray();
+            foreach (var i in list)
             {
-                switch (e.Key)
-                {
-                    case Key.Enter:
-                        LvwItemPreviewMouseDoubleClickEventHandler(null, null);
-                        break;
-                    case Key.Delete:
-                        RemoveMusic(SelectedIndex);
-                        break;
-                }
+                RemoveMusic(i);
             }
-
         }
-
         /// <summary>
         /// 选择的项的索引
         /// </summary>
@@ -155,6 +144,10 @@ namespace EasyMuisc
             lvw.ScrollIntoView(lvw.SelectedItem);
         }
     }
+
+
+
+
     public static class MusicHelper
 
     {  
@@ -282,6 +275,27 @@ namespace EasyMuisc
         {
             File.WriteAllBytes(path, SerializeObject(musicDatas));
         }
+        public static void ReadFileToList(string path)
+        {
+            byte[] bytes;
+            try
+            {
+                bytes = File.ReadAllBytes(path);
+            }
+            catch
+            {
+                throw new Exception("文件读取失败。");
+            }
+            try
+            {
+                musicDatas = DeserializeObject(bytes) as ObservableCollection<MusicInfo>;
+            }
+            catch
+            {
+                throw new Exception("二进制文件存在错误。");
+            }
+            
+        }
         /// <summary>
         /// 歌曲数量
         /// </summary>
@@ -309,6 +323,12 @@ namespace EasyMuisc
         {
             musicDatas.RemoveAt(index);
         }
+        public static void RemoveMusic(MusicInfo music)
+        {
+            musicDatas.Remove(music);
+        }
+
+
         /// <summary>
         /// 获取指定索引的歌曲
         /// </summary>
