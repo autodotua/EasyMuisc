@@ -18,6 +18,7 @@ using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using static EasyMuisc.MusicHelper;
 using System.Collections.ObjectModel;
+using Dialog;
 
 namespace EasyMuisc
 {
@@ -97,7 +98,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void WindowDragEnterEventHandler(object sender, DragEventArgs e)
         {
-     
+
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effects = DragDropEffects.All;
@@ -106,7 +107,7 @@ namespace EasyMuisc
             {
                 e.Effects = DragDropEffects.None;
             }
-            
+
         }
         /// <summary>
         /// 将文件拖到窗体上释放事件
@@ -283,7 +284,7 @@ namespace EasyMuisc
                 {
                     RemoveHistory(CurrentHistoryIndex + 1, HistoryCount - CurrentHistoryIndex - 1);
                 }
-               AddHistory(musicList.SelectedItem);
+                AddHistory(musicList.SelectedItem);
             };
             MenuItem menuDelete = new MenuItem() { Header = "删除选中项" };
             menuDelete.Click += (p1, p2) =>
@@ -322,24 +323,7 @@ namespace EasyMuisc
                     RemoveMusic(1);
                 }
             };
-            //void AfterClearList()
-            //{
-            //    SetCurrent(-1);
-            //    stkLrc.Visibility = Visibility.Hidden;
-            //    txtLrc.Visibility = Visibility.Hidden;
-            //    lbxLrc.Visibility = Visibility.Hidden;
-            //    if (set.ShowFloatLyric)
-            //    {
-            //        floatLyric.Clear();
-            //    }
-            //    Title = "EasyMusic";
-            //    txtMusicName.Text = "";
-            //    btnPlay.Visibility = Visibility.Visible;
-            //    btnPause.Visibility = Visibility.Hidden;
-            //    path = "";
-            //    Bass.BASS_ChannelStop(stream);
-            //    stream = 0;
-            //}
+
 
             MenuItem menuImport = new MenuItem() { Header = "导入歌单" };
             menuImport.Click += (p1, p2) =>
@@ -349,7 +333,7 @@ namespace EasyMuisc
                       DefaultExt = "bin",
                       Filter = "BIN二进制文件|*.bin|所有文件|*.*",
                   };
-                 if( dialog.ShowDialog()==true)
+                  if (dialog.ShowDialog() == true)
                   {
                       //byte[] bytes = null;
                       //try
@@ -378,7 +362,7 @@ namespace EasyMuisc
                       {
                           ReadFileToList(dialog.FileName);
                           musicList.ResetItemsSource();
-                          }
+                      }
                       catch (Exception ex)
                       {
                           ShowAlert(ex.Message);
@@ -405,9 +389,12 @@ namespace EasyMuisc
                     {
                         ShowAlert("无法保存文件：" + Environment.NewLine + ex.Message);
                     }
-                    
+
                 }
             };
+
+            MenuItem menuRefreshList = new MenuItem() { Header = "刷新列表" };
+            menuRefreshList.Click += MenuRefreshListClickEventHandler;
 
             MenuItem menuAutoFurl = new MenuItem() { Header = (set.AutoFurl ? "√" : "×") + "自动收放列表" };
             menuAutoFurl.Click += (p1, p2) =>
@@ -445,7 +432,7 @@ namespace EasyMuisc
                 //menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
             }
 
-            if (MusicCount> 0)
+            if (MusicCount > 0)
             {
                 if (musicList.SelectedIndex != -1)
                 {
@@ -457,6 +444,7 @@ namespace EasyMuisc
             }
             menu.Items.Add(menuImport);
             menu.Items.Add(menuExport);
+            menu.Items.Add(menuRefreshList);
             if (set.ShowLrc)
             {
                 menu.Items.Add(menuAutoFurl);
@@ -464,6 +452,46 @@ namespace EasyMuisc
             else
             {
                 menu.Items.Add(menuShowLrc);
+            }
+        }
+
+        private void MenuRefreshListClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            string[] paths = musicDatas.Select(p => p.Path).ToArray();
+
+
+            List<string> exists = new List<string>(paths.Length);
+            List<string> notExists = new List<string>(paths.Length);
+            foreach (var i in paths)
+            {
+                if (File.Exists(i))
+                {
+                    exists.Add(i);
+                }
+                else
+                {
+                    notExists.Add(i);
+                }
+            }
+
+            if (notExists.Count == 0)
+            {
+                if (DialogHelper.ShowMessage("检测完成，没有发现不存在的文件，是否刷新？", DialogType.Information, new string[] { "是", "否" }) == 1)
+                {
+                    RemoveMusic();
+                    AfterClearList();
+
+                    AddMusic(paths);
+                }
+            }
+           else
+            {
+                if (DialogHelper.ShowMessage($"检测完成，发现{notExists.Count}个不存在的文件，是否删除并刷新？", DialogType.Information, new string[] { "是", "否" }) == 1)
+                {
+                    RemoveMusic();
+                    AfterClearList();
+                    AddMusic(exists.ToArray());
+                }
             }
         }
 
@@ -544,7 +572,7 @@ namespace EasyMuisc
             menuReload.Click += (p1, p2) => InitialiazeLrc();
 
 
-            MenuItem menuFloat = new MenuItem() { Header = (set.ShowFloatLyric ? "√" : "×") + "悬浮歌词" };
+            MenuItem menuFloat = new MenuItem() { Header = (set.ShowFloatLyric ? "关闭" : "打开") + "悬浮歌词" };
             menuFloat.PreviewMouseLeftButtonUp += (p1, p2) =>
             {
                 set.ShowFloatLyric = !set.ShowFloatLyric;
@@ -794,6 +822,24 @@ namespace EasyMuisc
 
 
 
+        }
+        public void AfterClearList()
+        {
+            SetCurrent(-1);
+            stkLrc.Visibility = Visibility.Hidden;
+            txtLrc.Visibility = Visibility.Hidden;
+            lbxLrc.Visibility = Visibility.Hidden;
+            if (set.ShowFloatLyric)
+            {
+                floatLyric.Clear();
+            }
+            Title = "EasyMusic";
+            txtMusicName.Text = "";
+            btnPlay.Visibility = Visibility.Visible;
+            btnPause.Visibility = Visibility.Hidden;
+            path = "";
+            Bass.BASS_ChannelStop(stream);
+            stream = 0;
         }
         #endregion
 

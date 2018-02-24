@@ -552,7 +552,7 @@ namespace EasyMuisc
         /// <param name="sender"></param>
         private void TrayMenu(object sender)
         {
-            MenuItem menuFloat = new MenuItem() { Header = (set.ShowFloatLyric ? "√" : "×") + "悬浮歌词" };
+            MenuItem menuFloat = new MenuItem() { Header = (set.ShowFloatLyric ? "关闭" : "打开") + "悬浮歌词" };
             menuFloat.PreviewMouseLeftButtonUp += (p1, p2) =>
             {
                 set.ShowFloatLyric = !set.ShowFloatLyric;

@@ -314,6 +314,7 @@ namespace EasyMuisc
         public static void RemoveMusic()
         {
             musicDatas.Clear();
+            mainWindow.AfterClearList();
         }
         /// <summary>
         /// 删除指定歌曲
@@ -322,10 +323,18 @@ namespace EasyMuisc
         public static void RemoveMusic(int index)
         {
             musicDatas.RemoveAt(index);
+            if (musicDatas.Count == 0)
+            {
+                mainWindow.AfterClearList();
+            }
         }
         public static void RemoveMusic(MusicInfo music)
         {
             musicDatas.Remove(music);
+            if(musicDatas.Count==0)
+            {
+                mainWindow.AfterClearList();
+            }
         }
 
 
@@ -393,6 +402,7 @@ namespace EasyMuisc
         {
             return historyList[index];
         }
+
 
     }
 }
