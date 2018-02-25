@@ -18,6 +18,7 @@ using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using EasyMuisc.Tools;
 using static EasyMuisc.MusicHelper;
+using static Dialog.DialogHelper;
 
 namespace EasyMuisc
 {
@@ -60,7 +61,7 @@ namespace EasyMuisc
             }
             catch (Exception ex)
             {
-                ShowAlert("初始化失败!" + Environment.NewLine + ex.ToString());
+                ShowException("初始化失败", ex);
                 return;
             }
             ReadMusicSourceInfo(MusicHelper.CurrentMusic.Path);
@@ -260,7 +261,7 @@ namespace EasyMuisc
         {
             if (!File.Exists(GetMusic(index).Path))
             {
-                if (ShowAlert("文件不存在！是否从列表中删除？", MessageBoxButton.YesNo))
+                if (ShowMessage("文件不存在！是否从列表中删除？",Dialog.DialogType.Warn, MessageBoxButton.YesNo)==1)
                 {
                     RemoveMusic(index);
                 }

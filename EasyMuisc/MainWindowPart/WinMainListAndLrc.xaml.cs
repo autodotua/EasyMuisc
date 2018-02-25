@@ -17,6 +17,7 @@ using EasyMuisc.Windows;
 using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using static EasyMuisc.MusicHelper;
+using static Dialog.DialogHelper;
 using System.Collections.ObjectModel;
 using Dialog;
 
@@ -55,13 +56,13 @@ namespace EasyMuisc
             {
                 aniMargin.To = new Thickness(0, 0, 0, 0);
                 aniOpacity.To = 1;
-                set.ShrinkMusicListManually = false;
+               // set.ShrinkMusicListManually = false;
             }
             else
             {
                 aniMargin.To = new Thickness(-musicList.ActualWidth, 0, 0, 0);
                 aniOpacity.To = 0;
-                set.ShrinkMusicListManually = true;
+               // set.ShrinkMusicListManually = true;
             }
             story.Begin(grdList);
 
@@ -74,21 +75,21 @@ namespace EasyMuisc
         private void WindowSizeChangedEventHandler(object sender, SizeChangedEventArgs e)
         {
             lbxLrc.RefreshPlaceholder(grdLrcArea.ActualHeight / 2, set.HighlightLrcFontSize);
+            
+            //if (!set.AutoFurl || !set.ShowLrc || set.ShrinkMusicListManually)
+            //{
+            //    return;
+            //}
+            //double marginLeft = grdList.Margin.Left;
 
-            if (!set.AutoFurl || !set.ShowLrc || set.ShrinkMusicListManually)
-            {
-                return;
-            }
-            double marginLeft = grdList.Margin.Left;
-
-            if (ActualWidth < 500 && marginLeft == 0)
-            {
-                BtnListSwitcherClickEventHandler(null, null);
-            }
-            else if (ActualWidth >= 500 && marginLeft == -musicList.ActualWidth)
-            {
-                BtnListSwitcherClickEventHandler(null, null);
-            }
+            //if (ActualWidth < 500 && marginLeft == 0)
+            //{
+            //    BtnListSwitcherClickEventHandler(null, null);
+            //}
+            //else if (ActualWidth >= 500 && marginLeft == -musicList.ActualWidth)
+            //{
+            //    BtnListSwitcherClickEventHandler(null, null);
+            //}
 
         }
         /// <summary>
@@ -263,19 +264,26 @@ namespace EasyMuisc
             MenuItem menuShowMusicInfo = new MenuItem() { Header = "显示音乐信息" };
             menuShowMusicInfo.Click += (p1, p2) =>
             {
-                MusicInfo music = GetMusic(musicList.SelectedIndex);
-                FileInfo fileInfo = new FileInfo(music.Path);
-                string l = Environment.NewLine;
-                string info = fileInfo.Name + l
-                + music.Path + l
-                + Math.Round(fileInfo.Length / 1024d) + "KB" + l
-                + music.MusicName + l
-                + music.Length + l
-                + music.Singer + l
-                + music.Album;
-                WinMusicInfo winMusicInfo = new WinMusicInfo() { Title = fileInfo.Name + "-音乐信息" };
-                winMusicInfo.txt.Text = info;
-                winMusicInfo.ShowDialog();
+                try
+                {
+                    MusicInfo music = GetMusic(musicList.SelectedIndex);
+                    FileInfo fileInfo = new FileInfo(music.Path);
+                    string l = Environment.NewLine;
+                    string info = fileInfo.Name + l
+                    + music.Path + l
+                    + Math.Round(fileInfo.Length / 1024d) + "KB" + l
+                    + music.MusicName + l
+                    + music.Length + l
+                    + music.Singer + l
+                    + music.Album;
+                    WinMusicInfo winMusicInfo = new WinMusicInfo() { Title = fileInfo.Name + "-音乐信息" };
+                    winMusicInfo.txt.Text = info;
+                    winMusicInfo.ShowDialog();
+                }
+                catch(Exception ex)
+                {
+                    ShowException("提取音乐信息失败", ex);
+                }
             };
             MenuItem menuPlayNext = new MenuItem() { Header = "下一首播放" };
             menuPlayNext.Click += (p1, p2) =>
@@ -365,7 +373,7 @@ namespace EasyMuisc
                       }
                       catch (Exception ex)
                       {
-                          ShowAlert(ex.Message);
+                          ShowException(ex);
                       }
                   }
               };
@@ -387,7 +395,7 @@ namespace EasyMuisc
                     }
                     catch (Exception ex)
                     {
-                        ShowAlert("无法保存文件：" + Environment.NewLine + ex.Message);
+                        ShowException("无法保存文件" , ex);
                     }
 
                 }
@@ -396,12 +404,13 @@ namespace EasyMuisc
             MenuItem menuRefreshList = new MenuItem() { Header = "刷新列表" };
             menuRefreshList.Click += MenuRefreshListClickEventHandler;
 
-            MenuItem menuAutoFurl = new MenuItem() { Header = (set.AutoFurl ? "√" : "×") + "自动收放列表" };
-            menuAutoFurl.Click += (p1, p2) =>
-            {
-                set.AutoFurl = !set.AutoFurl;
-                WindowSizeChangedEventHandler(null, null);
-            };
+            //MenuItem menuAutoFurl = new MenuItem() { Header = (set.AutoFurl ? "取消" : "开启") + "自动收放列表" };
+            //menuAutoFurl.Click += (p1, p2) =>
+            //{
+            //    set.AutoFurl = !set.AutoFurl;
+            //    set.ShrinkMusicListManually = false;    
+            //    WindowSizeChangedEventHandler(null, null);
+            //};
             MenuItem menuShowLrc = new MenuItem() { Header = "显示歌词" };
             menuShowLrc.Click += (p1, p2) =>
             {
@@ -445,14 +454,14 @@ namespace EasyMuisc
             menu.Items.Add(menuImport);
             menu.Items.Add(menuExport);
             menu.Items.Add(menuRefreshList);
-            if (set.ShowLrc)
-            {
-                menu.Items.Add(menuAutoFurl);
-            }
-            else
-            {
-                menu.Items.Add(menuShowLrc);
-            }
+            //if (set.ShowLrc)
+            //{
+            //    menu.Items.Add(menuAutoFurl);
+            //}
+            //else
+            //{
+            //    menu.Items.Add(menuShowLrc);
+            //}
         }
 
         private void MenuRefreshListClickEventHandler(object sender, RoutedEventArgs e)
@@ -476,7 +485,7 @@ namespace EasyMuisc
 
             if (notExists.Count == 0)
             {
-                if (DialogHelper.ShowMessage("检测完成，没有发现不存在的文件，是否刷新？", DialogType.Information, new string[] { "是", "否" }) == 1)
+                if (ShowMessage("检测完成，没有发现不存在的文件，是否刷新？", DialogType.Information, new string[] { "是", "否" }) == 1)
                 {
                     RemoveMusic();
                     AfterClearList();
@@ -486,7 +495,7 @@ namespace EasyMuisc
             }
            else
             {
-                if (DialogHelper.ShowMessage($"检测完成，发现{notExists.Count}个不存在的文件，是否删除并刷新？", DialogType.Information, new string[] { "是", "否" }) == 1)
+                if (ShowMessage($"检测完成，发现{notExists.Count}个不存在的文件，是否删除并刷新？", DialogType.Information, new string[] { "是", "否" }) == 1)
                 {
                     RemoveMusic();
                     AfterClearList();
@@ -536,7 +545,7 @@ namespace EasyMuisc
             {
                 set.ShowLrc = false;
                 grdLrcArea.Visibility = Visibility.Collapsed;
-                set.AutoFurl = false;
+                //set.AutoFurl = false;
                 NewDoubleAnimation(this, WidthProperty, grdMain.ColumnDefinitions[0].ActualWidth + 32, 0.5, 0.3, (p3, p4) =>
                 {
                     grdMain.ColumnDefinitions[2].Width = new GridLength(0);
@@ -723,7 +732,7 @@ namespace EasyMuisc
                     }
                     catch (Exception ex)
                     {
-                        ShowAlert("无法保存文件：" + Environment.NewLine + ex.Message);
+                        ShowException("无法保存文件" , ex);
                     }
                 }
             }
@@ -736,7 +745,7 @@ namespace EasyMuisc
                 }
                 catch (Exception ex)
                 {
-                    ShowAlert("无法保存文件：" + Environment.NewLine + ex.Message);
+                    ShowException("无法保存文件", ex);
                 }
             }
         }
@@ -837,6 +846,8 @@ namespace EasyMuisc
             txtMusicName.Text = "";
             btnPlay.Visibility = Visibility.Visible;
             btnPause.Visibility = Visibility.Hidden;
+            imgAlbum.Source = null;
+            imgAlbum.Visibility = Visibility.Collapsed;
             path = "";
             Bass.BASS_ChannelStop(stream);
             stream = 0;

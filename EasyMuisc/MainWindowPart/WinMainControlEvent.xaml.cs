@@ -14,6 +14,7 @@ using Un4seen.Bass;
 using System.Windows.Controls.Primitives;
 using static EasyMuisc.ShareStaticResources;
 using static EasyMuisc.MusicHelper;
+using static Dialog.DialogHelper;
 
 namespace EasyMuisc
 {
@@ -108,7 +109,7 @@ namespace EasyMuisc
                     btnListCycle.Visibility = Visibility.Visible;
                     break;
                 default:
-                    ShowAlert("黑人问号");
+                    ShowError("黑人问号");
                     break;
             }
 

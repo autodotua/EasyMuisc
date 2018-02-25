@@ -6,6 +6,14 @@ using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using EasyMuisc.Tools;
 using Un4seen.Bass;
+using static Dialog.DialogHelper;
+using Microsoft.Win32;
+using System.IO;
+using System;
+using System.Xml.Linq;
+using System.Xml.XPath;
+using System.Collections.Generic;
+using System.Text;
 
 namespace EasyMuisc.Windows
 {
@@ -20,7 +28,7 @@ namespace EasyMuisc.Windows
             chkOffset.IsChecked = set.SaveLrcOffsetByTag;
             chkPreferMusicInfo.IsChecked = set.PreferMusicInfo;
             chkLrcAnimation.IsChecked = set.LrcAnimation;
-            txtAnimationFps .Text= set.AnimationFps.ToString();
+            txtAnimationFps.Text = set.AnimationFps.ToString();
             txtOffset.Text = set.LrcDefautOffset.ToString();
             txtUpdateSpeed.Text = set.UpdateSpeed.ToString();
             chkMusicSettings.IsChecked = set.MusicSettings;
@@ -54,7 +62,7 @@ namespace EasyMuisc.Windows
 
             if (!double.TryParse(txtUpdateSpeed.Text, out double speed) || speed <= 0)
             {
-              ShowAlert("输入的速度值不是正数！");
+                ShowError("输入的速度值不是正数！");
                 return;
             }
             //if (!int.TryParse(txtSampleRate.Text, out int sampleRate) || sampleRate <= 0)
@@ -62,28 +70,28 @@ namespace EasyMuisc.Windows
             //    ShowAlert("输入的采样率不是正数！");
             //    return;
             //}
-            if (speed>60)
+            if (speed > 60)
             {
-              ShowAlert("输入的速度值过大！");
+                ShowError("输入的速度值过大！");
                 return;
 
             }
             if (!int.TryParse(txtAnimationFps.Text, out int fps) || speed <= 0)
             {
-              ShowAlert("输入的FPS不是正数！");
+                ShowError("输入的FPS不是正数！");
                 return;
             }
             if (fps > 240)
             {
-              ShowAlert("输入的速度值过大！");
+                ShowError("输入的速度值过大！");
                 return;
 
             }
             if (!double.TryParse(txtOffset.Text, out double offset))
-                {
-                  ShowAlert("输入的偏移量不是数字！");
+            {
+                ShowError("输入的偏移量不是数字！");
                 return;
-                }
+            }
             //Bass.BASS_Free();
             //if(!Bass.BASS_Init(-1,sampleRate,BASSInit.BASS_DEVICE_DEFAULT,windowHandle))
             //{
@@ -96,7 +104,7 @@ namespace EasyMuisc.Windows
             set.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
             set.UseListBoxLrcInsteadOfStackPanel = (bool)chkListBoxLrc.IsChecked;
             set.MusicSettings = chkMusicSettings.IsChecked.Value;
-            if (fps!=set.AnimationFps)
+            if (fps != set.AnimationFps)
             {
                 MessageBox.Show("动画帧率将在下次启动后生效", "提示", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                 set.AnimationFps = fps;
@@ -105,7 +113,86 @@ namespace EasyMuisc.Windows
             set.LrcDefautOffset = offset;
             set.TrayMode = chkCloseBtnToTray.IsChecked.Value ? 1 : (chkMinimunBtnToTray.IsChecked.Value ? 2 : 3);
             Close();
+
         }
-        
+
+        private void ButtonExportClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            set.Save();
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+
+            SaveFileDialog dialog = new SaveFileDialog() { Filter = "XML文件|*.xml|所有文件|*.*" };
+            if (dialog.ShowDialog() == true)
+            {
+                config.SaveAs(dialog.FileName);
+            }
+        }
+
+        private void ButtonImportClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog() { Filter = "XML文件|*.xml|所有文件|*.*" };
+            if (dialog.ShowDialog() != true)
+            {
+                return;
+            }
+            if (!File.Exists(dialog.FileName))
+            {
+                ShowError("文件不存在！");
+                return;
+            }
+
+            try
+            {
+                StringBuilder failedSettings = new StringBuilder();
+                // Open settings file as XML
+                var import = XDocument.Load(dialog.FileName);
+                // Get the <setting> elements
+                var settings = import.XPathSelectElements("//setting");
+                foreach (var setting in settings)
+                {
+                    string name = setting.Attribute("name").Value;
+                    string value = setting.XPathSelectElement("value").FirstNode.ToString();
+
+                    try
+                    {
+                        if (set[name] is string)
+                        {
+                            set[name] = value;
+                        }
+                        else if (set[name] is int)
+                        {
+                            set[name] = int.Parse(value);
+                        }
+                        else if (set[name] is double)
+                        {
+                            set[name] = double.Parse(value);
+                        }
+                        else
+                        {
+                            failedSettings.AppendLine(name + ": 格式不支持" );
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        failedSettings.AppendLine(name + ": " + ex.Message);
+                    }
+                }
+
+                if (failedSettings.Length == 0)
+                {
+                    ShowPrompt("导入成功。部分设置需要重启生效。");
+                }
+                else
+                {
+                    ShowWarn("导入部分失败：" + Environment.NewLine + failedSettings);
+                }
+                set.Save();
+            }
+            catch (Exception ex)
+            {
+                ShowException("导入失败", ex);
+                set.Reload();
+            }
+        }
     }
 }

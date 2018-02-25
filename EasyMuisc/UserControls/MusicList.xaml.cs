@@ -19,6 +19,7 @@ using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.MusicHelper;
 using System.Windows.Shell;
 using Shell32;
+using static Dialog.DialogHelper;
 
 namespace EasyMuisc
 {
@@ -52,7 +53,7 @@ namespace EasyMuisc
                 }
                 catch
                 {
-                    ShowAlert("歌单存档已损坏，将重置歌单。");
+                    ShowWarn("歌单存档已损坏，将重置歌单。");
                     musicDatas = new ObservableCollection<MusicInfo>();
                 }
             }

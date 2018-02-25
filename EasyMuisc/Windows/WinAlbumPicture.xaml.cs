@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
+using static Dialog.DialogHelper;
 
 namespace EasyMuisc.Windows
 {
@@ -122,7 +123,7 @@ namespace EasyMuisc.Windows
                   }
                   catch(Exception ex)
                   {
-                      ShowAlert("保存文件失败：" + Environment.NewLine + ex.Message.ToString());
+                      ShowException("保存文件失败" , ex);
                   }
               };
             sfd.ShowDialog();

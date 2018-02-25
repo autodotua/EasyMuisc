@@ -86,18 +86,6 @@ namespace EasyMuisc.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool AutoFurl {
-            get {
-                return ((bool)(this["AutoFurl"]));
-            }
-            set {
-                this["AutoFurl"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool ShowLrc {
             get {
                 return ((bool)(this["ShowLrc"]));
@@ -188,18 +176,6 @@ namespace EasyMuisc.Properties {
             }
             set {
                 this["UseListBoxLrcInsteadOfStackPanel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ShrinkMusicListManually {
-            get {
-                return ((bool)(this["ShrinkMusicListManually"]));
-            }
-            set {
-                this["ShrinkMusicListManually"] = value;
             }
         }
         

@@ -31,6 +31,7 @@ using EasyMuisc.UserControls;
 using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using static EasyMuisc.MusicHelper;
+using static Dialog.DialogHelper;
 
 namespace EasyMuisc
 {
@@ -303,7 +304,7 @@ namespace EasyMuisc
 
             if (!Bass.BASS_Init(-1, set.SampleRate/*无设置界面*/, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
             {
-                ShowAlert("无法初始化音乐引擎，可能是采样率不支持。");
+               ShowError("无法初始化音乐引擎，可能是采样率不支持。"+Environment.NewLine+Bass.BASS_ErrorGetCode());
                 error = true;
                 //Application.Current.Shutdown();
             }
@@ -408,7 +409,7 @@ namespace EasyMuisc
             {
                 set.ShowLrc = false;
                 grdLrcArea.Visibility = Visibility.Collapsed;
-                set.AutoFurl = false;
+               // set.AutoFurl = false;
                 grdMain.ColumnDefinitions[2].Width = new GridLength(0);
                 grdMain.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
                 Width = grdMain.ColumnDefinitions[0].ActualWidth + 32;
@@ -435,10 +436,10 @@ namespace EasyMuisc
             Volumn = set.Volumn;
             sldVolumn.Value = set.Volumn;
             Topmost = set.Topmost;
-            if (set.ShrinkMusicListManually)
-            {
-                SleepThenDo(1000, (p1, p2) => BtnListSwitcherClickEventHandler(null, null));
-            }
+            //if (set.ShrinkMusicListManually)
+            //{
+            //    SleepThenDo(1000, (p1, p2) => BtnListSwitcherClickEventHandler(null, null));
+            //}
             if (set.ShowFloatLyric)
             {
                 floatLyric.Show();

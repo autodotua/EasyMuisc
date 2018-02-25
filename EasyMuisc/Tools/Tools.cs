@@ -18,26 +18,26 @@ namespace EasyMuisc.Tools
 {
     public static class Tools
     {
-        /// <summary>
-        /// 显示错误信息
-        /// </summary>
-        /// <param name="message"></param>
-        public static bool ShowAlert(string message, MessageBoxButton button = MessageBoxButton.OK)
-        {
-            if (button == MessageBoxButton.YesNo)
-            {
-                if (MessageBox.Show(message, "错误", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
-                {
-                    return true;
-                }
-                return false;
-            }
-            else
-            {
-                MessageBox.Show(message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            return true;
-        }
+        ///// <summary>
+        ///// 显示错误信息
+        ///// </summary>
+        ///// <param name="message"></param>
+        //public static bool ShowAlert(string message, MessageBoxButton button = MessageBoxButton.OK)
+        //{
+        //    if (button == MessageBoxButton.YesNo)
+        //    {
+        //        if (MessageBox.Show(message, "错误", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
+        //        {
+        //            return true;
+        //        }
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show(message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    }
+        //    return true;
+        //}
         /// <summary>
         /// 菜单分隔栏
         /// </summary>

@@ -18,7 +18,7 @@ using Un4seen.Bass;
 using System.Diagnostics;
 using System.Windows.Interop;
 using static EasyMuisc.Tools.Tools;
-
+using static Dialog.DialogHelper;
 namespace EasyMuisc.UserControls
 {
     /// <summary>
@@ -81,7 +81,7 @@ namespace EasyMuisc.UserControls
             if (!Bass.BASS_ChannelSetDevice(stream, device)
             || !Bass.BASS_SetDevice(device))
             {
-                ShowAlert(Bass.BASS_ErrorGetCode().ToString());
+                ShowError(Bass.BASS_ErrorGetCode().ToString());
             }
             BtnCloseEventHandler(null, null);
         }

@@ -17,6 +17,7 @@ using EasyMuisc.Windows;
 using static EasyMuisc.Tools.Tools;
 using EasyMuisc.Tools;
 using static EasyMuisc.ShareStaticResources;
+using static Dialog.DialogHelper;
 
 namespace EasyMuisc
 {
@@ -105,17 +106,23 @@ namespace EasyMuisc
         /// </summary>
         private void RegistGolbalHotKey()
         {
-            HotKey next = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Right);
-            HotKey last = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Left);
-            next.OnHotKey += () => BtnNextClickEventHandler(null, null);
-            last.OnHotKey += () => BtnLastClickEventHandler(null, null);
-            HotKey up = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Up);
-            HotKey down = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Down);
-            up.OnHotKey += () => sldVolumn.Value += 0.05;
-            down.OnHotKey += () => sldVolumn.Value -= 0.05;
-            HotKey playAndPause = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.OemQuestion);
-            playAndPause.OnHotKey += () => HotKeyPlayAndPauseEventHandler(null, null);
-
+            try
+            {
+                HotKey next = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Right);
+                HotKey last = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Left);
+                next.OnHotKey += () => BtnNextClickEventHandler(null, null);
+                last.OnHotKey += () => BtnLastClickEventHandler(null, null);
+                HotKey up = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Up);
+                HotKey down = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Down);
+                up.OnHotKey += () => sldVolumn.Value += 0.05;
+                down.OnHotKey += () => sldVolumn.Value -= 0.05;
+                HotKey playAndPause = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.OemQuestion);
+                playAndPause.OnHotKey += () => HotKeyPlayAndPauseEventHandler(null, null);
+            }
+            catch(Exception ex)
+            {
+                ShowException(ex);
+            }
         }
         #endregion
 
