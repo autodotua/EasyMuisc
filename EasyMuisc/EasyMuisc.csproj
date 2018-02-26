@@ -106,6 +106,9 @@
       <HintPath>Properties\Bass.Net.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="CsvHelper, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.7.0.1\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="CustomWPFColorPicker">
       <HintPath>Properties\CustomWPFColorPicker.dll</HintPath>
     </Reference>
@@ -147,6 +150,8 @@
     <Compile Include="MainWindowPart\WinMainMenu.xaml.cs" />
     <Compile Include="MainWindowPart\WinMainMusicControl.xaml.cs" />
     <Compile Include="MainWindowPart\WinMainControlEvent.xaml.cs" />
+    <Compile Include="Tools\FindVisualChildHelper.cs" />
+    <Compile Include="Tools\MusicHelper.cs" />
     <Compile Include="Tools\ShareStaticResources.cs" />
     <Compile Include="UserControls\ControlButton.xaml.cs">
       <DependentUpon>ControlButton.xaml</DependentUpon>
@@ -166,6 +171,9 @@
     </Compile>
     <Compile Include="UserControls\SeparatorLine.xaml.cs">
       <DependentUpon>SeparatorLine.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ToggleButton.xaml.cs">
+      <DependentUpon>ToggleButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\FloatLyrics.xaml.cs">
       <DependentUpon>FloatLyrics.xaml</DependentUpon>
@@ -216,6 +224,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\SeparatorLine.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ToggleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -280,6 +292,7 @@
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Images\icon.psd" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>

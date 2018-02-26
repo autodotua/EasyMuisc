@@ -11,8 +11,9 @@ using System.Windows.Media;
 using System.Windows.Shell;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
-using Dialog;
 using System.Diagnostics;
+using System.Security.Principal;
+using static Dialog.DialogHelper;
 
 namespace EasyMuisc
 {
@@ -122,7 +123,16 @@ namespace EasyMuisc
 
         private void MenuFileAssociationClickEventHandler(object sender, RoutedEventArgs e)
         {
-            FileAssociation.Associate(".mp3", "ClassID.ProgID", "mp3 文件", "icon.ico", Process.GetCurrentProcess().MainModule.FileName);
+            WindowsIdentity current = WindowsIdentity.GetCurrent();
+            WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
+            if (windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator))
+            {
+                FileAssociation.Associate(".mp3", "ClassID.ProgID", "mp3 文件", "icon.ico", Process.GetCurrentProcess().MainModule.FileName);
+            }
+            else
+            {
+                ShowError("需要管理员权限，请用管理员权限打开此程序。");
+            }
         }
 
         /// <summary>

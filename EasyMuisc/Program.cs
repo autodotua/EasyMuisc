@@ -48,7 +48,8 @@ namespace EasyMuisc
                   + Environment.NewLine
                    + e.Exception.ToString());
             }
-           App.Current.Shutdown();
+            //App.Current.Shutdown();
+            Environment.Exit(0);
             return;
         }
 

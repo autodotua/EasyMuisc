@@ -368,7 +368,7 @@ namespace EasyMuisc
                       //}
                       try
                       {
-                          ReadFileToList(dialog.FileName);
+                          ReadFileToList(dialog.FileName,false);
                           musicList.ResetItemsSource();
                       }
                       catch (Exception ex)
@@ -388,14 +388,15 @@ namespace EasyMuisc
                 };
                 if (dialog.ShowDialog() == true)
                 {
-                    byte[] bytes = SerializeObject(musicDatas);
+                    //byte[] bytes = SerializeObject(musicDatas);
                     try
                     {
-                        File.WriteAllBytes(dialog.FileName, bytes);
+                        //File.WriteAllBytes(dialog.FileName, bytes);
+                        SaveListToFile(dialog.FileName);
                     }
                     catch (Exception ex)
                     {
-                        ShowException("无法保存文件" , ex);
+                        ShowException("无法保存文件", ex);
                     }
 
                 }

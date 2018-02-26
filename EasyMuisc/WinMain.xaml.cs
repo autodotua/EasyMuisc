@@ -461,7 +461,8 @@ namespace EasyMuisc
                 return;
             }
             //SaveMusicListFromConfig();
-            MusicHelper.SaveListToFile();
+            // SaveListToFile(set.DefautMusicList);
+            SaveListToFile(musicList.lastBtn.Text, false);
             switch (CurrentCycleMode)
             {
                 case CycleMode.ListCycle:

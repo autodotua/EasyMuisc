@@ -4,9 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EasyMuisc"
+             xmlns:uc="clr-namespace:EasyMuisc.UserControls"
+             FocusVisualStyle="{x:Null}"
              mc:Ignorable="d">
     <UserControl.Resources>
-
+        <local:WidthConverter x:Key="conver"/>
         <!--ListView-->
         <ControlTemplate x:Key="tmpForThumb" TargetType="{x:Type Thumb}">
             <Border>
@@ -28,45 +30,84 @@
                 </Setter.Value>
             </Setter>
         </Style>
+   
     </UserControl.Resources>
-    <ListView x:Name="lvw" ItemsSource="{Binding}"  ScrollViewer.CanContentScroll="False"
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="4"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ListView x:Name="lvw" ItemsSource="{Binding}"  ScrollViewer.CanContentScroll="False" FocusVisualStyle="{x:Null}"
                       Background="{DynamicResource backgroundBrushColor}" Foreground="Black" BorderThickness="0"
-                     Grid.Row="2" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden">
 
-        <ListView.ItemContainerStyle>
-            <Style TargetType="{x:Type ListViewItem}">
-                <EventSetter Event="UIElement.PreviewKeyDown" Handler="LvwItemPreviewKeyDownEventHandler"/>
-                <EventSetter Event="Control.MouseDoubleClick" Handler="LvwItemPreviewMouseDoubleClickEventHandler"/>
-                <EventSetter Event="MouseRightButtonUp" Handler="ListViewItemMouseRightButtonUpEvetnHandler"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ListViewItem}">
-                            <Border x:Name="bd" Background="{DynamicResource backgroundBrushColor}"  BorderThickness="1"   Padding="{TemplateBinding Padding}"  SnapsToDevicePixels="True">
-                                <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <EventSetter Event="UIElement.PreviewKeyDown" Handler="LvwItemPreviewKeyDownEventHandler"/>
+                    <EventSetter Event="Control.MouseDoubleClick" Handler="LvwItemPreviewMouseDoubleClickEventHandler"/>
+                    <EventSetter Event="MouseRightButtonUp" Handler="ListViewItemMouseRightButtonUpEvetnHandler"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <Border x:Name="bd" Background="{DynamicResource backgroundBrushColor}"  BorderThickness="1"   Padding="{TemplateBinding Padding}"  SnapsToDevicePixels="True">
+                                    <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
                                                   Margin="3"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsSelected" Value="True" >
-                                    <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker2BrushColor}"/>
-                                </Trigger>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True" >
+                                        <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker2BrushColor}"/>
+                                    </Trigger>
 
-                                <Trigger Property="IsMouseOver"  Value="True" >
-                                    <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker3BrushColor}"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </ListView.ItemContainerStyle>
-        <ListView.View>
-            <GridView ColumnHeaderContainerStyle="{StaticResource musicListStyle}">
+                                    <Trigger Property="IsMouseOver"  Value="True" >
+                                        <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker3BrushColor}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView ColumnHeaderContainerStyle="{StaticResource musicListStyle}">
 
-                <GridViewColumn  Header="歌名" Width="144" DisplayMemberBinding="{Binding MusicName}"/>
-                <GridViewColumn Header="歌手" Width="96" DisplayMemberBinding="{Binding Singer}"/>
-                <GridViewColumn Header="时长" Width="64" DisplayMemberBinding="{Binding Length}"/>
-            </GridView>
-        </ListView.View>
+                    <GridViewColumn  Header="歌名" Width="144" DisplayMemberBinding="{Binding MusicName}"/>
+                    <GridViewColumn Header="歌手" Width="96" DisplayMemberBinding="{Binding Singer}"/>
+                    <GridViewColumn Header="时长" Width="64" DisplayMemberBinding="{Binding Length}"/>
+                </GridView>
+            </ListView.View>
 
-    </ListView>
+        </ListView>
+
+        <ScrollViewer x:Name="scv" Grid.Row="2"  VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=lvw, Mode=OneWay,Converter={StaticResource conver}}" >
+            <StackPanel x:Name="stkMusiList" Orientation="Horizontal">
+                <Button x:Name="btnSettings" FocusVisualStyle="{x:Null}" Grid.Column="4" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnAddClickEventHandler"  HorizontalAlignment="Left">
+                    <Button.Style>
+                        <Style  TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border CornerRadius="5">
+                                            <Canvas x:Name="btnCvs"  Background="{DynamicResource backgroundBrushColor}">
+                                                <Line x:Name="btnLine1" X1="12" X2="12" Y1="4" Y2=" 20" Stroke="Black" StrokeThickness="2" />
+                                                <Line x:Name="btnLine2" X1="4" X2="20" Y1="12" Y2=" 12" Stroke="Black" StrokeThickness="2" />
+                                            </Canvas>
+
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource darker2BrushColor}" TargetName="btnCvs" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

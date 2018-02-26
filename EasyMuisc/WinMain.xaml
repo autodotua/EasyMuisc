@@ -428,7 +428,7 @@
             </Grid>
             <local:MusicList Grid.Row="2" x:Name="musicList" />
 
-            <uc:ControlButton x:Name="btnListOption" Width="32" Height="32"  Click="BtnListOptionClickEventHanlder"  VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="0,0,20,1" Grid.Row="2" NormalSize="28" PressedSize="24" MouseOverSize="28"  OpacityAnimation="True"  FocusVisualStyle="{x:Null}"
+            <uc:ControlButton x:Name="btnListOption" Width="32" Height="32"  Click="BtnListOptionClickEventHanlder"  VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="0,0,20,1" Grid.Row="4" NormalSize="28" PressedSize="24" MouseOverSize="28"  OpacityAnimation="True"  FocusVisualStyle="{x:Null}"
                              PathData="F1 M 24.173,26.110 L 2.198,26.110 C 0.989,26.110 0.000,25.121 0.000,23.912 C 0.000,22.704 0.989,21.715 2.198,21.715 L 24.170,21.715 C 25.379,21.715 26.368,22.704 26.368,23.912 C 26.371,25.121 25.382,26.110 24.173,26.110 Z M 24.173,15.155 L 2.328,15.155 C 1.120,15.155 0.130,14.166 0.130,12.957 C 0.130,11.748 1.120,10.759 2.328,10.759 L 24.173,10.759 C 25.382,10.759 26.371,11.748 26.371,12.957 C 26.371,14.166 25.382,15.155 24.173,15.155 Z M 24.173,4.396 L 2.198,4.396 C 0.989,4.396 0.000,3.407 0.000,2.198 C 0.000,0.989 0.989,0.000 2.198,0.000 L 24.170,0.000 C 25.379,0.000 26.368,0.989 26.368,2.198 C 26.371,3.407 25.382,4.396 24.173,4.396 Z"/>
 
         </Grid>
@@ -574,7 +574,6 @@
                                         <Line x:Name="btnLine1" X1="4" X2="20" Y1="6" Y2=" 6" Stroke="Black" StrokeThickness="2" />
                                         <Line x:Name="btnLine2" X1="4" X2="20" Y1="12" Y2=" 12" Stroke="Black" StrokeThickness="2" />
                                         <Line x:Name="btnLine3" X1="4" X2="20" Y1="18" Y2=" 18" Stroke="Black" StrokeThickness="2" />
-
                                     </Canvas>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">

@@ -101,5 +101,11 @@
     <Setting Name="SampleRate" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">48000</Value>
     </Setting>
+    <Setting Name="MusicListPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%APPDATA%\EasyMusic\MusicList</Value>
+    </Setting>
+    <Setting Name="DefautMusicList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">默认</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

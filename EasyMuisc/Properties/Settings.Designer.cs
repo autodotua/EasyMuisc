@@ -418,5 +418,29 @@ namespace EasyMuisc.Properties {
                 this["SampleRate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\EasyMusic\\MusicList")]
+        public string MusicListPath {
+            get {
+                return ((string)(this["MusicListPath"]));
+            }
+            set {
+                this["MusicListPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("默认")]
+        public string DefautMusicList {
+            get {
+                return ((string)(this["DefautMusicList"]));
+            }
+            set {
+                this["DefautMusicList"] = value;
+            }
+        }
     }
 }
