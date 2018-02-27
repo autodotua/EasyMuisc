@@ -54,6 +54,21 @@ namespace EasyMuisc.Windows
                     chkTrayBtnToTray.IsChecked = true;
                     break;
             }
+
+            foreach (var i in mainWindow.musicList.stkMusiList.Children)
+            {
+                if(i is UserControls.ToggleButton)
+                {
+                    var btn = i as UserControls.ToggleButton;
+                    RadioButton chk = new RadioButton()
+                    {
+                        Content=btn.Text,
+                        IsChecked=btn.Text==set.DefautMusicList,
+                        Margin=new Thickness(0,0,0,8),
+                    };
+                    stkMusicList.Children.Add(chk);
+                }
+            }
         }
 
         private void ButtonClickEventHandler(object sender, RoutedEventArgs e)
@@ -112,6 +127,17 @@ namespace EasyMuisc.Windows
             set.UpdateSpeed = speed;
             set.LrcDefautOffset = offset;
             set.TrayMode = chkCloseBtnToTray.IsChecked.Value ? 1 : (chkMinimunBtnToTray.IsChecked.Value ? 2 : 3);
+
+            foreach (var i in stkMusicList.Children)
+            {
+                if(i is RadioButton && (i as RadioButton).IsChecked.Value)
+                {
+                    set.DefautMusicList = (i as RadioButton).Content as string;
+                    break;
+                }
+            }
+
+            set.Save();
             Close();
 
         }

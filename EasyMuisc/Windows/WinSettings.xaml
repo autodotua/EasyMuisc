@@ -86,6 +86,10 @@
             <TextBox x:Name="txtSampleRate" BorderThickness="0, 0,0,1" MinWidth="36" />
         </StackPanel>
         <TextBlock FontSize="5"/>-->
+        <StackPanel x:Name="stkMusicList" Orientation="Horizontal">
+            <TextBlock Text="默认歌单：     " />
+        </StackPanel>
+        <TextBlock FontSize="5"/>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

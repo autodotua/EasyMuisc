@@ -235,6 +235,16 @@ namespace EasyMuisc
             }
             File.Delete(path);
         }
+
+        public static void RenameMusicListFile(string oldPath,string newPath, bool abstractPath)
+        {
+            if (!abstractPath)
+            {
+                oldPath = ToAbstractPath(oldPath);
+                newPath = ToAbstractPath(newPath);
+            }
+            File.Move(oldPath, newPath);
+        }
         public static string ToAbstractPath(string path)
         {
             return (set.MusicListPath + "\\" + path+ (path.EndsWith(".csv")?"":".csv")).Replace("%APPDATA%",Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "");

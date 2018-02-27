@@ -86,12 +86,40 @@ namespace EasyMuisc
                 return;
             }
             var btn = sender as UserControls.ToggleButton;
+
+            MenuItem menuRename = new MenuItem() { Header = "重命名" };
+            menuRename.Click += (p1, p2) =>
+              {
+                  if (!File.Exists(ToAbstractPath(btn.Text)))
+                  {
+                      if (ShowMessage("歌单文件不存在，是否直接从界面删除？", Dialog.DialogType.Information, MessageBoxButton.YesNo) == 1)
+                      {
+                          RemoveButton();
+                      }
+                  }
+                  else
+                  {
+                      if (GetInput("请输入目标名称（不含后缀名）：", out string name, lvw.Background as SolidColorBrush,btn.Text, @"^[^\/:*\?\”“\<>|,]+$"))
+                          {
+                          try
+                          {
+                              RenameMusicListFile(btn.Text, name, false);
+                              btn.Text = name;
+                          }
+                          catch (Exception ex)
+                          {
+                              ShowException("删除歌单文件失败", ex);
+                          }
+                      }
+                  }
+              };
+
             MenuItem menuDelete = new MenuItem() { Header="删除" };
             menuDelete.Click += (p1, p2) =>
               {
                   if(!File.Exists(ToAbstractPath(btn.Text)))
                   {
-                      if(ShowMessage("歌单文件不存在，是否直接从界面删除？", Dialog.DialogType.Information, MessageBoxButton.YesNo) == 1)
+                      if(ShowMessage("歌单文件不存在，是否直接从界面删除？", Dialog.DialogType.Warn, MessageBoxButton.YesNo) == 1)
                       {
                           RemoveButton();
                       }
@@ -114,7 +142,7 @@ namespace EasyMuisc
             ContextMenu menu = new ContextMenu()
             {
                 PlacementTarget = this,
-                Items = {menuDelete },
+                Items = {menuRename, menuDelete },
                 IsOpen = true,
             };
 
