@@ -277,6 +277,8 @@ namespace EasyMuisc
         /// </summary>
         public MainWindow()
         {
+
+
             //if (!File.Exists("bass.dll"))
             //{
             //    File.WriteAllBytes("bass.dll", Properties.Resources.bass);

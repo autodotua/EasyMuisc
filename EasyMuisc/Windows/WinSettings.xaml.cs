@@ -133,12 +133,13 @@ namespace EasyMuisc.Windows
                 if(i is RadioButton && (i as RadioButton).IsChecked.Value)
                 {
                     set.DefautMusicList = (i as RadioButton).Content as string;
-                    break;
+                    set.Save();
+                    Close();
+                    return;
                 }
             }
-
-            set.Save();
-            Close();
+            ShowWarn("还未选择默认歌单！");
+            
 
         }
 

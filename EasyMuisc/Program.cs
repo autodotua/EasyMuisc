@@ -1,10 +1,13 @@
-﻿using System;
+﻿#define DEBUG 
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+
 
 namespace EasyMuisc
 {
@@ -20,17 +23,27 @@ namespace EasyMuisc
 
             App app = new App();
             //app.InitializeComponent();
-            app.DispatcherUnhandledException += AppDispatcherUnhandledExceptionEventHandler;
-           ShareStaticResources. mainWindow = new MainWindow() { path = args.Length != 0 ? args[0] : null };
-            app.Run(ShareStaticResources.mainWindow);
-             ShareStaticResources.trayIcon.Visible = false;
+#if(!DEBUG)
+            try
+            {
+#endif
+                ShareStaticResources.mainWindow = new MainWindow() { path = args.Length != 0 ? args[0] : null };
+                app.Run(ShareStaticResources.mainWindow);
+                ShareStaticResources.trayIcon.Visible = false;
+#if(!DEBUG)
+            }
+            catch(Exception ex)
+            {
+                UnhandledException(ex);
+            }
+#endif
             //app.Run(new EasyMuisc.Windows.FloatLyrics());
         }
 
-        private static void AppDispatcherUnhandledExceptionEventHandler(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private static void UnhandledException(Exception ex)
         {
-            ShowAlert(e.Exception.Message);
-            string logName = "UnhandledException.log";
+            Dialog.DialogHelper.ShowException("程序发生了未处理的异常，将立刻关闭", ex);
+            string logName = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+ "\\EasyMusic\\UnhandledException.log";
             if (File.Exists(logName))
             {
                 string oldFile = File.ReadAllText(logName);
@@ -39,25 +52,18 @@ namespace EasyMuisc
                 + Environment.NewLine + Environment.NewLine
                 + DateTime.Now.ToString()
                 + Environment.NewLine
-                + e.Exception.ToString());
+                + ex.ToString());
             }
             else
             {
                 File.WriteAllText(logName,
                   DateTime.Now.ToString()
                   + Environment.NewLine
-                   + e.Exception.ToString());
+                   + ex.ToString());
             }
             //App.Current.Shutdown();
             Environment.Exit(0);
             return;
-        }
-
-        private static void ShowAlert(string message)
-        {
-
-            MessageBox.Show(message, "发生异常", MessageBoxButton.OK, MessageBoxImage.Error);
-
         }
 
     }

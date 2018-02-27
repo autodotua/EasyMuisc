@@ -180,14 +180,21 @@ namespace EasyMuisc
                 }
                 catch(Exception ex)
                 {
-                    ShowException($"歌单存档已损坏，将重置歌单",ex);
+                    ShowException($"歌单文件{path}已损坏，将重置歌单",ex);
                     musicDatas = new ObservableCollection<MusicInfo>();
                 }
             }
             else
             {
-                ShowPrompt($"歌单存档不存在，将新建歌单");
-
+                ShowPrompt($"歌单文件{path}不存在，将新建歌单");
+                try
+                {
+                    File.Create(ToAbstractPath(path));
+                }
+                catch(Exception ex)
+                {
+                    ShowException("歌单文件创建失败。", ex);
+                }
                 musicDatas = new ObservableCollection<MusicInfo>();
             }
          

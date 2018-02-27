@@ -127,7 +127,8 @@ namespace EasyMuisc
             WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
             if (windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator))
             {
-                FileAssociation.Associate(".mp3", "ClassID.ProgID", "mp3 文件", "icon.ico", Process.GetCurrentProcess().MainModule.FileName);
+                FileAssociation.Associate(".mp3", "EasyMusic", "mp3 文件", AppDomain.CurrentDomain.BaseDirectory + "icon.ico", Process.GetCurrentProcess().MainModule.FileName);
+                ShowPrompt("成功");
             }
             else
             {

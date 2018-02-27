@@ -81,10 +81,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnPreviewMouseRightButtonDownEventHandler(object sender, MouseButtonEventArgs e)
         {
-            if(stkMusiList.Children.Count==2)
-            {
-                return;
-            }
+          
             var btn = sender as UserControls.ToggleButton;
 
             MenuItem menuRename = new MenuItem() { Header = "重命名" };
@@ -104,11 +101,15 @@ namespace EasyMuisc
                           try
                           {
                               RenameMusicListFile(btn.Text, name, false);
+                              if(btn.Text==set.DefautMusicList)
+                              {
+                                  set.DefautMusicList = name;
+                              }
                               btn.Text = name;
                           }
                           catch (Exception ex)
                           {
-                              ShowException("删除歌单文件失败", ex);
+                              ShowException("重命名歌单文件失败", ex);
                           }
                       }
                   }
@@ -142,13 +143,26 @@ namespace EasyMuisc
             ContextMenu menu = new ContextMenu()
             {
                 PlacementTarget = this,
-                Items = {menuRename, menuDelete },
                 IsOpen = true,
             };
-
+            menu.Items.Add(menuRename);
+            if(stkMusiList.Children.Count>2)
+            {
+                menu.Items.Add(menuDelete);
+            }
             void RemoveButton()
             {
+                if(btn.IsPressed)
+                {
+                    lastBtn = null;
+                }
+                string temp = btn.Text;
                 stkMusiList.Children.Remove(btn);
+                if(temp==set.DefautMusicList)
+                {
+                    ShowPrompt("默认歌单被删除，请重新选择默认歌单。");
+                    new Windows.WinSettings().ShowDialog();
+                }
                 (stkMusiList.Children[1] as UserControls.ToggleButton).RaiseClickEvent();
             }
         }
@@ -168,8 +182,10 @@ namespace EasyMuisc
                 }
                 (i as UserControls.ToggleButton).IsPressed = false; 
             }
-
-            SaveListToFile(lastBtn.Text, false);
+            if (lastBtn != null)
+            {
+                SaveListToFile(lastBtn.Text, false);
+            }
             lastBtn = btn;
 
             ReadFileToList(btn.Text);
