@@ -28,49 +28,77 @@ namespace EasyMuisc
     /// </summary>
     public partial class MusicList : UserControl
     {
-     public   UserControls.ToggleButton lastBtn;
+     public   UserControls.ToggleButton lastMusicListBtn;
         
 
         public MusicList()
         {
             InitializeComponent();
-            if(!Directory.Exists(ToAbstractPath()))
-            {
+            //if(!Directory.Exists(ToAbstractPath()))
+            //{
+            //    try
+            //    {
+            //        Directory.CreateDirectory(ToAbstractPath());
+            //        File.Create(ToAbstractPath(set.DefautMusicList));
+            //    }
+            //    catch(Exception ex)
+            //    {
+            //        ShowException("歌单目录不存在且无法创建", ex);
+            //    }
+
+            //    musicDatas = new ObservableCollection<MusicInfo>();
+            //}
+            //else
+            //{
+            
+                //ReadFileToList(set.DefautMusicList);
+                if(!Directory.Exists(ToAbstractPath()))
+                {
                 try
                 {
                     Directory.CreateDirectory(ToAbstractPath());
-                    File.Create(ToAbstractPath(set.DefautMusicList));
                 }
                 catch(Exception ex)
                 {
-                    ShowException("歌单目录不存在且无法创建", ex);
+                    ShowException("目录不存在且无法创建", ex);
+                    return;
                 }
-
-                musicDatas = new ObservableCollection<MusicInfo>();
+                
             }
-            else
+                if(Directory.EnumerateFiles(ToAbstractPath()).Count()==0)
             {
-                ReadFileToList(set.DefautMusicList);
+                try
+                {
+                    File.Create(ToAbstractPath("默认"));
+                }
+                catch (Exception ex)
+                {
+                    ShowException("不存在任何歌单且无法创建", ex);
+                    return;
+                }
+            }
                 foreach (var i in Directory.EnumerateFiles(ToAbstractPath()))
                 {
                     UserControls.ToggleButton button = null;
                     FileInfo file = new FileInfo(i);
-                    if (i == ToAbstractPath(set.DefautMusicList))
+                button = new UserControls.ToggleButton() { Text = file.Name.Replace(file.Extension, "") };
+
+                if (i == ToAbstractPath(set.LastMusicList))
                     {
-                         button = new UserControls.ToggleButton() { Text =file.Name.Replace(file.Extension,""), IsPressed=true};
-                        lastBtn = button;
-                        stkMusiList.Children.Insert(1, button);
+                        lastMusicListBtn = button;
                     }
-                    else
-                    {
-                        button = new UserControls.ToggleButton() { Text = file.Name.Replace(file.Extension, "") };
-                        stkMusiList.Children.Add(button);
-                    }
-                    button.Select += BtnSelectEventHandler;
+                stkMusiList.Children.Add(button);
+                button.Select += BtnSelectEventHandler;
                     button.PreviewMouseRightButtonDown += BtnPreviewMouseRightButtonDownEventHandler;
                 
                 }
+                if(lastMusicListBtn==null)
+            {
+                // (stkMusiList.Children[1] as UserControls.ToggleButton).IsPressed = true;
+                lastMusicListBtn = stkMusiList.Children[1] as UserControls.ToggleButton;
             }
+            lastMusicListBtn.RaiseClickEvent();
+
             ResetItemsSource();
             
         }
@@ -101,10 +129,10 @@ namespace EasyMuisc
                           try
                           {
                               RenameMusicListFile(btn.Text, name, false);
-                              if(btn.Text==set.DefautMusicList)
-                              {
-                                  set.DefautMusicList = name;
-                              }
+                              //if(btn.Text==set.DefautMusicList)
+                              //{
+                              //    set.DefautMusicList = name;
+                              //}
                               btn.Text = name;
                           }
                           catch (Exception ex)
@@ -154,15 +182,15 @@ namespace EasyMuisc
             {
                 if(btn.IsPressed)
                 {
-                    lastBtn = null;
+                    lastMusicListBtn = null;
                 }
                 string temp = btn.Text;
                 stkMusiList.Children.Remove(btn);
-                if(temp==set.DefautMusicList)
-                {
-                    ShowPrompt("默认歌单被删除，请重新选择默认歌单。");
-                    new Windows.WinSettings().ShowDialog();
-                }
+                //if(temp==set.DefautMusicList)
+                //{
+                //    ShowPrompt("默认歌单被删除，请重新选择默认歌单。");
+                //    new Windows.WinSettings().ShowDialog();
+                //}
                 (stkMusiList.Children[1] as UserControls.ToggleButton).RaiseClickEvent();
             }
         }
@@ -182,11 +210,11 @@ namespace EasyMuisc
                 }
                 (i as UserControls.ToggleButton).IsPressed = false; 
             }
-            if (lastBtn != null)
+            if (lastMusicListBtn != null && musicDatas!=null)
             {
-                SaveListToFile(lastBtn.Text, false);
+                SaveListToFile(lastMusicListBtn.Text, false);
             }
-            lastBtn = btn;
+            lastMusicListBtn = btn;
 
             ReadFileToList(btn.Text);
              
@@ -275,7 +303,11 @@ namespace EasyMuisc
             lvw.SelectedIndex = index;
             lvw.ScrollIntoView(lvw.SelectedItem);
         }
-
+        /// <summary>
+        /// 单击增加歌单按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnAddClickEventHandler(object sender, RoutedEventArgs e)
         {
             if (GetInput("请输入文件名：", out string name, lvw.Background as SolidColorBrush))
@@ -287,7 +319,10 @@ namespace EasyMuisc
                 stkMusiList.Children.Add(button);
                 try
                 {
-                    File.Create(ToAbstractPath(name));
+                    using (File.Create(ToAbstractPath(name)))
+                    { }
+                    button.RaiseClickEvent();
+                    scv.ScrollToRightEnd();
                 }
                 catch(Exception ex)
                 {
@@ -295,8 +330,12 @@ namespace EasyMuisc
                 }
             }
         }
-
-        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        /// <summary>
+        /// 鼠标滚轮在歌单按钮上滚动事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ScrollViewerPreviewMouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
             if(e.Delta>0)
             {

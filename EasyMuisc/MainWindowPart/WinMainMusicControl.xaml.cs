@@ -245,7 +245,7 @@ namespace EasyMuisc
         /// <returns></returns>
         private bool PlaySelection(bool playAtOnce = true)
         {
-          MusicHelper.  musicIndex = musicList.SelectedIndex;
+          MusicHelper.  musicIndex = lvwMusic.SelectedIndex;
             return PlayNew(MusicHelper.musicIndex, playAtOnce);
         }
         public bool PlayCurrent()
@@ -269,7 +269,7 @@ namespace EasyMuisc
             }
             SetCurrent(index);//指定当前的索引
             path = CurrentMusic.Path;//获取歌曲地址
-            musicList.SelectAndScroll( index);//选中列表中的歌曲
+            lvwMusic.SelectAndScroll( index);//选中列表中的歌曲
             if (CurrentHistoryIndex == HistoryCount - 1)
             {
                 if (CurrentHistoryIndex == -1 || CurrentHistory != CurrentMusic)

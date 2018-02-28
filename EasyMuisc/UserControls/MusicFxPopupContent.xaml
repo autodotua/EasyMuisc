@@ -6,14 +6,34 @@
              xmlns:local="clr-namespace:EasyMuisc.UserControls"
              mc:Ignorable="d" >
     <UserControl.Resources>
-
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="{DynamicResource backgroundBrushColor}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource backgroundBrushColor}"/>
-            <Setter Property="BorderThickness" Value="0"/>
+        <ControlTemplate x:Key="btnTemple" TargetType="{x:Type Button}">
+        <Border x:Name="border"  BorderThickness="0" Background="{DynamicResource darker1BrushColor }" SnapsToDevicePixels="true">
+            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource darker2BrushColor}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" TargetName="border" Value="{DynamicResource darker3BrushColor}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Key="btnStyleNormal" TargetType="{x:Type Button}">
             <Setter Property="Margin" Value="4"/>
             <Setter Property="Height" Value="24"/>
+            <Setter Property="Template" Value="{StaticResource btnTemple}"/>
         </Style>
+
+        <Style x:Key="btnStyleAUpDown" TargetType="{x:Type Button}">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Width" Value="18"/>
+            <Setter Property="Template" Value="{StaticResource btnTemple}"/>
+        </Style>
+
 
 
         <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
@@ -24,7 +44,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RepeatButton}">
-                        <Rectangle Fill="{DynamicResource darker1BrushColor}" Height="5" Width="{TemplateBinding Width}"/>
+                        <Rectangle Fill="{DynamicResource darker2BrushColor}" Height="5" Width="{TemplateBinding Width}"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -47,9 +67,9 @@
             <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                 <Grid>
 
-                    <Border x:Name="TrackBackground" BorderBrush="{DynamicResource backgroundBrushColor}" BorderThickness="0" Background="{DynamicResource backgroundBrushColor}" Height="18.0" Margin="5,0" VerticalAlignment="center">
+                    <Border x:Name="TrackBackground" BorderBrush="{DynamicResource backgroundBrushColor}" BorderThickness="0" Background="{DynamicResource darker1BrushColor}" Height="18.0" Margin="5,0" VerticalAlignment="center">
                         <Canvas Margin="-6,-1">
-                            <Rectangle x:Name="PART_SelectionRange" Fill="{DynamicResource darker1BrushColor}" Height="4.0" Visibility="Hidden"/>
+                            <Rectangle x:Name="PART_SelectionRange" Fill="{DynamicResource darker2BrushColor}" Height="4.0" Visibility="Hidden"/>
                         </Canvas>
                     </Border>
                     <Track x:Name="PART_Track" >
@@ -77,7 +97,7 @@
 
 
     </UserControl.Resources>
-    <Grid x:Name="g" Width="300" Margin="48" Background="{DynamicResource backgroundBrushColor}">
+    <Grid x:Name="g" Width="300" Margin="48" Background="{DynamicResource darker1BrushColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="4"/>
@@ -99,25 +119,31 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="42"/>
+                <ColumnDefinition Width="4"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="4"/>
-                <ColumnDefinition Width="42"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="Auto"/>
+
             </Grid.ColumnDefinitions>
             <TextBlock>音调：</TextBlock>
-            <Slider x:Name="sldPitch" ValueChanged="SldPitchValueChangedEventHandler" Grid.Column="2" Minimum="-50" Maximum="50" SmallChange="1" LargeChange="5" Value="0" Template="{StaticResource SliderHorizontal}"/>
-            <TextBlock x:Name="txtPitch" Grid.Column="4">0</TextBlock>
+            <Slider x:Name="sldPitch" ValueChanged="SldPitchValueChangedEventHandler" Grid.Column="4" Minimum="-50" Maximum="50" SmallChange="1" LargeChange="5" Value="0" Template="{StaticResource SliderHorizontal}"/>
+            <TextBlock x:Name="txtPitch" Grid.Column="2">0</TextBlock>
             <TextBlock Grid.Row="2">速度：</TextBlock>
+            <Slider x:Name="sldTempo" Grid.Row="2" ValueChanged="SldTempoValueChangedEventHandler" Grid.Column="4" Minimum="-95" Maximum="200" SmallChange="1" LargeChange="5" Value="0" Template="{StaticResource SliderHorizontal}"/>
+            <TextBlock x:Name="txtTempo" Grid.Row="2" Grid.Column="2">0%</TextBlock>
+            <Button Grid.Column="6" Style="{StaticResource btnStyleAUpDown}" Click="Button_Click" Tag="1">-</Button>
+            <Button Grid.Column="8" Style="{StaticResource btnStyleAUpDown}" Click="Button_Click" Tag="2">+</Button>
+            <Button Grid.Column="6" Grid.Row="2" Style="{StaticResource btnStyleAUpDown}" Click="Button_Click" Tag="3">-</Button>
+            <Button Grid.Column="8" Grid.Row="2" Style="{StaticResource btnStyleAUpDown}" Click="Button_Click" Tag="4">+</Button>
 
-            <Slider x:Name="sldTempo" Grid.Row="2" ValueChanged="SldTempoValueChangedEventHandler" Grid.Column="2" Minimum="-95" Maximum="200" SmallChange="1" LargeChange="5" Value="0" Template="{StaticResource SliderHorizontal}"/>
-         
-            <TextBlock x:Name="txtTempo" Grid.Row="2" Grid.Column="4">0%</TextBlock>
-    
-            
         </Grid>
         <ScrollViewer Grid.Row="2" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
             <StackPanel x:Name="stkDevices" Orientation="Horizontal"/>
         </ScrollViewer>
-        <Button Grid.Row="4" Click="BtnCloseEventHandler">关闭</Button>
-        <Button Grid.Row="4" Grid.Column="2" Click="BtnRecoverClickEventHandler">恢复</Button>
+        <Button Style="{StaticResource btnStyleNormal}" Grid.Row="4" Click="BtnCloseEventHandler">关闭</Button>
+        <Button Style="{StaticResource btnStyleNormal}" Grid.Row="4" Grid.Column="2" Click="BtnRecoverClickEventHandler">恢复</Button>
     </Grid>
 </UserControl>

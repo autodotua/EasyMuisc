@@ -145,5 +145,24 @@ namespace EasyMuisc.UserControls
         {
             sldPitch.Value = sldTempo.Value = 0;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            switch ((sender as Button).Tag as string)
+            {
+                case "1":
+                    sldPitch.Value--;
+                    break;
+                case "2":
+                    sldPitch.Value++;
+                    break;
+                case "3":
+                    sldTempo.Value--;
+                    break;
+                case "4":
+                    sldTempo.Value++;
+                    break;
+            }
+        }
     }
 }

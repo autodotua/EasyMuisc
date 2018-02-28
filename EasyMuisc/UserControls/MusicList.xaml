@@ -80,7 +80,7 @@
 
         </ListView>
 
-        <ScrollViewer x:Name="scv" Grid.Row="2"  VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=lvw, Mode=OneWay,Converter={StaticResource conver}}" >
+        <ScrollViewer x:Name="scv" Grid.Row="2"  VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="ScrollViewerPreviewMouseWheelEventHandler" HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=lvw, Mode=OneWay,Converter={StaticResource conver}}" >
             <StackPanel x:Name="stkMusiList" Orientation="Horizontal">
                 <Button x:Name="btnSettings" FocusVisualStyle="{x:Null}" Grid.Column="4" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnAddClickEventHandler"  HorizontalAlignment="Left">
                     <Button.Style>

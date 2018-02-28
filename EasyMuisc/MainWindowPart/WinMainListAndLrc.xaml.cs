@@ -60,7 +60,7 @@ namespace EasyMuisc
             }
             else
             {
-                aniMargin.To = new Thickness(-musicList.ActualWidth, 0, 0, 0);
+                aniMargin.To = new Thickness(-lvwMusic.ActualWidth, 0, 0, 0);
                 aniOpacity.To = 0;
                // set.ShrinkMusicListManually = true;
             }
@@ -259,14 +259,14 @@ namespace EasyMuisc
 
             MenuItem menuOpenMusicFolder = new MenuItem() { Header = "打开所在文件夹" };
             menuOpenMusicFolder.Click += (p1, p2) =>
-  Process.Start("Explorer.exe", @"/select," + GetMusic(musicList.SelectedIndex).Path);
+  Process.Start("Explorer.exe", @"/select," + GetMusic(lvwMusic.SelectedIndex).Path);
 
             MenuItem menuShowMusicInfo = new MenuItem() { Header = "显示音乐信息" };
             menuShowMusicInfo.Click += (p1, p2) =>
             {
                 try
                 {
-                    MusicInfo music = GetMusic(musicList.SelectedIndex);
+                    MusicInfo music = GetMusic(lvwMusic.SelectedIndex);
                     FileInfo fileInfo = new FileInfo(music.Path);
                     string l = Environment.NewLine;
                     string info = fileInfo.Name + l
@@ -292,7 +292,7 @@ namespace EasyMuisc
                 {
                     RemoveHistory(CurrentHistoryIndex + 1, HistoryCount - CurrentHistoryIndex - 1);
                 }
-                AddHistory(musicList.SelectedItem);
+                AddHistory(lvwMusic.SelectedItem);
             };
             MenuItem menuDelete = new MenuItem() { Header = "删除选中项" };
             menuDelete.Click += (p1, p2) =>
@@ -304,7 +304,7 @@ namespace EasyMuisc
                 //    PlayListNext();
                 //}
                 //RemoveMusic(needDeleteIndex);
-                musicList.RemoveAllSelection();
+                lvwMusic.RemoveAllSelection();
                 //if (MusicCount== 0)
                 //{
                 //    AfterClearList();
@@ -320,7 +320,7 @@ namespace EasyMuisc
             MenuItem menuClearExceptCurrent = new MenuItem() { Header = "删除其他", };
             menuClearExceptCurrent.Click += (p1, p2) =>
             {
-                int index = musicList.SelectedIndex;
+                int index = lvwMusic.SelectedIndex;
                 for (int i = 0; i < index; i++)
                 {
                     RemoveMusic(0);
@@ -369,7 +369,7 @@ namespace EasyMuisc
                       try
                       {
                           ReadFileToList(dialog.FileName,false);
-                          musicList.ResetItemsSource();
+                          lvwMusic.ResetItemsSource();
                       }
                       catch (Exception ex)
                       {
@@ -432,7 +432,7 @@ namespace EasyMuisc
             menu.Items.Add(NewSeparatorLine);
             //menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
 
-            if (musicList.SelectedIndex != -1)
+            if (lvwMusic.SelectedIndex != -1)
             {
                 menu.Items.Add(menuOpenMusicFolder);
                 menu.Items.Add(menuShowMusicInfo);
@@ -444,7 +444,7 @@ namespace EasyMuisc
 
             if (MusicCount > 0)
             {
-                if (musicList.SelectedIndex != -1)
+                if (lvwMusic.SelectedIndex != -1)
                 {
                     menu.Items.Add(menuDelete);
                     menu.Items.Add(menuClearExceptCurrent);

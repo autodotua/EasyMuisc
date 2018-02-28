@@ -104,8 +104,8 @@
     <Setting Name="MusicListPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">%APPDATA%\EasyMusic\MusicList</Value>
     </Setting>
-    <Setting Name="DefautMusicList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">默认</Value>
+    <Setting Name="LastMusicList" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

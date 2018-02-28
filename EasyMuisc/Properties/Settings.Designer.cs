@@ -433,13 +433,13 @@ namespace EasyMuisc.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("默认")]
-        public string DefautMusicList {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastMusicList {
             get {
-                return ((string)(this["DefautMusicList"]));
+                return ((string)(this["LastMusicList"]));
             }
             set {
-                this["DefautMusicList"] = value;
+                this["LastMusicList"] = value;
             }
         }
     }

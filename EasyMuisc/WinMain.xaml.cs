@@ -464,7 +464,7 @@ namespace EasyMuisc
             }
             //SaveMusicListFromConfig();
             // SaveListToFile(set.DefautMusicList);
-            SaveListToFile(musicList.lastBtn.Text, false);
+            SaveListToFile(lvwMusic.lastMusicListBtn.Text, false);
             switch (CurrentCycleMode)
             {
                 case CycleMode.ListCycle:
@@ -482,6 +482,7 @@ namespace EasyMuisc
             //SetConfig("TextLrcFontSize", textLrcFontSize.ToString());
             //SetConfig("LastMusic", path);
             set.LastMusic = path;
+            set.LastMusicList = lvwMusic.lastMusicListBtn.Text;
             //SetConfig("Volumn", sldVolumn.Value.ToString());
             set.Volumn = sldVolumn.Value;
             //SetConfig("AlwaysOnTop", Topmost.ToString());
