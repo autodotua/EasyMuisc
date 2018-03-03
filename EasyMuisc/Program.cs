@@ -20,6 +20,13 @@ namespace EasyMuisc
         [STAThread]
         static void Main(string[] args)
         {
+            System.Threading.Mutex mutex = new System.Threading.Mutex(true, "EasyMusic", out bool isSingle);
+            if(!isSingle)
+            {
+                Dialog.DialogHelper.ShowError("请勿运行多个实例！这会导致热键异常等问题。");
+                Environment.Exit(0);
+            }
+
 
             App app = new App();
             //app.InitializeComponent();
@@ -40,31 +47,31 @@ namespace EasyMuisc
             //app.Run(new EasyMuisc.Windows.FloatLyrics());
         }
 
-        private static void UnhandledException(Exception ex)
-        {
-            Dialog.DialogHelper.ShowException("程序发生了未处理的异常，将立刻关闭", ex);
-            string logName = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+ "\\EasyMusic\\UnhandledException.log";
-            if (File.Exists(logName))
-            {
-                string oldFile = File.ReadAllText(logName);
-                File.WriteAllText(logName,
-                oldFile
-                + Environment.NewLine + Environment.NewLine
-                + DateTime.Now.ToString()
-                + Environment.NewLine
-                + ex.ToString());
-            }
-            else
-            {
-                File.WriteAllText(logName,
-                  DateTime.Now.ToString()
-                  + Environment.NewLine
-                   + ex.ToString());
-            }
-            //App.Current.Shutdown();
-            Environment.Exit(0);
-            return;
-        }
+        //private static void UnhandledException(Exception ex)
+        //{
+        //    Dialog.DialogHelper.ShowException("程序发生了未处理的异常，将立刻关闭", ex);
+        //    string logName = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+ "\\EasyMusic\\UnhandledException.log";
+        //    if (File.Exists(logName))
+        //    {
+        //        string oldFile = File.ReadAllText(logName);
+        //        File.WriteAllText(logName,
+        //        oldFile
+        //        + Environment.NewLine + Environment.NewLine
+        //        + DateTime.Now.ToString()
+        //        + Environment.NewLine
+        //        + ex.ToString());
+        //    }
+        //    else
+        //    {
+        //        File.WriteAllText(logName,
+        //          DateTime.Now.ToString()
+        //          + Environment.NewLine
+        //           + ex.ToString());
+        //    }
+        //    //App.Current.Shutdown();
+        //    Environment.Exit(0);
+        //    return;
+        //}
 
     }
 }

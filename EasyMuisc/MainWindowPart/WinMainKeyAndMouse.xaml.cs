@@ -106,22 +106,62 @@ namespace EasyMuisc
         /// </summary>
         private void RegistGolbalHotKey()
         {
+            string error = "";
             try
             {
                 HotKey next = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Right);
-                HotKey last = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Left);
                 next.OnHotKey += () => BtnNextClickEventHandler(null, null);
+            }
+            catch (Exception ex)
+            {
+                error += "Ctrl →（下一曲）、";
+
+            }
+            try
+            {
+                HotKey last = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Left);
+
                 last.OnHotKey += () => BtnLastClickEventHandler(null, null);
+            }
+            catch (Exception ex)
+            {
+                error += "Ctrl ←（上一曲）、";
+
+            }
+            try
+            {
                 HotKey up = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Up);
-                HotKey down = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Down);
                 up.OnHotKey += () => sldVolumn.Value += 0.05;
+
+            }
+            catch (Exception ex)
+            {
+                error += "Ctrl ↑（音量加）、";
+
+            }
+            try
+            {
+                HotKey down = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Down);
                 down.OnHotKey += () => sldVolumn.Value -= 0.05;
+            }
+            catch (Exception ex)
+            {
+                error += "Ctrl ↓（音量减）、";
+
+            }
+            try
+            {
                 HotKey playAndPause = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.OemQuestion);
                 playAndPause.OnHotKey += () => HotKeyPlayAndPauseEventHandler(null, null);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                ShowException(ex);
+                error += "Ctrl /（播放暂停）、";
+
+            }
+            if(error!="")
+            {
+                ShowTrayMessage("以下热键无法注册，可能已被占用："+ error.TrimEnd(new char[] { '、' }));
             }
         }
         #endregion
@@ -196,7 +236,7 @@ namespace EasyMuisc
                 mouseInLrcArea = false;
             }
         }
-      
+
         #endregion
 
     }

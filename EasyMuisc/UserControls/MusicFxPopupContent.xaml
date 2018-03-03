@@ -140,7 +140,7 @@
             <Button Grid.Column="8" Grid.Row="2" Style="{StaticResource btnStyleAUpDown}" Click="Button_Click" Tag="4">+</Button>
 
         </Grid>
-        <ScrollViewer Grid.Row="2" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="2" Grid.ColumnSpan="9" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="ScrollViewerPreviewMouseWheelEventHandler">
             <StackPanel x:Name="stkDevices" Orientation="Horizontal"/>
         </ScrollViewer>
         <Button Style="{StaticResource btnStyleNormal}" Grid.Row="4" Click="BtnCloseEventHandler">关闭</Button>

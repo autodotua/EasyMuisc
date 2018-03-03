@@ -512,6 +512,11 @@ namespace EasyMuisc
             Hide();
             pauseTimer.Start();
         }
+        private void ShowTrayMessage(string message,int ms=2000)
+        {
+            trayIcon.BalloonTipText = message;
+            trayIcon.ShowBalloonTip(ms);
+        }
         /// <summary>
         /// 托盘图标
         /// </summary>

@@ -55,7 +55,7 @@ namespace EasyMuisc.UserControls
             foreach (var i in devices)
             {
                 n++;
-                if (n == 0 || n == Bass.BASS_ChannelGetDevice(stream))
+                if (n == 0 ||n==Bass.BASS_GetDevice() || n == Bass.BASS_ChannelGetDevice(stream))
                 {
                     Bass.BASS_SetDevice(n);
                     continue;
@@ -64,9 +64,27 @@ namespace EasyMuisc.UserControls
                 {
                     Content = i.name,
                     Tag = n,
+                    Style = Resources["btnStyleNormal"] as Style,
                 };
                 btn.Click += BtnDeviceClickEventHandler;
                 stkDevices.Children.Add(btn);
+            }
+        }
+        /// <summary>
+        /// 鼠标滚轮在歌单按钮上滚动事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ScrollViewerPreviewMouseWheelEventHandler(object sender, MouseWheelEventArgs e)
+        {
+            var scv = sender as ScrollViewer;
+            if (e.Delta > 0)
+            {
+                scv.LineLeft();
+            }
+            else
+            {
+                scv.LineRight();
             }
         }
         /// <summary>
