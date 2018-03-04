@@ -94,16 +94,20 @@ namespace EasyMuisc.UserControls
         public void ToMajor(string text)
         {
             tbk1.Text = text;
+            ToMajor();
+        }
+        public void ToMajor()
+        {
             FontSizeAnimation
-                (
-                tbk1,
-                             set.FloatLyricsNormalFontSize,
+                  (
+                  tbk1,
+                               set.FloatLyricsNormalFontSize,
 
-                set.FloatLyricsHighlightFontSize
-                 );
+                  set.FloatLyricsHighlightFontSize
+                   );
         }
 
-        public void FontSizeAnimation(TextBlock obj, double from,double to)
+            public void FontSizeAnimation(TextBlock obj, double from,double to)
         {
             DoubleAnimation ani = new DoubleAnimation
             {

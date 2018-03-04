@@ -121,11 +121,13 @@ namespace EasyMuisc.Windows
         /// <param name="lrc"></param>
         public void ReLoadLrc(List<string> lrc)
         {
+            CurrentIndex = 0;
             this.lrc = new List<string>(lrc);
+            //lrc.Add("\t");
             if (lrc.Count > 0)
             {
                 tbkLeft.Text = lrc[0];
-                tbkRight.Text = lrc[1];
+                //  Update(0);
             }
         }
 
@@ -138,26 +140,52 @@ namespace EasyMuisc.Windows
         {
             return (stk.Children[index] as RradualChangedTextBlock);
         }
+        private int CurrentIndex = 0;
         /// <summary>
         /// 通知改变当前歌词
         /// </summary>
         /// <param name="index"></param>
         public void Update(int index)
         {
-            if (index < 0 || lrc == null)
+            int oldIndex = index;
+            //if (index == lrc.Count - 1)
+            //{
+            //    GetTextBlock( CurrentIndex).ToMinor("");
+            //    return;
+            //}
+            if(lrc[index].Replace(" ","")=="")
+            {
+                return;
+            }
+            while (index < lrc.Count - 1 && lrc[index + 1].Replace(" ", "") == "")
+            {
+                index++;
+                //if (index >= lrc.Count - 1)
+                //{
+                //    return;
+                //}
+            }
+            if(index >= lrc.Count - 1)
+            {
+                GetTextBlock(CurrentIndex).ToMajor(lrc[oldIndex]);
+                GetTextBlock(1 - CurrentIndex).ToMinor("");
+                return;
+            }
+                if (index < 0 || lrc == null)
             {
                 Clear();
                 return;
             }
-            if (index < lrc.Count - 1)
-            {
-                GetTextBlock((index + 1) % 2).ToMinor(lrc[index + 1]);
-            }
-            else
-            {
-                GetTextBlock((index + 1) % 2).ToMinor("");
-            }
-            GetTextBlock(index % 2).ToMajor(lrc[index]);
+            //if (index < lrc.Count - 1)
+            //{
+            GetTextBlock(1 - CurrentIndex).ToMinor(lrc[index + 1]);
+            //}
+            //else
+            //{
+            //    GetTextBlock(1-CurrentIndex).ToMinor("");
+            //}
+            GetTextBlock(CurrentIndex).ToMajor(lrc[oldIndex]);
+            CurrentIndex = 1 - CurrentIndex;
             //currentIndex = index;
         }
 
