@@ -187,10 +187,10 @@ namespace EasyMuisc
         /// </summary>
         private void PlayNext()
         {
-            if (CurrentHistoryIndex < HistoryCount - 1)
-            {
-                RemoveHistory(CurrentHistoryIndex + 1, MusicCount - CurrentHistoryIndex - 1);
-            }
+            //  if (CurrentHistoryIndex < HistoryCount - 1)
+            //{
+            //    RemoveHistory(CurrentHistoryIndex + 1, MusicCount - CurrentHistoryIndex - 1);
+            //}
 
             switch (CurrentCycleMode)
             {
@@ -203,7 +203,7 @@ namespace EasyMuisc
                     {
                         index = GetRandomNumber(0, MusicCount);
                     }
-                    while(index== musicIndex)
+                    while (index == musicIndex)
                          ;
                     PlayNew(index);
                     break;
@@ -217,7 +217,7 @@ namespace EasyMuisc
         /// </summary>
         private void PlayListNext()
         {
-            PlayNew(CurrentMusicIndex == MusicCount- 1 ? 0 : CurrentMusicIndex + 1);
+            PlayNew(CurrentMusicIndex == MusicCount - 1 ? 0 : CurrentMusicIndex + 1);
         }
         /// <summary>
         /// （暂停后）播放
@@ -234,7 +234,7 @@ namespace EasyMuisc
                 pauseTimer.Stop();
             }
             playTimer.Start();
-        
+
             Bass.BASS_ChannelPlay(stream, false);
 
 
@@ -245,7 +245,7 @@ namespace EasyMuisc
         /// <returns></returns>
         private bool PlaySelection(bool playAtOnce = true)
         {
-          MusicHelper.  musicIndex = lvwMusic.SelectedIndex;
+            MusicHelper.musicIndex = lvwMusic.SelectedIndex;
             return PlayNew(MusicHelper.musicIndex, playAtOnce);
         }
         public bool PlayCurrent()
@@ -261,7 +261,7 @@ namespace EasyMuisc
         {
             if (!File.Exists(GetMusic(index).Path))
             {
-                if (ShowMessage("文件不存在！是否从列表中删除？",Dialog.DialogType.Warn, MessageBoxButton.YesNo)==1)
+                if (ShowMessage("文件不存在！是否从列表中删除？", Dialog.DialogType.Warn, MessageBoxButton.YesNo) == 1)
                 {
                     RemoveMusic(index);
                 }
@@ -269,7 +269,7 @@ namespace EasyMuisc
             }
             SetCurrent(index);//指定当前的索引
             path = CurrentMusic.Path;//获取歌曲地址
-            lvwMusic.SelectAndScroll( index);//选中列表中的歌曲
+            lvwMusic.SelectAndScroll(index);//选中列表中的歌曲
             if (CurrentHistoryIndex == HistoryCount - 1)
             {
                 if (CurrentHistoryIndex == -1 || CurrentHistory != CurrentMusic)
@@ -279,7 +279,7 @@ namespace EasyMuisc
             }
             //Debug.WriteLine(currentHistoryIndex);
             InitialiazeMusic();//初始化歌曲
-          
+
             if (playAtOnce)
             {
                 Play();
@@ -400,7 +400,8 @@ namespace EasyMuisc
                 if (Bass.BASS_ChannelGetPosition(stream) == Bass.BASS_ChannelGetLength(stream))
                 {
                     //如果一首歌放完了
-                    PlayNext();
+                    //PlayNext();
+                    BtnNextClickEventHandler(null, null);
                 }
                 UpdatePosition();
             }
