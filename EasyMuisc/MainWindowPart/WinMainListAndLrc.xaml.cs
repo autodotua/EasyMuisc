@@ -17,9 +17,10 @@ using EasyMuisc.Windows;
 using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using static EasyMuisc.MusicHelper;
-using static Dialog.DialogHelper;
+using static WpfControls.Dialog.DialogHelper;
 using System.Collections.ObjectModel;
-using Dialog;
+using static WpfControls.Dialog.DialogHelper;
+using WpfControls.Dialog;
 
 namespace EasyMuisc
 {
@@ -463,8 +464,16 @@ namespace EasyMuisc
             //{
             //    menu.Items.Add(menuShowLrc);
             //}
+            if(!set.ShowLrc)
+            {
+                menu.Items.Add(menuShowLrc);
+            }
         }
-
+        /// <summary>
+        /// 单击刷新列表按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MenuRefreshListClickEventHandler(object sender, RoutedEventArgs e)
         {
             string[] paths = musicDatas.Select(p => p.Path).ToArray();
@@ -504,7 +513,6 @@ namespace EasyMuisc
                 }
             }
         }
-
         /// <summary>
         /// 单击歌词选项按钮事件
         /// </summary>
@@ -833,6 +841,9 @@ namespace EasyMuisc
 
 
         }
+        /// <summary>
+        /// 执行清空列表后的清理工作
+        /// </summary>
         public void AfterClearList()
         {
             SetCurrent(-1);

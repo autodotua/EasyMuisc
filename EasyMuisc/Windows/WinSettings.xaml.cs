@@ -6,7 +6,7 @@ using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using EasyMuisc.Tools;
 using Un4seen.Bass;
-using static Dialog.DialogHelper;
+using static WpfControls.Dialog.DialogHelper;
 using Microsoft.Win32;
 using System.IO;
 using System;

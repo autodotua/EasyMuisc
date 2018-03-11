@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using static WpfControls.Dialog.DialogHelper;
 
 
 namespace EasyMuisc
@@ -23,7 +24,7 @@ namespace EasyMuisc
             System.Threading.Mutex mutex = new System.Threading.Mutex(true, "EasyMusic", out bool isSingle);
             if(!isSingle)
             {
-                Dialog.DialogHelper.ShowError("请勿运行多个实例！这会导致热键异常等问题。");
+                ShowError("请勿运行多个实例！这会导致热键异常等问题。");
                 Environment.Exit(0);
             }
 

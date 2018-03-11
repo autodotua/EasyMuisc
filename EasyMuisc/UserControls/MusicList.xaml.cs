@@ -5,12 +5,14 @@ using System.Windows.Input;
 using static EasyMuisc.ShareStaticResources;
 using static EasyMuisc.MusicHelper;
 using System.IO;
-using static Dialog.DialogHelper;
+using static WpfControls.Dialog.DialogHelper;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using WpfControls.Dialog;
 
 namespace EasyMuisc
 {
@@ -117,7 +119,7 @@ namespace EasyMuisc
               {
                   if (!File.Exists(ToAbstractPath(btn.Text)))
                   {
-                      if (ShowMessage("歌单文件不存在，是否直接从界面删除？", Dialog.DialogType.Information, MessageBoxButton.YesNo) == 1)
+                      if (ShowMessage("歌单文件不存在，是否直接从界面删除？", DialogType.Information, MessageBoxButton.YesNo) == 1)
                       {
                           RemoveButton();
                       }
@@ -148,7 +150,7 @@ namespace EasyMuisc
               {
                   if(!File.Exists(ToAbstractPath(btn.Text)))
                   {
-                      if(ShowMessage("歌单文件不存在，是否直接从界面删除？", Dialog.DialogType.Warn, MessageBoxButton.YesNo) == 1)
+                      if(ShowMessage("歌单文件不存在，是否直接从界面删除？", DialogType.Warn, MessageBoxButton.YesNo) == 1)
                       {
                           RemoveButton();
                       }

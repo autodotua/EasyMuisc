@@ -13,7 +13,7 @@ using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Security.Principal;
-using static Dialog.DialogHelper;
+using static WpfControls.Dialog.DialogHelper;
 
 namespace EasyMuisc
 {

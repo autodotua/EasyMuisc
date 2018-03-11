@@ -18,7 +18,9 @@ using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using EasyMuisc.Tools;
 using static EasyMuisc.MusicHelper;
-using static Dialog.DialogHelper;
+using static WpfControls.Dialog.DialogHelper;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using WpfControls.Dialog;
 
 namespace EasyMuisc
 {
@@ -225,17 +227,20 @@ namespace EasyMuisc
         /// <returns></returns>
         private void Play()
         {
-            tbiPlay.Visibility = Visibility.Collapsed;
-            tbiPause.Visibility = Visibility.Visible;
-            btnPlay.Visibility = Visibility.Hidden;
-            btnPause.Visibility = Visibility.Visible;
-            if (pauseTimer.IsEnabled)
-            {
-                pauseTimer.Stop();
-            }
-            playTimer.Start();
 
-            Bass.BASS_ChannelPlay(stream, false);
+            if (Bass.BASS_ChannelPlay(stream, false))
+            {
+
+                tbiPlay.Visibility = Visibility.Collapsed;
+                tbiPause.Visibility = Visibility.Visible;
+                btnPlay.Visibility = Visibility.Hidden;
+                btnPause.Visibility = Visibility.Visible;
+                if (pauseTimer.IsEnabled)
+                {
+                    pauseTimer.Stop();
+                }
+                playTimer.Start();
+            }
 
 
         }
@@ -245,8 +250,8 @@ namespace EasyMuisc
         /// <returns></returns>
         private bool PlaySelection(bool playAtOnce = true)
         {
-            MusicHelper.musicIndex = lvwMusic.SelectedIndex;
-            return PlayNew(MusicHelper.musicIndex, playAtOnce);
+            musicIndex = lvwMusic.SelectedIndex;
+            return PlayNew(musicIndex, playAtOnce);
         }
         public bool PlayCurrent()
         {
@@ -261,7 +266,7 @@ namespace EasyMuisc
         {
             if (!File.Exists(GetMusic(index).Path))
             {
-                if (ShowMessage("文件不存在！是否从列表中删除？", Dialog.DialogType.Warn, MessageBoxButton.YesNo) == 1)
+                if (ShowMessage("文件不存在！是否从列表中删除？", DialogType.Warn, MessageBoxButton.YesNo) == 1)
                 {
                     RemoveMusic(index);
                 }

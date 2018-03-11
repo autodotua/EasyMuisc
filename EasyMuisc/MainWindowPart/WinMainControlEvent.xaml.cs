@@ -14,7 +14,7 @@ using Un4seen.Bass;
 using System.Windows.Controls.Primitives;
 using static EasyMuisc.ShareStaticResources;
 using static EasyMuisc.MusicHelper;
-using static Dialog.DialogHelper;
+using static WpfControls.Dialog.DialogHelper;
 
 namespace EasyMuisc
 {
@@ -33,7 +33,11 @@ namespace EasyMuisc
             {
                 if (MusicCount!= 0)
                 {
-                    PlayNew(0);
+                   if( PlayNew(0))
+                    {
+                        Play();
+                        return;
+                    }
                 }
             }
             Play();

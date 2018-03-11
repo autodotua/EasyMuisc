@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
-using static Dialog.DialogHelper;
+using static WpfControls.Dialog.DialogHelper;
 
 namespace EasyMuisc.Windows
 {

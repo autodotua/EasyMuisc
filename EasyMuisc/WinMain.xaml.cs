@@ -31,7 +31,7 @@ using EasyMuisc.UserControls;
 using static EasyMuisc.Tools.Tools;
 using static EasyMuisc.ShareStaticResources;
 using static EasyMuisc.MusicHelper;
-using static Dialog.DialogHelper;
+using static WpfControls.Dialog.DialogHelper;
 
 namespace EasyMuisc
 {

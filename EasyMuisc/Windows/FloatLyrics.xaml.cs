@@ -147,6 +147,12 @@ namespace EasyMuisc.Windows
         /// <param name="index"></param>
         public void Update(int index)
         {
+            if(index==-1)
+            {
+                tbkLeft.Text = tbkRight.Text = "";
+                return;
+            }
+
             int oldIndex = index;
             //if (index == lrc.Count - 1)
             //{

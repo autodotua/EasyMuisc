@@ -112,9 +112,6 @@
     <Reference Include="CustomWPFColorPicker">
       <HintPath>Properties\CustomWPFColorPicker.dll</HintPath>
     </Reference>
-    <Reference Include="Dialog">
-      <HintPath>..\..\对话框\Dialog\bin\Debug\Dialog.dll</HintPath>
-    </Reference>
     <Reference Include="Interop.Shell32, Version=1.2.107.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -138,6 +135,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfControls">
+      <HintPath>..\..\Wpf控件\Controls\bin\Debug\WpfControls.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

@@ -18,7 +18,7 @@ using Un4seen.Bass;
 using System.Diagnostics;
 using System.Windows.Interop;
 using static EasyMuisc.Tools.Tools;
-using static Dialog.DialogHelper;
+using static WpfControls.Dialog.DialogHelper;
 namespace EasyMuisc.UserControls
 {
     /// <summary>
