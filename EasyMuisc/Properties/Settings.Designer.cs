@@ -170,18 +170,6 @@ namespace EasyMuisc.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool UseListBoxLrcInsteadOfStackPanel {
-            get {
-                return ((bool)(this["UseListBoxLrcInsteadOfStackPanel"]));
-            }
-            set {
-                this["UseListBoxLrcInsteadOfStackPanel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool ShowFloatLyric {
             get {
                 return ((bool)(this["ShowFloatLyric"]));

@@ -53,12 +53,12 @@
         <TextBlock FontSize="5"/>
         <CheckBox x:Name="chkMusicSettings" Content="音乐设置对所有歌曲生效" />
         <TextBlock FontSize="5"/>
-        <StackPanel Orientation="Horizontal">
+        <!--<StackPanel Orientation="Horizontal">
             <TextBlock Text="歌词界面显示类型：   "/>
             <RadioButton x:Name="chkListBoxLrc" Content="ListBox歌词         "/>
             <RadioButton x:Name="chkStackPanel" Content="StackPanel歌词"/>
         </StackPanel>
-        <TextBlock FontSize="5"/>
+        <TextBlock FontSize="5"/>-->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="最小化到托盘图标方式：     "/>
             <RadioButton x:Name="chkCloseBtnToTray" Content="关闭按钮         "/>

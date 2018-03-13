@@ -175,19 +175,20 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void MouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
-            if (mouseInLrcArea && (stkLrc.Visibility == Visibility.Visible || lbxLrc.Visibility == Visibility.Visible))
-            {
-                if (e.Delta > 0)
-                {
-                    offset -= 1d / 4;
-                }
-                else
-                {
-                    offset += 1d / 4;
-                }
-                ShowInfo("当前歌词偏移量：" + (offset > 0 ? "+" : "") + Math.Round(offset, 2).ToString() + "秒");
-            }
-            else if (!mouseInLrcArea && !mouseInMusicListArea)
+        //    if (mouseInLrcArea && (stkLrc.Visibility == Visibility.Visible || lbxLrc.Visibility == Visibility.Visible))
+        //    {
+        //        if (e.Delta > 0)
+        //        {
+        //            offset -= 1d / 4;
+        //        }
+        //        else
+        //        {
+        //            offset += 1d / 4;
+        //        }
+        //        ShowInfo("当前歌词偏移量：" + (offset > 0 ? "+" : "") + Math.Round(offset, 2).ToString() + "秒");
+        //    }
+        //    else 
+        if (!mouseInLrcArea && !mouseInMusicListArea)
             {
                 if (e.Delta > 0)
                 {

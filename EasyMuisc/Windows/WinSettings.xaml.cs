@@ -33,15 +33,15 @@ namespace EasyMuisc.Windows
             txtUpdateSpeed.Text = set.UpdateSpeed.ToString();
             chkMusicSettings.IsChecked = set.MusicSettings;
             //txtSampleRate.Text = set.SampleRate.ToString();
-            switch (set.UseListBoxLrcInsteadOfStackPanel)
-            {
-                case true:
-                    chkListBoxLrc.IsChecked = true;
-                    break;
-                case false:
-                    chkStackPanel.IsChecked = true;
-                    return;
-            }
+            //switch (set.UseListBoxLrcInsteadOfStackPanel)
+            //{
+            //    case true:
+            //        chkListBoxLrc.IsChecked = true;
+            //        break;
+            //    case false:
+            //        chkStackPanel.IsChecked = true;
+            //        return;
+            //}
             switch (set.TrayMode)
             {
                 case 1:
@@ -117,7 +117,7 @@ namespace EasyMuisc.Windows
             set.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
             set.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
             set.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
-            set.UseListBoxLrcInsteadOfStackPanel = (bool)chkListBoxLrc.IsChecked;
+           // set.UseListBoxLrcInsteadOfStackPanel = (bool)chkListBoxLrc.IsChecked;
             set.MusicSettings = chkMusicSettings.IsChecked.Value;
             if (fps != set.AnimationFps)
             {

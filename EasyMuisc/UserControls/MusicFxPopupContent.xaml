@@ -97,7 +97,7 @@
 
 
     </UserControl.Resources>
-    <Grid x:Name="g" Width="300" Margin="48" Background="{DynamicResource darker1BrushColor}">
+    <Grid x:Name="g" Width="300"  Background="{DynamicResource darker1BrushColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="4"/>

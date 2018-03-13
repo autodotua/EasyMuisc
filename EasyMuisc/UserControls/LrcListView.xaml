@@ -116,7 +116,7 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ListBox x:Name="lbx"  PreviewMouseWheel="lbx_MouseWheel">
+        <ListBox  FocusVisualStyle="{x:Null}" Focusable="False"  x:Name="lbx"  PreviewMouseWheel="lbx_MouseWheel">
             
         </ListBox>
     </Grid>

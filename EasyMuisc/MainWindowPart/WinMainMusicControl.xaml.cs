@@ -82,7 +82,7 @@ namespace EasyMuisc
             lrcTime.Clear();//清空歌词时间
             lrcContent.Clear();//清除歌词内容
             currentLrcIndex = -1;//删除歌词索引
-            stkLrc.Children.Clear();//清空歌词表
+           // stkLrc.Children.Clear();//清空歌词表
             lbxLrc.Clear();
 
             FileInfo file = new FileInfo(path);
@@ -91,17 +91,17 @@ namespace EasyMuisc
             {
                 grdLrc.Visibility = Visibility.Visible;
                 txtLrc.Visibility = Visibility.Hidden;
-                if (set.UseListBoxLrcInsteadOfStackPanel)
-                {
+                //if (set.UseListBoxLrcInsteadOfStackPanel)
+                //{
                     lbxLrc.Visibility = Visibility.Visible;
-                    stkLrc.Visibility = Visibility.Hidden;
+                //    stkLrc.Visibility = Visibility.Hidden;
 
-                }
-                else
-                {
-                    stkLrc.Visibility = Visibility.Visible;
-                    lbxLrc.Visibility = Visibility.Hidden;
-                }
+                //}
+                //else
+                //{
+                //    stkLrc.Visibility = Visibility.Visible;
+                //    lbxLrc.Visibility = Visibility.Hidden;
+                //}
                 lrc = new Lyric(file.FullName);//获取歌词信息
                 if (!double.TryParse(lrc.Offset, out offset))
                 {
@@ -138,15 +138,15 @@ namespace EasyMuisc
                         //单击歌词跳转到当前歌词
                         Bass.BASS_ChannelSetPosition(stream, (lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset) > 0 ? lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset : 0);
                     };
-                    if (set.UseListBoxLrcInsteadOfStackPanel)
-                    {
+                    //if (set.UseListBoxLrcInsteadOfStackPanel)
+                    //{
                         lbxLrc.Add(tbk);
-                    }
-                    else
-                    {
-                        stkLrc.Children.Add(tbk);
-                        //stkLrc.
-                    }
+                    //}
+                    //else
+                    //{
+                    //    stkLrc.Children.Add(tbk);
+                    //    //stkLrc.
+                    //}
                     lrcTime.Add(i.Key);
                 }
                 //lbxLrc.Add(lrc.LrcContent);
@@ -168,7 +168,7 @@ namespace EasyMuisc
                 txtLrc.FontSize = set.TextLrcFontSize;
                 grdLrc.Visibility = Visibility.Hidden;
                 txtLrc.Visibility = Visibility.Visible;
-                stkLrc.Visibility = Visibility.Hidden;
+                //stkLrc.Visibility = Visibility.Hidden;
                 lbxLrc.Visibility = Visibility.Hidden;
 
             }
@@ -176,7 +176,7 @@ namespace EasyMuisc
             {
                 grdLrc.Visibility = Visibility.Hidden;
                 txtLrc.Visibility = Visibility.Hidden;
-                stkLrc.Visibility = Visibility.Hidden;
+                //stkLrc.Visibility = Visibility.Hidden;
                 lbxLrc.Visibility = Visibility.Hidden;
                 if (set.ShowFloatLyric)
                 {
@@ -380,7 +380,7 @@ namespace EasyMuisc
         {
             if (set.LrcAnimation)
             {
-                Storyboard.SetTargetName(aniLrc, stkLrc.Name);
+                //Storyboard.SetTargetName(aniLrc, stkLrc.Name);
                 Storyboard.SetTargetProperty(aniLrc, new PropertyPath(MarginProperty));
                 storyLrc.Children.Add(aniLrc);
             }
@@ -455,21 +455,21 @@ namespace EasyMuisc
             if (changed)
             {
 
-                if (set.UseListBoxLrcInsteadOfStackPanel)
-                {
+                //if (set.UseListBoxLrcInsteadOfStackPanel)
+                //{
                     lbxLrc.RefreshFontSize(currentLrcIndex);
                     lbxLrc.ScrollTo(currentLrcIndex, lrcLineSumToIndex, set.NormalLrcFontSize);
-                }
-                else
-                {
-                    foreach (var i in stkLrc.Children)
-                    {
-                        //首先把所有的歌词都改为正常大小
-                        (i as TextBlock).FontSize = set.NormalLrcFontSize;
-                    }
-                    (stkLrc.Children[currentLrcIndex] as TextBlock).FontSize = set.HighlightLrcFontSize;//当前歌词改为高亮
-                    StackPanelLrcAnimition(currentLrcIndex);//歌词转变动画
-                }
+                //}
+                //else
+                //{
+                //    foreach (var i in stkLrc.Children)
+                //    {
+                //        //首先把所有的歌词都改为正常大小
+                //        (i as TextBlock).FontSize = set.NormalLrcFontSize;
+                //    }
+                //    (stkLrc.Children[currentLrcIndex] as TextBlock).FontSize = set.HighlightLrcFontSize;//当前歌词改为高亮
+                //    StackPanelLrcAnimition(currentLrcIndex);//歌词转变动画
+                //}
 
                 if (set.ShowFloatLyric)
                 {
@@ -484,85 +484,85 @@ namespace EasyMuisc
         /// 歌词转变动画
         /// </summary>
         /// <param name="lrcIndex"></param>
-        private void StackPanelLrcAnimition(int lrcIndex)
-        {
-            double top = 0.5 * ActualHeight - lrcLineSumToIndex[lrcIndex]/*第一行到当前行的总行数*/ * set.NormalLrcFontSize * FontFamily.LineSpacing/*歌词数量乘每行字的高度*/ - set.HighlightLrcFontSize;// 0.5 * ActualHeight - stkLrcHeight * lrcIndex / (stkLrc.Children.Count - 1)-highlightFontSize ;
+        //private void StackPanelLrcAnimition(int lrcIndex)
+        //{
+        //    double top = 0.5 * ActualHeight - lrcLineSumToIndex[lrcIndex]/*第一行到当前行的总行数*/ * set.NormalLrcFontSize * FontFamily.LineSpacing/*歌词数量乘每行字的高度*/ - set.HighlightLrcFontSize;// 0.5 * ActualHeight - stkLrcHeight * lrcIndex / (stkLrc.Children.Count - 1)-highlightFontSize ;
 
 
-            //Storyboard storyboard = new Storyboard();
-            //TranslateTransform translateTransform = new TranslateTransform(0, top);
-            ////ScaleTransform scale = new ScaleTransform(1.0, 1.0, 1, 1);
-            //stkLrc.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
-            //TransformGroup myTransGroup = new TransformGroup();
-            //myTransGroup.Children.Add(translateTransform);
-            //stkLrc.RenderTransform = myTransGroup;
+        //    //Storyboard storyboard = new Storyboard();
+        //    //TranslateTransform translateTransform = new TranslateTransform(0, top);
+        //    ////ScaleTransform scale = new ScaleTransform(1.0, 1.0, 1, 1);
+        //    //stkLrc.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
+        //    //TransformGroup myTransGroup = new TransformGroup();
+        //    //myTransGroup.Children.Add(translateTransform);
+        //    //stkLrc.RenderTransform = myTransGroup;
 
-            //DoubleAnimation growAnimation = new DoubleAnimation();
-            //growAnimation.Duration = TimeSpan.FromMilliseconds(1000);
-            ////growAnimation.From = 1;
-            //growAnimation.To = 1.1;
-            //storyboard.Children.Add(growAnimation);
+        //    //DoubleAnimation growAnimation = new DoubleAnimation();
+        //    //growAnimation.Duration = TimeSpan.FromMilliseconds(1000);
+        //    ////growAnimation.From = 1;
+        //    //growAnimation.To = 1.1;
+        //    //storyboard.Children.Add(growAnimation);
 
-            //DependencyProperty[] propertyChain = new DependencyProperty[]
-            //{
-            //Button.RenderTransformProperty,
-            //TransformGroup.ChildrenProperty,
-            //TranslateTransform.YProperty
-            //};
-            //string thePath = "(0).(1)[0].(2)";
-            //PropertyPath myPropertyPath = new PropertyPath(thePath, propertyChain);
-            //Storyboard.SetTargetProperty(growAnimation, myPropertyPath);
-            //Storyboard.SetTarget(growAnimation, stkLrc);
+        //    //DependencyProperty[] propertyChain = new DependencyProperty[]
+        //    //{
+        //    //Button.RenderTransformProperty,
+        //    //TransformGroup.ChildrenProperty,
+        //    //TranslateTransform.YProperty
+        //    //};
+        //    //string thePath = "(0).(1)[0].(2)";
+        //    //PropertyPath myPropertyPath = new PropertyPath(thePath, propertyChain);
+        //    //Storyboard.SetTargetProperty(growAnimation, myPropertyPath);
+        //    //Storyboard.SetTarget(growAnimation, stkLrc);
 
-            //storyboard.Begin();
-
-
-
+        //    //storyboard.Begin();
 
 
 
 
 
 
-            ////DoubleAnimationUsingKeyFrames ani = new DoubleAnimationUsingKeyFrames();
-            ////LinearDoubleKeyFrame first = new LinearDoubleKeyFrame(0, KeyTime.FromPercent(0));
-
-            ////LinearDoubleKeyFrame second = new LinearDoubleKeyFrame(10, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(500)));
-            ////ani.KeyFrames.Add(first);
-            ////ani.KeyFrames.Add(second);
-            ////stkLrc.RenderTransform .BeginAnimation(RenderTransform., ani);
-
-            //return;
 
 
-            //Canvas.SetTop(stkLrc, top);
-            // NewDoubleAnimation(stkLrc, Canvas.LeftProperty, top, 0.8, 0.5);
-            //return;
 
-            //DoubleAnimation ani = new DoubleAnimation()
-            //{
-            //    Duration = TimeSpan.FromMilliseconds(500),
-            //    To = top,
-            //};
-            ////  Storyboard.SetTargetProperty(aniLrc, new PropertyPath("(ListView.RenderTransform).(TranslateTransform.Y)"));
-            //Storyboard.SetTargetProperty(ani, new PropertyPath("(StackPanel.RenderTransform).(TranslateTransform.X)"));
-            //Storyboard.SetTarget(ani, stkLrc);
-            //Storyboard st = new Storyboard();
-            //st.Children.Add(ani);
-            //st.Begin(stkLrc);
-            //return;
+        //    ////DoubleAnimationUsingKeyFrames ani = new DoubleAnimationUsingKeyFrames();
+        //    ////LinearDoubleKeyFrame first = new LinearDoubleKeyFrame(0, KeyTime.FromPercent(0));
 
-            if (set.LrcAnimation)
-            {
-                storyLrc.Stop(stkLrc);
-                aniLrc.To = new Thickness(0, top, 0, 0);
-                storyLrc.Begin(stkLrc);
-            }
-            else
-            {
-                stkLrc.Margin = new Thickness(0, top, 0, 0);
-            }
-        }
+        //    ////LinearDoubleKeyFrame second = new LinearDoubleKeyFrame(10, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(500)));
+        //    ////ani.KeyFrames.Add(first);
+        //    ////ani.KeyFrames.Add(second);
+        //    ////stkLrc.RenderTransform .BeginAnimation(RenderTransform., ani);
+
+        //    //return;
+
+
+        //    //Canvas.SetTop(stkLrc, top);
+        //    // NewDoubleAnimation(stkLrc, Canvas.LeftProperty, top, 0.8, 0.5);
+        //    //return;
+
+        //    //DoubleAnimation ani = new DoubleAnimation()
+        //    //{
+        //    //    Duration = TimeSpan.FromMilliseconds(500),
+        //    //    To = top,
+        //    //};
+        //    ////  Storyboard.SetTargetProperty(aniLrc, new PropertyPath("(ListView.RenderTransform).(TranslateTransform.Y)"));
+        //    //Storyboard.SetTargetProperty(ani, new PropertyPath("(StackPanel.RenderTransform).(TranslateTransform.X)"));
+        //    //Storyboard.SetTarget(ani, stkLrc);
+        //    //Storyboard st = new Storyboard();
+        //    //st.Children.Add(ani);
+        //    //st.Begin(stkLrc);
+        //    //return;
+
+        //    if (set.LrcAnimation)
+        //    {
+        //        storyLrc.Stop(stkLrc);
+        //        aniLrc.To = new Thickness(0, top, 0, 0);
+        //        storyLrc.Begin(stkLrc);
+        //    }
+        //    else
+        //    {
+        //        stkLrc.Margin = new Thickness(0, top, 0, 0);
+        //    }
+        //}
         #endregion
     }
 }

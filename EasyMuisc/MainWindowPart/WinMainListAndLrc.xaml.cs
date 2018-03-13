@@ -19,7 +19,6 @@ using static EasyMuisc.ShareStaticResources;
 using static EasyMuisc.MusicHelper;
 using static WpfControls.Dialog.DialogHelper;
 using System.Collections.ObjectModel;
-using static WpfControls.Dialog.DialogHelper;
 using WpfControls.Dialog;
 
 namespace EasyMuisc
@@ -612,7 +611,8 @@ namespace EasyMuisc
             menu.Items.Add(menuShowLrc);
             menu.Items.Add(menuReload);
             menu.Items.Add(menuFloat);
-            if (lrcContent.Count != 0 && (lbxLrc.Visibility == Visibility.Visible || stkLrc.Visibility == Visibility.Visible))
+            //if (lrcContent.Count != 0 && (lbxLrc.Visibility == Visibility.Visible || stkLrc.Visibility == Visibility.Visible))
+            if (lrcContent.Count != 0 && lbxLrc.Visibility == Visibility.Visible )
             {
                 menu.Items.Add(NewSeparatorLine);
                 menu.Items.Add(menuCopyLrc);
@@ -847,7 +847,7 @@ namespace EasyMuisc
         public void AfterClearList()
         {
             SetCurrent(-1);
-            stkLrc.Visibility = Visibility.Hidden;
+           // stkLrc.Visibility = Visibility.Hidden;
             txtLrc.Visibility = Visibility.Hidden;
             lbxLrc.Visibility = Visibility.Hidden;
             if (set.ShowFloatLyric)

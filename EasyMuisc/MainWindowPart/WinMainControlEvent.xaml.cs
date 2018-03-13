@@ -220,23 +220,12 @@ namespace EasyMuisc
         {
             Popup ppp = Resources["pppMusicSettings"] as Popup;
             ppp.PlacementTarget = sender as FrameworkElement;
-            ppp.Placement = PlacementMode.Center;
+            ppp.Placement = PlacementMode.Bottom;
             ppp.IsOpen = true;
             (ppp.Child as MusicFxPopupContent).Refresh();
 
         }
-        /// <summary>
-        /// 单击播放设备菜单项事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-      
-        private void Popup_MouseLeave(object sender, MouseEventArgs e)
-        {
-            Popup ppp = Resources["pppMusicSettings"] as Popup;
-            ppp.IsOpen = false;
-        }
-
+     
         #endregion
     }
 }
