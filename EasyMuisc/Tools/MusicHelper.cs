@@ -366,7 +366,32 @@ namespace EasyMuisc
         {
             return historyList[index];
         }
+             public static void RandomizeList()
+        {
+            //Copy to a array
+            MusicInfo[] copyArray = new MusicInfo[musicDatas.Count];
+            musicDatas.CopyTo(copyArray,0);
 
+            //Add range
+            List<MusicInfo> copyList = new List<MusicInfo>();
+            copyList.AddRange(copyArray);
+
+            //Set outputList and random
+            //List<MusicInfo> outputList = new List<MusicInfo>();
+            Random rd = new Random(DateTime.Now.Millisecond);
+            musicDatas.Clear();
+            while (copyList.Count > 0)
+            {
+                //Select an index and item
+                int rdIndex = rd.Next(0, copyList.Count);
+                MusicInfo remove = copyList[rdIndex];
+
+                //remove it from copyList and add it to output
+                copyList.Remove(remove);
+                musicDatas.Add(remove);
+            }
+           // return outputList;
+        }
 
     }
 }

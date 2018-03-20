@@ -257,6 +257,9 @@ namespace EasyMuisc
                 }
             };
 
+            MenuItem menuRandom = new MenuItem() { Header = "随机排序" };
+            menuRandom.Click += (p1, p2) => RandomizeList();
+
             MenuItem menuOpenMusicFolder = new MenuItem() { Header = "打开所在文件夹" };
             menuOpenMusicFolder.Click += (p1, p2) =>
   Process.Start("Explorer.exe", @"/select," + GetMusic(lvwMusic.SelectedIndex).Path);
@@ -451,6 +454,7 @@ namespace EasyMuisc
                 }
                 menu.Items.Add(menuClear);
                 menu.Items.Add(NewSeparatorLine);
+                menu.Items.Add(menuRandom);
             }
             menu.Items.Add(menuImport);
             menu.Items.Add(menuExport);
