@@ -126,7 +126,7 @@ namespace EasyMuisc
                   }
                   else
                   {
-                      if (GetInput("请输入目标名称（不含后缀名）：", out string name, lvw.Background as SolidColorBrush,btn.Text, @"^[^\/:*\?\”“\<>|,]+$"))
+                      if (GetInput("请输入目标名称（不含后缀名）：", out string name, WpfControls.DarkerBrushConverter.GetDarkerColor(lvw.Background as SolidColorBrush), btn.Text, @"^[^\/:*\?\”“\<>|,]+$"))
                           {
                           try
                           {
@@ -312,7 +312,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnAddClickEventHandler(object sender, RoutedEventArgs e)
         {
-            if (GetInput("请输入文件名：", out string name, lvw.Background as SolidColorBrush))
+            if (GetInput("请输入文件名：", out string name, WpfControls.DarkerBrushConverter.GetDarkerColor(lvw.Background as SolidColorBrush)))
             {
               var  button = new UserControls.ToggleButton() { Text = new FileInfo(name).Name };
         

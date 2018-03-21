@@ -40,11 +40,15 @@ namespace EasyMuisc
         {
             var color = colorPicker.CurrentColor;
             Resources["backgroundBrushColor"] = color;
-            Resources["darker1BrushColor"] = new SolidColorBrush(Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.9f, color.Color.ScG * 0.9f, color.Color.ScB * 0.9f));
-            Resources["darker2BrushColor"] = new SolidColorBrush(Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.8f, color.Color.ScG * 0.8f, color.Color.ScB * 0.8f));
-            Resources["darker3BrushColor"] = new SolidColorBrush(Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.7f, color.Color.ScG * 0.7f, color.Color.ScB * 0.7f));
-            Resources["darker4BrushColor"] = new SolidColorBrush(Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.6f, color.Color.ScG * 0.6f, color.Color.ScB * 0.6f));
-
+            WpfControls.DarkerBrushConverter.GetDarkerColor(color, out SolidColorBrush darker1, out SolidColorBrush darker2, out SolidColorBrush darker3, out SolidColorBrush darker4);
+            //Resources["darker1BrushColor"] = new SolidColorBrush(Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.9f, color.Color.ScG * 0.9f, color.Color.ScB * 0.9f));
+            //Resources["darker2BrushColor"] = new SolidColorBrush(Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.8f, color.Color.ScG * 0.8f, color.Color.ScB * 0.8f));
+            //Resources["darker3BrushColor"] = new SolidColorBrush(Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.7f, color.Color.ScG * 0.7f, color.Color.ScB * 0.7f));
+            //Resources["darker4BrushColor"] = new SolidColorBrush(Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.6f, color.Color.ScG * 0.6f, color.Color.ScB * 0.6f));
+            Resources["darker1BrushColor"] = darker1;
+            Resources["darker2BrushColor"] = darker2;
+            Resources["darker3BrushColor"] = darker3;
+            Resources["darker4BrushColor"] = darker4;
             Resources["backgroundColor"] = color.Color;
             Resources["backgroundTransparentColor"] = Color.FromArgb(0, color.Color.R, color.Color.G, color.Color.B);
 
@@ -116,7 +120,7 @@ namespace EasyMuisc
             {
                 PlacementTarget = btnSettings,
                 IsOpen = true,
-                Items = { menuTop,menuFileAssociation, menuColor, menuSettings, menuHelp, menuAbout },
+                Items = { menuTop, menuFileAssociation, menuColor, menuSettings, menuHelp, menuAbout },
             };
             mainContextMenu.Closed += (p1, p2) => UpdateColor();
         }
