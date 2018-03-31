@@ -159,9 +159,9 @@ namespace EasyMuisc
                 error += "Ctrl /（播放暂停）、";
 
             }
-            if(error!="")
+            if (error != "")
             {
-                ShowTrayMessage("以下热键无法注册，可能已被占用："+ error.TrimEnd(new char[] { '、' }));
+                ShowTrayMessage("以下热键无法注册，可能已被占用：" + error.TrimEnd(new char[] { '、' }));
             }
         }
         #endregion
@@ -175,20 +175,32 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void MouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
-        //    if (mouseInLrcArea && (stkLrc.Visibility == Visibility.Visible || lbxLrc.Visibility == Visibility.Visible))
-        //    {
-        //        if (e.Delta > 0)
-        //        {
-        //            offset -= 1d / 4;
-        //        }
-        //        else
-        //        {
-        //            offset += 1d / 4;
-        //        }
-        //        ShowInfo("当前歌词偏移量：" + (offset > 0 ? "+" : "") + Math.Round(offset, 2).ToString() + "秒");
-        //    }
-        //    else 
-        if (!mouseInLrcArea && !mouseInMusicListArea)
+            //    if (mouseInLrcArea && (stkLrc.Visibility == Visibility.Visible || lbxLrc.Visibility == Visibility.Visible))
+            //    {
+            //        if (e.Delta > 0)
+            //        {
+            //            offset -= 1d / 4;
+            //        }
+            //        else
+            //        {
+            //            offset += 1d / 4;
+            //        }
+            //        ShowInfo("当前歌词偏移量：" + (offset > 0 ? "+" : "") + Math.Round(offset, 2).ToString() + "秒");
+            //    }
+            //    else 
+            if (mouseInLrcArea && lbxLrc.Visibility == Visibility.Visible)
+            {
+                if (e.Delta > 0)
+                {
+                    offset -= 1d / 4;
+                }
+                else
+                {
+                    offset += 1d / 4;
+                }
+                ShowInfo("当前歌词偏移量：" + (offset > 0 ? "+" : "") + Math.Round(offset, 2).ToString() + "秒");
+            }
+            else if (!mouseInLrcArea && !mouseInMusicListArea)
             {
                 if (e.Delta > 0)
                 {
