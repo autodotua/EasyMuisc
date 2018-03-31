@@ -264,11 +264,14 @@ namespace EasyMuisc
         /// <returns></returns>
         private bool PlayNew(int index, bool playAtOnce = true)
         {
-            if (!File.Exists(GetMusic(index).Path))
+            MusicInfo music = GetMusic(index);
+            if (!File.Exists(music.Path))
             {
-                if (ShowMessage("文件不存在！是否从列表中删除？", DialogType.Warn, MessageBoxButton.YesNo) == 1)
+                if (ShowMessage($"歌曲{music.MusicName}（{music.Path}）不存在！是否从列表中删除？", DialogType.Warn, MessageBoxButton.YesNo) == 1)
                 {
                     RemoveMusic(index);
+                    btnPlay.Visibility = Visibility.Visible;
+                    btnPause.Visibility = Visibility.Hidden;
                 }
                 return false;
             }
