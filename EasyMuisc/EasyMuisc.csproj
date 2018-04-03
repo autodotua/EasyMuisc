@@ -144,12 +144,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="MainWindowPart\WinMainHeader.xaml.cs" />
-    <Compile Include="MainWindowPart\WinMainKeyAndMouse.xaml.cs" />
-    <Compile Include="MainWindowPart\WinMainListAndLrc.xaml.cs" />
-    <Compile Include="MainWindowPart\WinMainMenu.xaml.cs" />
-    <Compile Include="MainWindowPart\WinMainMusicControl.xaml.cs" />
-    <Compile Include="MainWindowPart\WinMainControlEvent.xaml.cs" />
+    <Compile Include="MainWindowPart\Header.xaml.cs" />
+    <Compile Include="MainWindowPart\KeyAndMouse.xaml.cs" />
+    <Compile Include="MainWindowPart\ListAndLrc.xaml.cs" />
+    <Compile Include="MainWindowPart\Menu.xaml.cs" />
+    <Compile Include="MainWindowPart\MusicControl.xaml.cs" />
+    <Compile Include="MainWindowPart\ControlEvent.xaml.cs" />
     <Compile Include="Tools\FindVisualChildHelper.cs" />
     <Compile Include="Tools\MusicHelper.cs" />
     <Compile Include="Tools\ShareStaticResources.cs" />

@@ -169,9 +169,7 @@ namespace EasyMuisc
             }
         }
         #endregion
-
-
-
+        
         #region 列表与歌词选项
         /// <summary>
         /// 单击列表选项事件
@@ -188,7 +186,7 @@ namespace EasyMuisc
                 // Style=Resources["ctmStyle"] as Style
             };
 
-
+            #region 添加
             MenuItem menuOpenFile = new MenuItem() { Header = "文件" };
             menuOpenFile.Click += (p1, p2) =>
             {
@@ -257,6 +255,54 @@ namespace EasyMuisc
                 }
             };
 
+            MenuItem menuAdd = new MenuItem() {Header="添加到歌单", Items = { menuOpenFile, menuOpenFolder, menuOpenAllFolder } };
+            #endregion
+            #region 删除
+            MenuItem menuDeleteSelected = new MenuItem() { Header = "删除选中项" };
+            menuDeleteSelected.Click += (p1, p2) =>
+            {
+                //int needDeleteIndex = musicList.SelectedIndex;
+
+                //if (CurrentMusicIndex == needDeleteIndex)
+                //{
+                //    PlayListNext();
+                //}
+                //RemoveMusic(needDeleteIndex);
+                lvwMusic.RemoveAllSelection();
+                //if (MusicCount== 0)
+                //{
+                //    AfterClearList();
+                //}
+            };
+
+            MenuItem menuClear = new MenuItem() { Header = "清空列表", };
+            menuClear.Click += (p1, p2) =>
+            {
+                RemoveMusic();
+                //AfterClearList();
+            };
+            MenuItem menuClearExceptCurrent = new MenuItem() { Header = "删除其他", };
+            menuClearExceptCurrent.Click += (p1, p2) =>
+            {
+                int index = lvwMusic.SelectedIndex;
+                for (int i = 0; i < index; i++)
+                {
+                    RemoveMusic(0);
+                }
+                int count = MusicCount;
+                for (int i = 1; i < count; i++)
+                {
+                    RemoveMusic(1);
+                }
+            };
+            MenuItem menuDelete = new MenuItem() { Header = "删除" };
+            if(lvwMusic.SelectedIndex!=-1)
+            {
+                menuDelete.Items.Add(menuDeleteSelected);
+                menuDelete.Items.Add(menuClearExceptCurrent);
+            }
+            menuDelete.Items.Add(menuClear);
+            #endregion
             MenuItem menuRandom = new MenuItem() { Header = "随机排序" };
             menuRandom.Click += (p1, p2) => RandomizeList();
 
@@ -297,43 +343,7 @@ namespace EasyMuisc
                 }
                 AddHistory(lvwMusic.SelectedItem);
             };
-            MenuItem menuDelete = new MenuItem() { Header = "删除选中项" };
-            menuDelete.Click += (p1, p2) =>
-            {
-                //int needDeleteIndex = musicList.SelectedIndex;
-
-                //if (CurrentMusicIndex == needDeleteIndex)
-                //{
-                //    PlayListNext();
-                //}
-                //RemoveMusic(needDeleteIndex);
-                lvwMusic.RemoveAllSelection();
-                //if (MusicCount== 0)
-                //{
-                //    AfterClearList();
-                //}
-            };
-
-            MenuItem menuClear = new MenuItem() { Header = "清空列表", };
-            menuClear.Click += (p1, p2) =>
-            {
-                RemoveMusic();
-                //AfterClearList();
-            };
-            MenuItem menuClearExceptCurrent = new MenuItem() { Header = "删除其他", };
-            menuClearExceptCurrent.Click += (p1, p2) =>
-            {
-                int index = lvwMusic.SelectedIndex;
-                for (int i = 0; i < index; i++)
-                {
-                    RemoveMusic(0);
-                }
-                int count = MusicCount;
-                for (int i = 1; i < count; i++)
-                {
-                    RemoveMusic(1);
-                }
-            };
+           
 
 
             MenuItem menuImport = new MenuItem() { Header = "导入歌单" };
@@ -429,9 +439,14 @@ namespace EasyMuisc
 
             };
 
-            menu.Items.Add(menuOpenFile);
-            menu.Items.Add(menuOpenFolder);
-            menu.Items.Add(menuOpenAllFolder);
+            //menu.Items.Add(menuOpenFile);
+            //menu.Items.Add(menuOpenFolder);
+            //menu.Items.Add(menuOpenAllFolder);
+            menu.Items.Add(menuAdd);
+            if(MusicCount>0)
+            {
+                menu.Items.Add(menuDelete);
+            }
             menu.Items.Add(NewSeparatorLine);
             //menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
 
@@ -447,18 +462,18 @@ namespace EasyMuisc
 
             if (MusicCount > 0)
             {
-                if (lvwMusic.SelectedIndex != -1)
-                {
-                    menu.Items.Add(menuDelete);
-                    menu.Items.Add(menuClearExceptCurrent);
-                }
-                menu.Items.Add(menuClear);
-                menu.Items.Add(NewSeparatorLine);
+                //if (lvwMusic.SelectedIndex != -1)
+                //{
+                //    menu.Items.Add(menuDelete);
+                //    menu.Items.Add(menuClearExceptCurrent);
+                //}
+                //menu.Items.Add(menuClear);
+                //menu.Items.Add(NewSeparatorLine);
                 menu.Items.Add(menuRandom);
+                menu.Items.Add(menuRefreshList);
             }
             menu.Items.Add(menuImport);
             menu.Items.Add(menuExport);
-            menu.Items.Add(menuRefreshList);
             //if (set.ShowLrc)
             //{
             //    menu.Items.Add(menuAutoFurl);
@@ -523,6 +538,13 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnLrcOptionClickEventHanlder(object sender, RoutedEventArgs e)
         {
+            ContextMenu menu = new ContextMenu()
+            {
+                PlacementTarget = btnLrcOption,
+                Placement = PlacementMode.Top,
+                IsOpen = true
+            };
+
             StackPanel menuNormalFontSizeSetting = new StackPanel()
             {
                 Orientation = Orientation.Horizontal,
@@ -599,17 +621,68 @@ namespace EasyMuisc
                 set.ShowFloatLyric = !set.ShowFloatLyric;
                 floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
                 floatLyric.Update(currentLrcIndex);
+                menu.IsOpen = false;
             };
-            menuFloat.PreviewMouseRightButtonDown += (p1, p2) =>
-            ShowFloatLyricsMenu();
 
 
-            ContextMenu menu = new ContextMenu()
+
+            StackPanel menuFloatNormalFontSizeSetting = new StackPanel()
             {
-                PlacementTarget = btnLrcOption,
-                Placement = PlacementMode.Top,
-                IsOpen = true
+                Orientation = Orientation.Horizontal,
+                Children =
+           {
+               new TextBlock(){Text="正常歌词字体大小："},
+               new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsNormalFontSize.ToString()},
+           }
             };
+            StackPanel menuFloatHighlightFontSizeSetting = new StackPanel()
+            {
+                Orientation = Orientation.Horizontal,
+                Children =
+           {
+               new TextBlock(){Text="当前歌词字体大小："},
+               new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsHighlightFontSize.ToString()},
+           }
+            };
+            MenuItem menuFloatAdjust = new MenuItem() { Header = "调整位置和大小" };
+            menuFloatAdjust.Click += (p1, p2) => floatLyric.Adjuest = true;
+            MenuItem menuFloatOK = new MenuItem()
+            {
+                Header = "确定",
+            };
+            menuFloatOK.Click += (p1, p2) =>
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    string text = ((menuFloat.Items[menuFloat.Items.Count - 3 + i] as StackPanel).Children[1] as TextBox).Text;
+                    if (double.TryParse(text, out double newValue))
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                set.FloatLyricsNormalFontSize = newValue;
+                                break;
+                            case 1:
+                                set.FloatLyricsHighlightFontSize = newValue;
+                                break;
+                        }
+                    }
+                }
+            };
+
+            menuFloat.Items.Add(menuFloatAdjust);
+            menuFloat.Items.Add(NewSeparatorLine);
+            menuFloat.Items.Add(menuFloatNormalFontSizeSetting);
+            menuFloat.Items.Add(menuFloatHighlightFontSizeSetting);
+            menuFloat.Items.Add(menuFloatOK);
+
+
+
+
+
+
+
+          
 
 
             menu.Items.Add(menuShowLrc);
@@ -777,74 +850,68 @@ namespace EasyMuisc
             infoWaitTimer?.Stop();
             infoWaitTimer = SleepThenDo(1000, (p1, p2) => NewDoubleAnimation(tbkOffset, OpacityProperty, 0, 0.5, 0, (p3, p4) => tbkOffset.Opacity = 0, true));
         }
-        /// <summary>
-        /// 显示悬浮菜单的菜单
-        /// </summary>
-        private void ShowFloatLyricsMenu()
-        {
-            ContextMenu menu = new ContextMenu()
-            {
-                PlacementTarget = btnLrcOption,
-
-                IsOpen = true,
-            };
+        ///// <summary>
+        ///// 显示悬浮菜单的菜单
+        ///// </summary>
+        //private void ShowFloatLyricsMenu()
+        //{
+         
 
 
-
-            StackPanel menuNormalFontSizeSetting = new StackPanel()
-            {
-                Orientation = Orientation.Horizontal,
-                Children =
-           {
-               new TextBlock(){Text="正常歌词字体大小："},
-               new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsNormalFontSize.ToString()},
-           }
-            };
-            StackPanel menuHighlightFontSizeSetting = new StackPanel()
-            {
-                Orientation = Orientation.Horizontal,
-                Children =
-           {
-               new TextBlock(){Text="当前歌词字体大小："},
-               new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsHighlightFontSize.ToString()},
-           }
-            };
-            MenuItem menuAdjust = new MenuItem() { Header = "调整位置和大小" };
-            menuAdjust.Click += (p1, p2) => floatLyric.Adjuest = true;
-            MenuItem menuOK = new MenuItem()
-            {
-                Header = "确定",
-            };
-            menuOK.Click += (p1, p2) =>
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    string text = ((menu.Items[menu.Items.Count - 3 + i] as StackPanel).Children[1] as TextBox).Text;
-                    if (double.TryParse(text, out double newValue))
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                set.FloatLyricsNormalFontSize = newValue;
-                                break;
-                            case 1:
-                                set.FloatLyricsHighlightFontSize = newValue;
-                                break;
-                        }
-                    }
-                }
-            };
-            menu.Items.Add(menuAdjust);
-            menu.Items.Add(NewSeparatorLine);
-            menu.Items.Add(menuNormalFontSizeSetting);
-            menu.Items.Add(menuHighlightFontSizeSetting);
-            menu.Items.Add(menuOK);
+        //    StackPanel menuNormalFontSizeSetting = new StackPanel()
+        //    {
+        //        Orientation = Orientation.Horizontal,
+        //        Children =
+        //   {
+        //       new TextBlock(){Text="正常歌词字体大小："},
+        //       new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsNormalFontSize.ToString()},
+        //   }
+        //    };
+        //    StackPanel menuHighlightFontSizeSetting = new StackPanel()
+        //    {
+        //        Orientation = Orientation.Horizontal,
+        //        Children =
+        //   {
+        //       new TextBlock(){Text="当前歌词字体大小："},
+        //       new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsHighlightFontSize.ToString()},
+        //   }
+        //    };
+        //    MenuItem menuAdjust = new MenuItem() { Header = "调整位置和大小" };
+        //    menuAdjust.Click += (p1, p2) => floatLyric.Adjuest = true;
+        //    MenuItem menuOK = new MenuItem()
+        //    {
+        //        Header = "确定",
+        //    };
+        //    menuOK.Click += (p1, p2) =>
+        //    {
+        //        for (int i = 0; i < 2; i++)
+        //        {
+        //            string text = ((menu.Items[menu.Items.Count - 3 + i] as StackPanel).Children[1] as TextBox).Text;
+        //            if (double.TryParse(text, out double newValue))
+        //            {
+        //                switch (i)
+        //                {
+        //                    case 0:
+        //                        set.FloatLyricsNormalFontSize = newValue;
+        //                        break;
+        //                    case 1:
+        //                        set.FloatLyricsHighlightFontSize = newValue;
+        //                        break;
+        //                }
+        //            }
+        //        }
+        //    };
+        //    menu.Items.Add(menuAdjust);
+        //    menu.Items.Add(NewSeparatorLine);
+        //    menu.Items.Add(menuNormalFontSizeSetting);
+        //    menu.Items.Add(menuHighlightFontSizeSetting);
+        //    menu.Items.Add(menuOK);
 
 
 
 
 
-        }
+        //}
         /// <summary>
         /// 执行清空列表后的清理工作
         /// </summary>

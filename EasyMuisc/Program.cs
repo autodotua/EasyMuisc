@@ -28,7 +28,6 @@ namespace EasyMuisc
                 Environment.Exit(0);
             }
 
-
             App app = new App();
             //app.InitializeComponent();
 #if(!DEBUG)

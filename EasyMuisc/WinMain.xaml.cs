@@ -284,6 +284,7 @@ namespace EasyMuisc
             //    File.WriteAllBytes("bass.dll", Properties.Resources.bass);
             //}
             InitializeComponent();
+            DefautDialogOwner = this;
 
             windowHandle = new WindowInteropHelper(this).Handle;
 
@@ -569,8 +570,7 @@ namespace EasyMuisc
                 floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
                 floatLyric.Update(currentLrcIndex);
             };
-
-            menuFloat.PreviewMouseRightButtonDown += (p1, p2) => ShowFloatLyricsMenu();
+            
             MenuItem menuExit = new MenuItem() { Header = "退出" };
             menuExit.Click += (p1, p2) => Close();
             ContextMenu menu = new ContextMenu()

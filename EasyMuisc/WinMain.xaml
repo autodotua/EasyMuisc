@@ -142,14 +142,25 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type MenuItem}">
-                        <Border Margin="1" MinWidth="80" >
-                            <Border.Background>
-                                <SolidColorBrush x:Name="MyAnimatedBrushBackground" Color="Transparent" />
-                            </Border.Background>
-                            <StackPanel Orientation="Horizontal" Margin="8">
-                                <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
+                        <Grid>
+                            <Border Margin="1" MinWidth="80" >
+                                <Border.Background>
+                                    <SolidColorBrush x:Name="MyAnimatedBrushBackground" Color="Transparent" />
+                                </Border.Background>
+                                <StackPanel Orientation="Horizontal" Margin="8">
+                                    <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                            </Border>
+                            <TextBlock x:Name="tbkArrow" Text=">" Visibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <Popup Placement="Right" IsOpen="{TemplateBinding IsSubmenuOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Fade">
+                                <Border x:Name="DropDownBorder"  HorizontalAlignment="Stretch"   MinWidth="80" Background="{DynamicResource darker1BrushColor}">
+                                    <ScrollViewer  SnapsToDevicePixels="True"  HorizontalScrollBarVisibility="Hidden"  VerticalScrollBarVisibility="Hidden"   HorizontalAlignment="Center" >
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
                         <ControlTemplate.Triggers>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
@@ -176,6 +187,9 @@
                                     </BeginStoryboard>
                                 </MultiTrigger.ExitActions>
                             </MultiTrigger>
+                            <Trigger Property="HasItems" Value="True">
+                                <Setter TargetName="tbkArrow" Property="Visibility" Value="Visible"/>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
