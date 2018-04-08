@@ -118,16 +118,17 @@ namespace EasyMuisc
         {
             set
             {
-                if (value)
-                {
-                    grdLoading.Visibility = Visibility.Visible;
-                    NewDoubleAnimation(grdLoading, OpacityProperty, 0.5, 0.5, 0);
+                loading.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                //if (value)
+                //{
+                //    grdLoading.Visibility = Visibility.Visible;
+                //    NewDoubleAnimation(grdLoading, OpacityProperty, 0.5, 0.5, 0);
 
-                }
-                else
-                {
-                    NewDoubleAnimation(grdLoading, OpacityProperty, 0, 0.5, 0, (p1, p2) => grdLoading.Visibility = Visibility.Hidden);
-                }
+                //}
+                //else
+                //{
+                //    NewDoubleAnimation(grdLoading, OpacityProperty, 0, 0.5, 0, (p1, p2) => grdLoading.Visibility = Visibility.Hidden);
+                //}
             }
         }
         #endregion
@@ -383,7 +384,7 @@ namespace EasyMuisc
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void WindowLoadedEventHandler(object sender, RoutedEventArgs e)
+        private async void WindowLoadedEventHandler(object sender, RoutedEventArgs e)
         {
 
             RegistGolbalHotKey();
@@ -396,13 +397,13 @@ namespace EasyMuisc
                 string tempPath = set.LastMusic;
                 if (File.Exists(tempPath) && musicDatas.Where(p=>p.Path.Equals(tempPath)).Count()!=0)
                 {
-                    PlayNew(AddMusic(tempPath), false);
+                   PlayNew(await  AddMusic(tempPath), false);
 
                 }
             }
             else
             {
-                PlayNew(AddMusic(path), true);
+                PlayNew(await AddMusic(path), true);
 
             }
 

@@ -123,7 +123,7 @@ namespace EasyMuisc
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnOpenFileClickEventHandler(object sender, RoutedEventArgs e)
+        private async void BtnOpenFileClickEventHandler(object sender, RoutedEventArgs e)
         {
             OpenFileDialog opd = new OpenFileDialog()
             {
@@ -133,7 +133,7 @@ namespace EasyMuisc
             };
             if (opd.ShowDialog() == true && opd.FileNames != null)
             {
-                MusicInfo temp = AddMusic(opd.FileName);
+                MusicInfo temp =await AddMusic(opd.FileName);
                 if (temp != null)
                 {
                     PlayNew(temp);

@@ -34,7 +34,7 @@ namespace EasyMuisc
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static MusicInfo AddMusic(string path)
+        public async static Task<MusicInfo> AddMusic(string path)
         {
 
             try
@@ -46,16 +46,21 @@ namespace EasyMuisc
                         return i;
                     }
                 }
-                bool info = GetMusicInfo(path, out string name, out string singer, out string length, out string album);
-                musicDatas.Add(new MusicInfo
+                string name = "";
+                string singer = ""; ;
+                string length = "";
+                string album = "";
+                await   Task.Run(() => GetMusicInfo(path, out name, out singer, out length, out album));
+                var item = new MusicInfo()
                 {
                     MusicName = name,
                     Singer = singer,
                     Length = length.StartsWith("00:") ? length.Remove(0, 3) : length,
                     Path = path,
                     Album = album,
-                });
-                DoEvents();
+                };
+                musicDatas.Add(item);
+               // DoEvents();
                 return musicDatas[musicDatas.Count - 1];
             }
             catch
@@ -112,7 +117,7 @@ namespace EasyMuisc
         /// <param name="musics"></param>
         /// <param name="firstLoad"></param>
         /// <returns></returns>
-        public static void AddMusic(string[] musics)
+        public async static void AddMusic(string[] musics)
         {
             var taskBar = mainWindow.taskBar;
             taskBar.ProgressValue = 0;
@@ -122,11 +127,16 @@ namespace EasyMuisc
             //if (cfa.AppSettings.Settings["MusicList"] != null)
             //{
             int n = 1;
-            foreach (var i in musics)
-            {
-                AddMusic(i);
-                taskBar.ProgressValue = 1.0 * (n++) / musics.Length;
-            }
+            //await Task.Run(() =>
+            //{
+                foreach (var i in musics)
+                {
+                  await  AddMusic(i);
+                /* mainWindow.Dispatcher.Invoke(() =>*/
+                taskBar.ProgressValue = 1.0 * (n++) / musics.Length;//);
+                }
+            //}); 
+           
             //}
             taskBar.ProgressState = TaskbarItemProgressState.None;
             mainWindow.LoadingSpinner = false;

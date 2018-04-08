@@ -228,6 +228,10 @@ namespace EasyMuisc
         /// 刷新列表
         /// </summary>
         public void ResetItemsSource() => lvw.ItemsSource = musicDatas;
+        public void Refresh()
+        {
+
+        }
         /// <summary>
         /// 双击列表项事件
         /// </summary>

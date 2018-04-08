@@ -20,6 +20,7 @@ using static EasyMuisc.MusicHelper;
 using static WpfControls.Dialog.DialogHelper;
 using System.Collections.ObjectModel;
 using WpfControls.Dialog;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace EasyMuisc
 {
@@ -115,7 +116,7 @@ namespace EasyMuisc
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void WindowDropEventHandler(object sender, DragEventArgs e)
+        private async void WindowDropEventHandler(object sender, DragEventArgs e)
         {
 
 
@@ -130,7 +131,7 @@ namespace EasyMuisc
                 string extension = new FileInfo(files[0]).Extension;
                 if (supportExtension.Contains(extension))
                 {
-                    AddMusic(files[0]);
+                  await  AddMusic(files[0]);
                     if (MusicCount > currentCount)
                     {
                         PlayNew(currentCount);
@@ -212,17 +213,22 @@ namespace EasyMuisc
             MenuItem menuOpenFolder = new MenuItem() { Header = "文件夹" };
             menuOpenFolder.Click += (p1, p2) =>
             {
-                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog()
+                CommonOpenFileDialog fbd = new CommonOpenFileDialog()
                 {
-                    Description = "请选择包含音乐文件的文件夹。"
+                    Title = "请选择包含音乐文件的文件夹",
+                    IsFolderPicker=true,
+                    Multiselect=true,
                 };
-                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (fbd.ShowDialog() ==CommonFileDialogResult.Ok)
                 {
                     List<string> musics = new List<string>();
 
-                    foreach (var i in EnumerateFiles(fbd.SelectedPath, supportExtensionWithSplit, SearchOption.TopDirectoryOnly))
+                    foreach (var folderName in fbd.FileNames)
                     {
-                        musics.Add(i);
+                        foreach (var i in EnumerateFiles(folderName, supportExtensionWithSplit, SearchOption.TopDirectoryOnly))
+                        {
+                            musics.Add(i);
+                        }
                     }
 
                     if (musics.Count >= 1)
@@ -235,17 +241,40 @@ namespace EasyMuisc
             MenuItem menuOpenAllFolder = new MenuItem() { Header = "文件夹及子文件夹" };
             menuOpenAllFolder.Click += (p1, p2) =>
             {
-                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog()
+                //System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog()
+                //{
+                //    Description = "请选择包含音乐文件的文件夹。",
+                //};
+                //if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                //{
+                //    List<string> musics = new List<string>();
+
+                //    foreach (var i in EnumerateFiles(fbd.SelectedPath, supportExtensionWithSplit, SearchOption.AllDirectories))
+                //    {
+                //        musics.Add(i);
+                //    }
+
+                //    if (musics.Count >= 1)
+                //    {
+                //        AddMusic(musics.ToArray());
+                //    }
+                //}
+                CommonOpenFileDialog fbd = new CommonOpenFileDialog()
                 {
-                    Description = "请选择包含音乐文件的文件夹。",
+                    Title = "请选择包含音乐文件的文件夹",
+                    IsFolderPicker = true,
+                    Multiselect = true,
                 };
-                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (fbd.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     List<string> musics = new List<string>();
 
-                    foreach (var i in EnumerateFiles(fbd.SelectedPath, supportExtensionWithSplit, SearchOption.AllDirectories))
+                    foreach (var folderName in fbd.FileNames)
                     {
-                        musics.Add(i);
+                        foreach (var i in EnumerateFiles(folderName, supportExtensionWithSplit, SearchOption.AllDirectories))
+                        {
+                            musics.Add(i);
+                        }
                     }
 
                     if (musics.Count >= 1)
@@ -618,9 +647,7 @@ namespace EasyMuisc
             MenuItem menuFloat = new MenuItem() { Header = (set.ShowFloatLyric ? "关闭" : "打开") + "悬浮歌词" };
             menuFloat.PreviewMouseLeftButtonUp += (p1, p2) =>
             {
-                set.ShowFloatLyric = !set.ShowFloatLyric;
-                floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
-                floatLyric.Update(currentLrcIndex);
+                OpenOrCloseFloatLrc();
                 menu.IsOpen = false;
             };
 
@@ -734,6 +761,14 @@ namespace EasyMuisc
 
             menu.Items.Add(menuOK);
         }
+
+        private void OpenOrCloseFloatLrc()
+        {
+            set.ShowFloatLyric = !set.ShowFloatLyric;
+            floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+            floatLyric.Update(currentLrcIndex);
+        }
+
         /// <summary>
         /// 保存歌词
         /// </summary>

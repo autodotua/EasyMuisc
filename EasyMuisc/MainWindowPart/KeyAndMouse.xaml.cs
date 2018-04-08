@@ -157,7 +157,24 @@ namespace EasyMuisc
             catch (Exception ex)
             {
                 error += "Ctrl /（播放暂停）、";
-
+            }
+            try
+            {
+                HotKey playAndPause = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.Oemcomma);
+                playAndPause.OnHotKey += () => BtnListSwitcherClickEventHandler(null, null);
+            }
+            catch (Exception ex)
+            {
+                error += "Ctrl ,（收放列表）、";
+            }
+            try
+            {
+                HotKey playAndPause = new HotKey(this, HotKey.KeyFlags.MOD_CONTROL, System.Windows.Forms.Keys.OemPeriod);
+                playAndPause.OnHotKey += () => OpenOrCloseFloatLrc();
+            }
+            catch (Exception ex)
+            {
+                error += "Ctrl .（开关悬浮歌词）、";
             }
             if (error != "")
             {
