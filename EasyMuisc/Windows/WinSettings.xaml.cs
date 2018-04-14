@@ -42,19 +42,19 @@ namespace EasyMuisc.Windows
             //        chkStackPanel.IsChecked = true;
             //        return;
             //}
-            switch (set.TrayMode)
-            {
-                case 1:
-                    chkCloseBtnToTray.IsChecked = true;
-                    break;
-                case 2:
-                    chkMinimunBtnToTray.IsChecked = true;
-                    break;
-                case 3:
-                    chkTrayBtnToTray.IsChecked = true;
-                    break;
-            }
-
+            //switch (set.TrayMode)
+            //{
+            //    case 1:
+            //        chkCloseBtnToTray.IsChecked = true;
+            //        break;
+            //    case 2:
+            //        chkMinimunBtnToTray.IsChecked = true;
+            //        break;
+            //    case 3:
+            //        chkTrayBtnToTray.IsChecked = true;
+            //        break;
+            //}
+            cbbTrayMode.SelectedIndex = set.TrayMode;
             //foreach (var i in mainWindow.musicList.stkMusiList.Children)
             //{
             //    if(i is UserControls.ToggleButton)
@@ -117,7 +117,7 @@ namespace EasyMuisc.Windows
             set.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
             set.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
             set.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
-           // set.UseListBoxLrcInsteadOfStackPanel = (bool)chkListBoxLrc.IsChecked;
+            // set.UseListBoxLrcInsteadOfStackPanel = (bool)chkListBoxLrc.IsChecked;
             set.MusicSettings = chkMusicSettings.IsChecked.Value;
             if (fps != set.AnimationFps)
             {
@@ -126,20 +126,28 @@ namespace EasyMuisc.Windows
             }
             set.UpdateSpeed = speed;
             set.LrcDefautOffset = offset;
-            set.TrayMode = chkCloseBtnToTray.IsChecked.Value ? 1 : (chkMinimunBtnToTray.IsChecked.Value ? 2 : 3);
-
+            //set.TrayMode = chkCloseBtnToTray.IsChecked.Value ? 1 : (chkMinimunBtnToTray.IsChecked.Value ? 2 : 3);
+            if(cbbTrayMode.SelectedIndex ==0 && cbbTrayMode.SelectedIndex!=set.TrayMode)
+            {
+                trayIcon.Visible = false;
+            }
+            else if (cbbTrayMode.SelectedIndex !=0 &&set.TrayMode==0)
+            {
+                trayIcon.Visible = true;
+            }
+            set.TrayMode = cbbTrayMode.SelectedIndex;
             //foreach (var i in stkMusicList.Children)
             //{
             //    if(i is RadioButton && (i as RadioButton).IsChecked.Value)
             //    {
             //        set.DefautMusicList = (i as RadioButton).Content as string;
-                    set.Save();
-                    Close();
+            set.Save();
+            Close();
             //        return;
             //    }
             //}
             //ShowWarn("还未选择默认歌单！");
-            
+
 
         }
 
@@ -196,7 +204,7 @@ namespace EasyMuisc.Windows
                         }
                         else
                         {
-                            failedSettings.AppendLine(name + ": 格式不支持" );
+                            failedSettings.AppendLine(name + ": 格式不支持");
                         }
                     }
                     catch (Exception ex)

@@ -336,7 +336,7 @@ namespace EasyMuisc
                 Width = set.FloatLyricsWidth,
             };
 
-            Tray();
+            InitializeTray();
 
         }
         /// <summary>
@@ -389,7 +389,10 @@ namespace EasyMuisc
 
             RegistGolbalHotKey();
      
-
+            if(set.TrayMode==0)
+            {
+                trayIcon.Visible = false;
+            }
 
 
             if (path == null)
@@ -522,7 +525,7 @@ namespace EasyMuisc
         /// <summary>
         /// 托盘图标
         /// </summary>
-        private void Tray()
+        private void InitializeTray()
         {
             trayIcon = new System.Windows.Forms.NotifyIcon
             {

@@ -4,9 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMuisc.Windows"
+                xmlns:flat="clr-namespace:WpfControls.FlatStyle;assembly=WpfControls"
+
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
+        
         Title="设置" SizeToContent="WidthAndHeight" >
     <Window.Resources>
         <Style TargetType="Button">
@@ -45,13 +48,13 @@
 
     </Window.Resources>
     <StackPanel Margin="4">
-        <CheckBox x:Name="chkOffset" Content="通过Offset标签而不是改变全部时间来保存偏移的Lrc歌词"/>
+        <flat:CheckBox x:Name="chkOffset" Content="通过Offset标签而不是改变全部时间来保存偏移的Lrc歌词"/>
         <TextBlock FontSize="5"/>
-        <CheckBox x:Name="chkPreferMusicInfo" Content="保存歌词时优先采用歌曲信息而非原歌词信息"/>
+        <flat:CheckBox x:Name="chkPreferMusicInfo" Content="保存歌词时优先采用歌曲信息而非原歌词信息"/>
         <TextBlock FontSize="5"/>
-        <CheckBox x:Name="chkLrcAnimation" Content="歌词动画" />
+        <flat:CheckBox x:Name="chkLrcAnimation" Content="歌词动画" />
         <TextBlock FontSize="5"/>
-        <CheckBox x:Name="chkMusicSettings" Content="音乐设置对所有歌曲生效" />
+        <flat:CheckBox x:Name="chkMusicSettings" Content="音乐设置对所有歌曲生效" />
         <TextBlock FontSize="5"/>
         <!--<StackPanel Orientation="Horizontal">
             <TextBlock Text="歌词界面显示类型：   "/>
@@ -60,25 +63,31 @@
         </StackPanel>
         <TextBlock FontSize="5"/>-->
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="最小化到托盘图标方式：     "/>
-            <RadioButton x:Name="chkCloseBtnToTray" Content="关闭按钮         "/>
+            <TextBlock Text="最小化到托盘图标方式：" Margin="0,0,8,0" VerticalAlignment="Center"/>
+            <!--<RadioButton x:Name="chkCloseBtnToTray" Content="关闭按钮         "/>
             <RadioButton x:Name="chkMinimunBtnToTray" Content="最小化按钮         "/>
-            <RadioButton x:Name="chkTrayBtnToTray" Content="仅托盘图标按钮"/>
+            <RadioButton x:Name="chkTrayBtnToTray" Content="仅托盘图标按钮"/>-->
+            <flat:UneditableComboBox x:Name="cbbTrayMode">
+                <ComboBoxItem>不显示托盘图标</ComboBoxItem>
+                <ComboBoxItem>点击关闭按钮最小化到托盘图标</ComboBoxItem>
+                <ComboBoxItem>点击最小化按钮最小化到托盘图标</ComboBoxItem>
+                <ComboBoxItem>仅点击托盘图标最小化到托盘图标</ComboBoxItem>
+            </flat:UneditableComboBox>
         </StackPanel>
         <TextBlock FontSize="5"/>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="刷新检测速度（n/s）：   " />
-            <TextBox x:Name="txtUpdateSpeed" BorderThickness="0, 0,0,1" MinWidth="36"  />
+            <flat:TextBox x:Name="txtUpdateSpeed"  MinWidth="36"  />
         </StackPanel>
         <TextBlock FontSize="5"/>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="动画帧率（frame/s）：   " />
-            <TextBox x:Name="txtAnimationFps" BorderThickness="0, 0,0,1" MinWidth="36"  />
+            <flat:TextBox x:Name="txtAnimationFps" MinWidth="36"  />
         </StackPanel>
         <TextBlock FontSize="5"/>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="歌词默认偏移（s）：     " />
-            <TextBox x:Name="txtOffset" BorderThickness="0, 0,0,1" MinWidth="36" />
+            <flat:TextBox x:Name="txtOffset"  MinWidth="36" />
         </StackPanel>
         <TextBlock FontSize="5"/>
         <!--<StackPanel Orientation="Horizontal">
