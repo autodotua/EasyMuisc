@@ -6,7 +6,13 @@
         xmlns:local="clr-namespace:EasyMuisc.Windows"
         mc:Ignorable="d"
         Closing="WinAlbumPicClosingEventHandler"
-        Title="专辑图" SizeToContent="Height" Width="500" ResizeMode="NoResize"  WindowStyle="None" Loaded="WindowLoadedEventHandler" KeyDown="WinAlbumPicKeyDownEventHandler">
+        Title="专辑图" 
+        SizeToContent="Height" 
+        Width="500" 
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Loaded="WindowLoadedEventHandler" 
+        KeyDown="WinAlbumPicKeyDownEventHandler">
     <Window.Resources>
         <!--ContextMenu-->
         <Style TargetType="{x:Type ContextMenu}">

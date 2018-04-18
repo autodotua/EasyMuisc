@@ -98,7 +98,7 @@ namespace EasyMuisc
             };
             menuSettings.Click += (p1, p2) =>
             {
-                new WinSettings().ShowDialog();
+                new WinSettings() { Owner = this }.ShowDialog();
             };
             MenuItem menuHelp = new MenuItem()
             {
@@ -106,7 +106,7 @@ namespace EasyMuisc
             };
             menuHelp.Click += (p1, p2) =>
             {
-                new WinHelp().ShowDialog();
+                new WinHelp() { Owner = this }.ShowDialog();
             };
             MenuItem menuAbout = new MenuItem()
             {
@@ -114,7 +114,7 @@ namespace EasyMuisc
             };
             menuAbout.Click += (p1, p2) =>
             {
-                new WinAbout().ShowDialog();
+                new WinAbout() { Owner = this }.ShowDialog();
             };
             mainContextMenu = new ContextMenu()
             {

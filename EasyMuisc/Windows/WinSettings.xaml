@@ -7,7 +7,7 @@
                 xmlns:flat="clr-namespace:WpfControls.FlatStyle;assembly=WpfControls"
 
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         
         Title="设置" SizeToContent="WidthAndHeight" >

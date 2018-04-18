@@ -57,13 +57,13 @@ namespace EasyMuisc
             {
                 aniMargin.To = new Thickness(0, 0, 0, 0);
                 aniOpacity.To = 1;
-               // set.ShrinkMusicListManually = false;
+                // set.ShrinkMusicListManually = false;
             }
             else
             {
                 aniMargin.To = new Thickness(-lvwMusic.ActualWidth, 0, 0, 0);
                 aniOpacity.To = 0;
-               // set.ShrinkMusicListManually = true;
+                // set.ShrinkMusicListManually = true;
             }
             story.Begin(grdList);
 
@@ -76,7 +76,7 @@ namespace EasyMuisc
         private void WindowSizeChangedEventHandler(object sender, SizeChangedEventArgs e)
         {
             lbxLrc.RefreshPlaceholder(grdLrcArea.ActualHeight / 2, set.HighlightLrcFontSize);
-            
+
             //if (!set.AutoFurl || !set.ShowLrc || set.ShrinkMusicListManually)
             //{
             //    return;
@@ -131,7 +131,7 @@ namespace EasyMuisc
                 string extension = new FileInfo(files[0]).Extension;
                 if (supportExtension.Contains(extension))
                 {
-                  await  AddMusic(files[0]);
+                    await AddMusic(files[0]);
                     if (MusicCount > currentCount)
                     {
                         PlayNew(currentCount);
@@ -170,7 +170,7 @@ namespace EasyMuisc
             }
         }
         #endregion
-        
+
         #region 列表与歌词选项
         /// <summary>
         /// 单击列表选项事件
@@ -216,10 +216,10 @@ namespace EasyMuisc
                 CommonOpenFileDialog fbd = new CommonOpenFileDialog()
                 {
                     Title = "请选择包含音乐文件的文件夹",
-                    IsFolderPicker=true,
-                    Multiselect=true,
+                    IsFolderPicker = true,
+                    Multiselect = true,
                 };
-                if (fbd.ShowDialog() ==CommonFileDialogResult.Ok)
+                if (fbd.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     List<string> musics = new List<string>();
 
@@ -284,7 +284,7 @@ namespace EasyMuisc
                 }
             };
 
-            MenuItem menuAdd = new MenuItem() {Header="添加到歌单", Items = { menuOpenFile, menuOpenFolder, menuOpenAllFolder } };
+            MenuItem menuAdd = new MenuItem() { Header = "添加到歌单", Items = { menuOpenFile, menuOpenFolder, menuOpenAllFolder } };
             #endregion
             #region 删除
             MenuItem menuDeleteSelected = new MenuItem() { Header = "删除选中项" };
@@ -325,7 +325,7 @@ namespace EasyMuisc
                 }
             };
             MenuItem menuDelete = new MenuItem() { Header = "删除" };
-            if(lvwMusic.SelectedIndex!=-1)
+            if (lvwMusic.SelectedIndex != -1)
             {
                 menuDelete.Items.Add(menuDeleteSelected);
                 menuDelete.Items.Add(menuClearExceptCurrent);
@@ -354,11 +354,11 @@ namespace EasyMuisc
                     + music.Length + l
                     + music.Singer + l
                     + music.Album;
-                    WinMusicInfo winMusicInfo = new WinMusicInfo() { Title = fileInfo.Name + "-音乐信息" };
+                    WinMusicInfo winMusicInfo = new WinMusicInfo() { Owner=this, Title = fileInfo.Name + "-音乐信息" };
                     winMusicInfo.txt.Text = info;
                     winMusicInfo.ShowDialog();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ShowException("提取音乐信息失败", ex);
                 }
@@ -372,7 +372,7 @@ namespace EasyMuisc
                 }
                 AddHistory(lvwMusic.SelectedItem);
             };
-           
+
 
 
             MenuItem menuImport = new MenuItem() { Header = "导入歌单" };
@@ -410,7 +410,7 @@ namespace EasyMuisc
                       //}
                       try
                       {
-                          ReadFileToList(dialog.FileName,false);
+                          ReadFileToList(dialog.FileName, false);
                           lvwMusic.ResetItemsSource();
                       }
                       catch (Exception ex)
@@ -472,7 +472,7 @@ namespace EasyMuisc
             //menu.Items.Add(menuOpenFolder);
             //menu.Items.Add(menuOpenAllFolder);
             menu.Items.Add(menuAdd);
-            if(MusicCount>0)
+            if (MusicCount > 0)
             {
                 menu.Items.Add(menuDelete);
             }
@@ -511,7 +511,7 @@ namespace EasyMuisc
             //{
             //    menu.Items.Add(menuShowLrc);
             //}
-            if(!set.ShowLrc)
+            if (!set.ShowLrc)
             {
                 menu.Items.Add(menuShowLrc);
             }
@@ -550,7 +550,7 @@ namespace EasyMuisc
                     AddMusic(paths);
                 }
             }
-           else
+            else
             {
                 if (ShowMessage($"检测完成，发现{notExists.Count}个不存在的文件，是否删除并刷新？", DialogType.Information, new string[] { "是", "否" }) == 1)
                 {
@@ -643,6 +643,20 @@ namespace EasyMuisc
             MenuItem menuReload = new MenuItem() { Header = "重载歌词" };
             menuReload.Click += (p1, p2) => InitialiazeLrc();
 
+            MenuItem menuEdit = new MenuItem() { Header = "编辑歌词" };
+            menuEdit.Click += (p1, p2) =>
+            {
+                FileInfo file = new FileInfo(path);
+                if (lbxLrc.Visibility == Visibility.Visible)
+                {
+                    new WinLrcEdit(file.FullName.TrimEnd(file.Extension.ToCharArray()) + ".lrc") { Owner = this }.Show();
+                }
+                else
+                {
+                    new WinLrcEdit(file.FullName.TrimEnd(file.Extension.ToCharArray()) + ".txt") { Owner = this }.Show();
+                }
+            };
+
 
             MenuItem menuFloat = new MenuItem() { Header = (set.ShowFloatLyric ? "关闭" : "打开") + "悬浮歌词" };
             menuFloat.PreviewMouseLeftButtonUp += (p1, p2) =>
@@ -709,16 +723,17 @@ namespace EasyMuisc
 
 
 
-          
+
 
 
             menu.Items.Add(menuShowLrc);
             menu.Items.Add(menuReload);
             menu.Items.Add(menuFloat);
             //if (lrcContent.Count != 0 && (lbxLrc.Visibility == Visibility.Visible || stkLrc.Visibility == Visibility.Visible))
-            if (lrcContent.Count != 0 && lbxLrc.Visibility == Visibility.Visible )
+            if (lrcContent.Count != 0 && lbxLrc.Visibility == Visibility.Visible)
             {
                 menu.Items.Add(NewSeparatorLine);
+                menu.Items.Add(menuEdit);
                 menu.Items.Add(menuCopyLrc);
                 menu.Items.Add(menuSave);
                 menu.Items.Add(menuSaveAs);
@@ -761,7 +776,9 @@ namespace EasyMuisc
 
             menu.Items.Add(menuOK);
         }
-
+        /// <summary>
+        /// 打开关闭悬浮歌词
+        /// </summary>
         private void OpenOrCloseFloatLrc()
         {
             set.ShowFloatLyric = !set.ShowFloatLyric;
@@ -853,7 +870,7 @@ namespace EasyMuisc
                     }
                     catch (Exception ex)
                     {
-                        ShowException("无法保存文件" , ex);
+                        ShowException("无法保存文件", ex);
                     }
                 }
             }
@@ -890,7 +907,7 @@ namespace EasyMuisc
         ///// </summary>
         //private void ShowFloatLyricsMenu()
         //{
-         
+
 
 
         //    StackPanel menuNormalFontSizeSetting = new StackPanel()
@@ -953,7 +970,7 @@ namespace EasyMuisc
         public void AfterClearList()
         {
             SetCurrent(-1);
-           // stkLrc.Visibility = Visibility.Hidden;
+            // stkLrc.Visibility = Visibility.Hidden;
             txtLrc.Visibility = Visibility.Hidden;
             lbxLrc.Visibility = Visibility.Hidden;
             if (set.ShowFloatLyric)

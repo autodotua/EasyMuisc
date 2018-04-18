@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMuisc.Windows"
         mc:Ignorable="d"
-        Title="音乐信息"  SizeToContent="WidthAndHeight"  ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="音乐信息" 
+        SizeToContent="WidthAndHeight"  
+        ResizeMode="NoResize" 
+        WindowStartupLocation="CenterOwner">
 
     <Grid Margin="4">
         <Grid.ColumnDefinitions>

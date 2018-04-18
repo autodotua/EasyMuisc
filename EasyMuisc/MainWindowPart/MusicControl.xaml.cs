@@ -76,7 +76,7 @@ namespace EasyMuisc
         /// 初始化歌词
         /// </summary>
         /// <param name="musicLength"></param>
-        private void InitialiazeLrc()
+        public void InitialiazeLrc()
         {
             lrcLineSumToIndex.Clear();
             lrcTime.Clear();//清空歌词时间

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMuisc.Windows"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         Title="帮助" SizeToContent="WidthAndHeight">
     <RichTextBox x:Name="rtx" Margin="4" IsReadOnly="True" BorderThickness="0" Width="400"/>
