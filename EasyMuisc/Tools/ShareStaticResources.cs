@@ -80,5 +80,6 @@ namespace EasyMuisc
        public static string programDirectory = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).DirectoryName;
 
         public static MainWindow mainWindow;
+        
     }
 }

@@ -55,7 +55,7 @@ namespace EasyMuisc
         /// <summary>
         /// 
         /// </summary>
-        FloatLyrics floatLyric;
+        public FloatLyrics floatLyric;
         /// <summary>
         /// 音乐文件路径
         /// </summary>
@@ -517,7 +517,7 @@ namespace EasyMuisc
             Hide();
             pauseTimer.Start();
         }
-        private void ShowTrayMessage(string message,int ms=2000)
+        public void ShowTrayMessage(string message,int ms=2000)
         {
             trayIcon.BalloonTipText = message;
             trayIcon.ShowBalloonTip(ms);

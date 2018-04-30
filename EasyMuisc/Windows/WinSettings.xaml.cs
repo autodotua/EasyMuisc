@@ -22,9 +22,11 @@ namespace EasyMuisc.Windows
     /// </summary>
     public partial class WinSettings : Window
     {
-        public WinSettings()
+        public WinSettings(int pageIndex = 0)
         {
             InitializeComponent();
+            tab.SelectedIndex = pageIndex;
+
             chkOffset.IsChecked = set.SaveLrcOffsetByTag;
             chkPreferMusicInfo.IsChecked = set.PreferMusicInfo;
             chkLrcAnimation.IsChecked = set.LrcAnimation;
@@ -32,122 +34,154 @@ namespace EasyMuisc.Windows
             txtOffset.Text = set.LrcDefautOffset.ToString();
             txtUpdateSpeed.Text = set.UpdateSpeed.ToString();
             chkMusicSettings.IsChecked = set.MusicSettings;
-            //txtSampleRate.Text = set.SampleRate.ToString();
-            //switch (set.UseListBoxLrcInsteadOfStackPanel)
-            //{
-            //    case true:
-            //        chkListBoxLrc.IsChecked = true;
-            //        break;
-            //    case false:
-            //        chkStackPanel.IsChecked = true;
-            //        return;
-            //}
-            //switch (set.TrayMode)
-            //{
-            //    case 1:
-            //        chkCloseBtnToTray.IsChecked = true;
-            //        break;
-            //    case 2:
-            //        chkMinimunBtnToTray.IsChecked = true;
-            //        break;
-            //    case 3:
-            //        chkTrayBtnToTray.IsChecked = true;
-            //        break;
-            //}
             cbbTrayMode.SelectedIndex = set.TrayMode;
-            //foreach (var i in mainWindow.musicList.stkMusiList.Children)
-            //{
-            //    if(i is UserControls.ToggleButton)
-            //    {
-            //        var btn = i as UserControls.ToggleButton;
-            //        RadioButton chk = new RadioButton()
-            //        {
-            //            Content=btn.Text,
-            //            IsChecked=btn.Text==set.DefautMusicList,
-            //            Margin=new Thickness(0,0,0,8),
-            //        };
-            //        stkMusicList.Children.Add(chk);
-            //    }
-            //}
+            txtCurrentFontSize.Text = set.HighlightLrcFontSize.ToString();
+            txtNormalFontSize.Text = set.NormalLrcFontSize.ToString();
+            txtTextFontSize.Text = set.TextLrcFontSize.ToString();
+            txtFloatCurrentFontSize.Text = set.FloatLyricsHighlightFontSize.ToString();
+            txtFloatNormalFontSize.Text = set.FloatLyricsNormalFontSize.ToString();
+            cbbFloatFontEffect.SelectedIndex = set.FloatLyricsFontEffect;
+            floatFontColor.SetColor(set.FloatLyricsFontColor);
+            floatBorderColor.SetColor(set.FloatLyricsBorderColor);
+            cbbFloatFontEffect_SelectionChanged(null, null);
+            txtFloatBlur.Text = set.FloatLyricsBlurRadius.ToString();
+            txtFloatBorder.Text = set.FloatLyricsThickness.ToString();
+            chkFloatBold.IsChecked = set.FloatLyricsFontBold;
+            if(!cbbFloatFont.SetSelectedFontByString(set.FloatLyricsFont))
+            {
+                mainWindow.ShowTrayMessage("字体文件设置异常，请重新设置");
+            }
         }
 
         private void ButtonClickEventHandler(object sender, RoutedEventArgs e)
         {
+            try
+            {
+
+                int? speed = txtUpdateSpeed.IntNumber;
+                if (!speed.HasValue || speed <= 0)
+                {
+                    ShowError("输入的速度值不是正数！");
+                    return;
+                }
+
+                if (speed > 60)
+                {
+                    ShowError("输入的速度值过大！");
+                    return;
+
+                }
+
+                int? fps = txtAnimationFps.IntNumber;
+                if (!fps.HasValue || fps <= 0)
+                {
+                    ShowError("输入的FPS不是正数！");
+                    return;
+                }
+                if (fps > 240)
+                {
+                    ShowError("输入的速度值过大！");
+                    return;
+
+                }
+
+                double? offset = txtOffset.DoubleNumber;
+                if (!offset.HasValue)
+                {
+                    ShowError("输入的偏移量不是数字！");
+                    return;
+                }
+
+                double? current = txtCurrentFontSize.DoubleNumber;
+                if (!current.HasValue)
+                {
+                    ShowError("输入的主界面当前歌词字体大小不是数字！");
+                    return;
+                }
+
+                double? normal = txtNormalFontSize.DoubleNumber;
+                if (!normal.HasValue)
+                {
+                    ShowError("输入的主界面非当前歌词字体大小不是数字！");
+                    return;
+                }
+                double? text = txtTextFontSize.DoubleNumber;
+                if (!text.HasValue)
+                {
+                    ShowError("输入的主界面文本歌词字体大小不是数字！");
+                    return;
+                }
+                double? floatCurrent = txtFloatCurrentFontSize.DoubleNumber;
+                if (!floatCurrent.HasValue)
+                {
+                    ShowError("输入的悬浮歌词当前歌词字体大小不是数字！");
+                    return;
+                }
+
+                double? floatNormal = txtFloatNormalFontSize.DoubleNumber;
+                if (!floatNormal.HasValue)
+                {
+                    ShowError("输入的悬浮歌词非当前歌词字体大小不是数字！");
+                    return;
+                }
+                double? floatBorder = txtFloatBorder.DoubleNumber;
+                if (!floatBorder.HasValue)
+                {
+                    ShowError("输入的悬浮歌词边框粗细不是数字！");
+                    return;
+                }
+
+                double? floatBlur= txtFloatBlur.DoubleNumber;
+                if (!floatBlur.HasValue)
+                {
+                    ShowError("输入的悬浮歌词阴影深度不是数字！");
+                    return;
+                }
 
 
-            if (!double.TryParse(txtUpdateSpeed.Text, out double speed) || speed <= 0)
-            {
-                ShowError("输入的速度值不是正数！");
-                return;
+                set.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
+                set.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
+                set.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
+                set.MusicSettings = chkMusicSettings.IsChecked.Value;
+                if (fps != set.AnimationFps)
+                {
+                    ShowPrompt("动画帧率将在下次启动后生效");
+                    set.AnimationFps = fps.Value;
+                }
+                set.UpdateSpeed = speed.Value;
+                set.LrcDefautOffset = offset.Value;
+                set.NormalLrcFontSize = normal.Value;
+                set.HighlightLrcFontSize = current.Value;
+                set.FloatLyricsHighlightFontSize = floatCurrent.Value;
+                set.FloatLyricsNormalFontSize = floatNormal.Value;
+                if (cbbTrayMode.SelectedIndex == 0 && cbbTrayMode.SelectedIndex != set.TrayMode)
+                {
+                    trayIcon.Visible = false;
+                }
+                else if (cbbTrayMode.SelectedIndex != 0 && set.TrayMode == 0)
+                {
+                    trayIcon.Visible = true;
+                }
+                set.FloatLyricsFontEffect = cbbFloatFontEffect.SelectedIndex;
+                set.FloatLyricsBorderColor = floatBorderColor.ColorBrush.ToString();
+                set.FloatLyricsFontColor = floatFontColor.ColorBrush.ToString();
+                set.TrayMode = cbbTrayMode.SelectedIndex;
+                set.FloatLyricsThickness = floatBorder.Value;
+                set.FloatLyricsBlurRadius = floatBlur.Value;
+                set.FloatLyricsFontBold = chkFloatBold.IsChecked.Value;
+                set.FloatLyricsFont = cbbFloatFont.GetPreferChineseFontName();
+                mainWindow.floatLyric.SetFontEffect();
+                mainWindow.InitialiazeLrc();
+                set.Save();
             }
-            //if (!int.TryParse(txtSampleRate.Text, out int sampleRate) || sampleRate <= 0)
-            //{
-            //    ShowAlert("输入的采样率不是正数！");
-            //    return;
-            //}
-            if (speed > 60)
+            catch (Exception ex)
             {
-                ShowError("输入的速度值过大！");
-                return;
-
+                ShowException("保存设置失败", ex, this);
             }
-            if (!int.TryParse(txtAnimationFps.Text, out int fps) || speed <= 0)
+            finally
             {
-                ShowError("输入的FPS不是正数！");
-                return;
+                Close();
             }
-            if (fps > 240)
-            {
-                ShowError("输入的速度值过大！");
-                return;
-
-            }
-            if (!double.TryParse(txtOffset.Text, out double offset))
-            {
-                ShowError("输入的偏移量不是数字！");
-                return;
-            }
-            //Bass.BASS_Free();
-            //if(!Bass.BASS_Init(-1,sampleRate,BASSInit.BASS_DEVICE_DEFAULT,windowHandle))
-            //{
-            //    ShowAlert("采样率不支持！");
-            //    return;
-            //}
-
-            set.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
-            set.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
-            set.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
-            // set.UseListBoxLrcInsteadOfStackPanel = (bool)chkListBoxLrc.IsChecked;
-            set.MusicSettings = chkMusicSettings.IsChecked.Value;
-            if (fps != set.AnimationFps)
-            {
-                MessageBox.Show("动画帧率将在下次启动后生效", "提示", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                set.AnimationFps = fps;
-            }
-            set.UpdateSpeed = speed;
-            set.LrcDefautOffset = offset;
-            //set.TrayMode = chkCloseBtnToTray.IsChecked.Value ? 1 : (chkMinimunBtnToTray.IsChecked.Value ? 2 : 3);
-            if(cbbTrayMode.SelectedIndex ==0 && cbbTrayMode.SelectedIndex!=set.TrayMode)
-            {
-                trayIcon.Visible = false;
-            }
-            else if (cbbTrayMode.SelectedIndex !=0 &&set.TrayMode==0)
-            {
-                trayIcon.Visible = true;
-            }
-            set.TrayMode = cbbTrayMode.SelectedIndex;
-            //foreach (var i in stkMusicList.Children)
-            //{
-            //    if(i is RadioButton && (i as RadioButton).IsChecked.Value)
-            //    {
-            //        set.DefautMusicList = (i as RadioButton).Content as string;
-            set.Save();
-            Close();
-            //        return;
-            //    }
-            //}
-            //ShowWarn("还未选择默认歌单！");
-
 
         }
 
@@ -227,6 +261,20 @@ namespace EasyMuisc.Windows
             {
                 ShowException("导入失败", ex);
                 set.Reload();
+            }
+        }
+
+        private void cbbFloatFontEffect_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbbFloatFontEffect.SelectedIndex == 0)
+            {
+                stkBorder.Visibility = Visibility.Visible;
+                stkBlur.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                stkBorder.Visibility = Visibility.Collapsed;
+                stkBlur.Visibility = Visibility.Visible;
             }
         }
     }

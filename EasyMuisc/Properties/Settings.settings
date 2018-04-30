@@ -57,7 +57,7 @@
       <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="BackgroundColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#FFFFFF</Value>
+      <Value Profile="(Default)">#FFFFFFFF</Value>
     </Setting>
     <Setting Name="LastMusic" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -103,6 +103,27 @@
     </Setting>
     <Setting Name="LastMusicList" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FloatLyricsFontEffect" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="FloatLyricsFontColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFFFF</Value>
+    </Setting>
+    <Setting Name="FloatLyricsThickness" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1.5</Value>
+    </Setting>
+    <Setting Name="FloatLyricsBlurRadius" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="FloatLyricsBorderColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FF000000</Value>
+    </Setting>
+    <Setting Name="FloatLyricsFontBold" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="FloatLyricsFont" Type="System.String" Scope="User">
+      <Value Profile="(Default)">微软雅黑</Value>
     </Setting>
   </Settings>
 </SettingsFile>

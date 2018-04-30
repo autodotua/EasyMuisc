@@ -12,7 +12,7 @@ namespace EasyMuisc.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -241,7 +241,7 @@ namespace EasyMuisc.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFFFF")]
         public string BackgroundColor {
             get {
                 return ((string)(this["BackgroundColor"]));
@@ -428,6 +428,90 @@ namespace EasyMuisc.Properties {
             }
             set {
                 this["LastMusicList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FloatLyricsFontEffect {
+            get {
+                return ((int)(this["FloatLyricsFontEffect"]));
+            }
+            set {
+                this["FloatLyricsFontEffect"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFFFF")]
+        public string FloatLyricsFontColor {
+            get {
+                return ((string)(this["FloatLyricsFontColor"]));
+            }
+            set {
+                this["FloatLyricsFontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1.5")]
+        public double FloatLyricsThickness {
+            get {
+                return ((double)(this["FloatLyricsThickness"]));
+            }
+            set {
+                this["FloatLyricsThickness"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public double FloatLyricsBlurRadius {
+            get {
+                return ((double)(this["FloatLyricsBlurRadius"]));
+            }
+            set {
+                this["FloatLyricsBlurRadius"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF000000")]
+        public string FloatLyricsBorderColor {
+            get {
+                return ((string)(this["FloatLyricsBorderColor"]));
+            }
+            set {
+                this["FloatLyricsBorderColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FloatLyricsFontBold {
+            get {
+                return ((bool)(this["FloatLyricsFontBold"]));
+            }
+            set {
+                this["FloatLyricsFontBold"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("微软雅黑")]
+        public string FloatLyricsFont {
+            get {
+                return ((string)(this["FloatLyricsFont"]));
+            }
+            set {
+                this["FloatLyricsFont"] = value;
             }
         }
     }

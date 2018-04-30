@@ -30,8 +30,8 @@ namespace EasyMuisc.Windows
         {
 
             InitializeComponent();
-            tbkLeft.TextAlignment = TextAlignment.Left;
-            tbkRight.TextAlignment = TextAlignment.Right;
+           // tbkLeft.TextAlignment = TextAlignment.Left;
+           // tbkRight.TextAlignment = TextAlignment.Right;
             WindowChrome.SetWindowChrome(this, new WindowChrome()
             {
                 CaptionHeight = 0,
@@ -234,5 +234,10 @@ namespace EasyMuisc.Windows
             GetTextBlock(0).Text = GetTextBlock(1).Text = "";
         }
 
+        public void SetFontEffect()
+        {
+            tbkLeft.SetEffect();
+            tbkRight.SetEffect();
+        }
     }
 }

@@ -4,13 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMuisc.Windows"
-                xmlns:flat="clr-namespace:WpfControls.FlatStyle;assembly=WpfControls"
+        xmlns:flat="clr-namespace:WpfControls.FlatStyle;assembly=WpfControls"
+        xmlns:text="clr-namespace:WpfControls.Text;assembly=WpfControls"
+        xmlns:picker="clr-namespace:WpfControls.Picker;assembly=WpfControls"
 
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         
-        Title="设置" SizeToContent="WidthAndHeight" >
+        Title="设置"
+        Height="360" Width="360" >
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Template">
@@ -46,60 +49,202 @@
             </Setter>
         </Style>
 
+
+        <Style  TargetType="{x:Type TabItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid>
+                            <!-- 主Border -->
+                            <Border x:Name="bd" Background="#EEEEEE" CornerRadius="1.5" BorderBrush="White" BorderThickness="4">
+                                <ContentPresenter ContentSource="Header" VerticalAlignment="Center" Margin="5,3"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="bd" Property="BorderThickness" Value="0" />
+                                <Setter TargetName="bd" Property="Margin" Value="0" />
+                                <Setter Property="Background" TargetName="bd" Value="#DDDDDD"/>
+                            </Trigger>
+                            <!--<Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" TargetName="bd" Value="{DynamicResource darker3}"/>
+                                </Trigger>-->
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="False"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="Background" TargetName="bd" Value="#CCCCCC"/>
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <!-- TabControl的样式 -->
+        <Style  TargetType="{x:Type TabControl}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabControl}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Padding="10">
+                                <TabPanel IsItemsHost="True" />
+                            </Border>
+                            <Border Grid.Row="1" Padding="10" BorderThickness="0">
+                                <ContentPresenter ContentSource="SelectedContent"   x:Name="PART_SelectedContentHost"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
-    <StackPanel Margin="4">
-        <flat:CheckBox x:Name="chkOffset" Content="通过Offset标签而不是改变全部时间来保存偏移的Lrc歌词"/>
-        <TextBlock FontSize="5"/>
-        <flat:CheckBox x:Name="chkPreferMusicInfo" Content="保存歌词时优先采用歌曲信息而非原歌词信息"/>
-        <TextBlock FontSize="5"/>
-        <flat:CheckBox x:Name="chkLrcAnimation" Content="歌词动画" />
-        <TextBlock FontSize="5"/>
-        <flat:CheckBox x:Name="chkMusicSettings" Content="音乐设置对所有歌曲生效" />
-        <TextBlock FontSize="5"/>
-        <!--<StackPanel Orientation="Horizontal">
-            <TextBlock Text="歌词界面显示类型：   "/>
-            <RadioButton x:Name="chkListBoxLrc" Content="ListBox歌词         "/>
-            <RadioButton x:Name="chkStackPanel" Content="StackPanel歌词"/>
-        </StackPanel>
-        <TextBlock FontSize="5"/>-->
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="最小化到托盘图标方式：" Margin="0,0,8,0" VerticalAlignment="Center"/>
-            <!--<RadioButton x:Name="chkCloseBtnToTray" Content="关闭按钮         "/>
-            <RadioButton x:Name="chkMinimunBtnToTray" Content="最小化按钮         "/>
-            <RadioButton x:Name="chkTrayBtnToTray" Content="仅托盘图标按钮"/>-->
-            <flat:UneditableComboBox x:Name="cbbTrayMode">
-                <ComboBoxItem>不显示托盘图标</ComboBoxItem>
-                <ComboBoxItem>点击关闭按钮最小化到托盘图标</ComboBoxItem>
-                <ComboBoxItem>点击最小化按钮最小化到托盘图标</ComboBoxItem>
-                <ComboBoxItem>仅点击托盘图标最小化到托盘图标</ComboBoxItem>
-            </flat:UneditableComboBox>
-        </StackPanel>
-        <TextBlock FontSize="5"/>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="刷新检测速度（n/s）：   " />
-            <flat:TextBox x:Name="txtUpdateSpeed"  MinWidth="36"  />
-        </StackPanel>
-        <TextBlock FontSize="5"/>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="动画帧率（frame/s）：   " />
-            <flat:TextBox x:Name="txtAnimationFps" MinWidth="36"  />
-        </StackPanel>
-        <TextBlock FontSize="5"/>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="歌词默认偏移（s）：     " />
-            <flat:TextBox x:Name="txtOffset"  MinWidth="36" />
-        </StackPanel>
-        <TextBlock FontSize="5"/>
-        <!--<StackPanel Orientation="Horizontal">
-            <TextBlock Text="采样率：     " />
-            <TextBox x:Name="txtSampleRate" BorderThickness="0, 0,0,1" MinWidth="36" />
-        </StackPanel>
-        <TextBlock FontSize="5"/>-->
-        <!--<StackPanel x:Name="stkMusicList" Orientation="Horizontal">
-            <TextBlock Text="默认歌单：     " />
-        </StackPanel>
-        <TextBlock FontSize="5"/>-->
-        <Grid>
+
+
+
+
+
+
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+        <TabControl x:Name="tab">
+            <TabItem Header="程序">
+                <StackPanel >
+                    <flat:CheckBox x:Name="chkOffset" Content="通过Offset标签而不是改变全部时间来保存偏移的Lrc歌词"/>
+                    <TextBlock FontSize="8"/>
+                    <flat:CheckBox x:Name="chkPreferMusicInfo" Content="保存歌词时优先采用歌曲信息而非原歌词信息"/>
+                    <TextBlock FontSize="8"/>
+                    <flat:CheckBox x:Name="chkMusicSettings" Content="音乐设置对所有歌曲生效" />
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="最小化到托盘图标方式：" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <flat:UneditableComboBox x:Name="cbbTrayMode">
+                            <ComboBoxItem>不显示托盘图标</ComboBoxItem>
+                            <ComboBoxItem>点击关闭按钮最小化到托盘图标</ComboBoxItem>
+                            <ComboBoxItem>点击最小化按钮最小化到托盘图标</ComboBoxItem>
+                            <ComboBoxItem>仅点击托盘图标最小化到托盘图标</ComboBoxItem>
+                        </flat:UneditableComboBox>
+                    </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="刷新检测速度（n/s）：   " />
+                        <text:NumberTextBox MatchMode="PositiveIntegerNumber" x:Name="txtUpdateSpeed"  MinWidth="36"  />
+                    </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="动画帧率（frame/s）：   " />
+                        <text:NumberTextBox MatchMode="PositiveIntegerNumber" x:Name="txtAnimationFps" MinWidth="36"  />
+                    </StackPanel>
+
+
+                </StackPanel>
+
+            </TabItem>
+
+            <TabItem Header="主界面歌词">
+                <StackPanel >
+                    <flat:CheckBox x:Name="chkLrcAnimation" Content="歌词动画" />
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="歌词默认偏移（s）：     " />
+                        <text:NumberTextBox MatchMode="All"  x:Name="txtOffset"  MinWidth="36" />
+                    </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="当前歌词字体大小：     " />
+                        <text:NumberTextBox MatchMode="PositiveNumber"  x:Name="txtCurrentFontSize"  MinWidth="36" />
+                    </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="非当前歌词字体大小：     " />
+                        <text:NumberTextBox MatchMode="PositiveNumber" x:Name="txtNormalFontSize"  MinWidth="36" />
+                    </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="文本歌词字体大小：     " />
+                        <text:NumberTextBox MatchMode="PositiveNumber" x:Name="txtTextFontSize"  MinWidth="36" />
+                    </StackPanel>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="悬浮歌词">
+                <StackPanel >
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="字体：     "  VerticalAlignment="Center"/>
+                        <picker:FontPicker x:Name="cbbFloatFont"/>
+                    </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="当前歌词字体大小：     " />
+                        <text:NumberTextBox MatchMode="PositiveNumber" x:Name="txtFloatCurrentFontSize"  MinWidth="36" />
+                    </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="非当前歌词字体大小：     " />
+                        <text:NumberTextBox MatchMode="PositiveNumber" x:Name="txtFloatNormalFontSize"  MinWidth="36" />
+                    </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="歌词字体效果：     " VerticalAlignment="Center" />
+                        <flat:UneditableComboBox x:Name="cbbFloatFontEffect" SelectionChanged="cbbFloatFontEffect_SelectionChanged">
+                            <ComboBoxItem >边框</ComboBoxItem>
+                            <ComboBoxItem>阴影</ComboBoxItem>
+                        </flat:UneditableComboBox>
+                    </StackPanel>
+
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="字体颜色：     " />
+                        <picker:ColorPickerTextBox x:Name="floatFontColor"/>
+
+                    </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="字体边框/阴影颜色：     " />
+                        <picker:ColorPickerTextBox x:Name="floatBorderColor"/>
+
+                    </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal" x:Name="stkBorder">
+                        <TextBlock Text="字体边框粗细：     " />
+                        <text:NumberTextBox MatchMode="PositiveNumber" x:Name="txtFloatBorder"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" x:Name="stkBlur">
+                        <TextBlock Text="字体阴影深度：     " />
+                        <text:NumberTextBox MatchMode="PositiveNumber"  x:Name="txtFloatBlur"/>
+                    </StackPanel>
+
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <flat:CheckBox x:Name="chkFloatBold" Content="粗体字：     " />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+
+        </TabControl>
+
+
+
+        <Grid Grid.Row="2" Margin="8,0,8,4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="4"/>
@@ -111,7 +256,6 @@
             <Button Content="导入" Grid.Column="2" Click="ButtonImportClickEventHandler"/>
 
             <Button Content="保存" Grid.Column="4" Click="ButtonClickEventHandler"/>
-
         </Grid>
-    </StackPanel>
+    </Grid>
 </Window>

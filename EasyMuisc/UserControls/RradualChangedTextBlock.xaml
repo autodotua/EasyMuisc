@@ -4,28 +4,46 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EasyMuisc.UserControls"
-Loaded="UserControl_Loaded"
+             xmlns:text="clr-namespace:WpfControls.Text;assembly=WpfControls"
+              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             Loaded="UserControl_Loaded"
              Padding="8"
              mc:Ignorable="d" >
-    <Grid x:Name="g">
-        <TextBlock x:Name="tbk1">
-
-            <TextBlock.Effect>
-
-                <DropShadowEffect Color="Black" BlurRadius="4"  ShadowDepth="0" Opacity="1" RenderingBias="Quality"/>
-
-            </TextBlock.Effect>
-        </TextBlock>
-        <TextBlock x:Name="tbk2" Opacity="0">
-
-            <TextBlock.Effect>
-
-                <DropShadowEffect Color="Black" BlurRadius="4"  ShadowDepth="0" Opacity="1" RenderingBias="Quality"/>
-
-            </TextBlock.Effect>
-  
-        </TextBlock>
-
-
+    <UserControl.Resources>
+        <sys:Double x:Key="thickness"></sys:Double>
+        <sys:Double x:Key="blurRadius"></sys:Double>
+        <SolidColorBrush x:Key="borderBrush"></SolidColorBrush>
+        <Color x:Key="borderColor"></Color>
+        <SolidColorBrush x:Key="fontBrush"></SolidColorBrush>
+        <FontWeight x:Key="bold"></FontWeight>
+        <FontFamily x:Key="font"></FontFamily>
+    </UserControl.Resources>
+    <Grid x:Name="main">
+        <Grid x:Name="gLabel">
+            <text:StrokeableLabel x:Name="lbl1" 
+                                  FontWeight="{DynamicResource bold}" 
+                                  Stroke="{DynamicResource borderBrush}"
+                                  StrokeThickness="{DynamicResource thickness}" 
+                                  FontFamily="{DynamicResource font}"
+                                  Fill="{DynamicResource fontBrush}" />
+            <text:StrokeableLabel x:Name="lbl2" 
+                                  FontWeight="{DynamicResource bold}" 
+                                  Opacity="0" 
+                                  Stroke="{DynamicResource borderBrush}" 
+                                  StrokeThickness="{DynamicResource thickness}"
+                                  Fill="{DynamicResource fontBrush}" />
+        </Grid>
+        <Grid x:Name="gTextBlock">
+            <TextBlock x:Name="tbk1" FontWeight="{DynamicResource bold}" Foreground="{DynamicResource fontBrush}">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="{DynamicResource borderColor}" BlurRadius="4"  ShadowDepth="0" Opacity="1" RenderingBias="Quality"/>
+                </TextBlock.Effect>
+            </TextBlock>
+            <TextBlock x:Name="tbk2" FontWeight="{DynamicResource bold}" Opacity="0" Foreground="{DynamicResource fontBrush}">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="{DynamicResource borderColor}" BlurRadius="4"  ShadowDepth="0" Opacity="1" RenderingBias="Quality"/>
+                </TextBlock.Effect>
+            </TextBlock>
+        </Grid>
     </Grid>
 </UserControl>

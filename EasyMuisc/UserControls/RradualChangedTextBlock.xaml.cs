@@ -23,91 +23,125 @@ namespace EasyMuisc.UserControls
     /// </summary>
     public partial class RradualChangedTextBlock : UserControl
     {
+        dynamic text1;
+        dynamic text2;
         public RradualChangedTextBlock()
         {
             InitializeComponent();
-
+            SetEffect();
             DoubleAnimation ani1 = new DoubleAnimation
             {
                 To = 1,
                 Duration = TimeSpan.FromSeconds(0.4),
                 EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut },
-                FillBehavior=FillBehavior.Stop
+                FillBehavior = FillBehavior.Stop
             };
             DoubleAnimation ani2 = new DoubleAnimation
             {
                 To = 0,
                 Duration = TimeSpan.FromSeconds(0.4),
-                EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut } ,               
+                EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut },
                 FillBehavior = FillBehavior.Stop
 
             };
-            Storyboard.SetTargetName(ani1, tbk1.Name);
-            Storyboard.SetTargetName(ani2, tbk2.Name);
+            Storyboard.SetTargetName(ani1, text1.Name);
+            Storyboard.SetTargetName(ani2, text2.Name);
             Storyboard.SetTargetProperty(ani1, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetProperty(ani2, new PropertyPath(OpacityProperty));
             story.Children.Add(ani1);
             story.Children.Add(ani2);
             story.Completed += (p1, p2) =>
-              {
-                  //story.Stop();
-                  tbk1.Opacity = 1;
-                  tbk2.Opacity = 0;
+            {
+                //story.Stop();
+                text1.Opacity = 1;
+                text2.Opacity = 0;
 
-              };
-
+            };
 
 
         }
-        
-        public string Text { get => tbk1.Text; set => tbk1.Text = value; }
+
+        public void SetEffect()
+        {
+            if (set.FloatLyricsFontEffect == 0)
+            {
+                text1 = lbl1;
+                text2 = lbl2;
+                gLabel.Visibility = Visibility.Visible;
+                gTextBlock.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                text1 = tbk1;
+                text2 = tbk2;
+                gLabel.Visibility = Visibility.Collapsed;
+                gTextBlock.Visibility = Visibility.Visible;
+            }
+
+           SolidColorBrush borderBrush= new BrushConverter().ConvertFrom(set.FloatLyricsBorderColor) as SolidColorBrush;
+            Resources["borderBrush"] = borderBrush;
+            Resources["borderColor"] = borderBrush.Color;
+            Resources["thickness"] = set.FloatLyricsThickness;
+            Resources["blurRadius"] = set.FloatLyricsBlurRadius;
+            Resources["fontBrush"] =  new BrushConverter().ConvertFrom(set.FloatLyricsFontColor) as SolidColorBrush;
+            Resources["bold"] = set.FloatLyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
+            try
+            {
+                Resources["font"] = new FontFamily(set.FloatLyricsFont);
+            }
+            catch
+            {
+                mainWindow.ShowTrayMessage("选取的悬浮歌词字体无效");
+            }
+        }
+
+        public string Text { get => text1.Text; set => text1.Text = value; }
 
         public void ToMinor(string text)
         {
             FontSizeAnimation
                   (
-                  tbk1,
+                  text1,
                   set.FloatLyricsHighlightFontSize,
                   set.FloatLyricsNormalFontSize
                   );
             FontSizeAnimation
              (
-             tbk2,
+             text2,
              set.FloatLyricsHighlightFontSize,
              set.FloatLyricsNormalFontSize
              );
             ChangeText(text);
 
         }
-        
+
         public void ChangeText(string text)
         {
-            tbk1.Opacity = 0;
-            tbk2.Text = string.Copy(tbk1.Text);
-            tbk1.Text = text;
-            tbk2.Opacity = 1;
+            text1.Opacity = 0;
+            text2.Text = string.Copy(text1.Text);
+            text1.Text = text;
+            text2.Opacity = 1;
             story.Begin(this);
         }
 
         Storyboard story = new Storyboard();
-        
+
         public void ToMajor(string text)
         {
-            tbk1.Text = text;
+            text1.Text = text;
             ToMajor();
         }
         public void ToMajor()
         {
             FontSizeAnimation
                   (
-                  tbk1,
-                               set.FloatLyricsNormalFontSize,
-
+                  text1,
+                  set.FloatLyricsNormalFontSize,
                   set.FloatLyricsHighlightFontSize
                    );
         }
 
-            public void FontSizeAnimation(TextBlock obj, double from,double to)
+        public void FontSizeAnimation(dynamic obj, double from, double to)
         {
             DoubleAnimation ani = new DoubleAnimation
             {
@@ -127,13 +161,13 @@ namespace EasyMuisc.UserControls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            tbk1.FontSize = set.FloatLyricsNormalFontSize;
+            text1.FontSize = set.FloatLyricsNormalFontSize;
 
         }
 
-        public TextAlignment TextAlignment
-        {
-            set => tbk1.TextAlignment = tbk2.TextAlignment = value;
-        }
+        //public TextAlignment TextAlignment
+        //{
+        //    set  =>text1.VerticalAlignment = text2.VerticalAlignment = value;
+        //}
     }
 }
