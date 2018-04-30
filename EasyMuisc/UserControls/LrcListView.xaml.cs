@@ -39,7 +39,7 @@ namespace EasyMuisc.UserControls
 
         public void Add(TextBlock txt)
         {
-            var item = new ListBoxItem() { Content = txt };
+            var item = new ListBoxItem() { Content = txt ,Foreground= Foreground ,FontWeight=FontWeight};
             //TriggerActionCollection tac = new TriggerActionCollection();
             //DoubleAnimation ta = new DoubleAnimation();
             //Storyboard sb = new Storyboard();

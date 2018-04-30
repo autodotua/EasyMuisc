@@ -153,20 +153,26 @@
                         <TextBlock Text="动画帧率（frame/s）：   " />
                         <text:NumberTextBox MatchMode="PositiveIntegerNumber" x:Name="txtAnimationFps" MinWidth="36"  />
                     </StackPanel>
-
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="歌词默认偏移（s）：     " />
+                        <text:NumberTextBox MatchMode="All"  x:Name="txtOffset"  MinWidth="36" />
+                    </StackPanel>
 
                 </StackPanel>
 
             </TabItem>
 
             <TabItem Header="主界面歌词">
+                
                 <StackPanel >
-                    <flat:CheckBox x:Name="chkLrcAnimation" Content="歌词动画" />
-                    <TextBlock FontSize="8"/>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="歌词默认偏移（s）：     " />
-                        <text:NumberTextBox MatchMode="All"  x:Name="txtOffset"  MinWidth="36" />
+                        <TextBlock Text="字体：     "  VerticalAlignment="Center"/>
+                        <picker:FontPicker x:Name="cbbFont"/>
                     </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <flat:CheckBox x:Name="chkLrcAnimation" Content="歌词动画" />
+
                     <TextBlock FontSize="8"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="当前歌词字体大小：     " />
@@ -182,7 +188,16 @@
                         <TextBlock Text="文本歌词字体大小：     " />
                         <text:NumberTextBox MatchMode="PositiveNumber" x:Name="txtTextFontSize"  MinWidth="36" />
                     </StackPanel>
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="字体颜色：     " />
+                        <picker:ColorPickerTextBox x:Name="FontColor"/>
+                    </StackPanel>
 
+                    <TextBlock FontSize="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <flat:CheckBox x:Name="chkBold" Content="粗体字形" />
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
 
@@ -235,7 +250,7 @@
 
                     <TextBlock FontSize="8"/>
                     <StackPanel Orientation="Horizontal">
-                        <flat:CheckBox x:Name="chkFloatBold" Content="粗体字：     " />
+                        <flat:CheckBox x:Name="chkFloatBold" Content="粗体字形" />
                     </StackPanel>
                 </StackPanel>
             </TabItem>

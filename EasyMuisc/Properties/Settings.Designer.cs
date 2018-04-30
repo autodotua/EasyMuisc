@@ -514,5 +514,41 @@ namespace EasyMuisc.Properties {
                 this["FloatLyricsFont"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("微软雅黑")]
+        public string LyricsFont {
+            get {
+                return ((string)(this["LyricsFont"]));
+            }
+            set {
+                this["LyricsFont"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF000000")]
+        public string LyricsFontColor {
+            get {
+                return ((string)(this["LyricsFontColor"]));
+            }
+            set {
+                this["LyricsFontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LyricsFontBold {
+            get {
+                return ((bool)(this["LyricsFontBold"]));
+            }
+            set {
+                this["LyricsFontBold"] = value;
+            }
+        }
     }
 }

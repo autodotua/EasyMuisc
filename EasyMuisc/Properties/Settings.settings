@@ -125,5 +125,14 @@
     <Setting Name="FloatLyricsFont" Type="System.String" Scope="User">
       <Value Profile="(Default)">微软雅黑</Value>
     </Setting>
+    <Setting Name="LyricsFont" Type="System.String" Scope="User">
+      <Value Profile="(Default)">微软雅黑</Value>
+    </Setting>
+    <Setting Name="LyricsFontColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FF000000</Value>
+    </Setting>
+    <Setting Name="LyricsFontBold" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -47,7 +47,9 @@ namespace EasyMuisc.Windows
             txtFloatBlur.Text = set.FloatLyricsBlurRadius.ToString();
             txtFloatBorder.Text = set.FloatLyricsThickness.ToString();
             chkFloatBold.IsChecked = set.FloatLyricsFontBold;
-            if(!cbbFloatFont.SetSelectedFontByString(set.FloatLyricsFont))
+            FontColor.SetColor(set.LyricsFontColor);
+            chkBold.IsChecked = set.LyricsFontBold;
+            if(!cbbFloatFont.SetSelectedFontByString(set.FloatLyricsFont) || !cbbFont.SetSelectedFontByString(set.LyricsFont))
             {
                 mainWindow.ShowTrayMessage("字体文件设置异常，请重新设置");
             }
@@ -170,7 +172,9 @@ namespace EasyMuisc.Windows
                 set.FloatLyricsBlurRadius = floatBlur.Value;
                 set.FloatLyricsFontBold = chkFloatBold.IsChecked.Value;
                 set.FloatLyricsFont = cbbFloatFont.GetPreferChineseFontName();
-                mainWindow.floatLyric.SetFontEffect();
+                set.LyricsFontBold = chkBold.IsChecked.Value;
+                set.LyricsFont = cbbFont.GetPreferChineseFontName();
+                set.LyricsFontColor = FontColor.ColorBrush.ToString();
                 mainWindow.InitialiazeLrc();
                 set.Save();
             }

@@ -21,6 +21,7 @@ using static EasyMuisc.MusicHelper;
 using static WpfControls.Dialog.DialogHelper;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using WpfControls.Dialog;
+using System.Windows.Media;
 
 namespace EasyMuisc
 {
@@ -78,110 +79,130 @@ namespace EasyMuisc
         /// <param name="musicLength"></param>
         public void InitialiazeLrc()
         {
-            lrcLineSumToIndex.Clear();
-            lrcTime.Clear();//清空歌词时间
-            lrcContent.Clear();//清除歌词内容
-            currentLrcIndex = -1;//删除歌词索引
-           // stkLrc.Children.Clear();//清空歌词表
-            lbxLrc.Clear();
-
-            FileInfo file = new FileInfo(path);
-            file = new FileInfo(file.FullName.Replace(file.Extension, ".lrc"));
-            if (file.Exists)//判断是否存在歌词文件
+            try
             {
-                grdLrc.Visibility = Visibility.Visible;
-                txtLrc.Visibility = Visibility.Hidden;
-                //if (set.UseListBoxLrcInsteadOfStackPanel)
-                //{
-                    lbxLrc.Visibility = Visibility.Visible;
-                //    stkLrc.Visibility = Visibility.Hidden;
-
-                //}
-                //else
-                //{
-                //    stkLrc.Visibility = Visibility.Visible;
-                //    lbxLrc.Visibility = Visibility.Hidden;
-                //}
-                lrc = new Lyric(file.FullName);//获取歌词信息
-                if (!double.TryParse(lrc.Offset, out offset))
+                floatLyric.SetFontEffect();
+                FontFamily font = new FontFamily(set.LyricsFont);
+                if (font == null)
                 {
-                    offset = 0;
+                    ShowTrayMessage("主界面字体应用失败，请重新设置");
                 }
-                offset /= 1000.0;
-                int index = 0;//用于赋值Tag
-                foreach (var i in lrc.LrcContent)
+                else
                 {
-                    //if (i.Key > musicLength)//如果歌词文件有误，长度超过了歌曲的长度，那么超过部分就不管了
-                    //{
-                    //    break;
-                    //}
-                    //lbxLrc.Add(i.Value,index.ToString(),(p1,p2) =>
-                    //{
-                    //    var position = lrcTime[int.Parse(((p1 as FrameworkElement).Tag).ToString())] - offset - LrcDefautOffset;
-                    //    Bass.BASS_ChannelSetPosition(stream, position > 0 ? position : 0);
-                    //    });
+                    lbxLrc.FontFamily = font;
+                }
+                lbxLrc.Foreground = new BrushConverter().ConvertFrom(set.LyricsFontColor) as SolidColorBrush;
+                lbxLrc.FontWeight = set.LyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
 
-                    lrcContent.Add(i.Value);
-                    var tbk = new TextBlock()
-                    {
-                        Name = "tbk" + index.ToString(),
-                        FontSize = set.NormalLrcFontSize,
-                        Text = i.Value,
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        Tag = index++,//标签用于定位
-                        Cursor = Cursors.Hand,
-                        TextAlignment = TextAlignment.Center,
-                        FocusVisualStyle = null,
-                    };
-                    tbk.MouseLeftButtonUp += (p1, p2) =>
-                    {
-                        //单击歌词跳转到当前歌词
-                        Bass.BASS_ChannelSetPosition(stream, (lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset) > 0 ? lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset : 0);
-                    };
+                lrcLineSumToIndex.Clear();
+                lrcTime.Clear();//清空歌词时间
+                lrcContent.Clear();//清除歌词内容
+                currentLrcIndex = -1;//删除歌词索引
+                                     // stkLrc.Children.Clear();//清空歌词表
+                lbxLrc.Clear();
+
+                FileInfo file = new FileInfo(path);
+                file = new FileInfo(file.FullName.Replace(file.Extension, ".lrc"));
+                if (file.Exists)//判断是否存在歌词文件
+                {
+                    grdLrc.Visibility = Visibility.Visible;
+                    txtLrc.Visibility = Visibility.Hidden;
                     //if (set.UseListBoxLrcInsteadOfStackPanel)
                     //{
-                        lbxLrc.Add(tbk);
+                    lbxLrc.Visibility = Visibility.Visible;
+                    //    stkLrc.Visibility = Visibility.Hidden;
+
                     //}
                     //else
                     //{
-                    //    stkLrc.Children.Add(tbk);
-                    //    //stkLrc.
+                    //    stkLrc.Visibility = Visibility.Visible;
+                    //    lbxLrc.Visibility = Visibility.Hidden;
                     //}
-                    lrcTime.Add(i.Key);
-                }
-                //lbxLrc.Add(lrc.LrcContent);
-                //lbxLrc.ChangeFontSize(normalLrcFontSize);
-                foreach (var i in lrc.LineIndex)
-                {
-                    lrcLineSumToIndex.Add(i.Value);
-                }
-                floatLyric.ReLoadLrc(lrcContent);
-            }
-            else if ((file = new FileInfo(file.FullName.Replace(file.Extension, ".txt"))).Exists)
-            {
+                    lrc = new Lyric(file.FullName);//获取歌词信息
+                    if (!double.TryParse(lrc.Offset, out offset))
+                    {
+                        offset = 0;
+                    }
+                    offset /= 1000.0;
+                    int index = 0;//用于赋值Tag
+                    foreach (var i in lrc.LrcContent)
+                    {
+                        //if (i.Key > musicLength)//如果歌词文件有误，长度超过了歌曲的长度，那么超过部分就不管了
+                        //{
+                        //    break;
+                        //}
+                        //lbxLrc.Add(i.Value,index.ToString(),(p1,p2) =>
+                        //{
+                        //    var position = lrcTime[int.Parse(((p1 as FrameworkElement).Tag).ToString())] - offset - LrcDefautOffset;
+                        //    Bass.BASS_ChannelSetPosition(stream, position > 0 ? position : 0);
+                        //    });
 
-                txtLrc.Text = File.ReadAllText(file.FullName, EncodingType.GetType(file.FullName));
-                for (int i = 0; i < txtLrc.LineCount; i++)
-                {
-                    lrcContent.Add(txtLrc.GetLineText(i));
+                        lrcContent.Add(i.Value);
+                        var tbk = new TextBlock()
+                        {
+                            Name = "tbk" + index.ToString(),
+                            FontSize = set.NormalLrcFontSize,
+                            Text = i.Value,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            Tag = index++,//标签用于定位
+                            Cursor = Cursors.Hand,
+                            TextAlignment = TextAlignment.Center,
+                            FocusVisualStyle = null,
+                        };
+                        tbk.MouseLeftButtonUp += (p1, p2) =>
+                        {
+                        //单击歌词跳转到当前歌词
+                        Bass.BASS_ChannelSetPosition(stream, (lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset) > 0 ? lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset : 0);
+                        };
+                        //if (set.UseListBoxLrcInsteadOfStackPanel)
+                        //{
+                        lbxLrc.Add(tbk);
+                        //}
+                        //else
+                        //{
+                        //    stkLrc.Children.Add(tbk);
+                        //    //stkLrc.
+                        //}
+                        lrcTime.Add(i.Key);
+                    }
+                    //lbxLrc.Add(lrc.LrcContent);
+                    //lbxLrc.ChangeFontSize(normalLrcFontSize);
+                    foreach (var i in lrc.LineIndex)
+                    {
+                        lrcLineSumToIndex.Add(i.Value);
+                    }
+                    floatLyric.ReLoadLrc(lrcContent);
                 }
-                txtLrc.FontSize = set.TextLrcFontSize;
-                grdLrc.Visibility = Visibility.Hidden;
-                txtLrc.Visibility = Visibility.Visible;
-                //stkLrc.Visibility = Visibility.Hidden;
-                lbxLrc.Visibility = Visibility.Hidden;
+                else if ((file = new FileInfo(file.FullName.Replace(file.Extension, ".txt"))).Exists)
+                {
 
-            }
-            else
-            {
-                grdLrc.Visibility = Visibility.Hidden;
-                txtLrc.Visibility = Visibility.Hidden;
-                //stkLrc.Visibility = Visibility.Hidden;
-                lbxLrc.Visibility = Visibility.Hidden;
-                if (set.ShowFloatLyric)
-                {
-                    floatLyric.Clear();
+                    txtLrc.Text = File.ReadAllText(file.FullName, EncodingType.GetType(file.FullName));
+                    for (int i = 0; i < txtLrc.LineCount; i++)
+                    {
+                        lrcContent.Add(txtLrc.GetLineText(i));
+                    }
+                    txtLrc.FontSize = set.TextLrcFontSize;
+                    grdLrc.Visibility = Visibility.Hidden;
+                    txtLrc.Visibility = Visibility.Visible;
+                    //stkLrc.Visibility = Visibility.Hidden;
+                    lbxLrc.Visibility = Visibility.Hidden;
+
                 }
+                else
+                {
+                    grdLrc.Visibility = Visibility.Hidden;
+                    txtLrc.Visibility = Visibility.Hidden;
+                    //stkLrc.Visibility = Visibility.Hidden;
+                    lbxLrc.Visibility = Visibility.Hidden;
+                    if (set.ShowFloatLyric)
+                    {
+                        floatLyric.Clear();
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                ShowException("初始化歌词失败！",ex);
             }
         }
         /// <summary>
