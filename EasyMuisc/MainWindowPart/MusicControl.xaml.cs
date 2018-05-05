@@ -171,7 +171,8 @@ namespace EasyMuisc
                     {
                         lrcLineSumToIndex.Add(i.Value);
                     }
-                    floatLyric.ReLoadLrc(lrcContent);
+                    ReloadFloatLrc();
+                    floatLyric.Reload(lrcContent);
                 }
                 else if ((file = new FileInfo(file.FullName.Replace(file.Extension, ".txt"))).Exists)
                 {

@@ -265,7 +265,7 @@ namespace EasyMuisc
         /// 分隔符
         /// </summary>
         const string split = "#Split#";
-   
+
         /// <summary>
         /// 是否产生了不可挽救错误
         /// </summary>
@@ -308,7 +308,7 @@ namespace EasyMuisc
 
             if (!Bass.BASS_Init(-1, set.SampleRate/*无设置界面*/, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
             {
-               ShowError("无法初始化音乐引擎，可能是采样率不支持。"+Environment.NewLine+Bass.BASS_ErrorGetCode());
+                ShowError("无法初始化音乐引擎，可能是采样率不支持。" + Environment.NewLine + Bass.BASS_ErrorGetCode());
                 error = true;
                 //Application.Current.Shutdown();
             }
@@ -328,17 +328,12 @@ namespace EasyMuisc
 
             InitializeAnimation();
 
-            floatLyric = new FloatLyrics()
-            {
-                Top = set.FloatLyricsTop,
-                Left = set.FloatLyricsLeft,
-                Height = set.FloatLyricsHeight,
-                Width = set.FloatLyricsWidth,
-            };
+            ReloadFloatLrc();
 
             InitializeTray();
 
         }
+
         /// <summary>
         /// 初始化定时器事件
         /// </summary>
@@ -388,8 +383,8 @@ namespace EasyMuisc
         {
 
             RegistGolbalHotKey();
-     
-            if(set.TrayMode==0)
+
+            if (set.TrayMode == 0)
             {
                 trayIcon.Visible = false;
             }
@@ -398,9 +393,9 @@ namespace EasyMuisc
             if (path == null)
             {
                 string tempPath = set.LastMusic;
-                if (File.Exists(tempPath) && musicDatas.Where(p=>p.Path.Equals(tempPath)).Count()!=0)
+                if (File.Exists(tempPath) && musicDatas.Where(p => p.Path.Equals(tempPath)).Count() != 0)
                 {
-                   PlayNew(await  AddMusic(tempPath), false);
+                    PlayNew(await AddMusic(tempPath), false);
 
                 }
             }
@@ -416,7 +411,7 @@ namespace EasyMuisc
             {
                 set.ShowLrc = false;
                 grdLrcArea.Visibility = Visibility.Collapsed;
-               // set.AutoFurl = false;
+                // set.AutoFurl = false;
                 grdMain.ColumnDefinitions[2].Width = new GridLength(0);
                 grdMain.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
                 Width = grdMain.ColumnDefinitions[0].ActualWidth + 32;
@@ -447,13 +442,10 @@ namespace EasyMuisc
             //{
             //    SleepThenDo(1000, (p1, p2) => BtnListSwitcherClickEventHandler(null, null));
             //}
-            if (set.ShowFloatLyric)
-            {
-                floatLyric.Show();
-            }
+       
         }
 
-     
+
 
         /// <summary>
         /// 窗体关闭事件，保存配置项
@@ -517,7 +509,7 @@ namespace EasyMuisc
             Hide();
             pauseTimer.Start();
         }
-        public void ShowTrayMessage(string message,int ms=2000)
+        public void ShowTrayMessage(string message, int ms = 2000)
         {
             trayIcon.BalloonTipText = message;
             trayIcon.ShowBalloonTip(ms);
@@ -574,7 +566,7 @@ namespace EasyMuisc
                 floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
                 floatLyric.Update(currentLrcIndex);
             };
-            
+
             MenuItem menuExit = new MenuItem() { Header = "退出" };
             menuExit.Click += (p1, p2) => Close();
             ContextMenu menu = new ContextMenu()
@@ -594,7 +586,7 @@ namespace EasyMuisc
 
 
         #endregion
-        
+
     }
 
 }

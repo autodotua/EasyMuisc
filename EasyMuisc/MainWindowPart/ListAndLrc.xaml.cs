@@ -995,6 +995,28 @@ namespace EasyMuisc
             Bass.BASS_ChannelStop(stream);
             stream = 0;
         }
+        /// <summary>
+        /// 重新加载悬浮歌词
+        /// </summary>
+        private void ReloadFloatLrc()
+        {
+            if(floatLyric!=null)
+            {
+                floatLyric.Close();
+            }
+
+            floatLyric = new FloatLyrics()
+            {
+                Top = set.FloatLyricsTop,
+                Left = set.FloatLyricsLeft,
+                Height = set.FloatLyricsHeight,
+                Width = set.FloatLyricsWidth,
+            };
+            if (set.ShowFloatLyric)
+            {
+                floatLyric.Show();
+            }
+        }
         #endregion
 
         #region 歌曲搜索

@@ -119,7 +119,7 @@ namespace EasyMuisc.Windows
         /// 加载歌词
         /// </summary>
         /// <param name="lrc"></param>
-        public void ReLoadLrc(List<string> lrc)
+        public void Reload(List<string> lrc)
         {
             CurrentIndex = 0;
             this.lrc = new List<string>(lrc);

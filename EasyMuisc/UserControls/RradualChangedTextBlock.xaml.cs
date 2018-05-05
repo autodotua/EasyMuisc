@@ -78,12 +78,12 @@ namespace EasyMuisc.UserControls
                 gTextBlock.Visibility = Visibility.Visible;
             }
 
-           SolidColorBrush borderBrush= new BrushConverter().ConvertFrom(set.FloatLyricsBorderColor) as SolidColorBrush;
+            SolidColorBrush borderBrush = new BrushConverter().ConvertFrom(set.FloatLyricsBorderColor) as SolidColorBrush;
             Resources["borderBrush"] = borderBrush;
             Resources["borderColor"] = borderBrush.Color;
             Resources["thickness"] = set.FloatLyricsThickness;
             Resources["blurRadius"] = set.FloatLyricsBlurRadius;
-            Resources["fontBrush"] =  new BrushConverter().ConvertFrom(set.FloatLyricsFontColor) as SolidColorBrush;
+            Resources["fontBrush"] = new BrushConverter().ConvertFrom(set.FloatLyricsFontColor) as SolidColorBrush;
             Resources["bold"] = set.FloatLyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
             try
             {
@@ -165,9 +165,20 @@ namespace EasyMuisc.UserControls
 
         }
 
-        //public TextAlignment TextAlignment
-        //{
-        //    set  =>text1.VerticalAlignment = text2.VerticalAlignment = value;
-        //}
+        public TextAlignment TextAlignment
+        {
+            set
+            {
+                if (text1 is TextBlock)
+                {
+                    text1.TextAlignment = text2.TextAlignment = value;
+                }
+                else
+                {
+                    text1.HorizontalContentAlignment = text2.HorizontalContentAlignment = text1.HorizontalAlignment = text2.HorizontalAlignment =
+                        value == TextAlignment.Left ? HorizontalAlignment.Left : HorizontalAlignment.Right;
+                }
+            }
+        }
     }
 }
