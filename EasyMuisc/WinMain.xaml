@@ -519,7 +519,10 @@
 
             <!--<StackPanel x:Name="stkLrc" FocusVisualStyle="{x:Null}" Focusable="False"  Visibility="Hidden" Background="{DynamicResource backgroundBrushColor}" SnapsToDevicePixels="True" />-->
             <uc:LrcListView x:Name="lbxLrc" FocusVisualStyle="{x:Null}" Focusable="False"  Visibility="Hidden" HorizontalAlignment="Stretch"/>
-            <TextBox x:Name="txtLrc" FocusVisualStyle="{x:Null}" Focusable="False"   Background="{DynamicResource backgroundBrushColor}" TextAlignment="Center" IsReadOnly="True" BorderThickness="0" VerticalScrollBarVisibility="Auto" Visibility="Hidden" PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown" />
+            <TextBox x:Name="txtLrc" FocusVisualStyle="{x:Null}" Focusable="False"   Background="{DynamicResource backgroundBrushColor}" 
+                     AcceptsReturn="True" TextWrapping="Wrap"
+                     TextAlignment="Center" IsReadOnly="True" 
+                     BorderThickness="0" VerticalScrollBarVisibility="Auto" Visibility="Hidden" PreviewKeyDown="TxtLrcAndLvwPreviewKeyDown" />
             <Grid x:Name="grdLrc" FocusVisualStyle="{x:Null}" Focusable="False"   IsHitTestVisible="False" Margin="0,-4,0,-4">
                 <Grid.Background>
                     <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">

@@ -643,7 +643,7 @@ namespace EasyMuisc
             MenuItem menuReload = new MenuItem() { Header = "重载歌词" };
             menuReload.Click += (p1, p2) => InitialiazeLrc();
 
-            MenuItem menuEdit = new MenuItem() { Header = "编辑歌词" };
+            MenuItem menuEdit = new MenuItem() { Header =(lbxLrc.Visibility==Visibility.Visible || txtLrc.Visibility==Visibility.Visible)? "编辑歌词":"新建歌词" };
             menuEdit.Click += (p1, p2) =>
             {
                 FileInfo file = new FileInfo(path);
@@ -651,9 +651,21 @@ namespace EasyMuisc
                 {
                     new WinLrcEdit(file.FullName.TrimEnd(file.Extension.ToCharArray()) + ".lrc") { Owner = this }.Show();
                 }
-                else
+                else if(txtLrc.Visibility==Visibility.Visible)
                 {
                     new WinLrcEdit(file.FullName.TrimEnd(file.Extension.ToCharArray()) + ".txt") { Owner = this }.Show();
+                }
+                else
+                {
+                   int index= ShowMessage("Lrc歌词文件还是Txt文本文件？", DialogType.Information, new string[] { "Lrc文件", "Txt文件", "取消" });
+                    if (index==0)
+                    {
+                        new WinLrcEdit(file.FullName.TrimEnd(file.Extension.ToCharArray()) + ".lrc") { Owner = this }.Show();
+                    }
+                    else if (index==1)
+                    {
+                        new WinLrcEdit(file.FullName.TrimEnd(file.Extension.ToCharArray()) + ".txt") { Owner = this }.Show();
+                    }
                 }
             };
             MenuItem menuOpenSetting = new MenuItem() { Header = "主界面歌词设置" };
@@ -736,11 +748,12 @@ namespace EasyMuisc
             menu.Items.Add(menuShowLrc);
             menu.Items.Add(menuReload);
             menu.Items.Add(menuFloat);
+            menu.Items.Add(NewSeparatorLine);
+            menu.Items.Add(menuEdit);
             //if (lrcContent.Count != 0 && (lbxLrc.Visibility == Visibility.Visible || stkLrc.Visibility == Visibility.Visible))
             if (lrcContent.Count != 0 && lbxLrc.Visibility == Visibility.Visible)
             {
-                menu.Items.Add(NewSeparatorLine);
-                menu.Items.Add(menuEdit);
+             
                 menu.Items.Add(menuCopyLrc);
                 menu.Items.Add(menuSave);
                 menu.Items.Add(menuSaveAs);

@@ -32,29 +32,41 @@ namespace EasyMuisc.Windows
 
         private void Load()
         {
+            Title = "歌词编辑 - " + filePath;
+
             FileInfo file = new FileInfo(filePath);
             if (!file.Exists)
             {
-                ShowError("歌词文件不存在！");
-                Close();
-                return;
+                try
+                {
+                    File.Create(filePath);
+                }
+                catch
+                {
+                    ShowError("歌词文件不存在且创建失败！");
+                    Close();
+                    return;
+                }
+               
             }
-            if (file.Length > 1024 * 1024)
+            else
             {
-                ShowError("文件大小超过1MB，怀疑有误！");
-                Close();
-                return;
+                if (file.Length > 1024 * 1024)
+                {
+                    ShowError("文件大小超过1MB，怀疑有误！");
+                    Close();
+                    return;
+                }
+                try
+                {
+                    txt.Text = File.ReadAllText(filePath, Tools.EncodingType.GetType(filePath));
+                }
+                catch (Exception ex)
+                {
+                    ShowException(ex, this);
+                }
             }
-            Title = "歌词编辑 - " + filePath;
-            try
-            {
-                txt.Text = File.ReadAllText(filePath, Tools.EncodingType.GetType(filePath));
-
-            }
-            catch (Exception ex)
-            {
-                ShowException(ex, this);
-            }
+        
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -74,7 +86,7 @@ namespace EasyMuisc.Windows
                     {
                         File.WriteAllText(filePath, txt.Text, Tools.EncodingType.GetType(filePath));
                         SetButtonsStatus(false);
-                        if (ShowMessage("重载歌词？", WpfControls.Dialog.DialogType.Information, MessageBoxButton.YesNo, this) == 1)
+                        if (ShowMessage("重载歌词？", WpfControls.Dialog.DialogType.Information, MessageBoxButton.YesNo, this) == 0)
                         {
                             ShareStaticResources.mainWindow.InitialiazeLrc();
                         }

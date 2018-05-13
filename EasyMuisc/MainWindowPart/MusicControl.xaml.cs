@@ -57,7 +57,7 @@ namespace EasyMuisc
                 Volumn = sldVolumn.Value;
                 txtMusicName.Text = new FileInfo(path).Name.Replace(new FileInfo(path).Extension, "");
                 Title = txtMusicName.Text + " - EasyMusic";//将窗体标题改为歌曲名
-                string[] length = MusicHelper.CurrentMusic.Length.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+                string[] length = CurrentMusic.Length.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                 musicLength = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetLength(stream));
                 sldProcess.Maximum = musicLength;
                 InitialiazeLrc();
@@ -67,7 +67,7 @@ namespace EasyMuisc
                 ShowException("初始化失败", ex);
                 return;
             }
-            ReadMusicSourceInfo(MusicHelper.CurrentMusic.Path);
+            ReadMusicSourceInfo(CurrentMusic.Path);
 
             mainTimer.Tick += UpdateTick;
             mainTimer.Start();
