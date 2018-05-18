@@ -57,7 +57,7 @@ namespace EasyMuisc
                 Volumn = sldVolumn.Value;
                 txtMusicName.Text = new FileInfo(path).Name.Replace(new FileInfo(path).Extension, "");
                 Title = txtMusicName.Text + " - EasyMusic";//将窗体标题改为歌曲名
-                string[] length = CurrentMusic.Length.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+                //string[] length = CurrentMusic.Length.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                 musicLength = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetLength(stream));
                 sldProcess.Maximum = musicLength;
                 InitialiazeLrc();
@@ -118,7 +118,7 @@ namespace EasyMuisc
                     //    stkLrc.Visibility = Visibility.Visible;
                     //    lbxLrc.Visibility = Visibility.Hidden;
                     //}
-                    lrc = new Lyric(file.FullName);//获取歌词信息
+                    lrc = new LyricHelper(file.FullName);//获取歌词信息
                     if (!double.TryParse(lrc.Offset, out offset))
                     {
                         offset = 0;
@@ -275,6 +275,10 @@ namespace EasyMuisc
             musicIndex = lvwMusic.SelectedIndex;
             return PlayNew(musicIndex, playAtOnce);
         }
+        /// <summary>
+        /// 播放当前歌曲
+        /// </summary>
+        /// <returns></returns>
         public bool PlayCurrent()
         {
             return PlayNew(CurrentMusicIndex);
@@ -289,7 +293,7 @@ namespace EasyMuisc
             MusicInfo music = GetMusic(index);
             if (!File.Exists(music.Path))
             {
-                if (ShowMessage($"歌曲{music.MusicName}（{music.Path}）不存在！是否从列表中删除？", DialogType.Warn, MessageBoxButton.YesNo) == 1)
+                if (ShowMessage($"歌曲{music.Name}（{music.Path}）不存在！是否从列表中删除？", DialogType.Warn, MessageBoxButton.YesNo) == 1)
                 {
                     RemoveMusic(index);
                     btnPlay.Visibility = Visibility.Visible;
@@ -319,6 +323,7 @@ namespace EasyMuisc
                 Width += 0.01;
                 Width -= 0.01;
             }
+            ListenHistoryHelper.AddHistory();
             return true;
 
         }
@@ -380,7 +385,7 @@ namespace EasyMuisc
         /// <summary>
         /// 歌词对象
         /// </summary>
-        Lyric lrc;
+        LyricHelper lrc;
         /// <summary>
         /// 当前歌词索引
         /// </summary>

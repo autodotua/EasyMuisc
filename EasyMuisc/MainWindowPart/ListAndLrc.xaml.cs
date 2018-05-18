@@ -350,7 +350,7 @@ namespace EasyMuisc
                     string info = fileInfo.Name + l
                     + music.Path + l
                     + Math.Round(fileInfo.Length / 1024d) + "KB" + l
-                    + music.MusicName + l
+                    + music.Name + l
                     + music.Length + l
                     + music.Singer + l
                     + music.Album;
@@ -638,7 +638,7 @@ namespace EasyMuisc
             menuSaveAs.Click += (p1, p2) => SaveLrc(true);
 
             MenuItem menuSearchInNetEase = new MenuItem() { Header = "在网易云中搜索" };
-            menuSearchInNetEase.Click += (p1, p2) => Process.Start($"https://music.163.com/#/search/m/?s={CurrentMusic.MusicName}");
+            menuSearchInNetEase.Click += (p1, p2) => Process.Start($"https://music.163.com/#/search/m/?s={CurrentMusic.Name}");
 
             MenuItem menuReload = new MenuItem() { Header = "重载歌词" };
             menuReload.Click += (p1, p2) => InitialiazeLrc();
@@ -816,9 +816,9 @@ namespace EasyMuisc
             StringBuilder str = new StringBuilder();
             if (set.PreferMusicInfo)
             {
-                if (CurrentMusic.MusicName != "")
+                if (CurrentMusic.Name != "")
                 {
-                    str.Append("[ti:" + CurrentMusic.MusicName + "]" + Environment.NewLine);
+                    str.Append("[ti:" + CurrentMusic.Name + "]" + Environment.NewLine);
                 }
                 if (CurrentMusic.Singer != "")
                 {
@@ -1055,7 +1055,7 @@ namespace EasyMuisc
 
                 if (IsInfoMatch(value, i))
                 {
-                    ComboBoxItem cbbItem = new ComboBoxItem() { Content = i.MusicName, Tag = index };
+                    ComboBoxItem cbbItem = new ComboBoxItem() { Content = i.Name, Tag = index };
                     cbbItem.PreviewMouseLeftButtonUp += (p1, p2) =>
                     {
                         PlayNew((int)cbbItem.Tag, false);
@@ -1112,7 +1112,7 @@ namespace EasyMuisc
         private bool IsInfoMatch(string str, MusicInfo info)
         {
             str = str.ToLower();
-            string musicName = (info.MusicName + new FileInfo(info.Path).Name).ToLower();
+            string musicName = (info.Name + new FileInfo(info.Path).Name).ToLower();
             if (musicName.Contains(str))
             {
                 return true;

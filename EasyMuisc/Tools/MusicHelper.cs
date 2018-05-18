@@ -53,9 +53,10 @@ namespace EasyMuisc
                 await   Task.Run(() => GetMusicInfo(path, out name, out singer, out length, out album));
                 var item = new MusicInfo()
                 {
-                    MusicName = name,
+                    Name = name,
                     Singer = singer,
-                    Length = length.StartsWith("00:") ? length.Remove(0, 3) : length,
+                    Length = GetIntLength(length),
+                   // Length = length.StartsWith("00:") ? length.Remove(0, 3) : length,
                     Path = path,
                     Album = album,
                 };
@@ -68,6 +69,23 @@ namespace EasyMuisc
                 return null;
             }
 
+        }
+        private static int GetIntLength(string length)
+        {
+            int[] lengthArray = length.Split(':').Select(p => int.Parse(p)).ToArray();
+            return lengthArray[0] * 3600 + lengthArray[1] * 60 + lengthArray[2];
+        }
+        public static string GetStringLength(int length)
+        {
+            int hour = length / 3600;
+            length -= hour * 3600;
+            int minute = length / 60;
+            int second = length - minute * 60;
+            if (hour != 0)
+            {
+                return hour.ToString("00") + ":" + minute.ToString("00") + ":" + second.ToString("00");
+            }
+            return minute.ToString("00") + ":" + second.ToString("00");
         }
         /// <summary>
         /// 历史记录

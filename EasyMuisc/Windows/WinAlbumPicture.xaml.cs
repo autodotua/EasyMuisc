@@ -113,7 +113,7 @@ namespace EasyMuisc.Windows
                 DefaultExt = "jpg",
                 Title = "保存专辑图",
                 Filter = "JPG图片(*.jpg)|*.jpg",
-                FileName = MusicHelper.CurrentMusic.MusicName,
+                FileName = MusicHelper.CurrentMusic.Name,
             };
             sfd.FileOk += delegate
               {

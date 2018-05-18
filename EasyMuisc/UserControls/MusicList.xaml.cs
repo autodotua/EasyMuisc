@@ -16,15 +16,6 @@ using WpfControls.Dialog;
 
 namespace EasyMuisc
 {
-    [Serializable]
-    public class MusicInfo
-    {
-        public string MusicName { get; set; }
-        public string Singer { get; set; }
-        public string Length { get; set; }
-        public string Album { get; set; }
-        public string Path { get; set; }
-    }
     /// <summary>
     /// MusicList.xaml 的交互逻辑
     /// </summary>

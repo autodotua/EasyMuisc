@@ -167,6 +167,8 @@
     <Compile Include="MainWindowPart\MusicControl.xaml.cs" />
     <Compile Include="MainWindowPart\ControlEvent.xaml.cs" />
     <Compile Include="Tools\FindVisualChildHelper.cs" />
+    <Compile Include="Tools\ListenHistory.cs" />
+    <Compile Include="Tools\LyricHelper.cs" />
     <Compile Include="Tools\MusicHelper.cs" />
     <Compile Include="Tools\ShareStaticResources.cs" />
     <Compile Include="UserControls\ControlButton.xaml.cs">
@@ -179,6 +181,7 @@
     <Compile Include="UserControls\MusicFxPopupContent.xaml.cs">
       <DependentUpon>MusicFxPopupContent.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tools\MusicInfo.cs" />
     <Compile Include="UserControls\MusicList.xaml.cs">
       <DependentUpon>MusicList.xaml</DependentUpon>
     </Compile>
@@ -275,7 +278,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tools\EncodingType.cs" />
-    <Compile Include="Tools\Lrc.cs" />
     <Compile Include="WinMain.xaml.cs">
       <DependentUpon>WinMain.xaml</DependentUpon>
       <SubType>Code</SubType>

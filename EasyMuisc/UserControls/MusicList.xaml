@@ -8,6 +8,7 @@
              FocusVisualStyle="{x:Null}"
              mc:Ignorable="d">
     <UserControl.Resources>
+        <local:LengthToStringConverter x:Key="lengthConverter"/>
         <local:WidthConverter x:Key="conver"/>
         <!--ListView-->
         <ControlTemplate x:Key="tmpForThumb" TargetType="{x:Type Thumb}">
@@ -72,9 +73,9 @@
             <ListView.View>
                 <GridView ColumnHeaderContainerStyle="{StaticResource musicListStyle}">
 
-                    <GridViewColumn  Header="歌名" Width="144" DisplayMemberBinding="{Binding MusicName}"/>
+                    <GridViewColumn  Header="歌名" Width="144" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="歌手" Width="96" DisplayMemberBinding="{Binding Singer}"/>
-                    <GridViewColumn Header="时长" Width="64" DisplayMemberBinding="{Binding Length}"/>
+                    <GridViewColumn Header="时长" Width="64" DisplayMemberBinding="{Binding Length, Converter={StaticResource lengthConverter}}"/>
                 </GridView>
             </ListView.View>
 
