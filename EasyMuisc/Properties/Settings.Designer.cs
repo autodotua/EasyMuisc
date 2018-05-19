@@ -550,5 +550,29 @@ namespace EasyMuisc.Properties {
                 this["LyricsFontBold"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\EasyMusic\\ListenHistory.xml")]
+        public string ListenHistoryPath {
+            get {
+                return ((string)(this["ListenHistoryPath"]));
+            }
+            set {
+                this["ListenHistoryPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RecordListenHistory {
+            get {
+                return ((bool)(this["RecordListenHistory"]));
+            }
+            set {
+                this["RecordListenHistory"] = value;
+            }
+        }
     }
 }

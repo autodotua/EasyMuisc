@@ -134,5 +134,11 @@
     <Setting Name="LyricsFontBold" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="ListenHistoryPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%APPDATA%\EasyMusic\ListenHistory.xml</Value>
+    </Setting>
+    <Setting Name="RecordListenHistory" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

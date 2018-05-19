@@ -323,7 +323,10 @@ namespace EasyMuisc
                 Width += 0.01;
                 Width -= 0.01;
             }
-            ListenHistoryHelper.AddHistory();
+            if (set.RecordListenHistory)
+            {
+                listenHistory.AddHistory();
+            }
             return true;
 
         }
