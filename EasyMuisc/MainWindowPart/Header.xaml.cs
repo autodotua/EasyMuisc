@@ -193,7 +193,7 @@ namespace EasyMuisc
             }
             else
             {
-                Close();
+                CloseWindow();
             }
         }
         /// <summary>

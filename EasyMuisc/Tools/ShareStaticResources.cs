@@ -78,7 +78,7 @@ namespace EasyMuisc
         /// 程序目录
         /// </summary>
        public static string programDirectory = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).DirectoryName;
-        public static Tools.ListenHistoryHelper listenHistory = new Tools.ListenHistoryHelper();
+        public static ListenHistoryHelper listenHistory = new ListenHistoryHelper();
         public static MainWindow mainWindow;
         
     }

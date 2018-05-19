@@ -443,6 +443,14 @@ namespace EasyMuisc
 
                 }
             };
+            MenuItem menuListenHistory = new MenuItem() { Header = "聆听历史" };
+            menuListenHistory.Click += (p1, p2) =>
+              {
+                  WinListenHistory win = new WinListenHistory();
+                  win.Owner = this;
+                  win.Show();
+              };
+
 
             MenuItem menuRefreshList = new MenuItem() { Header = "刷新列表" };
             menuRefreshList.Click += MenuRefreshListClickEventHandler;
@@ -501,6 +509,7 @@ namespace EasyMuisc
                 menu.Items.Add(menuRandom);
                 menu.Items.Add(menuRefreshList);
             }
+            menu.Items.Add(menuListenHistory);
             menu.Items.Add(menuImport);
             menu.Items.Add(menuExport);
             //if (set.ShowLrc)

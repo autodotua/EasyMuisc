@@ -34,6 +34,10 @@ namespace EasyMuisc
         /// 歌曲时长
         /// </summary>
         double musicLength;
+        /// <summary>
+        /// 若在PlayNew时没立即播放则暂时不记录
+        /// </summary>
+        bool notRecordYet = false;
 
         /// <summary>
         /// 初始化新的歌曲
@@ -151,8 +155,8 @@ namespace EasyMuisc
                         };
                         tbk.MouseLeftButtonUp += (p1, p2) =>
                         {
-                        //单击歌词跳转到当前歌词
-                        Bass.BASS_ChannelSetPosition(stream, (lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset) > 0 ? lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset : 0);
+                            //单击歌词跳转到当前歌词
+                            Bass.BASS_ChannelSetPosition(stream, (lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset) > 0 ? lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset : 0);
                         };
                         //if (set.UseListBoxLrcInsteadOfStackPanel)
                         //{
@@ -201,9 +205,9 @@ namespace EasyMuisc
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                ShowException("初始化歌词失败！",ex);
+                ShowException("初始化歌词失败！", ex);
             }
         }
         /// <summary>
@@ -263,7 +267,11 @@ namespace EasyMuisc
                 }
                 playTimer.Start();
             }
-
+            if (set.RecordListenHistory && notRecordYet)
+            {
+                listenHistory.Record();
+                notRecordYet = false;
+            }
 
         }
         /// <summary>
@@ -311,7 +319,11 @@ namespace EasyMuisc
                     AddHistory(CurrentMusic);//加入历史记录
                 }
             }
-            //Debug.WriteLine(currentHistoryIndex);
+            if (set.RecordListenHistory)
+            {
+                listenHistory.RecordEnd();
+                notRecordYet = false;
+            }
             InitialiazeMusic();//初始化歌曲
 
             if (playAtOnce)
@@ -325,7 +337,15 @@ namespace EasyMuisc
             }
             if (set.RecordListenHistory)
             {
-                listenHistory.AddHistory();
+                if (playAtOnce)
+                {
+                    listenHistory.Record();
+                }
+                else
+                {
+                    notRecordYet = true;
+                }
+
             }
             return true;
 
@@ -490,8 +510,8 @@ namespace EasyMuisc
 
                 //if (set.UseListBoxLrcInsteadOfStackPanel)
                 //{
-                    lbxLrc.RefreshFontSize(currentLrcIndex);
-                    lbxLrc.ScrollTo(currentLrcIndex, lrcLineSumToIndex, set.NormalLrcFontSize);
+                lbxLrc.RefreshFontSize(currentLrcIndex);
+                lbxLrc.ScrollTo(currentLrcIndex, lrcLineSumToIndex, set.NormalLrcFontSize);
                 //}
                 //else
                 //{

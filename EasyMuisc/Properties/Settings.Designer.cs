@@ -574,5 +574,17 @@ namespace EasyMuisc.Properties {
                 this["RecordListenHistory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int ThresholdValueOfListenTime {
+            get {
+                return ((int)(this["ThresholdValueOfListenTime"]));
+            }
+            set {
+                this["ThresholdValueOfListenTime"] = value;
+            }
+        }
     }
 }

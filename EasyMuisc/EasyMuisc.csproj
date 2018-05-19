@@ -216,6 +216,9 @@
     <Compile Include="Windows\WinHelp.xaml.cs">
       <DependentUpon>WinHelp.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\WinListenHistory.xaml.cs">
+      <DependentUpon>WinListenHistory.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\WinLrcEdit.xaml.cs">
       <DependentUpon>WinLrcEdit.xaml</DependentUpon>
     </Compile>
@@ -262,6 +265,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\WinHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\WinListenHistory.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -568,7 +568,7 @@ namespace EasyMuisc
             };
 
             MenuItem menuExit = new MenuItem() { Header = "退出" };
-            menuExit.Click += (p1, p2) => Close();
+            menuExit.Click += (p1, p2) => CloseWindow();
             ContextMenu menu = new ContextMenu()
             {
                 IsOpen = true,
@@ -581,7 +581,11 @@ namespace EasyMuisc
             };
         }
 
-
+        private void CloseWindow()
+        {
+            listenHistory.RecordEnd();
+            Close();
+        }
 
 
 

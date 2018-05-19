@@ -8,22 +8,35 @@ using static EasyMuisc.MusicHelper;
 using System.Xml;
 using System.IO;
 
-namespace EasyMuisc.Tools
+namespace EasyMuisc
 {
     public class ListenHistory
     {
-        public ListenHistory()
-        {
-            ListenTimes = new List<DateTime>() { DateTime.Now };
-            Name = CurrentMusic.Name;
-            Length = CurrentMusic.Length;
-        }
 
-        public List<DateTime> ListenTimes { get; set; }
+        public Dictionary<DateTime, DateTime?> ListenTimes { get; set; }
+        public string LastListenTime => ListenTimes.Last().Key.ToString();
         public string Name { get; set; }
-        public double Length { get; set; }
-        private string Singer { get; set; }
+        public int Length { get; set; }
+        public string DisplayLength => GetStringLength(Length);
+        public string Singer { get; set; }
         public int ListenNumber => ListenTimes.Count;
+        //public string TotalTime
+        //{
+        //    get
+        //    {
+        //        TimeSpan totalTime = new TimeSpan();
+        //        foreach (var time in ListenTimes)
+        //        {
+        //            if(!time.Value.HasValue)
+        //            {
+        //                continue;
+        //            }
+        //            TimeSpan span = time.Value.Value - time.Key;
+        //            totalTime += span;
+        //        }
+        //        return totalTime.ToString();
+        //    }
+        //}
     }
 
     public class ListenHistoryHelper
@@ -32,6 +45,8 @@ namespace EasyMuisc.Tools
 
         XmlDocument xml = new XmlDocument();
         XmlElement root;
+
+        XmlElement lastTimeElement;
 
         IEnumerable<XmlElement> Histories => root.ChildNodes.Cast<XmlElement>();
 
@@ -53,7 +68,68 @@ namespace EasyMuisc.Tools
             }
         }
 
-        public bool AddHistory()
+        public void RecordEnd()
+        {
+            if (lastTimeElement == null)
+            {
+                return;
+            }
+            DateTime now = DateTime.Now;
+            TimeSpan span = now - DateTime.Parse(lastTimeElement.GetAttribute("BeginTime"));
+            lastTimeElement.SetAttribute("EndTime", now.ToString());
+            try
+            {
+                xml.Save(XmlPath);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public IEnumerable<ListenHistory> GetListenHistories()
+        {
+            List<ListenHistory> histories = new List<ListenHistory>();
+            foreach (XmlElement element in root.ChildNodes)
+            {
+                string name = element.GetAttribute("Name");
+                int length = int.Parse(element.GetAttribute("Length"));
+                string singer = element.GetAttribute("Singer");
+                Dictionary<DateTime, DateTime?> times = new Dictionary<DateTime, DateTime?>();
+                foreach (XmlElement child in element.ChildNodes)
+                {
+                    DateTime start = DateTime.Parse(child.GetAttribute("BeginTime"));
+                    DateTime? end = null;
+                    if (child.HasAttribute("EndTime"))
+                    {
+                        end = DateTime.Parse(child.GetAttribute("EndTime"));
+                        if((end.Value-start).TotalSeconds<set.ThresholdValueOfListenTime)
+                        {
+                            continue;
+                        }
+                    }
+                    if (!times.ContainsKey(start))
+                    {
+                        times.Add(start, end);
+                    }
+                }
+                if(times.Count==0)
+                {
+                    continue;
+                }
+                ListenHistory history = new ListenHistory()
+                {
+                    Name = name,
+                    Length = length,
+                    ListenTimes = times,
+                    Singer = singer,
+                };
+                histories.Add(history);
+            }
+            return histories;
+        }
+
+        public bool Record()
         {
             string name = CurrentMusic.Name;
             string length = CurrentMusic.Length.ToString();
@@ -69,13 +145,15 @@ namespace EasyMuisc.Tools
             }
 
             XmlElement timeElement = xml.CreateElement("Listen");
-            timeElement.SetAttribute("Time", DateTime.Now.ToString());
+            timeElement.SetAttribute("BeginTime", DateTime.Now.ToString());
             element.AppendChild(timeElement);
+            lastTimeElement = timeElement;
+
             try
             {
                 xml.Save(XmlPath);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
