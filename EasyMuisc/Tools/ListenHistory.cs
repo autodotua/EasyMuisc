@@ -41,7 +41,7 @@ namespace EasyMuisc
 
     public class ListenHistoryHelper
     {
-        private string XmlPath => set.ListenHistoryPath.Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "");
+        public static string XmlPath => set.ListenHistoryPath.Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "");
 
         XmlDocument xml = new XmlDocument();
         XmlElement root;

@@ -496,7 +496,10 @@ namespace EasyMuisc
 
                 //menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
             }
-
+            if (set.RecordListenHistory)
+            {
+                menu.Items.Add(menuListenHistory);
+            }
             if (MusicCount > 0)
             {
                 //if (lvwMusic.SelectedIndex != -1)
@@ -509,7 +512,7 @@ namespace EasyMuisc
                 menu.Items.Add(menuRandom);
                 menu.Items.Add(menuRefreshList);
             }
-            menu.Items.Add(menuListenHistory);
+
             menu.Items.Add(menuImport);
             menu.Items.Add(menuExport);
             //if (set.ShowLrc)

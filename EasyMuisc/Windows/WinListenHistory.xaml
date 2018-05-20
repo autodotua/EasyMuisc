@@ -9,27 +9,52 @@
         WindowStartupLocation="CenterOwner"
         Title="听歌历史"
         Height="450" Width="800">
-    <Grid x:Name="grd">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+    <Grid x:Name="grdMain" Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="*"/>
 
-        </Grid.ColumnDefinitions>
-        <GridSplitter HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="4" Background="#FFBBBBBB" Grid.Column="1"/>
-        <flat:ListView x:Name="lvwMain" SelectionChanged="lvwMain_PreviewMouseLeftButtonDown">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="音乐名" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="歌手" DisplayMemberBinding="{Binding Singer}"/>
-                    <GridViewColumn Header="时长" DisplayMemberBinding="{Binding DisplayLength}"/>
-                    <GridViewColumn Header="聆听次数" DisplayMemberBinding="{Binding ListenNumber}"/>
-                    <GridViewColumn Header="最后一次聆听时间" DisplayMemberBinding="{Binding LastListenTime}"/>
-                    <!--<GridViewColumn Header="总时间" DisplayMemberBinding="{Binding TotalTime}"/>-->
+        </Grid.RowDefinitions>
 
-                </GridView>
-            </ListView.View>
-        </flat:ListView>
-        <Frame NavigationUIVisibility="Hidden" x:Name="frm" Grid.Column="2"/>
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="Auto"/>
+
+            </Grid.ColumnDefinitions>
+            <flat:UneditableComboBox x:Name="cbbOrderMode" SelectedIndex="0" SelectionChanged="OrderModeSelectionChangedEventHandler">
+                <ComboBoxItem>根据聆听数量降序</ComboBoxItem>
+                <ComboBoxItem>根据最后一次聆听时间降序</ComboBoxItem>
+
+            </flat:UneditableComboBox>
+            <flat:Button  Click="Button_Click" Grid.Column="2">打开聆听历史文件</flat:Button>
+        </Grid>       
+        
+        <Grid x:Name="grd" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+
+            </Grid.ColumnDefinitions>
+            <GridSplitter HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="4" Background="#FFBBBBBB" Grid.Column="1"/>
+            <flat:ListView x:Name="lvwMain" SelectionChanged="LvwSelectionChangedEventHandler">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="音乐名" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Header="歌手" DisplayMemberBinding="{Binding Singer}"/>
+                        <GridViewColumn Header="时长" DisplayMemberBinding="{Binding DisplayLength}"/>
+                        <GridViewColumn Header="聆听次数" DisplayMemberBinding="{Binding ListenNumber}"/>
+                        <GridViewColumn Header="最后一次聆听时间" DisplayMemberBinding="{Binding LastListenTime}"/>
+                        <!--<GridViewColumn Header="总时间" DisplayMemberBinding="{Binding TotalTime}"/>-->
+
+                    </GridView>
+                </ListView.View>
+            </flat:ListView>
+            <flat:ListView x:Name="lvwTime" Grid.Column="2"/>
+        </Grid>
+
     </Grid>
 </Window>

@@ -134,15 +134,13 @@
                     <TextBlock FontSize="8"/>
                     <flat:CheckBox x:Name="chkMusicSettings" Content="音乐设置对所有歌曲生效" />
                     <TextBlock FontSize="8"/>
+                    <flat:CheckBox x:Name="chkListenHitory" Content="记录聆听历史" />
+                    <TextBlock FontSize="8"/>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="最小化到托盘图标方式：" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                        <flat:UneditableComboBox x:Name="cbbTrayMode">
-                            <ComboBoxItem>不显示托盘图标</ComboBoxItem>
-                            <ComboBoxItem>点击关闭按钮最小化到托盘图标</ComboBoxItem>
-                            <ComboBoxItem>点击最小化按钮最小化到托盘图标</ComboBoxItem>
-                            <ComboBoxItem>仅点击托盘图标最小化到托盘图标</ComboBoxItem>
-                        </flat:UneditableComboBox>
+                        <TextBlock Text="聆听历史阙值（s）：   " />
+                        <text:NumberTextBox MatchMode="PositiveIntegerNumber" x:Name="txtListenHistoryValue"  MinWidth="36"  />
                     </StackPanel>
+
                     <TextBlock FontSize="8"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="刷新检测速度（n/s）：   " />
@@ -157,6 +155,17 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="歌词默认偏移（s）：     " />
                         <text:NumberTextBox MatchMode="All"  x:Name="txtOffset"  MinWidth="36" />
+                    </StackPanel>
+                    <TextBlock FontSize="8"/>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="最小化到托盘图标方式：" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <flat:UneditableComboBox x:Name="cbbTrayMode">
+                            <ComboBoxItem>不显示托盘图标</ComboBoxItem>
+                            <ComboBoxItem>点击关闭按钮最小化到托盘图标</ComboBoxItem>
+                            <ComboBoxItem>点击最小化按钮最小化到托盘图标</ComboBoxItem>
+                            <ComboBoxItem>仅点击托盘图标最小化到托盘图标</ComboBoxItem>
+                        </flat:UneditableComboBox>
                     </StackPanel>
 
                 </StackPanel>

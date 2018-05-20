@@ -49,6 +49,9 @@ namespace EasyMuisc.Windows
             chkFloatBold.IsChecked = set.FloatLyricsFontBold;
             FontColor.SetColor(set.LyricsFontColor);
             chkBold.IsChecked = set.LyricsFontBold;
+            chkListenHitory.IsChecked = set.RecordListenHistory;
+            txtListenHistoryValue.Text = set.ThresholdValueOfListenTime.ToString();
+
             if(!cbbFloatFont.SetSelectedFontByString(set.FloatLyricsFont) || !cbbFont.SetSelectedFontByString(set.LyricsFont))
             {
                 mainWindow.ShowTrayMessage("字体文件设置异常，请重新设置");
@@ -139,7 +142,12 @@ namespace EasyMuisc.Windows
                     ShowError("输入的悬浮歌词阴影深度不是数字！");
                     return;
                 }
-
+                int? listenValue = txtListenHistoryValue.IntNumber;
+                if (!floatBlur.HasValue)
+                {
+                    ShowError("输入的聆听历史阙值不是正整数！");
+                    return;
+                }
 
                 set.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
                 set.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
@@ -175,6 +183,8 @@ namespace EasyMuisc.Windows
                 set.LyricsFontBold = chkBold.IsChecked.Value;
                 set.LyricsFont = cbbFont.GetPreferChineseFontName();
                 set.LyricsFontColor = FontColor.ColorBrush.ToString();
+                set.RecordListenHistory = chkListenHitory.IsChecked.Value;
+                set.ThresholdValueOfListenTime = listenValue.Value;
                 mainWindow.InitialiazeLrc();
                 set.Save();
             }
