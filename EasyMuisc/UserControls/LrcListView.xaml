@@ -30,15 +30,15 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBox}">
-                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="true">
-                            <ScrollViewer x:Name="svw" Focusable="false" Padding="{TemplateBinding Padding}"  ScrollChanged="svw_ScrollChanged" local:ScrollAnimationBehavior.IsEnabled="True">
+                        <!--<Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="true">-->
+                            <!--<ScrollViewer x:Name="svw" Focusable="false" Padding="{TemplateBinding Padding}"  ScrollChanged="svw_ScrollChanged" local:ScrollAnimationBehavior.IsEnabled="True">-->
                                 <StackPanel >
                                     <Grid x:Name="HeaderGrid" Height="{DynamicResource topHalfHeight}"/>
                                     <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                                     <Grid x:Name="FootGrid" Height="{DynamicResource bottomHalfHeight}"/>
                                 </StackPanel>
-                            </ScrollViewer>
-                        </Border>
+                            <!--</ScrollViewer>-->
+                        <!--</Border>-->
                         <ControlTemplate.Triggers>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
@@ -115,9 +115,15 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid>
-        <ListBox  FocusVisualStyle="{x:Null}" Focusable="False"  x:Name="lbx"  PreviewMouseWheel="lbx_MouseWheel">
-            
+    <StackPanel>
+        <ListBox x:Name="lbx" 
+                 VirtualizingPanel.IsVirtualizing="False" 
+                 FocusVisualStyle="{x:Null}"
+                 Focusable="False"
+                 PreviewMouseWheel="lbx_MouseWheel">
+            <ListBox.RenderTransform>
+                <TranslateTransform/>
+            </ListBox.RenderTransform>
         </ListBox>
-    </Grid>
+    </StackPanel>
 </UserControl>

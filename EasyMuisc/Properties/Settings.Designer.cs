@@ -586,5 +586,17 @@ namespace EasyMuisc.Properties {
                 this["ThresholdValueOfListenTime"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00.8000000")]
+        public global::System.TimeSpan AnimationDuration {
+            get {
+                return ((global::System.TimeSpan)(this["AnimationDuration"]));
+            }
+            set {
+                this["AnimationDuration"] = value;
+            }
+        }
     }
 }
