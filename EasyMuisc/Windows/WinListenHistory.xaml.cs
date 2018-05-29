@@ -45,6 +45,10 @@ namespace EasyMuisc.Windows
 
         private void LvwSelectionChangedEventHandler(object sender, SelectionChangedEventArgs e)
         {
+            if (lvwMain.SelectedItem==null)
+            {
+                return;
+            }
             try
             {
                 lvwTime.ClearRows();

@@ -67,7 +67,7 @@ namespace EasyMuisc.UserControls
 
         }
 
-        private void lbx_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void MouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
             e.Handled = true;
         }
@@ -101,9 +101,10 @@ namespace EasyMuisc.UserControls
         DoubleAnimation aniFontSize = new DoubleAnimation
         {
             Duration = set.AnimationDuration,// new Duration(TimeSpan.FromSeconds(0.8)),//动画时间1秒
-            EasingFunction=new CubicEase() { EasingMode=EasingMode.EaseOut},
+            EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut },
             //DecelerationRatio = 0.5,
         };
+
         public void RefreshFontSize(int index)
         {
 

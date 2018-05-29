@@ -47,11 +47,11 @@ namespace EasyMuisc.Windows
             txtFloatBlur.Text = set.FloatLyricsBlurRadius.ToString();
             txtFloatBorder.Text = set.FloatLyricsThickness.ToString();
             chkFloatBold.IsChecked = set.FloatLyricsFontBold;
-            FontColor.SetColor(set.LyricsFontColor);
+            fontColor.SetColor(set.LyricsFontColor);
             chkBold.IsChecked = set.LyricsFontBold;
             chkListenHitory.IsChecked = set.RecordListenHistory;
             txtListenHistoryValue.Text = set.ThresholdValueOfListenTime.ToString();
-
+            mainColor.SetColor(set.BackgroundColor);
             if(!cbbFloatFont.SetSelectedFontByString(set.FloatLyricsFont) || !cbbFont.SetSelectedFontByString(set.LyricsFont))
             {
                 mainWindow.ShowTrayMessage("字体文件设置异常，请重新设置");
@@ -182,9 +182,11 @@ namespace EasyMuisc.Windows
                 set.FloatLyricsFont = cbbFloatFont.GetPreferChineseFontName();
                 set.LyricsFontBold = chkBold.IsChecked.Value;
                 set.LyricsFont = cbbFont.GetPreferChineseFontName();
-                set.LyricsFontColor = FontColor.ColorBrush.ToString();
+                set.LyricsFontColor = fontColor.ColorBrush.ToString();
                 set.RecordListenHistory = chkListenHitory.IsChecked.Value;
                 set.ThresholdValueOfListenTime = listenValue.Value;
+                set.BackgroundColor = mainColor.ColorBrush.ToString();
+                mainWindow.UpdateColor(mainColor.ColorBrush);
                 mainWindow.InitialiazeLrc();
                 set.Save();
             }
@@ -194,7 +196,10 @@ namespace EasyMuisc.Windows
             }
             finally
             {
-                Close();
+                if ((sender as Button).Name == "btnOk")
+                {
+                    Close();
+                }
             }
 
         }

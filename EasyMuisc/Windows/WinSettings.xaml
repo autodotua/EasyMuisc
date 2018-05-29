@@ -13,41 +13,8 @@
         ResizeMode="NoResize"
         
         Title="设置"
-        Height="360" Width="360" >
+        Height="400" Width="420" >
     <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ButtonBase}">
-                        <Border x:Name="border" Padding="12,2,12,2" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="5,3" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="Button.IsDefaulted" Value="True">
-                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" TargetName="border" Value="#FFBEE6FD"/>
-                                <Setter Property="BorderBrush" TargetName="border" Value="#FF3C7FB1"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" TargetName="border" Value="#FF73CFFF"/>
-                                <Setter Property="BorderBrush" TargetName="border" Value="#FF2C628B"/>
-                            </Trigger>
-                            <Trigger Property="ToggleButton.IsChecked" Value="True">
-                                <Setter Property="Background" TargetName="border" Value="#FFBCDDEE"/>
-                                <Setter Property="BorderBrush" TargetName="border" Value="#FF245A83"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Background" TargetName="border" Value="#FFF4F4F4"/>
-                                <Setter Property="BorderBrush" TargetName="border" Value="#FFADB2B5"/>
-                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="#FF838383"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
 
 
         <Style  TargetType="{x:Type TabItem}">
@@ -167,6 +134,12 @@
                             <ComboBoxItem>仅点击托盘图标最小化到托盘图标</ComboBoxItem>
                         </flat:UneditableComboBox>
                     </StackPanel>
+                    <TextBlock FontSize="8"/>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="主题颜色：" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <picker:ColorPickerTextBox x:Name="mainColor"/>
+                    </StackPanel>
 
                 </StackPanel>
 
@@ -200,7 +173,7 @@
                     <TextBlock FontSize="8"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="字体颜色：     " />
-                        <picker:ColorPickerTextBox x:Name="FontColor"/>
+                        <picker:ColorPickerTextBox x:Name="fontColor"/>
                     </StackPanel>
 
                     <TextBlock FontSize="8"/>
@@ -275,11 +248,14 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Content="导出" Grid.Column="0" Click="ButtonExportClickEventHandler"/>
-            <Button Content="导入" Grid.Column="2" Click="ButtonImportClickEventHandler"/>
+            <flat:Button Padding="16,4" Content="导出" Grid.Column="0" Click="ButtonExportClickEventHandler"/>
+            <flat:Button  Padding="16,4" Content="导入" Grid.Column="2" Click="ButtonImportClickEventHandler"/>
+            <flat:Button x:Name="btnApply" Padding="16,4" Content="应用" Grid.Column="4" Click="ButtonClickEventHandler"/>
 
-            <Button Content="保存" Grid.Column="4" Click="ButtonClickEventHandler"/>
+            <flat:Button x:Name="btnOk" Padding="16,4" Content="确定" Grid.Column="6" Click="ButtonClickEventHandler"/>
         </Grid>
     </Grid>
 </Window>

@@ -492,6 +492,9 @@
 
         <!--播放列表区-->
         <Grid x:Name="grdList" Grid.Row="2" MouseEnter="GrdLrcAreaMouseEnterEventHandler" MouseLeave="GrdLrcAreaMouseLeaveEventHandler">
+            <Grid.RenderTransform>
+                <TranslateTransform/>
+            </Grid.RenderTransform>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="4"/>

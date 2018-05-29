@@ -197,6 +197,10 @@ namespace EasyMuisc
 
 
         }
+        /// <summary>
+        /// 读取音乐列表
+        /// </summary>
+        /// <param name="path"></param>
         public static void ReadFileToList(string path)
         {
            if(File.Exists(ToAbstractPath(path)))
@@ -228,6 +232,11 @@ namespace EasyMuisc
          
 
         }
+        /// <summary>
+        /// 读取音乐列表
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="abstractPath"></param>
         public static void ReadFileToList(string path,bool abstractPath)
         {
             if(!abstractPath)
@@ -262,6 +271,11 @@ namespace EasyMuisc
 
 
         }
+        /// <summary>
+        /// 删除音乐列表
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="abstractPath"></param>
         public static void DeleteMusicListFile(string path, bool abstractPath)
         {
             if(!abstractPath)
@@ -270,7 +284,12 @@ namespace EasyMuisc
             }
             File.Delete(path);
         }
-
+        /// <summary>
+        /// 重命名歌单
+        /// </summary>
+        /// <param name="oldPath"></param>
+        /// <param name="newPath"></param>
+        /// <param name="abstractPath"></param>
         public static void RenameMusicListFile(string oldPath,string newPath, bool abstractPath)
         {
             if (!abstractPath)
@@ -280,10 +299,19 @@ namespace EasyMuisc
             }
             File.Move(oldPath, newPath);
         }
+        /// <summary>
+        /// 转换到绝对地址
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static string ToAbstractPath(string path)
         {
             return (set.MusicListPath + "\\" + path+ (path.EndsWith(".csv")?"":".csv")).Replace("%APPDATA%",Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "");
         }
+        /// <summary>
+        /// 获取根目录
+        /// </summary>
+        /// <returns></returns>
         public static string ToAbstractPath()
         {
             return (set.MusicListPath).Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));

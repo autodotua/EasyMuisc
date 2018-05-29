@@ -36,9 +36,9 @@ namespace EasyMuisc
         /// <summary>
         /// 更新主题颜色
         /// </summary>
-        private void UpdateColor()
+        public void UpdateColor(SolidColorBrush color)
         {
-            var color = colorPicker.CurrentColor;
+            //var color = colorPicker.CurrentColor;
             Resources["backgroundBrushColor"] = color;
             WpfControls.DarkerBrushConverter.GetDarkerColor(color, out SolidColorBrush darker1, out SolidColorBrush darker2, out SolidColorBrush darker3, out SolidColorBrush darker4);
             //Resources["darker1BrushColor"] = new SolidColorBrush(Color.FromScRgb(color.Color.ScA, color.Color.ScR * 0.9f, color.Color.ScG * 0.9f, color.Color.ScB * 0.9f));
@@ -80,17 +80,24 @@ namespace EasyMuisc
             };
             MenuItem menuFileAssociation = new MenuItem() { Header = "注册格式" };
             menuFileAssociation.Click += MenuFileAssociationClickEventHandler;
-
-            StackPanel menuColor = new StackPanel()
+            MenuItem menuListenHistory = new MenuItem() { Header = "聆听历史" };
+            menuListenHistory.Click += (p1, p2) =>
             {
-                Orientation = Orientation.Horizontal,
-                Children =
-                {
-                    new TextBlock{Text="背景"},
-                    colorPicker,
-                },
+                WinListenHistory win = new WinListenHistory();
+                win.Owner = this;
+                win.Show();
             };
-            colorPicker.ChooseComplete((p1, p2) => mainContextMenu.IsOpen = false);
+
+            //StackPanel menuColor = new StackPanel()
+            //{
+            //    Orientation = Orientation.Horizontal,
+            //    Children =
+            //    {
+            //        new TextBlock{Text="背景"},
+            //        colorPicker,
+            //    },
+            //};
+            //colorPicker.ChooseComplete((p1, p2) => mainContextMenu.IsOpen = false);
 
             MenuItem menuSettings = new MenuItem()
             {
@@ -120,9 +127,18 @@ namespace EasyMuisc
             {
                 PlacementTarget = btnSettings,
                 IsOpen = true,
-                Items = { menuTop, menuFileAssociation, menuColor, menuSettings, menuHelp, menuAbout },
             };
-            mainContextMenu.Closed += (p1, p2) => UpdateColor();
+            mainContextMenu.Items.Add(menuTop);
+            mainContextMenu.Items.Add(menuFileAssociation);
+            if (set.RecordListenHistory)
+            {
+                mainContextMenu.Items.Add(menuListenHistory);
+            }
+            mainContextMenu.Items.Add(menuSettings);
+            mainContextMenu.Items.Add(menuHelp);
+            mainContextMenu.Items.Add(menuAbout);
+
+            //mainContextMenu.Closed += (p1, p2) => UpdateColor();
         }
 
         private void MenuFileAssociationClickEventHandler(object sender, RoutedEventArgs e)

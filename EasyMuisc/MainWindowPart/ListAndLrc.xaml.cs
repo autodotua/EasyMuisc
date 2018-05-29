@@ -38,13 +38,15 @@ namespace EasyMuisc
         {
             ThicknessAnimation aniMargin = new ThicknessAnimation
             {
-                Duration = new Duration(TimeSpan.FromSeconds(0.5)),//动画时间1秒
-                DecelerationRatio = 0.3
+                Duration = new Duration(set.AnimationDuration),
+                EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
+
             };
             DoubleAnimation aniOpacity = new DoubleAnimation
             {
-                Duration = new Duration(TimeSpan.FromSeconds(0.5)),//动画时间1秒
-                DecelerationRatio = 0.3
+                Duration = new Duration(set.AnimationDuration),
+                EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }  
+
             };
             Storyboard.SetTargetName(aniMargin, grdList.Name);
             Storyboard.SetTargetProperty(aniMargin, new PropertyPath(MarginProperty));
@@ -66,6 +68,64 @@ namespace EasyMuisc
                 // set.ShrinkMusicListManually = true;
             }
             story.Begin(grdList);
+
+            //ThicknessAnimation aniMargin = new ThicknessAnimation
+            //{
+            //    Duration = new Duration(set.AnimationDuration),
+            //    EasingFunction=new CubicEase() { EasingMode=EasingMode.EaseInOut}
+            //};
+            //DoubleAnimation aniTransform = new DoubleAnimation()
+            //{
+            //    Duration = new Duration(set.AnimationDuration),
+            //    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
+
+            //};
+            //DoubleAnimation aniOpacity = new DoubleAnimation
+            //{
+            //    Duration = new Duration(set.AnimationDuration),
+            //    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
+            //};
+            //DoubleAnimation aniLeft = new DoubleAnimation
+            //{
+            //    Duration = new Duration(set.AnimationDuration),
+            //    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
+            //};
+            ////Storyboard.SetTargetName(aniMargin, grdList.Name);
+            ////Storyboard.SetTargetProperty(aniMargin, new PropertyPath(MarginProperty));
+            //Storyboard.SetTarget(aniTransform, grdList);
+            //Storyboard.SetTarget(aniOpacity, grdList);
+            //Storyboard.SetTargetProperty(aniTransform, new PropertyPath("(UIElement.RenderTransform).(TranslateTransform.X)"));
+            //Storyboard.SetTargetProperty(aniOpacity, new PropertyPath(OpacityProperty));
+            //Storyboard story = new Storyboard();
+            ////story.Children.Add(aniMargin);
+            //story.Children.Add(aniTransform);
+            //story.Children.Add(aniOpacity);
+
+            //if ((grdList.RenderTransform as TranslateTransform).X == 0)
+            //{
+            //    aniTransform.To = -lvwMusic.ActualWidth;
+            //    aniOpacity.To = 0;
+            //}
+            //else
+            //{
+            //    aniTransform.To = 0;
+            //    aniOpacity.To = 1;
+
+            //}
+
+            ////if (grdList.Margin.Left < 0)
+            ////{
+            ////    aniMargin.To = new Thickness(0, 0, 0, 0);
+            ////    aniOpacity.To = 1;
+            ////    // set.ShrinkMusicListManually = false;
+            ////}
+            ////else
+            ////{
+            ////    aniMargin.To = new Thickness(-lvwMusic.ActualWidth, 0, 0, 0);
+            ////    aniOpacity.To = 0;
+            ////    // set.ShrinkMusicListManually = true;
+            ////}
+            //story.Begin(grdList);
 
         }
         /// <summary>
@@ -443,13 +503,6 @@ namespace EasyMuisc
 
                 }
             };
-            MenuItem menuListenHistory = new MenuItem() { Header = "聆听历史" };
-            menuListenHistory.Click += (p1, p2) =>
-              {
-                  WinListenHistory win = new WinListenHistory();
-                  win.Owner = this;
-                  win.Show();
-              };
 
 
             MenuItem menuRefreshList = new MenuItem() { Header = "刷新列表" };
@@ -496,10 +549,7 @@ namespace EasyMuisc
 
                 //menu.Items.Add(System.Windows.Markup.XamlReader.Parse(System.Windows.Markup.XamlWriter.Save(SeparatorLine)) as System.Windows.Shapes.Line);
             }
-            if (set.RecordListenHistory)
-            {
-                menu.Items.Add(menuListenHistory);
-            }
+
             if (MusicCount > 0)
             {
                 //if (lvwMusic.SelectedIndex != -1)

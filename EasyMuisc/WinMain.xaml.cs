@@ -48,10 +48,10 @@ namespace EasyMuisc
 
 
         #region 字段
-        /// <summary>
-        /// 颜色选择器
-        /// </summary>
-        ColorPickerControlView colorPicker = new ColorPickerControlView();
+        ///// <summary>
+        ///// 颜色选择器
+        ///// </summary>
+        //ColorPickerControlView colorPicker = new ColorPickerControlView();
         /// <summary>
         /// 
         /// </summary>
@@ -320,8 +320,8 @@ namespace EasyMuisc
                 ResizeBorderThickness = new Thickness(4),
             });
 
-            colorPicker.CurrentColor = new BrushConverter().ConvertFrom(set.BackgroundColor) as SolidColorBrush;
-            UpdateColor();
+           // colorPicker.CurrentColor = new BrushConverter().ConvertFrom(set.BackgroundColor) as SolidColorBrush;
+            UpdateColor(new BrushConverter().ConvertFrom(set.BackgroundColor) as SolidColorBrush);
 
             InitialiazeField();
             txtMusicName.MaxWidth = SystemParameters.WorkArea.Width - 200;
@@ -485,7 +485,7 @@ namespace EasyMuisc
             //SetConfig("AlwaysOnTop", Topmost.ToString());
             // set.Topmost = Topmost;
             // SetConfig("BackgroundColor", colorPicker.CurrentColor.ToString());
-            set.BackgroundColor = colorPicker.CurrentColor.ToString();
+            //set.BackgroundColor = colorPicker.CurrentColor.ToString();
             //SetConfig("Top", Top.ToString());
             // SetConfig("Left", Left.ToString());
             // SetConfig("Width", ActualWidth.ToString());

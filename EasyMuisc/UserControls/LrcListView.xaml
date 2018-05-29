@@ -120,7 +120,7 @@
                  VirtualizingPanel.IsVirtualizing="False" 
                  FocusVisualStyle="{x:Null}"
                  Focusable="False"
-                 PreviewMouseWheel="lbx_MouseWheel">
+                 PreviewMouseWheel="MouseWheelEventHandler">
             <ListBox.RenderTransform>
                 <TranslateTransform/>
             </ListBox.RenderTransform>
