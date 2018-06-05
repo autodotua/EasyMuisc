@@ -102,9 +102,9 @@
     <StartupObject>EasyMuisc.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bass.Net">
-      <HintPath>Properties\Bass.Net.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="Bass.Net, Version=2.4.13.1, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Bass.Net.dll</HintPath>
     </Reference>
     <Reference Include="CsvHelper, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.7.0.1\lib\net45\CsvHelper.dll</HintPath>
@@ -112,10 +112,9 @@
     <Reference Include="CustomWPFColorPicker">
       <HintPath>Properties\CustomWPFColorPicker.dll</HintPath>
     </Reference>
-    <Reference Include="Interop.Shell32, Version=1.2.107.0, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Interop.Shell32">
+      <HintPath>dlls\Interop.Shell32.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>Properties\Interop.Shell32.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack.1.1.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -363,6 +362,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bass.Net.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -308,7 +308,7 @@ namespace EasyMuisc
 
             if (!Bass.BASS_Init(-1, set.SampleRate/*无设置界面*/, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
             {
-                ShowError("无法初始化音乐引擎，可能是采样率不支持。" + Environment.NewLine + Bass.BASS_ErrorGetCode());
+                ShowError("无法初始化音乐引擎：" + Environment.NewLine + Bass.BASS_ErrorGetCode());
                 error = true;
                 //Application.Current.Shutdown();
             }

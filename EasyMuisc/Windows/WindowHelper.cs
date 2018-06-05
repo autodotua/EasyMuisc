@@ -11,6 +11,10 @@ namespace EasyMuisc.Windows
 {
     class WindowHelper
     {
+        /// <summary>
+        /// WPF最大化避免覆盖任务栏
+        /// </summary>
+        /// <param name="wpfWindow"></param>
         public static void RepairWindowBehavior(Window wpfWindow)
 
         {
