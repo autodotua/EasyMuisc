@@ -650,7 +650,7 @@
 
             <Image x:Name="imgAlbum"  Height="32" MouseLeave="ImgAlbumMouseLeaveEventHandler"  PreviewMouseDown="ImgAlbumPreviewMouseDownEventHandler" PreviewMouseUp="ImgAlbumPreviewMouseUpEventHandler" HorizontalAlignment="Left"/>
             <Viewbox Grid.Column="2" IsHitTestVisible="False" HorizontalAlignment="Left"    >
-                <TextBlock x:Name="txtMusicName"/>
+                <TextBlock x:Name="txtMusicName">EasyMusic</TextBlock>
             </Viewbox>
 
             <Button x:Name="btnSettings" FocusVisualStyle="{x:Null}" Grid.Column="4" Width="24" Height="24"  VerticalAlignment="Top" Click="BtnSettingsClickEventHandler"  HorizontalAlignment="Left">

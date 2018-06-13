@@ -62,7 +62,7 @@ namespace EasyMuisc
             {
                 try
                 {
-                    File.Create(ToAbstractPath("默认"));
+                    using (File.Create(ToAbstractPath("默认"))) { }
                 }
                 catch (Exception ex)
                 {

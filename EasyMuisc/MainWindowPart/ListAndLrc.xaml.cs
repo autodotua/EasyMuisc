@@ -734,33 +734,31 @@ namespace EasyMuisc
             menuOpenSetting.Click += (p1, p2) => new WinSettings(1) { Owner = this }.ShowDialog();
 
 
-            MenuItem menuFloat = new MenuItem() { Header = (set.ShowFloatLyric ? "关闭" : "打开") + "悬浮歌词" };
-            menuFloat.PreviewMouseLeftButtonUp += (p1, p2) =>
-            {
-                OpenOrCloseFloatLrc();
-                menu.IsOpen = false;
-            };
+            MenuItem menuFloat = new MenuItem() { Header =  "悬浮歌词" };
+   
 
 
 
-           // StackPanel menuFloatNormalFontSizeSetting = new StackPanel()
-           // {
-           //     Orientation = Orientation.Horizontal,
-           //     Children =
-           //{
-           //    new TextBlock(){Text="正常歌词字体大小："},
-           //    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsNormalFontSize.ToString()},
-           //}
-           // };
-           // StackPanel menuFloatHighlightFontSizeSetting = new StackPanel()
-           // {
-           //     Orientation = Orientation.Horizontal,
-           //     Children =
-           //{
-           //    new TextBlock(){Text="当前歌词字体大小："},
-           //    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsHighlightFontSize.ToString()},
-           //}
-           // };
+            // StackPanel menuFloatNormalFontSizeSetting = new StackPanel()
+            // {
+            //     Orientation = Orientation.Horizontal,
+            //     Children =
+            //{
+            //    new TextBlock(){Text="正常歌词字体大小："},
+            //    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsNormalFontSize.ToString()},
+            //}
+            // };
+            // StackPanel menuFloatHighlightFontSizeSetting = new StackPanel()
+            // {
+            //     Orientation = Orientation.Horizontal,
+            //     Children =
+            //{
+            //    new TextBlock(){Text="当前歌词字体大小："},
+            //    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsHighlightFontSize.ToString()},
+            //}
+            // };
+            MenuItem menuFloatSwitch = new MenuItem() { Header = (set.ShowFloatLyric ? "关闭" : "打开") };
+            menuFloatSwitch.Click += (p1, p2) => OpenOrCloseFloatLrc();
             MenuItem menuFloatAdjust = new MenuItem() { Header = "调整位置和大小" };
             menuFloatAdjust.Click += (p1, p2) => floatLyric.Adjuest = true;
             //MenuItem menuFloatOK = new MenuItem()
@@ -790,7 +788,7 @@ namespace EasyMuisc
             //        }
             //    }
             //};
-
+            menuFloat.Items.Add(menuFloatSwitch);
             menuFloat.Items.Add(menuFloatAdjust);
             menuFloat.Items.Add(menuFloatOpenSetting);
             //menuFloat.Items.Add(NewSeparatorLine);

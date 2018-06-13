@@ -75,13 +75,13 @@
       <Value Profile="(Default)">200</Value>
     </Setting>
     <Setting Name="FloatLyricsWidth" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">500</Value>
-    </Setting>
-    <Setting Name="FloatLyricsTop" Type="System.Double" Scope="User">
       <Value Profile="(Default)">800</Value>
     </Setting>
+    <Setting Name="FloatLyricsTop" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
     <Setting Name="FloatLyricsLeft" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">400</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="TrayMode" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
@@ -105,7 +105,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="FloatLyricsFontEffect" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="FloatLyricsFontColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#FFFFFFFF</Value>
@@ -120,7 +120,7 @@
       <Value Profile="(Default)">#FF000000</Value>
     </Setting>
     <Setting Name="FloatLyricsFontBold" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="FloatLyricsFont" Type="System.String" Scope="User">
       <Value Profile="(Default)">微软雅黑</Value>

@@ -184,17 +184,24 @@ namespace EasyMuisc
             {
                 path = ToAbstractPath(path);
             }
-            if(!File.Exists(path))
-            {
-                File.Create(path);
-            }
+            //if(!File.Exists(path))
+            //{
+            //    File.Create(path);
+            //}
             //File.WriteAllBytes(path, SerializeObject(musicDatas));
-            using (StreamWriter stream = new StreamWriter(File.Open(path, FileMode.Create), new UTF8Encoding(true)))
+            try
             {
-                CsvHelper.CsvWriter writer = new CsvHelper.CsvWriter(stream);
-                writer.WriteRecords(musicDatas);
-            }
 
+                using (StreamWriter stream = new StreamWriter(File.Open(path, FileMode.Create), new UTF8Encoding(true)))
+                {
+                    CsvHelper.CsvWriter writer = new CsvHelper.CsvWriter(stream);
+                    writer.WriteRecords(musicDatas);
+                }
+            }
+            catch(Exception ex)
+            {
+                ShowException("保存歌单文件" + new FileInfo(path).Name + "失败：", ex);
+            }
 
         }
         /// <summary>
@@ -221,7 +228,7 @@ namespace EasyMuisc
                 ShowPrompt($"歌单文件“{path}”不存在，将新建歌单");
                 try
                 {
-                    File.Create(ToAbstractPath(path));
+                    using (File.Create(ToAbstractPath(path))) { }
                 }
                 catch(Exception ex)
                 {

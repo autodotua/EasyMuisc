@@ -396,7 +396,6 @@ namespace EasyMuisc
                 if (File.Exists(tempPath) && musicDatas.Where(p => p.Path.Equals(tempPath)).Count() != 0)
                 {
                     PlayNew(await AddMusic(tempPath), false);
-
                 }
             }
             else

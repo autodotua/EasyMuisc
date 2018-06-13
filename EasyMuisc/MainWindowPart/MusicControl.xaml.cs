@@ -455,7 +455,8 @@ namespace EasyMuisc
             {
                 double currentPosition = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetPosition(stream));
                 sldProcess.Value = currentPosition;
-                if (Bass.BASS_ChannelGetPosition(stream) == Bass.BASS_ChannelGetLength(stream))
+         
+                if (Bass.BASS_ChannelGetLength(stream)-Bass.BASS_ChannelGetPosition(stream) <=144 )
                 {
                     //如果一首歌放完了
                     //PlayNext();
