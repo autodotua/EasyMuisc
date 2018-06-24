@@ -54,7 +54,7 @@ namespace EasyMuisc.Windows
             mainColor.SetColor(set.BackgroundColor);
             if(!cbbFloatFont.SetSelectedFontByString(set.FloatLyricsFont) || !cbbFont.SetSelectedFontByString(set.LyricsFont))
             {
-                mainWindow.ShowTrayMessage("字体文件设置异常，请重新设置");
+                trayIcon.ShowMessage("字体文件设置异常，请重新设置");
             }
         }
 
@@ -166,11 +166,11 @@ namespace EasyMuisc.Windows
                 set.FloatLyricsNormalFontSize = floatNormal.Value;
                 if (cbbTrayMode.SelectedIndex == 0 && cbbTrayMode.SelectedIndex != set.TrayMode)
                 {
-                    trayIcon.Visible = false;
+                    trayIcon.Hide();
                 }
                 else if (cbbTrayMode.SelectedIndex != 0 && set.TrayMode == 0)
                 {
-                    trayIcon.Visible = true;
+                    trayIcon.Show();
                 }
                 set.FloatLyricsFontEffect = cbbFloatFontEffect.SelectedIndex;
                 set.FloatLyricsBorderColor = floatBorderColor.ColorBrush.ToString();

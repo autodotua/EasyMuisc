@@ -149,9 +149,12 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfCodes">
+      <HintPath>..\..\WPF模块\Codes\bin\x64\Release\WpfCodes.dll</HintPath>
+    </Reference>
     <Reference Include="WpfControls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WPF模块\Controls\bin\Debug\WpfControls.dll</HintPath>
+      <HintPath>..\..\WPF模块\Controls\bin\x64\Release\WpfControls.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

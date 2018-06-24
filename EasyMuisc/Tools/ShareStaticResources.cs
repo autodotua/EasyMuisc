@@ -73,7 +73,7 @@ namespace EasyMuisc
         /// <summary>
         /// 托盘图标
         /// </summary>
-        public static System.Windows.Forms.NotifyIcon trayIcon = null;
+        public static WpfControls.ButtonBase.TrayIcon trayIcon = null;
         /// <summary>
         /// 程序目录
         /// </summary>

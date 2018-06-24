@@ -1075,7 +1075,7 @@ namespace EasyMuisc
         {
             if(floatLyric!=null)
             {
-                floatLyric.Close();
+                floatLyric.Close(true);
             }
 
             floatLyric = new FloatLyrics()

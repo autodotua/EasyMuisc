@@ -18,6 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Shell;
 using static EasyMuisc.ShareStaticResources;
+using static WpfCodes.WindowsApi.WindowMode;
 
 namespace EasyMuisc.Windows
 {
@@ -41,39 +42,40 @@ namespace EasyMuisc.Windows
 
             //sbdOpacity.Children.Add(aniOpacity);
         }
-        #region WindowsAPI
-        public const int WS_EX_TRANSPARENT = 0x00000020;
-        public const int GWL_EXSTYLE = (-20);
-        [DllImport("user32.dll")]
-        public static extern int GetWindowLong(IntPtr hwnd, int index);
-        [DllImport("user32.dll")]
-        public static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
-        int extendedStyle;
-        #endregion
-        /// <summary>
-        /// 设置鼠标穿透
-        /// </summary>
-        private void SetToMouseThrough()
-        {
+        //#region WindowsAPI
+        //public const int WS_EX_TRANSPARENT = 0x00000020;
+        //public const int GWL_EXSTYLE = (-20);
+        //[DllImport("user32.dll")]
+        //public static extern int GetWindowLong(IntPtr hwnd, int index);
+        //[DllImport("user32.dll")]
+        //public static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+        //int extendedStyle;
+        //#endregion
+        ///// <summary>
+        ///// 设置鼠标穿透
+        ///// </summary>
+        //private void SetToMouseThrough()
+        //{
 
-            // Get this window's handle
-            IntPtr hwnd = new WindowInteropHelper(this).Handle;
+        //    // Get this window's handle
+        //    IntPtr hwnd = new WindowInteropHelper(this).Handle;
 
-            // Change the extended window style to include WS_EX_TRANSPARENT
-            extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
-        }
-        /// <summary>
-        /// 取消鼠标穿透
-        /// </summary>
-        private void SetToNoMouseThrough()
-        {
+        //    // Change the extended window style to include WS_EX_TRANSPARENT
+        //    extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+        //    SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+        //}
+        ///// <summary>
+        ///// 取消鼠标穿透
+        ///// </summary>
+        //private void SetToNoMouseThrough()
+        //{
 
-            // Get this window's handle
-            IntPtr hwnd = new WindowInteropHelper(this).Handle;
+        //    // Get this window's handle
+        //    IntPtr hwnd = new WindowInteropHelper(this).Handle;
 
-            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle);
-        }
+        //    SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle);
+        //}
+        WpfCodes.WindowsApi.WindowMode windowMode;
         /// <summary>
         /// 在加载时设置鼠标穿透
         /// </summary>
@@ -81,7 +83,9 @@ namespace EasyMuisc.Windows
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
-            SetToMouseThrough();
+            //SetToMouseThrough();
+            windowMode = new WpfCodes.WindowsApi.WindowMode(this);
+            windowMode.SetToMouseThrough();
         }
         /// <summary>
         /// 是否正在调整歌词位置、大小
@@ -102,11 +106,11 @@ namespace EasyMuisc.Windows
                 btnOk.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
                 if (value)
                 {
-                    SetToNoMouseThrough();
+                    windowMode.SetToNormal();
                 }
                 else
                 {
-                    SetToMouseThrough();
+                    windowMode.SetToMouseThrough();
                 }
             }
             get => adjuesting;
@@ -124,11 +128,22 @@ namespace EasyMuisc.Windows
             CurrentIndex = 0;
             this.lrc = new List<string>(lrc);
             //lrc.Add("\t");
-            if (lrc.Count > 0)
+            //if (lrc.Count > 0)
+            //{
+            //    tbkLeft.Text = lrc[0];
+            //    //  Update(0);
+            //    if(lrc.Count>1)
+            //    {
+            //        tbkRight.Text = lrc[1];
+            //    }
+            //}
+
+            try
             {
-                tbkLeft.Text = lrc[0];
-                //  Update(0);
+                Update(0);
             }
+            catch
+            { }
         }
 
         /// <summary>
@@ -184,13 +199,13 @@ namespace EasyMuisc.Windows
             }
             //if (index < lrc.Count - 1)
             //{
-            GetTextBlock(1 - CurrentIndex).ToMinor(lrc[index + 1]);
+            GetTextBlock( CurrentIndex).ToMinor(lrc[index + 1]);
             //}
             //else
             //{
             //    GetTextBlock(1-CurrentIndex).ToMinor("");
             //}
-            GetTextBlock(CurrentIndex).ToMajor(lrc[oldIndex]);
+            GetTextBlock(1-CurrentIndex).ToMajor(lrc[oldIndex]);
             CurrentIndex = 1 - CurrentIndex;
             //currentIndex = index;
         }
@@ -205,12 +220,26 @@ namespace EasyMuisc.Windows
             //base.OnPreviewMouseLeftButtonDown(e);
         }
 
+        public void Close(bool mustTrue)
+        {
+            if(mustTrue)
+            {
+                closing = true;
+            }
+            Close();
+        }
+        private bool closing = false;
         private void WindowClosingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
         {
             set.FloatLyricsTop = Top;
             set.FloatLyricsLeft = Left;
             set.FloatLyricsHeight = Height;
             set.FloatLyricsWidth = Width;
+
+            if(!closing)
+            {
+                e.Cancel = true;
+            }
         }
 
         private void BtnOkClickEventHandler(object sender, RoutedEventArgs e)

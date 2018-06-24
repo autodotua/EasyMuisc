@@ -91,7 +91,7 @@ namespace EasyMuisc.UserControls
             }
             catch
             {
-                mainWindow.ShowTrayMessage("选取的悬浮歌词字体无效");
+                trayIcon.ShowMessage("选取的悬浮歌词字体无效");
             }
         }
 

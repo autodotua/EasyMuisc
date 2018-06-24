@@ -89,7 +89,7 @@ namespace EasyMuisc
                 FontFamily font = new FontFamily(set.LyricsFont);
                 if (font == null)
                 {
-                    ShowTrayMessage("主界面字体应用失败，请重新设置");
+                    trayIcon.ShowMessage("主界面字体应用失败，请重新设置");
                 }
                 else
                 {
@@ -175,7 +175,7 @@ namespace EasyMuisc
                     {
                         lrcLineSumToIndex.Add(i.Value);
                     }
-                    ReloadFloatLrc();
+                   // ReloadFloatLrc();
                     floatLyric.Reload(lrcContent);
                 }
                 else if ((file = new FileInfo(file.FullName.Replace(file.Extension, ".txt"))).Exists)

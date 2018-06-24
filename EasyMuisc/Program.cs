@@ -1,4 +1,4 @@
-﻿#define DEBUG 
+﻿
 
 using System;
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace EasyMuisc
 #endif
                 ShareStaticResources.mainWindow = new MainWindow() { path = args.Length != 0 ? args[0] : null };
                 app.Run(ShareStaticResources.mainWindow);
-                ShareStaticResources.trayIcon.Visible = false;
+            ShareStaticResources.trayIcon.Hide();
 #if(!DEBUG)
             }
             catch(Exception ex)

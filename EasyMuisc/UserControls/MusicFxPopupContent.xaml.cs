@@ -33,7 +33,7 @@ namespace EasyMuisc.UserControls
         /// <summary>
         /// 刷新界面（因为这个东西不是对话框，创建出来以后就不会变了
         /// </summary>
-        public void Refresh()
+        public void Load()
         {
             sldPitch.Value = Pitch;
             sldTempo.Value = Tempo;
@@ -70,11 +70,6 @@ namespace EasyMuisc.UserControls
                 stkDevices.Children.Add(btn);
             }
         }
-        /// <summary>
-        /// 鼠标滚轮在歌单按钮上滚动事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ScrollViewerPreviewMouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
             var scv = sender as ScrollViewer;
@@ -96,8 +91,13 @@ namespace EasyMuisc.UserControls
         {
             int device = int.Parse((sender as Button).Tag.ToString());
 
-            if (!Bass.BASS_ChannelSetDevice(stream, device)
-            || !Bass.BASS_SetDevice(device))
+            if (Bass.BASS_ChannelSetDevice(stream, device)
+            && Bass.BASS_SetDevice(device))
+            {
+                Bass.BASS_ChannelPause(stream);
+                Bass.BASS_ChannelPlay(stream, false);
+            }
+            else
             {
                 ShowError(Bass.BASS_ErrorGetCode().ToString());
             }

@@ -201,11 +201,12 @@ namespace EasyMuisc
         {
             if (set.TrayMode == 1)
             {
-                NewDoubleAnimation(this, TopProperty, SystemParameters.FullPrimaryScreenHeight, 0.2, 0, (p1, p2) =>
-                {
-                    Top = reservedTop;
-                    Hide();
-                }, true);
+                //NewDoubleAnimation(this, TopProperty, SystemParameters.FullPrimaryScreenHeight, 0.2, 0, (p1, p2) =>
+                //{
+                //    Top = reservedTop;
+                //    Hide();
+                //}, true);
+                NewDoubleAnimation(this, OpacityProperty, 0, 0.1, 0, (p1, p2) => { Hide(); }, true);
             }
             else
             {
@@ -221,6 +222,8 @@ namespace EasyMuisc
         {
             WindowState = (WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
         }
+
+
         /// <summary>
         /// 单击最小化按钮事件
         /// </summary>
@@ -229,9 +232,8 @@ namespace EasyMuisc
         private void BtnMinimizeClickEventHandler(object sender, RoutedEventArgs e)
         {
             reservedTop = Top;
-            NewDoubleAnimation(this, TopProperty, SystemParameters.FullPrimaryScreenHeight, 0.2, 0, (p1, p2) =>
+            NewDoubleAnimation(this, OpacityProperty, 0, 0.1, 0, (p1, p2) =>
             {
-                Top = reservedTop;
                 if (set.TrayMode == 2)
                 {
                     Hide();
@@ -240,6 +242,7 @@ namespace EasyMuisc
                 {
                     WindowState = WindowState.Minimized;
                 }
+               // Opacity = 1;
             }, true);
         }
         /// <summary>

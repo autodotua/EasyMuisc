@@ -178,7 +178,7 @@ namespace EasyMuisc
             }
             if (error != "")
             {
-                ShowTrayMessage("以下热键无法注册，可能已被占用：" + error.TrimEnd(new char[] { '、' }));
+                trayIcon.ShowMessage("以下热键无法注册，可能已被占用：" + error.TrimEnd(new char[] { '、' }));
             }
         }
         #endregion

@@ -384,10 +384,10 @@ namespace EasyMuisc
 
             RegistGolbalHotKey();
 
-            if (set.TrayMode == 0)
-            {
-                trayIcon.Visible = false;
-            }
+            //if (set.TrayMode == 0)
+            //{
+            //    trayIcon.Hide();// = false;
+            //}
 
 
             if (path == null)
@@ -498,7 +498,7 @@ namespace EasyMuisc
 
             if (set.ShowFloatLyric)
             {
-                floatLyric.Close();
+                floatLyric.Close(true);
             }
 
             //cfa.Save();
@@ -508,77 +508,93 @@ namespace EasyMuisc
             Hide();
             pauseTimer.Start();
         }
-        public void ShowTrayMessage(string message, int ms = 2000)
-        {
-            trayIcon.BalloonTipText = message;
-            trayIcon.ShowBalloonTip(ms);
-        }
+        //public void ShowTrayMessage(string message, int ms = 2000)
+        //{
+        //    trayIcon.BalloonTipText = message;
+        //    trayIcon.ShowBalloonTip(ms);
+        //}
         /// <summary>
         /// 托盘图标
         /// </summary>
         private void InitializeTray()
         {
-            trayIcon = new System.Windows.Forms.NotifyIcon
-            {
-                BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info,
-                BalloonTipText = "设置界面在任务栏托盘",
-                Text = "EasyMusic",
-                Icon = Properties.Resources.icon,
-                Visible = true,
-            };
+            trayIcon = new WpfControls.ButtonBase.TrayIcon(Properties.Resources.icon, "EasyMusic");
+            //    = new System.Windows.Forms.NotifyIcon
+            //{
+            //    BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info,
+            //    BalloonTipText = "设置界面在任务栏托盘",
+            //    Text = "EasyMusic",
+            //    Icon = Properties.Resources.icon,
+            //    Visible = true,
+            //};
+
+
             //if (!File.Exists(MusicListName))
             //{
             //    trayIcon.ShowBalloonTip(2000);
             //}
-            trayIcon.MouseClick += (p1, p2) =>
+            trayIcon.MouseLeftClick += (p1, p2) =>
             {
-                if (p2.Button == System.Windows.Forms.MouseButtons.Left)
+                //if (p2.Button == System.Windows.Forms.MouseButtons.Left)
+                //{
+                if (Visibility == Visibility.Hidden)
                 {
-                    if (Visibility == Visibility.Hidden)
-                    {
-                        Show();
-                        Topmost = true;
-                        Topmost = set.Topmost;
-                        Activate();
-                    }
-                    else
-                    {
-                        Visibility = Visibility.Hidden;
-                    }
+                    Show();
+                    Topmost = true;
+                    Topmost = set.Topmost;
+                    Activate();
                 }
-                else if (p2.Button == System.Windows.Forms.MouseButtons.Right)
+                else
                 {
-                    TrayMenu(p1);
+                    Visibility = Visibility.Hidden;
                 }
+            //}
+            //    else if (p2.Button == System.Windows.Forms.MouseButtons.Right)
+            //    {
+            //        TrayMenu(p1);
+            //    }
             };
+
+            trayIcon.AddContextMenu("悬浮歌词开关", () =>
+            {
+                set.ShowFloatLyric = !set.ShowFloatLyric;
+                floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+                floatLyric.Update(currentLrcIndex);
+            });
+            trayIcon.AddContextMenu("退出", () => CloseWindow());
+
+            if(set.TrayMode!=0)
+            {
+                trayIcon.Show();
+            }
         }
         /// <summary>
         /// 托盘图标菜单
         /// </summary>
         /// <param name="sender"></param>
-        private void TrayMenu(object sender)
-        {
-            MenuItem menuFloat = new MenuItem() { Header = (set.ShowFloatLyric ? "关闭" : "打开") + "悬浮歌词" };
-            menuFloat.PreviewMouseLeftButtonUp += (p1, p2) =>
-            {
-                set.ShowFloatLyric = !set.ShowFloatLyric;
-                floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
-                floatLyric.Update(currentLrcIndex);
-            };
+        //private void TrayMenu(object sender)
+        //{
+        //    MenuItem menuFloat = new MenuItem() { Header = (set.ShowFloatLyric ? "关闭" : "打开") + "悬浮歌词" };
+        //    menuFloat.PreviewMouseLeftButtonUp += (p1, p2) =>
+        //    {
+        //        set.ShowFloatLyric = !set.ShowFloatLyric;
+        //        floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+        //        floatLyric.Update(currentLrcIndex);
+        //    };
 
-            MenuItem menuExit = new MenuItem() { Header = "退出" };
-            menuExit.Click += (p1, p2) => CloseWindow();
-            ContextMenu menu = new ContextMenu()
-            {
-                IsOpen = true,
-                PlacementTarget = this,
-                Items =
-                {
-                   menuFloat,
-                   menuExit
-                }
-            };
-        }
+        //    MenuItem menuExit = new MenuItem() { Header = "退出" };
+        //    menuExit.Click += (p1, p2) => 
+        //    ContextMenu menu = new ContextMenu()
+        //    {
+        //        IsOpen = true,
+        //        PlacementTarget = this,
+        //        Items =
+        //        {
+        //           menuFloat,
+        //           menuExit
+        //        }
+        //    };
+        //}
 
         private void CloseWindow()
         {

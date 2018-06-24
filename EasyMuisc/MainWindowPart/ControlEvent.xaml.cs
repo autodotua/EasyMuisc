@@ -222,7 +222,7 @@ namespace EasyMuisc
             ppp.PlacementTarget = sender as FrameworkElement;
             ppp.Placement = PlacementMode.Bottom;
             ppp.IsOpen = true;
-            (ppp.Child as MusicFxPopupContent).Refresh();
+            (ppp.Child as MusicFxPopupContent).Load();
 
         }
      
