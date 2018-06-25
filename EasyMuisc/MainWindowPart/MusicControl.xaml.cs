@@ -355,7 +355,7 @@ namespace EasyMuisc
         /// </summary>
         /// <param name="music">指定歌曲信息实例</param>
         /// <returns></returns>
-        private bool PlayNew(MusicInfo music, bool playAtOnce = true)
+        public bool PlayNew(MusicInfo music, bool playAtOnce = true)
         {
             int index = GetMusic(music);
             if (index < 0 && index >= MusicCount)

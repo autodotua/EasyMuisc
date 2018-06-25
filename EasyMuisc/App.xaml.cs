@@ -14,6 +14,12 @@ namespace EasyMuisc
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+
+        }
+
+
         //void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         //{
         //   ShowAlert(e.Exception.Message);
@@ -40,9 +46,9 @@ namespace EasyMuisc
         //}
         //private void ShowAlert(string message)
         //{
-           
+
         //        MessageBox.Show(message, "发生异常", MessageBoxButton.OK, MessageBoxImage.Error);
-            
+
         //}
     }
     

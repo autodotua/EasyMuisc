@@ -126,7 +126,7 @@ namespace EasyMuisc.Windows
         public void Reload(List<string> lrc)
         {
             CurrentIndex = 0;
-            this.lrc = new List<string>(lrc);
+            this.lrc = lrc.ToList();
             //lrc.Add("\t");
             //if (lrc.Count > 0)
             //{
@@ -188,8 +188,8 @@ namespace EasyMuisc.Windows
             }
             if(index >= lrc.Count - 1)
             {
-                GetTextBlock(CurrentIndex).ToMajor(lrc[oldIndex]);
-                GetTextBlock(1 - CurrentIndex).ToMinor("");
+                GetTextBlock(1-CurrentIndex).ToMajor(lrc[oldIndex]);
+                GetTextBlock(CurrentIndex).ToMinor("");
                 return;
             }
                 if (index < 0 || lrc == null)

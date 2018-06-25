@@ -79,7 +79,7 @@ namespace EasyMuisc
         /// </summary>
        public static string programDirectory = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).DirectoryName;
         public static ListenHistoryHelper listenHistory = new ListenHistoryHelper();
-        public static MainWindow mainWindow;
+        public static MainWindow WinMain=>App.Current.MainWindow as MainWindow;
         
     }
 }

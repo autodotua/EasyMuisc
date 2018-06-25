@@ -430,7 +430,7 @@ namespace EasyMuisc
                 {
                     RemoveHistory(CurrentHistoryIndex + 1, HistoryCount - CurrentHistoryIndex - 1);
                 }
-                AddHistory(lvwMusic.SelectedItem);
+                AddHistory(lvwMusic.SelectedItem,false);
             };
 
 

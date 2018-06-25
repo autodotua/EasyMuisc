@@ -29,11 +29,11 @@ namespace EasyMuisc.Windows
         public WinAlbumPicture()
         {
             InitializeComponent();
-            Left = mainWindow.Left ; // + 12;
-            Top = mainWindow.Top;// + win.ActualHeight - win.imgAlbum.Height - 16;
-            Width = mainWindow.imgAlbum.ActualWidth;
-            Height = mainWindow.imgAlbum.ActualHeight;
-            if(mainWindow.Topmost)
+            Left = WinMain.Left ; // + 12;
+            Top = WinMain.Top;// + win.ActualHeight - win.imgAlbum.Height - 16;
+            Width = WinMain.imgAlbum.ActualWidth;
+            Height = WinMain.imgAlbum.ActualHeight;
+            if(WinMain.Topmost)
             {
                 winMainTopMost = true;
             }
@@ -147,7 +147,7 @@ namespace EasyMuisc.Windows
 
         private void WinAlbumPicClosingEventHandler(object sender, EventArgs e)
         {
-            mainWindow.Topmost = winMainTopMost;
+            WinMain.Topmost = winMainTopMost;
         }
     }
 }

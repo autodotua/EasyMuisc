@@ -98,7 +98,7 @@ namespace EasyMuisc
         {
             if (e.Key == Key.Space)
             {
-                mainWindow.HotKeyPlayAndPauseEventHandler(null, null);
+                WinMain.HotKeyPlayAndPauseEventHandler(null, null);
             }
         }
         /// <summary>

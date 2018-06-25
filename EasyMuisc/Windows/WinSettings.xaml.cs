@@ -186,10 +186,10 @@ namespace EasyMuisc.Windows
                 set.RecordListenHistory = chkListenHitory.IsChecked.Value;
                 set.ThresholdValueOfListenTime = listenValue.Value;
                 set.BackgroundColor = mainColor.ColorBrush.ToString();
-                mainWindow.UpdateColor(mainColor.ColorBrush);
-                if (mainWindow.path != null && File.Exists(mainWindow.path))
+                WinMain.UpdateColor(mainColor.ColorBrush);
+                if (WinMain.path != null && File.Exists(WinMain.path))
                 {
-                    mainWindow.InitialiazeLrc();
+                    WinMain.InitialiazeLrc();
                 }
                 set.Save();
             }

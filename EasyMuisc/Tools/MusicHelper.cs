@@ -90,7 +90,7 @@ namespace EasyMuisc
         /// <summary>
         /// 历史记录
         /// </summary>
-        private static List<MusicInfo> historyList = new List<MusicInfo>();
+        public static List<MusicInfo> historyList = new List<MusicInfo>();
         /// <summary>
         /// 当前播放历史索引
         /// </summary>
@@ -137,10 +137,10 @@ namespace EasyMuisc
         /// <returns></returns>
         public async static void AddMusic(string[] musics)
         {
-            var taskBar = mainWindow.taskBar;
+            var taskBar = WinMain.taskBar;
             taskBar.ProgressValue = 0;
             taskBar.ProgressState = TaskbarItemProgressState.Normal;
-            mainWindow.LoadingSpinner = true;
+            WinMain.LoadingSpinner = true;
 
             //if (cfa.AppSettings.Settings["MusicList"] != null)
             //{
@@ -157,7 +157,7 @@ namespace EasyMuisc
            
             //}
             taskBar.ProgressState = TaskbarItemProgressState.None;
-            mainWindow.LoadingSpinner = false;
+            WinMain.LoadingSpinner = false;
 
         }
         /// <summary>
@@ -341,7 +341,7 @@ namespace EasyMuisc
         public static void RemoveMusic()
         {
             musicDatas.Clear();
-            mainWindow.AfterClearList();
+            WinMain.AfterClearList();
         }
         /// <summary>
         /// 删除指定歌曲
@@ -352,7 +352,7 @@ namespace EasyMuisc
             musicDatas.RemoveAt(index);
             if (musicDatas.Count == 0)
             {
-                mainWindow.AfterClearList();
+                WinMain.AfterClearList();
             }
         }
         public static void RemoveMusic(MusicInfo music)
@@ -360,7 +360,7 @@ namespace EasyMuisc
             musicDatas.Remove(music);
             if (musicDatas.Count == 0)
             {
-                mainWindow.AfterClearList();
+                WinMain.AfterClearList();
             }
         }
 
@@ -405,10 +405,13 @@ namespace EasyMuisc
         /// 新增歌曲历史
         /// </summary>
         /// <param name="music"></param>
-        public static void AddHistory(MusicInfo music)
+        public static void AddHistory(MusicInfo music,bool indexPlusOne=true)
         {
             historyList.Add(music);
-            historyIndex++;
+            if (indexPlusOne)
+            {
+                historyIndex++;
+            }
         }
         /// <summary>
         /// 移除一定的歌曲历史

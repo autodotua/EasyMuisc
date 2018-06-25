@@ -88,7 +88,7 @@ namespace EasyMuisc.Windows
                         SetButtonsStatus(false);
                         if (ShowMessage("重载歌词？", WpfControls.Dialog.DialogType.Information, MessageBoxButton.YesNo, this) == 0)
                         {
-                            ShareStaticResources.mainWindow.InitialiazeLrc();
+                            ShareStaticResources.WinMain.InitialiazeLrc();
                         }
                     }
                     catch (Exception ex)

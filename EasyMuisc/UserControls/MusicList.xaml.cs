@@ -85,6 +85,7 @@ namespace EasyMuisc
                 button.PreviewMouseRightButtonDown += BtnPreviewMouseRightButtonDownEventHandler;
 
             }
+
             if (lastMusicListBtn == null)
             {
                 // (stkMusiList.Children[1] as UserControls.ToggleButton).IsPressed = true;
@@ -219,10 +220,7 @@ namespace EasyMuisc
         /// 刷新列表
         /// </summary>
         public void ResetItemsSource() => lvw.ItemsSource = musicDatas;
-        public void Refresh()
-        {
 
-        }
         /// <summary>
         /// 双击列表项事件
         /// </summary>
@@ -230,12 +228,20 @@ namespace EasyMuisc
         /// <param name="e"></param>
         public void LvwItemPreviewMouseDoubleClickEventHandler(object sender, MouseButtonEventArgs e)
         {
-            if (CurrentHistoryIndex < HistoryCount - 1)
+            if (lvw.ItemsSource == musicDatas)
+
             {
-                RemoveHistory(CurrentHistoryIndex + 1, HistoryCount - CurrentHistoryIndex - 1);
+                if (CurrentHistoryIndex < HistoryCount - 1)
+                {
+                    RemoveHistory(CurrentHistoryIndex + 1, HistoryCount - CurrentHistoryIndex - 1);
+                }
+                musicIndex = lvw.SelectedIndex;
+                WinMain.PlayCurrent();
             }
-            musicIndex = lvw.SelectedIndex;
-            mainWindow.PlayCurrent();
+            else
+            {
+                WinMain.PlayNew(lvw.SelectedItem as MusicInfo);
+            }
         }
         /// <summary>
         /// 在列表项上按下按钮事件，包括打开、删除
@@ -268,7 +274,7 @@ namespace EasyMuisc
         {
             if (lvw.SelectedIndex != -1)
             {
-                mainWindow.BtnListOptionClickEventHanlder(sender, null);
+                WinMain.BtnListOptionClickEventHanlder(sender, null);
 
             }
         }
@@ -344,6 +350,22 @@ namespace EasyMuisc
             }
         }
 
+        private void BtnHistoryClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            if (lvw.ItemsSource == musicDatas)
+            {
+                lvw.ItemsSource = historyList;
+                btn.Background = WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor( WpfControls.DarkerBrushConverter.StringToSolidColorBrush(set.BackgroundColor))));
+
+            }
+            else
+            {
+                lvw.ItemsSource = musicDatas;
+                btn.Background = WpfControls.DarkerBrushConverter.StringToSolidColorBrush(set.BackgroundColor);
+
+            }
+        }
     }
 
     public class WidthConverter : IValueConverter
