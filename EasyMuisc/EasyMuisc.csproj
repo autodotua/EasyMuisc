@@ -136,6 +136,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -169,10 +170,10 @@
     <Compile Include="MainWindowPart\MusicControl.xaml.cs" />
     <Compile Include="MainWindowPart\ControlEvent.xaml.cs" />
     <Compile Include="Tools\FindVisualChildHelper.cs" />
+    <Compile Include="Tools\GlobalDatas.cs" />
     <Compile Include="Tools\ListenHistory.cs" />
     <Compile Include="Tools\LyricHelper.cs" />
     <Compile Include="Tools\MusicHelper.cs" />
-    <Compile Include="Tools\ShareStaticResources.cs" />
     <Compile Include="UserControls\ControlButton.xaml.cs">
       <DependentUpon>ControlButton.xaml</DependentUpon>
     </Compile>
@@ -309,7 +310,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

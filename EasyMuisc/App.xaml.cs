@@ -14,9 +14,42 @@ namespace EasyMuisc
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+         if(   WpfCodes.Program.Startup.HaveAnotherInstance("EasyMusic"))
+            {
+              WpfControls.Dialog.DialogHelper.  ShowError("请勿运行多个实例！这会导致热键异常等问题。");
+                Environment.Exit(0);
+            }
+        }
+
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            if(e.Args.Length!=0)
+            {
+                GlobalDatas.argPath = e.Args[0];
+            }
 
+            TaskScheduler.UnobservedTaskException += (p1, p2) => { if (!p2.Observed) ShowException(p2.Exception, 3); };//Task
+            AppDomain.CurrentDomain.UnhandledException += (p1, p2) => ShowException((Exception)p2.ExceptionObject, 2);//UI
+            DispatcherUnhandledException += (p1, p2) => ShowException(p2.Exception, 1);//Thread
+        }
+        private void ShowException(Exception ex, int type)
+        {
+            try
+            {
+                Dispatcher.Invoke(() => WpfControls.Dialog.DialogHelper.ShowException("程序发生了未捕获的错误，类型" + type.ToString(), ex));
+
+                File.AppendAllText("Exception.log", Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + ex.ToString());
+            }
+            catch (Exception ex2)
+            {
+                Dispatcher.Invoke(() => WpfControls.Dialog.DialogHelper.ShowException("错误信息无法写入", ex2));
+            }
+            finally
+            {
+                App.Current.Shutdown();
+            }
         }
 
 

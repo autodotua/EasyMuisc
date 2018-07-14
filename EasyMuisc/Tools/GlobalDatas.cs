@@ -9,7 +9,7 @@ using Un4seen.Bass;
 
 namespace EasyMuisc
 {
-    public static class ShareStaticResources
+    public static class GlobalDatas
     {
         /// <summary>
         /// 音乐播放句柄
@@ -80,6 +80,7 @@ namespace EasyMuisc
        public static string programDirectory = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).DirectoryName;
         public static ListenHistoryHelper listenHistory = new ListenHistoryHelper();
         public static MainWindow WinMain=>App.Current.MainWindow as MainWindow;
-        
+
+        public static string argPath = null;
     }
 }

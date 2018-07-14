@@ -6,7 +6,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using EasyMuisc.Windows;
 using static EasyMuisc.Tools.Tools;
-using static EasyMuisc.ShareStaticResources;
+using static EasyMuisc.GlobalDatas;
 using System.Windows.Media;
 using System.Windows.Shell;
 using Microsoft.Win32;

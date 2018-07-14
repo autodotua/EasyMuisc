@@ -12,7 +12,7 @@ using EasyMuisc.UserControls;
 using Microsoft.Win32;
 using Un4seen.Bass;
 using System.Windows.Controls.Primitives;
-using static EasyMuisc.ShareStaticResources;
+using static EasyMuisc.GlobalDatas;
 using static EasyMuisc.MusicHelper;
 using static WpfControls.Dialog.DialogHelper;
 

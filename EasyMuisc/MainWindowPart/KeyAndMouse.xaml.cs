@@ -16,8 +16,10 @@ using System.Text.RegularExpressions;
 using EasyMuisc.Windows;
 using static EasyMuisc.Tools.Tools;
 using EasyMuisc.Tools;
-using static EasyMuisc.ShareStaticResources;
+using static EasyMuisc.GlobalDatas;
 using static WpfControls.Dialog.DialogHelper;
+using System.Speech.Recognition;
+using System.Speech.Synthesis;
 
 namespace EasyMuisc
 {
@@ -181,6 +183,77 @@ namespace EasyMuisc
                 trayIcon.ShowMessage("以下热键无法注册，可能已被占用：" + error.TrimEnd(new char[] { '、' }));
             }
         }
+        #endregion
+
+        #region 语音识别
+
+        private void RegistSpeechRecognition()
+        {
+            return;
+            SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine(System.Globalization.CultureInfo.CurrentCulture);
+
+            //----------------
+            //初始化命令词
+            Choices conmmonds = new Choices();
+            //添加命令词
+            conmmonds.Add(new string[] { "播放", "暂停", "轻一点", "响一点", "多轻一点", "多响一点" });
+            //初始化命令词管理
+            GrammarBuilder gBuilder = new GrammarBuilder();
+            //将命令词添加到管理中
+            gBuilder.Append(conmmonds);
+            //实例化命令词管理
+            Grammar grammar = new Grammar(gBuilder);
+            //-----------------
+
+            //创建并加载听写语法(添加命令词汇识别的比较精准)
+            recognizer.LoadGrammar(grammar);
+            //为语音识别事件添加处理程序。
+            recognizer.SpeechRecognized += RecognizerSpeechRecognizedEventHandler;
+            //将输入配置到语音识别器。
+            recognizer.SetInputToDefaultAudioDevice();
+            //启动异步，连续语音识别。
+            recognizer.RecognizeAsync(RecognizeMode.Multiple);
+
+            sy.SelectVoiceByHints(VoiceGender.Neutral);
+
+
+        }
+        SpeechSynthesizer sy = new SpeechSynthesizer();
+        private void RecognizerSpeechRecognizedEventHandler(object sender, SpeechRecognizedEventArgs e)
+        {
+            switch (e.Result.Text)
+            {
+                case "暂停":
+                    if (btnPause.Visibility == Visibility.Visible)
+                    {
+                        BtnPauseClickEventHandler(null, null);
+                    }
+                    break;
+                case "播放":
+                    if (btnPlay.Visibility == Visibility.Visible)
+                    {
+                        BtnPlayClickEventHandler(null, null);
+                    }
+                    break;
+                case "轻一点":
+                    sldVolumn.Value -= 0.05;
+                    sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
+                    break;
+                case "响一点":
+                    sldVolumn.Value += 0.05;
+                    sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
+                    break;
+                case "多轻一点":
+                    sldVolumn.Value -= 0.2;
+                    sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
+                    break;
+                case "多响一点":
+                    sldVolumn.Value += 0.2;
+                    sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
+                    break;
+            }
+        }
+
         #endregion
 
 

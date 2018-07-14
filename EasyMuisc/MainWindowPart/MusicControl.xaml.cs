@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using EasyMuisc.Windows;
 using static EasyMuisc.Tools.Tools;
-using static EasyMuisc.ShareStaticResources;
+using static EasyMuisc.GlobalDatas;
 using EasyMuisc.Tools;
 using static EasyMuisc.MusicHelper;
 using static WpfControls.Dialog.DialogHelper;

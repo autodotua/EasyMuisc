@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static EasyMuisc.ShareStaticResources;
+using static EasyMuisc.GlobalDatas;
 using Un4seen.Bass;
 using System.Diagnostics;
 using System.Windows.Interop;

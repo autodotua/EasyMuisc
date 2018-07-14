@@ -29,7 +29,7 @@ using EasyMuisc.Tools;
 using EasyMuisc.Windows;
 using EasyMuisc.UserControls;
 using static EasyMuisc.Tools.Tools;
-using static EasyMuisc.ShareStaticResources;
+using static EasyMuisc.GlobalDatas;
 using static EasyMuisc.MusicHelper;
 using static WpfControls.Dialog.DialogHelper;
 
@@ -320,7 +320,7 @@ namespace EasyMuisc
                 ResizeBorderThickness = new Thickness(4),
             });
 
-           // colorPicker.CurrentColor = new BrushConverter().ConvertFrom(set.BackgroundColor) as SolidColorBrush;
+            // colorPicker.CurrentColor = new BrushConverter().ConvertFrom(set.BackgroundColor) as SolidColorBrush;
             UpdateColor(new BrushConverter().ConvertFrom(set.BackgroundColor) as SolidColorBrush);
 
             InitialiazeField();
@@ -383,25 +383,26 @@ namespace EasyMuisc
         {
 
             RegistGolbalHotKey();
-
+            RegistSpeechRecognition();
             //if (set.TrayMode == 0)
             //{
             //    trayIcon.Hide();// = false;
             //}
 
 
-            if (path == null)
+            if (argPath != null && File.Exists(argPath))
             {
+                path = argPath;
+                PlayNew(await AddMusic(path), true);
+            }
+            else
+            {
+
                 string tempPath = set.LastMusic;
                 if (File.Exists(tempPath) && musicDatas.Where(p => p.Path.Equals(tempPath)).Count() != 0)
                 {
                     PlayNew(await AddMusic(tempPath), false);
                 }
-            }
-            else
-            {
-                PlayNew(await AddMusic(path), true);
-
             }
 
 
@@ -441,7 +442,7 @@ namespace EasyMuisc
             //{
             //    SleepThenDo(1000, (p1, p2) => BtnListSwitcherClickEventHandler(null, null));
             //}
-       
+
         }
 
 
@@ -548,11 +549,11 @@ namespace EasyMuisc
                 {
                     Visibility = Visibility.Hidden;
                 }
-            //}
-            //    else if (p2.Button == System.Windows.Forms.MouseButtons.Right)
-            //    {
-            //        TrayMenu(p1);
-            //    }
+                //}
+                //    else if (p2.Button == System.Windows.Forms.MouseButtons.Right)
+                //    {
+                //        TrayMenu(p1);
+                //    }
             };
 
             trayIcon.AddContextMenu("悬浮歌词开关", () =>
@@ -563,7 +564,7 @@ namespace EasyMuisc
             });
             trayIcon.AddContextMenu("退出", () => CloseWindow());
 
-            if(set.TrayMode!=0)
+            if (set.TrayMode != 0)
             {
                 trayIcon.Show();
             }

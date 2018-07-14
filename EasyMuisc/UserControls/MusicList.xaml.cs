@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
-using static EasyMuisc.ShareStaticResources;
+using static EasyMuisc.GlobalDatas;
 using static EasyMuisc.MusicHelper;
 using System.IO;
 using static WpfControls.Dialog.DialogHelper;

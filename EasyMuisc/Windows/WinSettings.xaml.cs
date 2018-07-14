@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using static EasyMuisc.Tools.Tools;
-using static EasyMuisc.ShareStaticResources;
+using static EasyMuisc.GlobalDatas;
 using EasyMuisc.Tools;
 using Un4seen.Bass;
 using static WpfControls.Dialog.DialogHelper;

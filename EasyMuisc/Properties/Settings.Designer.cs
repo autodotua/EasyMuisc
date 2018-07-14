@@ -598,5 +598,17 @@ namespace EasyMuisc.Properties {
                 this["AnimationDuration"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SpeechRecognitionCommand {
+            get {
+                return ((bool)(this["SpeechRecognitionCommand"]));
+            }
+            set {
+                this["SpeechRecognitionCommand"] = value;
+            }
+        }
     }
 }
