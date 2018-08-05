@@ -4,9 +4,9 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
-using EasyMuisc.Windows;
-using static EasyMuisc.Tools.Tools;
-using static EasyMuisc.GlobalDatas;
+using EasyMusic.Windows;
+using static EasyMusic.Tools.Tools;
+using static EasyMusic.GlobalDatas;
 using System.Windows.Media;
 using System.Windows.Shell;
 using Microsoft.Win32;
@@ -15,7 +15,7 @@ using System.Diagnostics;
 using System.Security.Principal;
 using static WpfControls.Dialog.DialogHelper;
 
-namespace EasyMuisc
+namespace EasyMusic
 {
     public partial class MainWindow : Window
     {
@@ -76,7 +76,7 @@ namespace EasyMuisc
             menuTop.Click += (p1, p2) =>
             {
                 Topmost = !Topmost;
-                set.Topmost = Topmost;
+                Setting.Topmost = Topmost;
             };
             MenuItem menuFileAssociation = new MenuItem() { Header = "注册格式" };
             menuFileAssociation.Click += MenuFileAssociationClickEventHandler;
@@ -130,7 +130,7 @@ namespace EasyMuisc
             };
             mainContextMenu.Items.Add(menuTop);
             mainContextMenu.Items.Add(menuFileAssociation);
-            if (set.RecordListenHistory)
+            if (Setting.RecordListenHistory)
             {
                 mainContextMenu.Items.Add(menuListenHistory);
             }
@@ -199,7 +199,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void BtnCloseClickEventHandler(object sender, RoutedEventArgs e)
         {
-            if (set.TrayMode == 1)
+            if (Setting.TrayMode == 1)
             {
                 //NewDoubleAnimation(this, TopProperty, SystemParameters.FullPrimaryScreenHeight, 0.2, 0, (p1, p2) =>
                 //{
@@ -234,7 +234,7 @@ namespace EasyMuisc
             reservedTop = Top;
             NewDoubleAnimation(this, OpacityProperty, 0, 0.1, 0, (p1, p2) =>
             {
-                if (set.TrayMode == 2)
+                if (Setting.TrayMode == 2)
                 {
                     Hide();
                 }

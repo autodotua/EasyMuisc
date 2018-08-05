@@ -1,4 +1,4 @@
-﻿using EasyMuisc.UserControls;
+﻿using EasyMusic.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,10 +17,10 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Shell;
-using static EasyMuisc.GlobalDatas;
+using static EasyMusic.GlobalDatas;
 using static WpfCodes.WindowsApi.WindowMode;
 
-namespace EasyMuisc.Windows
+namespace EasyMusic.Windows
 {
     /// <summary>
     /// FloatLyrics.xaml 的交互逻辑
@@ -231,10 +231,10 @@ namespace EasyMuisc.Windows
         private bool closing = false;
         private void WindowClosingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            set.FloatLyricsTop = Top;
-            set.FloatLyricsLeft = Left;
-            set.FloatLyricsHeight = Height;
-            set.FloatLyricsWidth = Width;
+            Setting.FloatLyricsTop = Top;
+            Setting.FloatLyricsLeft = Left;
+            Setting.FloatLyricsHeight = Height;
+            Setting.FloatLyricsWidth = Width;
 
             if(!closing)
             {

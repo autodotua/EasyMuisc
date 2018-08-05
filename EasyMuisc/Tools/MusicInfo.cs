@@ -1,8 +1,9 @@
-﻿using System;
+﻿using EasyMusic.Helper;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace EasyMuisc
+namespace EasyMusic
 {
     [Serializable]
     public class MusicInfo

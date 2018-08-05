@@ -6,8 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WpfCodes.Basic;
 
-namespace EasyMuisc.Tools
+namespace EasyMusic.Helper
 {
     public class LyricHelper
     {

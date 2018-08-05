@@ -14,11 +14,12 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static EasyMuisc.Tools.Tools;
-using static EasyMuisc.GlobalDatas;
+using static EasyMusic.Tools.Tools;
+using static EasyMusic.GlobalDatas;
 using static WpfControls.Dialog.DialogHelper;
+using EasyMusic.Helper;
 
-namespace EasyMuisc.Windows
+namespace EasyMusic.Windows
 {
     /// <summary>
     /// winAlbumPicture.xaml 的交互逻辑

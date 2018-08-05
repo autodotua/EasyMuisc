@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static EasyMuisc.GlobalDatas;
-using static EasyMuisc.MusicHelper;
+using static EasyMusic.GlobalDatas;
+using static EasyMusic.Helper.MusicHelper;
 using System.Xml;
 using System.IO;
 
-namespace EasyMuisc
+namespace EasyMusic.Tools
 {
-    public class ListenHistory
+    public class ListenHistoryInfo
     {
 
         public Dictionary<DateTime, DateTime?> ListenTimes { get; set; }
@@ -41,7 +41,7 @@ namespace EasyMuisc
 
     public class ListenHistoryHelper
     {
-        public static string XmlPath => set.ListenHistoryPath.Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "");
+        public static string XmlPath => Setting.ConfigPath.Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "")+ "\\ListenHistory.xml";
 
         XmlDocument xml = new XmlDocument();
         XmlElement root;
@@ -87,9 +87,9 @@ namespace EasyMuisc
             }
         }
 
-        public IEnumerable<ListenHistory> GetListenHistories()
+        public IEnumerable<ListenHistoryInfo> GetListenHistories()
         {
-            List<ListenHistory> histories = new List<ListenHistory>();
+            List<ListenHistoryInfo> histories = new List<ListenHistoryInfo>();
             foreach (XmlElement element in root.ChildNodes)
             {
                 string name = element.GetAttribute("Name");
@@ -103,7 +103,7 @@ namespace EasyMuisc
                     if (child.HasAttribute("EndTime"))
                     {
                         end = DateTime.Parse(child.GetAttribute("EndTime"));
-                        if((end.Value-start).TotalSeconds<set.ThresholdValueOfListenTime)
+                        if((end.Value-start).TotalSeconds<Setting.ThresholdValueOfListenTime)
                         {
                             continue;
                         }
@@ -117,7 +117,7 @@ namespace EasyMuisc
                 {
                     continue;
                 }
-                ListenHistory history = new ListenHistory()
+                ListenHistoryInfo history = new ListenHistoryInfo()
                 {
                     Name = name,
                     Length = length,

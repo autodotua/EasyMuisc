@@ -13,17 +13,19 @@ using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Linq;
 using System.Text.RegularExpressions;
-using EasyMuisc.Windows;
-using static EasyMuisc.Tools.Tools;
-using static EasyMuisc.GlobalDatas;
-using EasyMuisc.Tools;
-using static EasyMuisc.MusicHelper;
+using EasyMusic.Windows;
+using static EasyMusic.Tools.Tools;
+using static EasyMusic.GlobalDatas;
+using EasyMusic.Tools;
+using static EasyMusic.Helper.MusicHelper;
 using static WpfControls.Dialog.DialogHelper;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using WpfControls.Dialog;
 using System.Windows.Media;
+using EasyMusic.Helper;
+using WpfCodes.Basic;
 
-namespace EasyMuisc
+namespace EasyMusic
 {
     public partial class MainWindow : Window
     {
@@ -52,10 +54,10 @@ namespace EasyMuisc
                 stream = Un4seen.Bass.AddOn.Fx.BassFx.BASS_FX_TempoCreate(tempStream, BASSFlag.BASS_FX_FREESOURCE); // create a tempo stream for it
                                                                                                                     //Bass.  BASS_ChannelSetAttribute(tempostream, BASS_ATTRIB_TEMPO_PITCH, pitch); // set the pitch
                                                                                                                     //  BASS_ChannelPlay(tempostream, FALSE); // start playing
-                if (set.MusicSettings)
+                if (Setting.MusicSettings)
                 {
-                    Pitch = set.Pitch;
-                    Tempo = set.Tempo;
+                    Pitch = Setting.Pitch;
+                    Tempo = Setting.Tempo;
                 }
 
                 Volumn = sldVolumn.Value;
@@ -86,7 +88,7 @@ namespace EasyMuisc
             try
             {
                 floatLyric.SetFontEffect();
-                FontFamily font = new FontFamily(set.LyricsFont);
+                FontFamily font = new FontFamily(Setting.LyricsFont);
                 if (font == null)
                 {
                     trayIcon.ShowMessage("主界面字体应用失败，请重新设置");
@@ -95,8 +97,8 @@ namespace EasyMuisc
                 {
                     lbxLrc.FontFamily = font;
                 }
-                lbxLrc.Foreground = new BrushConverter().ConvertFrom(set.LyricsFontColor) as SolidColorBrush;
-                lbxLrc.FontWeight = set.LyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
+                lbxLrc.Foreground = new BrushConverter().ConvertFrom(Setting.LyricsFontColor) as SolidColorBrush;
+                lbxLrc.FontWeight = Setting.LyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
 
                 lrcLineSumToIndex.Clear();
                 lrcTime.Clear();//清空歌词时间
@@ -145,7 +147,7 @@ namespace EasyMuisc
                         var tbk = new TextBlock()
                         {
                             Name = "tbk" + index.ToString(),
-                            FontSize = set.NormalLrcFontSize,
+                            FontSize = Setting.NormalLrcFontSize,
                             Text = i.Value,
                             HorizontalAlignment = HorizontalAlignment.Center,
                             Tag = index++,//标签用于定位
@@ -156,7 +158,7 @@ namespace EasyMuisc
                         tbk.MouseLeftButtonUp += (p1, p2) =>
                         {
                             //单击歌词跳转到当前歌词
-                            Bass.BASS_ChannelSetPosition(stream, (lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset) > 0 ? lrcTime[(int)tbk.Tag] - offset - set.LrcDefautOffset : 0);
+                            Bass.BASS_ChannelSetPosition(stream, (lrcTime[(int)tbk.Tag] - offset - Setting.LrcDefautOffset) > 0 ? lrcTime[(int)tbk.Tag] - offset - Setting.LrcDefautOffset : 0);
                         };
                         //if (set.UseListBoxLrcInsteadOfStackPanel)
                         //{
@@ -186,7 +188,7 @@ namespace EasyMuisc
                     {
                         lrcContent.Add(txtLrc.GetLineText(i));
                     }
-                    txtLrc.FontSize = set.TextLrcFontSize;
+                    txtLrc.FontSize = Setting.TextLrcFontSize;
                     grdLrc.Visibility = Visibility.Hidden;
                     txtLrc.Visibility = Visibility.Visible;
                     //stkLrc.Visibility = Visibility.Hidden;
@@ -199,7 +201,7 @@ namespace EasyMuisc
                     txtLrc.Visibility = Visibility.Hidden;
                     //stkLrc.Visibility = Visibility.Hidden;
                     lbxLrc.Visibility = Visibility.Hidden;
-                    if (set.ShowFloatLyric)
+                    if (Setting.ShowFloatLyric)
                     {
                         floatLyric.Clear();
                     }
@@ -267,7 +269,7 @@ namespace EasyMuisc
                 }
                 playTimer.Start();
             }
-            if (set.RecordListenHistory && notRecordYet)
+            if (Setting.RecordListenHistory && notRecordYet)
             {
                 listenHistory.Record();
                 notRecordYet = false;
@@ -319,7 +321,7 @@ namespace EasyMuisc
                     AddHistory(CurrentMusic);//加入历史记录
                 }
             }
-            if (set.RecordListenHistory)
+            if (Setting.RecordListenHistory)
             {
                 listenHistory.RecordEnd();
                 notRecordYet = false;
@@ -335,7 +337,7 @@ namespace EasyMuisc
                 Width += 0.01;
                 Width -= 0.01;
             }
-            if (set.RecordListenHistory)
+            if (Setting.RecordListenHistory)
             {
                 if (playAtOnce)
                 {
@@ -431,7 +433,7 @@ namespace EasyMuisc
         /// </summary>
         private void InitializeAnimation()
         {
-            if (set.LrcAnimation)
+            if (Setting.LrcAnimation)
             {
                 //Storyboard.SetTargetName(aniLrc, stkLrc.Name);
                 Storyboard.SetTargetProperty(aniLrc, new PropertyPath(MarginProperty));
@@ -485,7 +487,7 @@ namespace EasyMuisc
             {
                 for (int i = 0; i < lrcTime.Count - 1; i++)//从第一个循环到最后一个歌词时间
                 {
-                    if (lrcTime[i + 1] > position + offset + set.LrcDefautOffset)//如果下一条歌词的时间比当前时间要后面（因为增序判断所以这一条歌词时间肯定小于的）
+                    if (lrcTime[i + 1] > position + offset + Setting.LrcDefautOffset)//如果下一条歌词的时间比当前时间要后面（因为增序判断所以这一条歌词时间肯定小于的）
                     {
                         if (currentLrcIndex != i)//如果上一次不是这一句歌词
                         {
@@ -494,7 +496,7 @@ namespace EasyMuisc
                         }
                         break;
                     }
-                    else if (i == lrcTime.Count - 2 && lrcTime[i + 1] < position + offset + set.LrcDefautOffset)
+                    else if (i == lrcTime.Count - 2 && lrcTime[i + 1] < position + offset + Setting.LrcDefautOffset)
                     {
                         if (currentLrcIndex != i + 1)//如果上一次不是这一句歌词
                         {
@@ -512,7 +514,7 @@ namespace EasyMuisc
                 //if (set.UseListBoxLrcInsteadOfStackPanel)
                 //{
                 lbxLrc.RefreshFontSize(currentLrcIndex);
-                lbxLrc.ScrollTo(currentLrcIndex, lrcLineSumToIndex, set.NormalLrcFontSize);
+                lbxLrc.ScrollTo(currentLrcIndex, lrcLineSumToIndex, Setting.NormalLrcFontSize);
                 //}
                 //else
                 //{
@@ -525,7 +527,7 @@ namespace EasyMuisc
                 //    StackPanelLrcAnimition(currentLrcIndex);//歌词转变动画
                 //}
 
-                if (set.ShowFloatLyric)
+                if (Setting.ShowFloatLyric)
                 {
                     floatLyric.Update(currentLrcIndex);
                 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace EasyMuisc
+namespace EasyMusic
 {
     public partial class MainWindow : Window
     {

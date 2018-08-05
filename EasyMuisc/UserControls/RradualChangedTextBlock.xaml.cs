@@ -14,9 +14,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static EasyMuisc.GlobalDatas;
+using static EasyMusic.GlobalDatas;
 
-namespace EasyMuisc.UserControls
+namespace EasyMusic.UserControls
 {
     /// <summary>
     /// RradualChangedTextBlock.xaml 的交互逻辑
@@ -63,7 +63,7 @@ namespace EasyMuisc.UserControls
 
         public void SetEffect()
         {
-            if (set.FloatLyricsFontEffect == 0)
+            if (Setting.FloatLyricsFontEffect == 0)
             {
                 text1 = lbl1;
                 text2 = lbl2;
@@ -78,16 +78,16 @@ namespace EasyMuisc.UserControls
                 gTextBlock.Visibility = Visibility.Visible;
             }
 
-            SolidColorBrush borderBrush = new BrushConverter().ConvertFrom(set.FloatLyricsBorderColor) as SolidColorBrush;
+            SolidColorBrush borderBrush = new BrushConverter().ConvertFrom(Setting.FloatLyricsBorderColor) as SolidColorBrush;
             Resources["borderBrush"] = borderBrush;
             Resources["borderColor"] = borderBrush.Color;
-            Resources["thickness"] = set.FloatLyricsThickness;
-            Resources["blurRadius"] = set.FloatLyricsBlurRadius;
-            Resources["fontBrush"] = new BrushConverter().ConvertFrom(set.FloatLyricsFontColor) as SolidColorBrush;
-            Resources["bold"] = set.FloatLyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
+            Resources["thickness"] = Setting.FloatLyricsThickness;
+            Resources["blurRadius"] = Setting.FloatLyricsBlurRadius;
+            Resources["fontBrush"] = new BrushConverter().ConvertFrom(Setting.FloatLyricsFontColor) as SolidColorBrush;
+            Resources["bold"] = Setting.FloatLyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
             try
             {
-                Resources["font"] = new FontFamily(set.FloatLyricsFont);
+                Resources["font"] = new FontFamily(Setting.FloatLyricsFont);
             }
             catch
             {
@@ -102,14 +102,14 @@ namespace EasyMuisc.UserControls
             FontSizeAnimation
                   (
                   text1,
-                  set.FloatLyricsHighlightFontSize,
-                  set.FloatLyricsNormalFontSize
+                  Setting.FloatLyricsHighlightFontSize,
+                  Setting.FloatLyricsNormalFontSize
                   );
             FontSizeAnimation
              (
              text2,
-             set.FloatLyricsHighlightFontSize,
-             set.FloatLyricsNormalFontSize
+             Setting.FloatLyricsHighlightFontSize,
+             Setting.FloatLyricsNormalFontSize
              );
             ChangeText(text);
 
@@ -136,8 +136,8 @@ namespace EasyMuisc.UserControls
             FontSizeAnimation
                   (
                   text1,
-                  set.FloatLyricsNormalFontSize,
-                  set.FloatLyricsHighlightFontSize
+                  Setting.FloatLyricsNormalFontSize,
+                  Setting.FloatLyricsHighlightFontSize
                    );
         }
 
@@ -161,7 +161,7 @@ namespace EasyMuisc.UserControls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            text1.FontSize = set.FloatLyricsNormalFontSize;
+            text1.FontSize = Setting.FloatLyricsNormalFontSize;
 
         }
 

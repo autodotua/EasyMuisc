@@ -4,19 +4,19 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
-using EasyMuisc.Windows;
-using static EasyMuisc.Tools.Tools;
+using EasyMusic.Windows;
+using static EasyMusic.Tools.Tools;
 using System.Windows.Media;
 using System.Windows.Shell;
-using EasyMuisc.UserControls;
+using EasyMusic.UserControls;
 using Microsoft.Win32;
 using Un4seen.Bass;
 using System.Windows.Controls.Primitives;
-using static EasyMuisc.GlobalDatas;
-using static EasyMuisc.MusicHelper;
+using static EasyMusic.GlobalDatas;
+using static EasyMusic.Helper.MusicHelper;
 using static WpfControls.Dialog.DialogHelper;
 
-namespace EasyMuisc
+namespace EasyMusic
 {
     public partial class MainWindow : Window
     {

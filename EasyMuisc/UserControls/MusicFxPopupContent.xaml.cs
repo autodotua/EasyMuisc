@@ -13,13 +13,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static EasyMuisc.GlobalDatas;
+using static EasyMusic.GlobalDatas;
 using Un4seen.Bass;
 using System.Diagnostics;
 using System.Windows.Interop;
-using static EasyMuisc.Tools.Tools;
+using static EasyMusic.Tools.Tools;
 using static WpfControls.Dialog.DialogHelper;
-namespace EasyMuisc.UserControls
+namespace EasyMusic.UserControls
 {
     /// <summary>
     /// MusicFxPopupContent.xaml 的交互逻辑
@@ -49,7 +49,7 @@ namespace EasyMuisc.UserControls
             var devices = Bass.BASS_GetDeviceInfos();
             for (int i = 1; i < devices.Length; i++)
             {
-                Bass.BASS_Init(i, set.SampleRate, BASSInit.BASS_DEVICE_DEFAULT, windowHandle);
+                Bass.BASS_Init(i, Setting.SampleRate, BASSInit.BASS_DEVICE_DEFAULT, windowHandle);
             }
             int n = -1;
             foreach (var i in devices)

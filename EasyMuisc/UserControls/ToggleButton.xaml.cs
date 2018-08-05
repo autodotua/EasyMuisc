@@ -12,9 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using EasyMuisc.Tools;
+using EasyMusic.Tools;
 
-namespace EasyMuisc.UserControls
+namespace EasyMusic.UserControls
 {
     /// <summary>
     /// ToggleButton.xaml 的交互逻辑

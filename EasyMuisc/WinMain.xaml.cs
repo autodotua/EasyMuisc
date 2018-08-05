@@ -25,15 +25,15 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Shell;
 using CustomWPFColorPicker;
-using EasyMuisc.Tools;
-using EasyMuisc.Windows;
-using EasyMuisc.UserControls;
-using static EasyMuisc.Tools.Tools;
-using static EasyMuisc.GlobalDatas;
-using static EasyMuisc.MusicHelper;
+using EasyMusic.Tools;
+using EasyMusic.Windows;
+using EasyMusic.UserControls;
+using static EasyMusic.Tools.Tools;
+using static EasyMusic.GlobalDatas;
+using static EasyMusic.Helper.MusicHelper;
 using static WpfControls.Dialog.DialogHelper;
 
-namespace EasyMuisc
+namespace EasyMusic
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
@@ -200,7 +200,7 @@ namespace EasyMuisc
         ///// </summary>
         public int AnimationFps
         {
-            get => set.AnimationFps;
+            get => Setting.AnimationFps;
             set
             {
                 if (value == -1)
@@ -209,7 +209,7 @@ namespace EasyMuisc
                 }
                 else
                 {
-                    set.AnimationFps = value;
+                    Setting.AnimationFps = value;
                 }
             }
         }
@@ -289,7 +289,7 @@ namespace EasyMuisc
 
             windowHandle = new WindowInteropHelper(this).Handle;
 
-            if (set.MaxWindow)
+            if (Setting.MaxWindow)
             {
                 WindowState = WindowState.Maximized;
             }
@@ -297,16 +297,16 @@ namespace EasyMuisc
             {
                 WindowStartupLocation = WindowStartupLocation.Manual;
 
-                Top = set.Top;
-                Left = set.Left;
-                Width = set.Width;
-                Height = set.Height;
+                Top = Setting.Top;
+                Left = Setting.Left;
+                Width = Setting.Width;
+                Height = Setting.Height;
 
             }
 
             Un4seen.Bass.AddOn.Fx.BassFx.LoadMe();
 
-            if (!Bass.BASS_Init(-1, set.SampleRate/*无设置界面*/, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
+            if (!Bass.BASS_Init(-1, Setting.SampleRate/*无设置界面*/, BASSInit.BASS_DEVICE_DEFAULT, new WindowInteropHelper(this).Handle))
             {
                 ShowError("无法初始化音乐引擎：" + Environment.NewLine + Bass.BASS_ErrorGetCode());
                 error = true;
@@ -321,7 +321,7 @@ namespace EasyMuisc
             });
 
             // colorPicker.CurrentColor = new BrushConverter().ConvertFrom(set.BackgroundColor) as SolidColorBrush;
-            UpdateColor(new BrushConverter().ConvertFrom(set.BackgroundColor) as SolidColorBrush);
+            UpdateColor(new BrushConverter().ConvertFrom(Setting.BackgroundColor) as SolidColorBrush);
 
             InitialiazeField();
             txtMusicName.MaxWidth = SystemParameters.WorkArea.Width - 200;
@@ -339,7 +339,7 @@ namespace EasyMuisc
         /// </summary>
         private void InitialiazeField()
         {
-            mainTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000 / set.UpdateSpeed) };
+            mainTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000 / Setting.UpdateSpeed) };
             playTimer.Tick += (p1, p2) =>
             {
 
@@ -398,7 +398,7 @@ namespace EasyMuisc
             else
             {
 
-                string tempPath = set.LastMusic;
+                string tempPath = Setting.LastMusic;
                 if (File.Exists(tempPath) && musicDatas.Where(p => p.Path.Equals(tempPath)).Count() != 0)
                 {
                     PlayNew(await AddMusic(tempPath), false);
@@ -407,9 +407,9 @@ namespace EasyMuisc
 
 
 
-            if (!set.ShowLrc)
+            if (!Setting.ShowLrc)
             {
-                set.ShowLrc = false;
+                Setting.ShowLrc = false;
                 grdLrcArea.Visibility = Visibility.Collapsed;
                 // set.AutoFurl = false;
                 grdMain.ColumnDefinitions[2].Width = new GridLength(0);
@@ -419,7 +419,7 @@ namespace EasyMuisc
             }
 
 
-            switch (set.CycleMode)
+            switch (Setting.CycleMode)
             {
                 case 1:
                     btnListCycle.Visibility = Visibility.Visible;
@@ -435,9 +435,9 @@ namespace EasyMuisc
             //highlightLrcFontSize = double.Parse(GetConfig("HighlightLrcFontSize", highlightLrcFontSize.ToString()));
             //textLrcFontSize = double.Parse(GetConfig("TextLrcFontSize", textLrcFontSize.ToString()));
             //sldVolumn.Value = double.Parse(GetConfig("Volumn", "1"));
-            Volumn = set.Volumn;
-            sldVolumn.Value = set.Volumn;
-            Topmost = set.Topmost;
+            Volumn = Setting.Volumn;
+            sldVolumn.Value = Setting.Volumn;
+            Topmost = Setting.Topmost;
             //if (set.ShrinkMusicListManually)
             //{
             //    SleepThenDo(1000, (p1, p2) => BtnListSwitcherClickEventHandler(null, null));
@@ -465,23 +465,23 @@ namespace EasyMuisc
             switch (CurrentCycleMode)
             {
                 case CycleMode.ListCycle:
-                    set.CycleMode = 1;
+                    Setting.CycleMode = 1;
                     break;
                 case CycleMode.Shuffle:
-                    set.CycleMode = 2;
+                    Setting.CycleMode = 2;
                     break;
                 case CycleMode.SingleCycle:
-                    set.CycleMode = 3;
+                    Setting.CycleMode = 3;
                     break;
             }
             //SetConfig("NormalLrcFontSize", normalLrcFontSize.ToString());
             //SetConfig("HighlightLrcFontSize", highlightLrcFontSize.ToString());
             //SetConfig("TextLrcFontSize", textLrcFontSize.ToString());
             //SetConfig("LastMusic", path);
-            set.LastMusic = path;
-            set.LastMusicList = lvwMusic.lastMusicListBtn.Text;
+            Setting.LastMusic = path;
+            Setting.LastMusicList = lvwMusic.lastMusicListBtn.Text;
             //SetConfig("Volumn", sldVolumn.Value.ToString());
-            set.Volumn = sldVolumn.Value;
+            Setting.Volumn = sldVolumn.Value;
             //SetConfig("AlwaysOnTop", Topmost.ToString());
             // set.Topmost = Topmost;
             // SetConfig("BackgroundColor", colorPicker.CurrentColor.ToString());
@@ -491,19 +491,19 @@ namespace EasyMuisc
             // SetConfig("Width", ActualWidth.ToString());
             //SetConfig("Height", ActualHeight.ToString());
             //SetConfig("MaxWindow", (WindowState == WindowState.Maximized) ? "True" : "False");
-            set.Top = Top;
-            set.Left = Left;
-            set.Height = Height;
-            set.Width = Width;
-            set.MaxWindow = (WindowState == WindowState.Maximized);
+            Setting.Top = Top;
+            Setting.Left = Left;
+            Setting.Height = Height;
+            Setting.Width = Width;
+            Setting.MaxWindow = (WindowState == WindowState.Maximized);
 
-            if (set.ShowFloatLyric)
+            if (Setting.ShowFloatLyric)
             {
                 floatLyric.Close(true);
             }
 
             //cfa.Save();
-            set.Save();
+            Setting.Save();
             e.Cancel = true;
             closing = true;
             Hide();
@@ -519,7 +519,7 @@ namespace EasyMuisc
         /// </summary>
         private void InitializeTray()
         {
-            trayIcon = new WpfControls.ButtonBase.TrayIcon(Properties.Resources.icon, "EasyMusic");
+            trayIcon = new WpfCodes.Program.TrayIcon(Properties.Resources.icon, "EasyMusic");
             //    = new System.Windows.Forms.NotifyIcon
             //{
             //    BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info,
@@ -542,7 +542,7 @@ namespace EasyMuisc
                 {
                     Show();
                     Topmost = true;
-                    Topmost = set.Topmost;
+                    Topmost = Setting.Topmost;
                     Activate();
                 }
                 else
@@ -558,13 +558,13 @@ namespace EasyMuisc
 
             trayIcon.AddContextMenu("悬浮歌词开关", () =>
             {
-                set.ShowFloatLyric = !set.ShowFloatLyric;
+                Setting.ShowFloatLyric = !Setting.ShowFloatLyric;
                 floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
                 floatLyric.Update(currentLrcIndex);
             });
             trayIcon.AddContextMenu("退出", () => CloseWindow());
 
-            if (set.TrayMode != 0)
+            if (Setting.TrayMode != 0)
             {
                 trayIcon.Show();
             }

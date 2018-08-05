@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="EasyMuisc.MusicList"
+﻿<UserControl x:Class="EasyMusic.MusicList"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:EasyMuisc"
-             xmlns:uc="clr-namespace:EasyMuisc.UserControls"
+             xmlns:local="clr-namespace:EasyMusic"
+             xmlns:uc="clr-namespace:EasyMusic.UserControls"
              FocusVisualStyle="{x:Null}"
              mc:Ignorable="d">
     <UserControl.Resources>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyMusic.Tools;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Un4seen.Bass;
 
-namespace EasyMuisc
+namespace EasyMusic
 {
     public static class GlobalDatas
     {
@@ -42,7 +43,7 @@ namespace EasyMuisc
                     value = 50;
                 }
                 Bass.BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_TEMPO_PITCH, value);
-                set.Pitch = value;
+                Setting.Pitch = value;
             }
         }
         public static int Tempo
@@ -64,22 +65,22 @@ namespace EasyMuisc
                     value = 200;
                 }
                 Bass.BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_TEMPO, ((float)value));
-                set.Tempo = value;
+                Setting.Tempo = value;
             }
         }
-        public static Properties.Settings set = new Properties.Settings();
+        public static Properties.Settings Setting { get; } = new Properties.Settings();
 
         public static IntPtr windowHandle;
         /// <summary>
         /// 托盘图标
         /// </summary>
-        public static WpfControls.ButtonBase.TrayIcon trayIcon = null;
+        public static WpfCodes.Program.TrayIcon trayIcon = null;
         /// <summary>
         /// 程序目录
         /// </summary>
-       public static string programDirectory = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).DirectoryName;
+        public static string programDirectory = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).DirectoryName;
         public static ListenHistoryHelper listenHistory = new ListenHistoryHelper();
-        public static MainWindow WinMain=>App.Current.MainWindow as MainWindow;
+        public static MainWindow WinMain => App.Current.MainWindow as MainWindow;
 
         public static string argPath = null;
     }

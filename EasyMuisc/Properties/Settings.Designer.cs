@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EasyMuisc.Properties {
+namespace EasyMusic.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -409,13 +409,13 @@ namespace EasyMuisc.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\EasyMusic\\MusicList")]
-        public string MusicListPath {
+        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\EasyMusic")]
+        public string ConfigPath {
             get {
-                return ((string)(this["MusicListPath"]));
+                return ((string)(this["ConfigPath"]));
             }
             set {
-                this["MusicListPath"] = value;
+                this["ConfigPath"] = value;
             }
         }
         
@@ -548,18 +548,6 @@ namespace EasyMuisc.Properties {
             }
             set {
                 this["LyricsFontBold"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\EasyMusic\\ListenHistory.xml")]
-        public string ListenHistoryPath {
-            get {
-                return ((string)(this["ListenHistoryPath"]));
-            }
-            set {
-                this["ListenHistoryPath"] = value;
             }
         }
         

@@ -1,4 +1,4 @@
-﻿using EasyMuisc.Properties;
+﻿using EasyMusic.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +14,7 @@ using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Security.Cryptography;
 
-namespace EasyMuisc.Tools
+namespace EasyMusic.Tools
 {
     public static class Tools
     {

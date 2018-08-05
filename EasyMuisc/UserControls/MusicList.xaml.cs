@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
-using static EasyMuisc.GlobalDatas;
-using static EasyMuisc.MusicHelper;
+using static EasyMusic.GlobalDatas;
+using static EasyMusic.Helper.MusicHelper;
 using System.IO;
 using static WpfControls.Dialog.DialogHelper;
 using System.Collections.ObjectModel;
@@ -14,7 +14,7 @@ using System.Windows.Media;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using WpfControls.Dialog;
 
-namespace EasyMuisc
+namespace EasyMusic
 {
     /// <summary>
     /// MusicList.xaml 的交互逻辑
@@ -45,11 +45,11 @@ namespace EasyMuisc
             //{
 
             //ReadFileToList(set.DefautMusicList);
-            if (!Directory.Exists(ToAbstractPath()))
+            if (!Directory.Exists(GetMusicListPath()))
             {
                 try
                 {
-                    Directory.CreateDirectory(ToAbstractPath());
+                    Directory.CreateDirectory(GetMusicListPath());
                 }
                 catch (Exception ex)
                 {
@@ -58,11 +58,11 @@ namespace EasyMuisc
                 }
 
             }
-            if (Directory.EnumerateFiles(ToAbstractPath()).Count() == 0)
+            if (Directory.EnumerateFiles(GetMusicListPath()).Count() == 0)
             {
                 try
                 {
-                    using (File.Create(ToAbstractPath("默认"))) { }
+                    using (File.Create(GetMusicListPath("默认"))) { }
                 }
                 catch (Exception ex)
                 {
@@ -70,13 +70,13 @@ namespace EasyMuisc
                     return;
                 }
             }
-            foreach (var i in Directory.EnumerateFiles(ToAbstractPath()))
+            foreach (var i in Directory.EnumerateFiles(GetMusicListPath()))
             {
                 UserControls.ToggleButton button = null;
                 FileInfo file = new FileInfo(i);
                 button = new UserControls.ToggleButton() { Text = file.Name.Replace(file.Extension, "") };
 
-                if (i == ToAbstractPath(set.LastMusicList))
+                if (i == GetMusicListPath(Setting.LastMusicList))
                 {
                     lastMusicListBtn = button;
                 }
@@ -86,10 +86,11 @@ namespace EasyMuisc
 
             }
 
+
             if (lastMusicListBtn == null)
             {
                 // (stkMusiList.Children[1] as UserControls.ToggleButton).IsPressed = true;
-                lastMusicListBtn = stkMusiList.Children[1] as UserControls.ToggleButton;
+                lastMusicListBtn = stkMusiList.Children[2] as UserControls.ToggleButton;
             }
             lastMusicListBtn.RaiseClickEvent();
 
@@ -109,7 +110,7 @@ namespace EasyMuisc
             MenuItem menuRename = new MenuItem() { Header = "重命名" };
             menuRename.Click += (p1, p2) =>
               {
-                  if (!File.Exists(ToAbstractPath(btn.Text)))
+                  if (!File.Exists(GetMusicListPath(btn.Text)))
                   {
                       if (ShowMessage("歌单文件不存在，是否直接从界面删除？", DialogType.Information, MessageBoxButton.YesNo) == 1)
                       {
@@ -140,7 +141,7 @@ namespace EasyMuisc
             MenuItem menuDelete = new MenuItem() { Header = "删除" };
             menuDelete.Click += (p1, p2) =>
               {
-                  if (!File.Exists(ToAbstractPath(btn.Text)))
+                  if (!File.Exists(GetMusicListPath(btn.Text)))
                   {
                       if (ShowMessage("歌单文件不存在，是否直接从界面删除？", DialogType.Warn, MessageBoxButton.YesNo) == 1)
                       {
@@ -322,7 +323,7 @@ namespace EasyMuisc
                 stkMusiList.Children.Add(button);
                 try
                 {
-                    using (File.Create(ToAbstractPath(name)))
+                    using (File.Create(GetMusicListPath(name)))
                     { }
                     button.RaiseClickEvent();
                     scv.ScrollToRightEnd();
@@ -356,13 +357,13 @@ namespace EasyMuisc
             if (lvw.ItemsSource == musicDatas)
             {
                 lvw.ItemsSource = historyList;
-                btn.Background = WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor( WpfControls.DarkerBrushConverter.StringToSolidColorBrush(set.BackgroundColor))));
+                btn.Background = WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor( WpfControls.DarkerBrushConverter.StringToSolidColorBrush(Setting.BackgroundColor))));
 
             }
             else
             {
                 lvw.ItemsSource = musicDatas;
-                btn.Background = WpfControls.DarkerBrushConverter.StringToSolidColorBrush(set.BackgroundColor);
+                btn.Background = WpfControls.DarkerBrushConverter.StringToSolidColorBrush(Setting.BackgroundColor);
 
             }
         }

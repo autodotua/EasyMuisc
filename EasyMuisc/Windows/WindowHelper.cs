@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace EasyMuisc.Windows
+namespace EasyMusic.Windows
 {
     class WindowHelper
     {

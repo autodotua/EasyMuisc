@@ -1,4 +1,4 @@
-﻿using EasyMuisc.Windows;
+﻿using EasyMusic.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,13 +14,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using static EasyMuisc.GlobalDatas;
-using static EasyMuisc.Tools.Tools;
+using static EasyMusic.GlobalDatas;
+using static EasyMusic.Tools.Tools;
 using System.Windows.Shell;
 using Shell32;
 using static WpfControls.Dialog.DialogHelper;
 
-namespace EasyMuisc
+namespace EasyMusic.Helper
 {
     public static class MusicHelper
 
@@ -182,7 +182,7 @@ namespace EasyMuisc
         {
             if(!abstractPath)
             {
-                path = ToAbstractPath(path);
+                path = GetMusicListPath(path);
             }
             //if(!File.Exists(path))
             //{
@@ -210,7 +210,7 @@ namespace EasyMuisc
         /// <param name="path"></param>
         public static void ReadFileToList(string path)
         {
-           if(File.Exists(ToAbstractPath(path)))
+           if(File.Exists(GetMusicListPath(path)))
             { 
                 
                 try
@@ -228,7 +228,7 @@ namespace EasyMuisc
                 ShowPrompt($"歌单文件“{path}”不存在，将新建歌单");
                 try
                 {
-                    using (File.Create(ToAbstractPath(path))) { }
+                    using (File.Create(GetMusicListPath(path))) { }
                 }
                 catch(Exception ex)
                 {
@@ -248,7 +248,7 @@ namespace EasyMuisc
         {
             if(!abstractPath)
             {
-                path = ToAbstractPath(path);
+                path = GetMusicListPath(path);
             }
             using (StreamReader stream = new StreamReader(File.Open(path, FileMode.Open),new UTF8Encoding(true)))
             {
@@ -287,7 +287,7 @@ namespace EasyMuisc
         {
             if(!abstractPath)
             {
-                path = ToAbstractPath(path);
+                path = GetMusicListPath(path);
             }
             File.Delete(path);
         }
@@ -301,8 +301,8 @@ namespace EasyMuisc
         {
             if (!abstractPath)
             {
-                oldPath = ToAbstractPath(oldPath);
-                newPath = ToAbstractPath(newPath);
+                oldPath = GetMusicListPath(oldPath);
+                newPath = GetMusicListPath(newPath);
             }
             File.Move(oldPath, newPath);
         }
@@ -311,17 +311,17 @@ namespace EasyMuisc
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static string ToAbstractPath(string path)
+        public static string GetMusicListPath(string path)
         {
-            return (set.MusicListPath + "\\" + path+ (path.EndsWith(".csv")?"":".csv")).Replace("%APPDATA%",Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "");
+            return (Setting.ConfigPath + "\\MusicList\\" + path+ (path.EndsWith(".csv")?"":".csv")).Replace("%APPDATA%",Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "");
         }
         /// <summary>
         /// 获取根目录
         /// </summary>
         /// <returns></returns>
-        public static string ToAbstractPath()
+        public static string GetMusicListPath()
         {
-            return (set.MusicListPath).Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            return (Setting.ConfigPath+ "\\MusicList").Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
         }
         /// <summary>
         /// 歌曲数量

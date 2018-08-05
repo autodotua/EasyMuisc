@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyMusic.Tools;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -14,10 +15,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static EasyMuisc.GlobalDatas;
+using static EasyMusic.GlobalDatas;
 using static WpfControls.Dialog.DialogHelper;
 
-namespace EasyMuisc.Windows
+namespace EasyMusic.Windows
 {
     /// <summary>
     /// WinListenHistory.xaml 的交互逻辑
@@ -32,7 +33,7 @@ namespace EasyMuisc.Windows
             InitializeComponent();
             try
             {
-                lvwMain.ItemsSource = new ObservableCollection<ListenHistory>(listenHistory.GetListenHistories().OrderByDescending(p => p.ListenNumber));
+                lvwMain.ItemsSource = new ObservableCollection<ListenHistoryInfo>(listenHistory.GetListenHistories().OrderByDescending(p => p.ListenNumber));
             }
             catch (Exception ex)
             {
@@ -53,13 +54,13 @@ namespace EasyMuisc.Windows
             {
                 lvwTime.ClearRows();
                 int index = 0;
-                foreach (var time in (lvwMain.SelectedItem as ListenHistory).ListenTimes)
+                foreach (var time in (lvwMain.SelectedItem as ListenHistoryInfo).ListenTimes)
                 {
                     DateTime begin = time.Key;
                     DateTime? end = time.Value;
                     if (end.HasValue)
                     {
-                        if ((end.Value - begin).TotalSeconds < set.ThresholdValueOfListenTime)
+                        if ((end.Value - begin).TotalSeconds < Setting.ThresholdValueOfListenTime)
                         {
                             continue;
                         }
@@ -102,11 +103,11 @@ namespace EasyMuisc.Windows
                 }
                 if (cbbOrderMode.SelectedIndex == 0)
                 {
-                    lvwMain.ItemsSource = new ObservableCollection<ListenHistory>(listenHistory.GetListenHistories().OrderByDescending(p => p.ListenNumber));
+                    lvwMain.ItemsSource = new ObservableCollection<ListenHistoryInfo>(listenHistory.GetListenHistories().OrderByDescending(p => p.ListenNumber));
                 }
                 else
                 {
-                    lvwMain.ItemsSource = new ObservableCollection<ListenHistory>(listenHistory.GetListenHistories().OrderByDescending(p => p.ListenTimes.Last().Key));
+                    lvwMain.ItemsSource = new ObservableCollection<ListenHistoryInfo>(listenHistory.GetListenHistories().OrderByDescending(p => p.ListenTimes.Last().Key));
 
                 }
             }

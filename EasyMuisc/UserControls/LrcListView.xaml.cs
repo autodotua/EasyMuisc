@@ -15,11 +15,11 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static EasyMuisc.Tools.Tools;
-using static EasyMuisc.GlobalDatas;
-using EasyMuisc.Tools;
+using static EasyMusic.Tools.Tools;
+using static EasyMusic.GlobalDatas;
+using EasyMusic.Tools;
 
-namespace EasyMuisc.UserControls
+namespace EasyMusic.UserControls
 {
     /// <summary>
     /// LrcListView.xaml 的交互逻辑
@@ -89,7 +89,7 @@ namespace EasyMuisc.UserControls
             //         EasingMode = EasingMode.EaseInOut
             //     });
 
-            DoubleAnimation ani = new DoubleAnimation(-height, set.AnimationDuration) { EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } };
+            DoubleAnimation ani = new DoubleAnimation(-height, Setting.AnimationDuration) { EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } };
             Storyboard.SetTarget(ani, lbx);
             Storyboard.SetTargetProperty(ani, new PropertyPath("(UIElement.RenderTransform).(TranslateTransform.Y)"));
             Storyboard storyToSmall = new Storyboard() { Children = { ani } };
@@ -100,7 +100,7 @@ namespace EasyMuisc.UserControls
 
         DoubleAnimation aniFontSize = new DoubleAnimation
         {
-            Duration = set.AnimationDuration,// new Duration(TimeSpan.FromSeconds(0.8)),//动画时间1秒
+            Duration = Setting.AnimationDuration,// new Duration(TimeSpan.FromSeconds(0.8)),//动画时间1秒
             EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut },
             //DecelerationRatio = 0.5,
         };
@@ -122,15 +122,15 @@ namespace EasyMuisc.UserControls
                     //    highlight,
                     //    0.8,0.5
                     //    );
-                    aniFontSize.To = set.HighlightLrcFontSize;
+                    aniFontSize.To = Setting.HighlightLrcFontSize;
                     txt.BeginAnimation(TextBlock.FontSizeProperty, aniFontSize);
                     //BeginStoryboard(story);
 
                 }
-                else if (txt.FontSize != set.NormalLrcFontSize)
+                else if (txt.FontSize != Setting.NormalLrcFontSize)
                 {
                     //txt.FontSize = normal;
-                    aniFontSize.To = set.NormalLrcFontSize;
+                    aniFontSize.To = Setting.NormalLrcFontSize;
                     txt.BeginAnimation(TextBlock.FontSizeProperty, aniFontSize);
                 }
             }

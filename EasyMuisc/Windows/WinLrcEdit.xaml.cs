@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using EasyMusic.Tools;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,9 +14,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfCodes.Basic;
 using static WpfControls.Dialog.DialogHelper;
 
-namespace EasyMuisc.Windows
+namespace EasyMusic.Windows
 {
     /// <summary>
     /// WinLrcEdit.xaml 的交互逻辑
@@ -59,7 +61,7 @@ namespace EasyMuisc.Windows
                 }
                 try
                 {
-                    txt.Text = File.ReadAllText(filePath, Tools.EncodingType.GetType(filePath));
+                    txt.Text = File.ReadAllText(filePath, EncodingType.GetType(filePath));
                 }
                 catch (Exception ex)
                 {
@@ -84,7 +86,7 @@ namespace EasyMuisc.Windows
                 case "btnSave":
                     try
                     {
-                        File.WriteAllText(filePath, txt.Text, Tools.EncodingType.GetType(filePath));
+                        File.WriteAllText(filePath, txt.Text, EncodingType.GetType(filePath));
                         SetButtonsStatus(false);
                         if (ShowMessage("重载歌词？", WpfControls.Dialog.DialogType.Information, MessageBoxButton.YesNo, this) == 0)
                         {
@@ -102,7 +104,7 @@ namespace EasyMuisc.Windows
                     {
                         try
                         {
-                            File.WriteAllText(dialog.FileName, txt.Text, Tools.EncodingType.GetType(filePath));
+                            File.WriteAllText(dialog.FileName, txt.Text, EncodingType.GetType(filePath));
                             SetButtonsStatus(false);
 
                         }

@@ -1,8 +1,9 @@
-﻿<Application x:Class="EasyMuisc.App"
+﻿<Application x:Class="EasyMusic.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:EasyMuisc"
+             xmlns:local="clr-namespace:EasyMusic"
              Startup="Application_Startup"
+             Exit="Application_Exit"
                StartupUri="WinMain.xaml">
              <!--DispatcherUnhandledException="App_DispatcherUnhandledException"-->
            

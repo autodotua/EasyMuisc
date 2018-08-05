@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EasyMuisc.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EasyMusic.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="NormalLrcFontSize" Type="System.Double" Scope="User">
@@ -98,8 +98,8 @@
     <Setting Name="SampleRate" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">48000</Value>
     </Setting>
-    <Setting Name="MusicListPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">%APPDATA%\EasyMusic\MusicList</Value>
+    <Setting Name="ConfigPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%APPDATA%\EasyMusic</Value>
     </Setting>
     <Setting Name="LastMusicList" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -133,9 +133,6 @@
     </Setting>
     <Setting Name="LyricsFontBold" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="ListenHistoryPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">%APPDATA%\EasyMusic\ListenHistory.xml</Value>
     </Setting>
     <Setting Name="RecordListenHistory" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

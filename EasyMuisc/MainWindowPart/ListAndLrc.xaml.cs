@@ -13,16 +13,16 @@ using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Linq;
 using System.Text.RegularExpressions;
-using EasyMuisc.Windows;
-using static EasyMuisc.Tools.Tools;
-using static EasyMuisc.GlobalDatas;
-using static EasyMuisc.MusicHelper;
+using EasyMusic.Windows;
+using static EasyMusic.Tools.Tools;
+using static EasyMusic.GlobalDatas;
+using static EasyMusic.Helper.MusicHelper;
 using static WpfControls.Dialog.DialogHelper;
 using System.Collections.ObjectModel;
 using WpfControls.Dialog;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace EasyMuisc
+namespace EasyMusic
 {
     public partial class MainWindow : Window
     {
@@ -38,13 +38,13 @@ namespace EasyMuisc
         {
             ThicknessAnimation aniMargin = new ThicknessAnimation
             {
-                Duration = new Duration(set.AnimationDuration),
+                Duration = new Duration(Setting.AnimationDuration),
                 EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
 
             };
             DoubleAnimation aniOpacity = new DoubleAnimation
             {
-                Duration = new Duration(set.AnimationDuration),
+                Duration = new Duration(Setting.AnimationDuration),
                 EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }  
 
             };
@@ -135,7 +135,7 @@ namespace EasyMuisc
         /// <param name="e"></param>
         private void WindowSizeChangedEventHandler(object sender, SizeChangedEventArgs e)
         {
-            lbxLrc.RefreshPlaceholder(grdLrcArea.ActualHeight / 2, set.HighlightLrcFontSize);
+            lbxLrc.RefreshPlaceholder(grdLrcArea.ActualHeight / 2, Setting.HighlightLrcFontSize);
 
             //if (!set.AutoFurl || !set.ShowLrc || set.ShrinkMusicListManually)
             //{
@@ -518,7 +518,7 @@ namespace EasyMuisc
             MenuItem menuShowLrc = new MenuItem() { Header = "显示歌词" };
             menuShowLrc.Click += (p1, p2) =>
             {
-                set.ShowLrc = true;
+                Setting.ShowLrc = true;
                 grdLrcArea.Visibility = Visibility.Visible;
                 //MaxWidth = double.PositiveInfinity;
                 //MinWidth = 0;
@@ -573,7 +573,7 @@ namespace EasyMuisc
             //{
             //    menu.Items.Add(menuShowLrc);
             //}
-            if (!set.ShowLrc)
+            if (!Setting.ShowLrc)
             {
                 menu.Items.Add(menuShowLrc);
             }
@@ -668,7 +668,7 @@ namespace EasyMuisc
             MenuItem menuShowLrc = new MenuItem() { Header = "不显示歌词" };
             menuShowLrc.Click += (p1, p2) =>
             {
-                set.ShowLrc = false;
+                Setting.ShowLrc = false;
                 grdLrcArea.Visibility = Visibility.Collapsed;
                 //set.AutoFurl = false;
                 NewDoubleAnimation(this, WidthProperty, grdMain.ColumnDefinitions[0].ActualWidth + 32, 0.5, 0.3, (p3, p4) =>
@@ -757,7 +757,7 @@ namespace EasyMuisc
             //    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsHighlightFontSize.ToString()},
             //}
             // };
-            MenuItem menuFloatSwitch = new MenuItem() { Header = (set.ShowFloatLyric ? "关闭" : "打开") };
+            MenuItem menuFloatSwitch = new MenuItem() { Header = (Setting.ShowFloatLyric ? "关闭" : "打开") };
             menuFloatSwitch.Click += (p1, p2) => OpenOrCloseFloatLrc();
             MenuItem menuFloatAdjust = new MenuItem() { Header = "调整位置和大小" };
             menuFloatAdjust.Click += (p1, p2) => floatLyric.Adjuest = true;
@@ -862,7 +862,7 @@ namespace EasyMuisc
         /// </summary>
         private void OpenOrCloseFloatLrc()
         {
-            set.ShowFloatLyric = !set.ShowFloatLyric;
+            Setting.ShowFloatLyric = !Setting.ShowFloatLyric;
             floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
             floatLyric.Update(currentLrcIndex);
         }
@@ -874,7 +874,7 @@ namespace EasyMuisc
         private void SaveLrc(bool saveAs)
         {
             StringBuilder str = new StringBuilder();
-            if (set.PreferMusicInfo)
+            if (Setting.PreferMusicInfo)
             {
                 if (CurrentMusic.Name != "")
                 {
@@ -908,14 +908,14 @@ namespace EasyMuisc
                     str.Append("[by:" + lrc.LrcBy + "]" + Environment.NewLine);
                 }
             }
-            if (set.SaveLrcOffsetByTag && offset != 0)
+            if (Setting.SaveLrcOffsetByTag && offset != 0)
             {
                 str.Append("[offset:" + (int)Math.Round(offset * 1000) + "]" + Environment.NewLine);
             }
             List<double> lrcTime = new List<double>();
             foreach (var i in this.lrcTime)
             {
-                lrcTime.Add((set.SaveLrcOffsetByTag) ? i : i + offset);
+                lrcTime.Add((Setting.SaveLrcOffsetByTag) ? i : i + offset);
             }
 
             FileInfo file = new FileInfo(path);
@@ -1054,7 +1054,7 @@ namespace EasyMuisc
             // stkLrc.Visibility = Visibility.Hidden;
             txtLrc.Visibility = Visibility.Hidden;
             lbxLrc.Visibility = Visibility.Hidden;
-            if (set.ShowFloatLyric)
+            if (Setting.ShowFloatLyric)
             {
                 floatLyric.Clear();
             }
@@ -1080,12 +1080,12 @@ namespace EasyMuisc
 
             floatLyric = new FloatLyrics()
             {
-                Top = set.FloatLyricsTop,
-                Left = set.FloatLyricsLeft,
-                Height = set.FloatLyricsHeight,
-                Width = set.FloatLyricsWidth,
+                Top = Setting.FloatLyricsTop,
+                Left = Setting.FloatLyricsLeft,
+                Height = Setting.FloatLyricsHeight,
+                Width = Setting.FloatLyricsWidth,
             };
-            if (set.ShowFloatLyric)
+            if (Setting.ShowFloatLyric)
             {
                 floatLyric.Show();
             }

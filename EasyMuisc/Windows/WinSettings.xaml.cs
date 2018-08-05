@@ -2,9 +2,9 @@
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using static EasyMuisc.Tools.Tools;
-using static EasyMuisc.GlobalDatas;
-using EasyMuisc.Tools;
+using static EasyMusic.Tools.Tools;
+using static EasyMusic.GlobalDatas;
+using EasyMusic.Tools;
 using Un4seen.Bass;
 using static WpfControls.Dialog.DialogHelper;
 using Microsoft.Win32;
@@ -15,7 +15,7 @@ using System.Xml.XPath;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EasyMuisc.Windows
+namespace EasyMusic.Windows
 {
     /// <summary>
     /// WinSettings.xaml 的交互逻辑
@@ -27,32 +27,32 @@ namespace EasyMuisc.Windows
             InitializeComponent();
             tab.SelectedIndex = pageIndex;
 
-            chkOffset.IsChecked = set.SaveLrcOffsetByTag;
-            chkPreferMusicInfo.IsChecked = set.PreferMusicInfo;
-            chkLrcAnimation.IsChecked = set.LrcAnimation;
-            txtAnimationFps.Text = set.AnimationFps.ToString();
-            txtOffset.Text = set.LrcDefautOffset.ToString();
-            txtUpdateSpeed.Text = set.UpdateSpeed.ToString();
-            chkMusicSettings.IsChecked = set.MusicSettings;
-            cbbTrayMode.SelectedIndex = set.TrayMode;
-            txtCurrentFontSize.Text = set.HighlightLrcFontSize.ToString();
-            txtNormalFontSize.Text = set.NormalLrcFontSize.ToString();
-            txtTextFontSize.Text = set.TextLrcFontSize.ToString();
-            txtFloatCurrentFontSize.Text = set.FloatLyricsHighlightFontSize.ToString();
-            txtFloatNormalFontSize.Text = set.FloatLyricsNormalFontSize.ToString();
-            cbbFloatFontEffect.SelectedIndex = set.FloatLyricsFontEffect;
-            floatFontColor.SetColor(set.FloatLyricsFontColor);
-            floatBorderColor.SetColor(set.FloatLyricsBorderColor);
+            chkOffset.IsChecked = Setting.SaveLrcOffsetByTag;
+            chkPreferMusicInfo.IsChecked = Setting.PreferMusicInfo;
+            chkLrcAnimation.IsChecked = Setting.LrcAnimation;
+            txtAnimationFps.Text = Setting.AnimationFps.ToString();
+            txtOffset.Text = Setting.LrcDefautOffset.ToString();
+            txtUpdateSpeed.Text = Setting.UpdateSpeed.ToString();
+            chkMusicSettings.IsChecked = Setting.MusicSettings;
+            cbbTrayMode.SelectedIndex = Setting.TrayMode;
+            txtCurrentFontSize.Text = Setting.HighlightLrcFontSize.ToString();
+            txtNormalFontSize.Text = Setting.NormalLrcFontSize.ToString();
+            txtTextFontSize.Text = Setting.TextLrcFontSize.ToString();
+            txtFloatCurrentFontSize.Text = Setting.FloatLyricsHighlightFontSize.ToString();
+            txtFloatNormalFontSize.Text = Setting.FloatLyricsNormalFontSize.ToString();
+            cbbFloatFontEffect.SelectedIndex = Setting.FloatLyricsFontEffect;
+            floatFontColor.SetColor(Setting.FloatLyricsFontColor);
+            floatBorderColor.SetColor(Setting.FloatLyricsBorderColor);
             cbbFloatFontEffect_SelectionChanged(null, null);
-            txtFloatBlur.Text = set.FloatLyricsBlurRadius.ToString();
-            txtFloatBorder.Text = set.FloatLyricsThickness.ToString();
-            chkFloatBold.IsChecked = set.FloatLyricsFontBold;
-            fontColor.SetColor(set.LyricsFontColor);
-            chkBold.IsChecked = set.LyricsFontBold;
-            chkListenHitory.IsChecked = set.RecordListenHistory;
-            txtListenHistoryValue.Text = set.ThresholdValueOfListenTime.ToString();
-            mainColor.SetColor(set.BackgroundColor);
-            if(!cbbFloatFont.SetSelectedFontByString(set.FloatLyricsFont) || !cbbFont.SetSelectedFontByString(set.LyricsFont))
+            txtFloatBlur.Text = Setting.FloatLyricsBlurRadius.ToString();
+            txtFloatBorder.Text = Setting.FloatLyricsThickness.ToString();
+            chkFloatBold.IsChecked = Setting.FloatLyricsFontBold;
+            fontColor.SetColor(Setting.LyricsFontColor);
+            chkBold.IsChecked = Setting.LyricsFontBold;
+            chkListenHitory.IsChecked = Setting.RecordListenHistory;
+            txtListenHistoryValue.Text = Setting.ThresholdValueOfListenTime.ToString();
+            mainColor.SetColor(Setting.BackgroundColor);
+            if(!cbbFloatFont.SetSelectedFontByString(Setting.FloatLyricsFont) || !cbbFont.SetSelectedFontByString(Setting.LyricsFont))
             {
                 trayIcon.ShowMessage("字体文件设置异常，请重新设置");
             }
@@ -149,49 +149,49 @@ namespace EasyMuisc.Windows
                     return;
                 }
 
-                set.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
-                set.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
-                set.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
-                set.MusicSettings = chkMusicSettings.IsChecked.Value;
-                if (fps != set.AnimationFps)
+                Setting.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
+                Setting.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
+                Setting.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
+                Setting.MusicSettings = chkMusicSettings.IsChecked.Value;
+                if (fps != Setting.AnimationFps)
                 {
                     ShowPrompt("动画帧率将在下次启动后生效");
-                    set.AnimationFps = fps.Value;
+                    Setting.AnimationFps = fps.Value;
                 }
-                set.UpdateSpeed = speed.Value;
-                set.LrcDefautOffset = offset.Value;
-                set.NormalLrcFontSize = normal.Value;
-                set.HighlightLrcFontSize = current.Value;
-                set.FloatLyricsHighlightFontSize = floatCurrent.Value;
-                set.FloatLyricsNormalFontSize = floatNormal.Value;
-                if (cbbTrayMode.SelectedIndex == 0 && cbbTrayMode.SelectedIndex != set.TrayMode)
+                Setting.UpdateSpeed = speed.Value;
+                Setting.LrcDefautOffset = offset.Value;
+                Setting.NormalLrcFontSize = normal.Value;
+                Setting.HighlightLrcFontSize = current.Value;
+                Setting.FloatLyricsHighlightFontSize = floatCurrent.Value;
+                Setting.FloatLyricsNormalFontSize = floatNormal.Value;
+                if (cbbTrayMode.SelectedIndex == 0 && cbbTrayMode.SelectedIndex != Setting.TrayMode)
                 {
                     trayIcon.Hide();
                 }
-                else if (cbbTrayMode.SelectedIndex != 0 && set.TrayMode == 0)
+                else if (cbbTrayMode.SelectedIndex != 0 && Setting.TrayMode == 0)
                 {
                     trayIcon.Show();
                 }
-                set.FloatLyricsFontEffect = cbbFloatFontEffect.SelectedIndex;
-                set.FloatLyricsBorderColor = floatBorderColor.ColorBrush.ToString();
-                set.FloatLyricsFontColor = floatFontColor.ColorBrush.ToString();
-                set.TrayMode = cbbTrayMode.SelectedIndex;
-                set.FloatLyricsThickness = floatBorder.Value;
-                set.FloatLyricsBlurRadius = floatBlur.Value;
-                set.FloatLyricsFontBold = chkFloatBold.IsChecked.Value;
-                set.FloatLyricsFont = cbbFloatFont.GetPreferChineseFontName();
-                set.LyricsFontBold = chkBold.IsChecked.Value;
-                set.LyricsFont = cbbFont.GetPreferChineseFontName();
-                set.LyricsFontColor = fontColor.ColorBrush.ToString();
-                set.RecordListenHistory = chkListenHitory.IsChecked.Value;
-                set.ThresholdValueOfListenTime = listenValue.Value;
-                set.BackgroundColor = mainColor.ColorBrush.ToString();
+                Setting.FloatLyricsFontEffect = cbbFloatFontEffect.SelectedIndex;
+                Setting.FloatLyricsBorderColor = floatBorderColor.ColorBrush.ToString();
+                Setting.FloatLyricsFontColor = floatFontColor.ColorBrush.ToString();
+                Setting.TrayMode = cbbTrayMode.SelectedIndex;
+                Setting.FloatLyricsThickness = floatBorder.Value;
+                Setting.FloatLyricsBlurRadius = floatBlur.Value;
+                Setting.FloatLyricsFontBold = chkFloatBold.IsChecked.Value;
+                Setting.FloatLyricsFont = cbbFloatFont.GetPreferChineseFontName();
+                Setting.LyricsFontBold = chkBold.IsChecked.Value;
+                Setting.LyricsFont = cbbFont.GetPreferChineseFontName();
+                Setting.LyricsFontColor = fontColor.ColorBrush.ToString();
+                Setting.RecordListenHistory = chkListenHitory.IsChecked.Value;
+                Setting.ThresholdValueOfListenTime = listenValue.Value;
+                Setting.BackgroundColor = mainColor.ColorBrush.ToString();
                 WinMain.UpdateColor(mainColor.ColorBrush);
                 if (WinMain.path != null && File.Exists(WinMain.path))
                 {
                     WinMain.InitialiazeLrc();
                 }
-                set.Save();
+                Setting.Save();
             }
             catch (Exception ex)
             {
@@ -209,7 +209,7 @@ namespace EasyMuisc.Windows
 
         private void ButtonExportClickEventHandler(object sender, RoutedEventArgs e)
         {
-            set.Save();
+            Setting.Save();
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
 
             SaveFileDialog dialog = new SaveFileDialog() { Filter = "XML文件|*.xml|所有文件|*.*" };
@@ -246,17 +246,17 @@ namespace EasyMuisc.Windows
 
                     try
                     {
-                        if (set[name] is string)
+                        if (Setting[name] is string)
                         {
-                            set[name] = value;
+                            Setting[name] = value;
                         }
-                        else if (set[name] is int)
+                        else if (Setting[name] is int)
                         {
-                            set[name] = int.Parse(value);
+                            Setting[name] = int.Parse(value);
                         }
-                        else if (set[name] is double)
+                        else if (Setting[name] is double)
                         {
-                            set[name] = double.Parse(value);
+                            Setting[name] = double.Parse(value);
                         }
                         else
                         {
@@ -277,12 +277,12 @@ namespace EasyMuisc.Windows
                 {
                     ShowWarn("导入部分失败：" + Environment.NewLine + failedSettings);
                 }
-                set.Save();
+                Setting.Save();
             }
             catch (Exception ex)
             {
                 ShowException("导入失败", ex);
-                set.Reload();
+                Setting.Reload();
             }
         }
 
