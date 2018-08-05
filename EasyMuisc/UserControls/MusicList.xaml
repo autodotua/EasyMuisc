@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:EasyMusic"
+              xmlns:helper="clr-namespace:EasyMusic.Helper"
+            xmlns:local="clr-namespace:EasyMusic"
              xmlns:uc="clr-namespace:EasyMusic.UserControls"
              FocusVisualStyle="{x:Null}"
              mc:Ignorable="d">
@@ -40,7 +41,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ListView x:Name="lvw" ItemsSource="{Binding}"  ScrollViewer.CanContentScroll="False" FocusVisualStyle="{x:Null}"
+        <ListView x:Name="lvw" ItemsSource="{Binding MusicListBinding}" SelectedItem="{Binding SelectedMusic}" ScrollViewer.CanContentScroll="False" FocusVisualStyle="{x:Null}"
                       Background="{DynamicResource backgroundBrushColor}" Foreground="Black" BorderThickness="0"
                     ScrollViewer.HorizontalScrollBarVisibility="Hidden">
 

@@ -1,37 +1,23 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Configuration;
 using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Interop;
-using Shell32;
 using Un4seen.Bass;
 using System.Windows.Input;
-using System.Threading;
 using System.Windows.Threading;
 using System.Windows.Controls;
-using System.Drawing;
-using System.Windows.Data;
-using System.Collections.Generic;
 using System.Windows.Media.Animation;
-using Microsoft.Win32;
 using System.Windows.Media;
-using System.Security.Permissions;
-using System.Diagnostics;
-using System.Windows.Controls.Primitives;
-using System.Runtime.InteropServices;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Shell;
-using CustomWPFColorPicker;
-using EasyMusic.Tools;
 using EasyMusic.Windows;
-using EasyMusic.UserControls;
-using static EasyMusic.Tools.Tools;
 using static EasyMusic.GlobalDatas;
-using static EasyMusic.Helper.MusicHelper;
+using static EasyMusic.Helper.MusicListHelper;
 using static WpfControls.Dialog.DialogHelper;
+using static EasyMusic.Helper.MusicControlHelper;
+using EasyMusic.Helper;
+using WpfCodes.Basic;
 
 namespace EasyMusic
 {
@@ -40,12 +26,7 @@ namespace EasyMusic
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        /// <summary>
-        /// 循环模式
-        /// </summary>
-        private enum CycleMode { SingleCycle, ListCycle, Shuffle }
-
+        public static MainWindow Current;
 
         #region 字段
         ///// <summary>
@@ -71,46 +52,7 @@ namespace EasyMusic
         /// <summary>
         /// 获取当前的播放循环模式
         /// </summary>
-        private CycleMode CurrentCycleMode
-        {
-            get
-            {
-                if (btnListCycle.Visibility == Visibility.Visible)
-                {
-                    return CycleMode.ListCycle;
-                }
-                if (btnShuffle.Visibility == Visibility.Visible)
-                {
-                    return CycleMode.Shuffle;
-                }
-                return CycleMode.SingleCycle;
-            }
-        }
-        /// <summary>
-        /// 内部音量
-        /// </summary>
-        private double Volumn
-        {
-            set
-            {
-                if (value > 1)
-                {
-                    value = 1;
-                }
-                if (value < 0)
-                {
-                    value = 0;
-                }
-                Bass.BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, (float)Math.Pow(value, 2));
-
-            }
-            get
-            {
-                float value = 0;
-                Bass.BASS_ChannelGetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, ref value);
-                return Math.Sqrt(value);
-            }
-        }
+      
         /// <summary>
         /// 是否显示加载动画
         /// </summary>
@@ -278,7 +220,7 @@ namespace EasyMusic
         /// </summary>
         public MainWindow()
         {
-
+            Current = this;
 
             //if (!File.Exists("bass.dll"))
             //{
@@ -340,31 +282,31 @@ namespace EasyMusic
         private void InitialiazeField()
         {
             mainTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000 / Setting.UpdateSpeed) };
-            playTimer.Tick += (p1, p2) =>
-            {
+            //playTimer.Tick += (p1, p2) =>
+            //{
 
-                if (Volumn >= sldVolumn.Value)
-                {
-                    playTimer.Stop();
-                    return;
-                }
-                Volumn += 0.05;
-            };
-            pauseTimer.Tick += (p1, p2) =>
-            {
+            //    if (Volumn >= sldVolumn.Value)
+            //    {
+            //        playTimer.Stop();
+            //        return;
+            //    }
+            //    Volumn += 0.05;
+            //};
+            //pauseTimer.Tick += (p1, p2) =>
+            //{
 
-                if (Volumn <= 0.05)
-                {
-                    Bass.BASS_ChannelPause(stream);
-                    pauseTimer.Stop();
-                    if (closing)
-                    {
-                        Application.Current.Shutdown();
-                    }
-                    return;
-                }
-                Volumn -= 0.05;
-            };
+            //    if (Volumn <= 0.05)
+            //    {
+            //        Bass.BASS_ChannelPause(stream);
+            //        pauseTimer.Stop();
+            //        if (closing)
+            //        {
+            //            Application.Current.Shutdown();
+            //        }
+            //        return;
+            //    }
+            //    Volumn -= 0.05;
+            //};
 
             StringBuilder str = new StringBuilder();
             foreach (var i in supportExtension)
@@ -383,12 +325,6 @@ namespace EasyMusic
         {
 
             RegistGolbalHotKey();
-            RegistSpeechRecognition();
-            //if (set.TrayMode == 0)
-            //{
-            //    trayIcon.Hide();// = false;
-            //}
-
 
             if (argPath != null && File.Exists(argPath))
             {
@@ -399,7 +335,7 @@ namespace EasyMusic
             {
 
                 string tempPath = Setting.LastMusic;
-                if (File.Exists(tempPath) && musicDatas.Where(p => p.Path.Equals(tempPath)).Count() != 0)
+                if (File.Exists(tempPath) && MusicDatas.Where(p => p.Path.Equals(tempPath)).Count() != 0)
                 {
                     PlayNew(await AddMusic(tempPath), false);
                 }
@@ -419,24 +355,10 @@ namespace EasyMusic
             }
 
 
-            switch (Setting.CycleMode)
-            {
-                case 1:
-                    btnListCycle.Visibility = Visibility.Visible;
-                    break;
-                case 2:
-                    btnShuffle.Visibility = Visibility.Visible;
-                    break;
-                case 3:
-                    btnSingleCycle.Visibility = Visibility.Visible;
-                    break;
-            }
             //set. = double.Parse(GetConfig("NormalLrcFontSize", normalLrcFontSize.ToString()));
             //highlightLrcFontSize = double.Parse(GetConfig("HighlightLrcFontSize", highlightLrcFontSize.ToString()));
             //textLrcFontSize = double.Parse(GetConfig("TextLrcFontSize", textLrcFontSize.ToString()));
             //sldVolumn.Value = double.Parse(GetConfig("Volumn", "1"));
-            Volumn = Setting.Volumn;
-            sldVolumn.Value = Setting.Volumn;
             Topmost = Setting.Topmost;
             //if (set.ShrinkMusicListManually)
             //{
@@ -444,7 +366,7 @@ namespace EasyMusic
             //}
 
         }
-
+        
 
 
         /// <summary>
@@ -462,18 +384,7 @@ namespace EasyMusic
             //SaveMusicListFromConfig();
             // SaveListToFile(set.DefautMusicList);
             SaveListToFile(lvwMusic.lastMusicListBtn.Text, false);
-            switch (CurrentCycleMode)
-            {
-                case CycleMode.ListCycle:
-                    Setting.CycleMode = 1;
-                    break;
-                case CycleMode.Shuffle:
-                    Setting.CycleMode = 2;
-                    break;
-                case CycleMode.SingleCycle:
-                    Setting.CycleMode = 3;
-                    break;
-            }
+            Setting.CycleMode = (int)MusicControlHelper.CycleMode;
             //SetConfig("NormalLrcFontSize", normalLrcFontSize.ToString());
             //SetConfig("HighlightLrcFontSize", highlightLrcFontSize.ToString());
             //SetConfig("TextLrcFontSize", textLrcFontSize.ToString());
@@ -481,7 +392,7 @@ namespace EasyMusic
             Setting.LastMusic = path;
             Setting.LastMusicList = lvwMusic.lastMusicListBtn.Text;
             //SetConfig("Volumn", sldVolumn.Value.ToString());
-            Setting.Volumn = sldVolumn.Value;
+            Setting.Volumn = MusicControlHelper.Volumn;
             //SetConfig("AlwaysOnTop", Topmost.ToString());
             // set.Topmost = Topmost;
             // SetConfig("BackgroundColor", colorPicker.CurrentColor.ToString());
@@ -560,7 +471,7 @@ namespace EasyMusic
             {
                 Setting.ShowFloatLyric = !Setting.ShowFloatLyric;
                 floatLyric.Visibility = floatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
-                floatLyric.Update(currentLrcIndex);
+                floatLyric.Update(lrc.CurrentIndex);
             });
             trayIcon.AddContextMenu("退出", () => CloseWindow());
 
@@ -603,6 +514,122 @@ namespace EasyMusic
             Close();
         }
 
+        public void ResetControls(ControlStatus status)
+        {
+            switch(status)
+            {
+                case ControlStatus.Play:
+                    tbiPlay.Visibility = Visibility.Collapsed;
+                    tbiPause.Visibility = Visibility.Visible;
+                 
+                    break;
+                case ControlStatus.Pause:
+                    tbiPause.Visibility = Visibility.Collapsed;
+                    tbiPlay.Visibility = Visibility.Visible;
+                    if (playTimer.IsEnabled)
+                    {
+                        playTimer.Stop();
+                    }
+                    pauseTimer.Start();
+                    break;
+            }
+            controlBar.ResetControls(status);
+        }
+
+        /// <summary>
+        /// 初始化歌词
+        /// </summary>
+        /// <param name="musicLength"></param>
+        public void InitialiazeLrc()
+        {
+            try
+            {
+                lrc = null;
+                floatLyric.SetFontEffect();
+                FontFamily font = new FontFamily(Setting.LyricsFont);
+                if (font == null)
+                {
+                    trayIcon.ShowMessage("主界面字体应用失败，请重新设置");
+                }
+                else
+                {
+                    lbxLrc.FontFamily = font;
+                }
+                lbxLrc.Foreground = new BrushConverter().ConvertFrom(Setting.LyricsFontColor) as SolidColorBrush;
+                lbxLrc.FontWeight = Setting.LyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
+
+                lrcLineSumToIndex.Clear();
+           
+                                     // stkLrc.Children.Clear();//清空歌词表
+                lbxLrc.Clear();
+
+                FileInfo file = new FileInfo(path);
+                file = new FileInfo(file.FullName.Replace(file.Extension, ".lrc"));
+                if (file.Exists)//判断是否存在歌词文件
+                {
+                    grdLrc.Visibility = Visibility.Visible;
+                    txtLrc.Visibility = Visibility.Hidden;
+                    //if (set.UseListBoxLrcInsteadOfStackPanel)
+                    //{
+                    lbxLrc.Visibility = Visibility.Visible;
+                    lrc = new LyricInfo(file.FullName);//获取歌词信息
+                    lrc.Offset /= 1000.0;
+                    int index = 0;//用于赋值Tag
+                    foreach (var i in lrc.LrcContent)
+                    {
+                        var tbk = new TextBlock()
+                        {
+                            Name = "tbk" + index.ToString(),
+                            FontSize = Setting.NormalLrcFontSize,
+                            Text = i.Value,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            Tag = index++,//标签用于定位
+                            Cursor = Cursors.Hand,
+                            TextAlignment = TextAlignment.Center,
+                            FocusVisualStyle = null,
+                        };
+                        tbk.MouseLeftButtonUp += (p1, p2) => Music.Position=(lrc.LrcContent.ElementAt((int)tbk.Tag).Key - lrc.Offset - Setting.LrcDefautOffset);
+                        
+                        lbxLrc.Add(tbk);
+                    }
+                    //lbxLrc.Add(lrc.LrcContent);
+                    //lbxLrc.ChangeFontSize(normalLrcFontSize);
+                    foreach (var i in lrc.LineIndex)
+                    {
+                        lrcLineSumToIndex.Add(i.Value);
+                    }
+                    // ReloadFloatLrc();
+                    floatLyric.Reload(lrc.LrcContent.Values.ToList());
+                }
+                else if ((file = new FileInfo(file.FullName.Replace(file.Extension, ".txt"))).Exists)
+                {
+
+                    txtLrc.Text = File.ReadAllText(file.FullName, EncodingType.GetType(file.FullName));
+               
+                    txtLrc.FontSize = Setting.TextLrcFontSize;
+                    grdLrc.Visibility = Visibility.Hidden;
+                    txtLrc.Visibility = Visibility.Visible;
+                    //stkLrc.Visibility = Visibility.Hidden;
+                    lbxLrc.Visibility = Visibility.Hidden;
+
+                }
+                else
+                {
+                    grdLrc.Visibility = Visibility.Hidden;
+                    txtLrc.Visibility = Visibility.Hidden;
+                    //stkLrc.Visibility = Visibility.Hidden;
+                    lbxLrc.Visibility = Visibility.Hidden;
+                    if (Setting.ShowFloatLyric)
+                    {
+                        floatLyric.Clear();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowException("初始化歌词失败！", ex);
+            }
+        }
 
 
         #endregion

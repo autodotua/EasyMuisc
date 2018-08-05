@@ -90,7 +90,7 @@ namespace EasyMusic.Windows
                         SetButtonsStatus(false);
                         if (ShowMessage("重载歌词？", WpfControls.Dialog.DialogType.Information, MessageBoxButton.YesNo, this) == 0)
                         {
-                            GlobalDatas.WinMain.InitialiazeLrc();
+                            MainWindow.Current.InitialiazeLrc();
                         }
                     }
                     catch (Exception ex)

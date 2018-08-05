@@ -174,17 +174,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CycleMode.cs" />
+    <Compile Include="Helpers\BassModuleHelper.cs" />
+    <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\MusicControlHelper.cs" />
+    <Compile Include="Helpers\MusicListHelper.cs" />
+    <Compile Include="Info\LyricInfo.cs" />
     <Compile Include="MainWindowPart\Header.xaml.cs" />
     <Compile Include="MainWindowPart\KeyAndMouse.xaml.cs" />
     <Compile Include="MainWindowPart\ListAndLrc.xaml.cs" />
     <Compile Include="MainWindowPart\Menu.xaml.cs" />
     <Compile Include="MainWindowPart\MusicControl.xaml.cs" />
-    <Compile Include="MainWindowPart\ControlEvent.xaml.cs" />
     <Compile Include="Helpers\FindVisualChildHelper.cs" />
     <Compile Include="GlobalDatas.cs" />
-    <Compile Include="Helpers\LyricHelper.cs" />
-    <Compile Include="Helpers\MusicHelper.cs" />
     <Compile Include="Tools\ListenHistoryInfo.cs" />
     <Compile Include="UserControls\ControlButton.xaml.cs">
       <DependentUpon>ControlButton.xaml</DependentUpon>
@@ -192,10 +194,13 @@
     <Compile Include="UserControls\LrcListView.xaml.cs">
       <DependentUpon>LrcListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\MusicControlBar.xaml.cs">
+      <DependentUpon>MusicControlBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\MusicFxPopupContent.xaml.cs">
       <DependentUpon>MusicFxPopupContent.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tools\MusicInfo.cs" />
+    <Compile Include="Info\MusicInfo.cs" />
     <Compile Include="UserControls\MusicList.xaml.cs">
       <DependentUpon>MusicList.xaml</DependentUpon>
     </Compile>
@@ -226,7 +231,7 @@
     <Compile Include="Windows\WinAlbumPicture.xaml.cs">
       <DependentUpon>WinAlbumPicture.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\WindowHelper.cs" />
+    <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Windows\WinHelp.xaml.cs">
       <DependentUpon>WinHelp.xaml</DependentUpon>
     </Compile>
@@ -242,11 +247,18 @@
     <Compile Include="Windows\WinSettings.xaml.cs">
       <DependentUpon>WinSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="UserControls\ControlButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\LrcListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MusicControlBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -290,16 +302,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WinMain.xaml">
+    <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WinMain.xaml.cs">
-      <DependentUpon>WinMain.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UserControls\SpinnerDotCircle.xaml">

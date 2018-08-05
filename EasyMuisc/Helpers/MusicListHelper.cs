@@ -22,13 +22,13 @@ using static WpfControls.Dialog.DialogHelper;
 
 namespace EasyMusic.Helper
 {
-    public static class MusicHelper
+    public static class MusicListHelper
 
     {
         /// <summary>
         /// 音乐信息，与列表绑定
         /// </summary>
-        public static ObservableCollection<MusicInfo> musicDatas;
+        public static ObservableCollection<MusicInfo> MusicDatas { get; } = new ObservableCollection<MusicInfo>();
         /// <summary>
         /// 增加新的歌曲到列表中
         /// </summary>
@@ -39,7 +39,7 @@ namespace EasyMusic.Helper
 
             try
             {
-                foreach (var i in musicDatas)
+                foreach (var i in MusicDatas)
                 {
                     if (path == i.Path)
                     {
@@ -60,9 +60,9 @@ namespace EasyMusic.Helper
                     Path = path,
                     Album = album,
                 };
-                musicDatas.Add(item);
+                MusicDatas.Add(item);
                // DoEvents();
-                return musicDatas[musicDatas.Count - 1];
+                return MusicDatas[MusicDatas.Count - 1];
             }
             catch
             {
@@ -95,10 +95,6 @@ namespace EasyMusic.Helper
         /// 当前播放历史索引
         /// </summary>
         private static int historyIndex = -1;
-        /// <summary>
-        /// 当前音乐在列表中的索引
-        /// </summary>
-        public static int musicIndex = 0;
         /// <summary>
         /// 获取音乐的信息
         /// </summary>
@@ -137,10 +133,10 @@ namespace EasyMusic.Helper
         /// <returns></returns>
         public async static void AddMusic(string[] musics)
         {
-            var taskBar = WinMain.taskBar;
+            var taskBar = MainWindow.Current.taskBar;
             taskBar.ProgressValue = 0;
             taskBar.ProgressState = TaskbarItemProgressState.Normal;
-            WinMain.LoadingSpinner = true;
+            MainWindow.Current.LoadingSpinner = true;
 
             //if (cfa.AppSettings.Settings["MusicList"] != null)
             //{
@@ -157,7 +153,7 @@ namespace EasyMusic.Helper
            
             //}
             taskBar.ProgressState = TaskbarItemProgressState.None;
-            WinMain.LoadingSpinner = false;
+            MainWindow.Current.LoadingSpinner = false;
 
         }
         /// <summary>
@@ -195,7 +191,7 @@ namespace EasyMusic.Helper
                 using (StreamWriter stream = new StreamWriter(File.Open(path, FileMode.Create), new UTF8Encoding(true)))
                 {
                     CsvHelper.CsvWriter writer = new CsvHelper.CsvWriter(stream);
-                    writer.WriteRecords(musicDatas);
+                    writer.WriteRecords(MusicDatas);
                 }
             }
             catch(Exception ex)
@@ -220,7 +216,7 @@ namespace EasyMusic.Helper
                 catch(Exception ex)
                 {
                     ShowException($"歌单文件“{path}”已损坏，将重置歌单",ex);
-                    musicDatas = new ObservableCollection<MusicInfo>();
+                    MusicDatas.Clear();
                 }
             }
             else
@@ -234,7 +230,7 @@ namespace EasyMusic.Helper
                 {
                     ShowException($"歌单文件“{path}”创建失败。", ex);
                 }
-                musicDatas = new ObservableCollection<MusicInfo>();
+                MusicDatas.Clear();
             }
          
 
@@ -253,7 +249,11 @@ namespace EasyMusic.Helper
             using (StreamReader stream = new StreamReader(File.Open(path, FileMode.Open),new UTF8Encoding(true)))
             {
                 CsvHelper.CsvReader reader = new CsvHelper.CsvReader(stream);
-                musicDatas = new ObservableCollection<MusicInfo>(reader.GetRecords<MusicInfo>());
+                MusicDatas.Clear();
+                foreach (var item in reader.GetRecords<MusicInfo>())
+                {
+                    MusicDatas.Add(item);
+                }
             }
             
 
@@ -326,22 +326,14 @@ namespace EasyMusic.Helper
         /// <summary>
         /// 歌曲数量
         /// </summary>
-        public static int MusicCount => musicDatas.Count;
-        /// <summary>
-        /// 当前的歌曲实例
-        /// </summary>
-        public static MusicInfo CurrentMusic => musicDatas[musicIndex];
-        /// <summary>
-        /// 当前歌曲索引
-        /// </summary>
-        public static int CurrentMusicIndex => musicIndex;
+        public static int MusicCount => MusicDatas.Count;
         /// <summary>
         /// 删除所有歌曲
         /// </summary>
-        public static void RemoveMusic()
+        public static void ClearMusics()
         {
-            musicDatas.Clear();
-            WinMain.AfterClearList();
+            MusicDatas.Clear();
+            MainWindow.Current.AfterClearList();
         }
         /// <summary>
         /// 删除指定歌曲
@@ -349,42 +341,22 @@ namespace EasyMusic.Helper
         /// <param name="index"></param>
         public static void RemoveMusic(int index)
         {
-            musicDatas.RemoveAt(index);
-            if (musicDatas.Count == 0)
+            MusicDatas.RemoveAt(index);
+            if (MusicDatas.Count == 0)
             {
-                WinMain.AfterClearList();
+                MainWindow.Current.AfterClearList();
             }
         }
         public static void RemoveMusic(MusicInfo music)
         {
-            musicDatas.Remove(music);
-            if (musicDatas.Count == 0)
+            MusicDatas.Remove(music);
+            if (MusicDatas.Count == 0)
             {
-                WinMain.AfterClearList();
+               MainWindow.Current.AfterClearList();
             }
         }
 
-
-        /// <summary>
-        /// 获取指定索引的歌曲
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public static MusicInfo GetMusic(int index) => musicDatas[index];
-        /// <summary>
-        /// 根据歌曲实例获取歌曲的索引
-        /// </summary>
-        /// <param name="music"></param>
-        /// <returns></returns>
-        public static int GetMusic(MusicInfo music) => musicDatas.IndexOf(music);
-        /// <summary>
-        /// 设置当前歌曲索引
-        /// </summary>
-        /// <param name="index"></param>
-        public static void SetCurrent(int index)
-        {
-            musicIndex = index;
-        }
+        
         /// <summary>
         /// 歌曲历史总数
         /// </summary>
@@ -435,8 +407,8 @@ namespace EasyMusic.Helper
              public static void RandomizeList()
         {
             //Copy to a array
-            MusicInfo[] copyArray = new MusicInfo[musicDatas.Count];
-            musicDatas.CopyTo(copyArray,0);
+            MusicInfo[] copyArray = new MusicInfo[MusicDatas.Count];
+            MusicDatas.CopyTo(copyArray,0);
 
             //Add range
             List<MusicInfo> copyList = new List<MusicInfo>();
@@ -445,7 +417,7 @@ namespace EasyMusic.Helper
             //Set outputList and random
             //List<MusicInfo> outputList = new List<MusicInfo>();
             Random rd = new Random(DateTime.Now.Millisecond);
-            musicDatas.Clear();
+            MusicDatas.Clear();
             while (copyList.Count > 0)
             {
                 //Select an index and item
@@ -454,7 +426,7 @@ namespace EasyMusic.Helper
 
                 //remove it from copyList and add it to output
                 copyList.Remove(remove);
-                musicDatas.Add(remove);
+                MusicDatas.Add(remove);
             }
            // return outputList;
         }

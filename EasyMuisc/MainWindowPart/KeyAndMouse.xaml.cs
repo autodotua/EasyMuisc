@@ -21,6 +21,8 @@ using static WpfControls.Dialog.DialogHelper;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
 using WpfCodes.WindowsApi;
+using EasyMusic.Helper;
+using EasyMusic.Helper;
 
 namespace EasyMusic
 {
@@ -36,13 +38,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void HotKeyFowardEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            //BtnNextClickEventHandler(null, null);
-            double position = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetPosition(stream)) + 4;
-            if (position > musicLength)
-            {
-                position = musicLength;
-            }
-            Bass.BASS_ChannelSetPosition(stream, position);
+            MusicControlHelper.Music.Position+=4;
         }
         /// <summary>
         /// 执行后退快捷键
@@ -51,12 +47,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void HotKeyBackEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            double position = Bass.BASS_ChannelBytes2Seconds(stream, Bass.BASS_ChannelGetPosition(stream)) - 4;
-            if (position < 0)
-            {
-                position = 0;
-            }
-            Bass.BASS_ChannelSetPosition(stream, position);
+            MusicControlHelper.Music.Position -= 4;
         }
         /// <summary>
         /// 执行播放暂停快捷键
@@ -65,14 +56,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         public void HotKeyPlayAndPauseEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            if (btnPause.Visibility == Visibility.Visible)
-            {
-                BtnPauseClickEventHandler(null, null);
-            }
-            else
-            {
-                BtnPlayClickEventHandler(null, null);
-            }
+            MusicControlHelper.Music.PlayOrPause();
         }
         /// <summary>
         /// 执行下一曲快捷键
@@ -81,7 +65,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void HotKeyNextEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            BtnNextClickEventHandler(null, null);
+            MusicControlHelper.PlayListNext();
         }
         /// <summary>
         /// 执行上一曲快捷键
@@ -101,7 +85,7 @@ namespace EasyMusic
         {
             if (e.Key == Key.Space)
             {
-                WinMain.HotKeyPlayAndPauseEventHandler(null, null);
+                MainWindow.Current.HotKeyPlayAndPauseEventHandler(null, null);
             }
         }
 
@@ -256,72 +240,72 @@ namespace EasyMusic
 
         #region 语音识别
 
-        private void RegistSpeechRecognition()
-        {
-            return;
-            SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine(System.Globalization.CultureInfo.CurrentCulture);
+        //private void RegistSpeechRecognition()
+        //{
+        //    return;
+        //    SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine(System.Globalization.CultureInfo.CurrentCulture);
 
-            //----------------
-            //初始化命令词
-            Choices conmmonds = new Choices();
-            //添加命令词
-            conmmonds.Add(new string[] { "播放", "暂停", "轻一点", "响一点", "多轻一点", "多响一点" });
-            //初始化命令词管理
-            GrammarBuilder gBuilder = new GrammarBuilder();
-            //将命令词添加到管理中
-            gBuilder.Append(conmmonds);
-            //实例化命令词管理
-            Grammar grammar = new Grammar(gBuilder);
-            //-----------------
+        //    //----------------
+        //    //初始化命令词
+        //    Choices conmmonds = new Choices();
+        //    //添加命令词
+        //    conmmonds.Add(new string[] { "播放", "暂停", "轻一点", "响一点", "多轻一点", "多响一点" });
+        //    //初始化命令词管理
+        //    GrammarBuilder gBuilder = new GrammarBuilder();
+        //    //将命令词添加到管理中
+        //    gBuilder.Append(conmmonds);
+        //    //实例化命令词管理
+        //    Grammar grammar = new Grammar(gBuilder);
+        //    //-----------------
 
-            //创建并加载听写语法(添加命令词汇识别的比较精准)
-            recognizer.LoadGrammar(grammar);
-            //为语音识别事件添加处理程序。
-            recognizer.SpeechRecognized += RecognizerSpeechRecognizedEventHandler;
-            //将输入配置到语音识别器。
-            recognizer.SetInputToDefaultAudioDevice();
-            //启动异步，连续语音识别。
-            recognizer.RecognizeAsync(RecognizeMode.Multiple);
+        //    //创建并加载听写语法(添加命令词汇识别的比较精准)
+        //    recognizer.LoadGrammar(grammar);
+        //    //为语音识别事件添加处理程序。
+        //    recognizer.SpeechRecognized += RecognizerSpeechRecognizedEventHandler;
+        //    //将输入配置到语音识别器。
+        //    recognizer.SetInputToDefaultAudioDevice();
+        //    //启动异步，连续语音识别。
+        //    recognizer.RecognizeAsync(RecognizeMode.Multiple);
 
-            sy.SelectVoiceByHints(VoiceGender.Neutral);
+        //    sy.SelectVoiceByHints(VoiceGender.Neutral);
 
 
-        }
-        SpeechSynthesizer sy = new SpeechSynthesizer();
-        private void RecognizerSpeechRecognizedEventHandler(object sender, SpeechRecognizedEventArgs e)
-        {
-            switch (e.Result.Text)
-            {
-                case "暂停":
-                    if (btnPause.Visibility == Visibility.Visible)
-                    {
-                        BtnPauseClickEventHandler(null, null);
-                    }
-                    break;
-                case "播放":
-                    if (btnPlay.Visibility == Visibility.Visible)
-                    {
-                        BtnPlayClickEventHandler(null, null);
-                    }
-                    break;
-                case "轻一点":
-                    sldVolumn.Value -= 0.05;
-                    sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
-                    break;
-                case "响一点":
-                    sldVolumn.Value += 0.05;
-                    sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
-                    break;
-                case "多轻一点":
-                    sldVolumn.Value -= 0.2;
-                    sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
-                    break;
-                case "多响一点":
-                    sldVolumn.Value += 0.2;
-                    sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
-                    break;
-            }
-        }
+        //}
+        //SpeechSynthesizer sy = new SpeechSynthesizer();
+        //private void RecognizerSpeechRecognizedEventHandler(object sender, SpeechRecognizedEventArgs e)
+        //{
+        //    switch (e.Result.Text)
+        //    {
+        //        case "暂停":
+        //            if (btnPause.Visibility == Visibility.Visible)
+        //            {
+        //                BtnPauseClickEventHandler(null, null);
+        //            }
+        //            break;
+        //        case "播放":
+        //            if (btnPlay.Visibility == Visibility.Visible)
+        //            {
+        //                BtnPlayClickEventHandler(null, null);
+        //            }
+        //            break;
+        //        case "轻一点":
+        //            sldVolumn.Value -= 0.05;
+        //            sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
+        //            break;
+        //        case "响一点":
+        //            sldVolumn.Value += 0.05;
+        //            sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
+        //            break;
+        //        case "多轻一点":
+        //            sldVolumn.Value -= 0.2;
+        //            sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
+        //            break;
+        //        case "多响一点":
+        //            sldVolumn.Value += 0.2;
+        //            sy.SpeakAsync("百分之" + (int)(sldVolumn.Value * 100));
+        //            break;
+        //    }
+        //}
 
         #endregion
 
@@ -361,14 +345,7 @@ namespace EasyMusic
             }
             else if (!mouseInLrcArea && !mouseInMusicListArea)
             {
-                if (e.Delta > 0)
-                {
-                    sldVolumn.Value += 0.05;
-                }
-                else
-                {
-                    sldVolumn.Value -= 0.05;
-                }
+                MusicControlHelper.Volumn += e.Delta > 0 ? 0.05 : -0.05;
             }
         }
         /// <summary>

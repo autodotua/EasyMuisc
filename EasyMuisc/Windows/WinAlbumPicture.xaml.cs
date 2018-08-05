@@ -30,11 +30,11 @@ namespace EasyMusic.Windows
         public WinAlbumPicture()
         {
             InitializeComponent();
-            Left = WinMain.Left ; // + 12;
-            Top = WinMain.Top;// + win.ActualHeight - win.imgAlbum.Height - 16;
-            Width = WinMain.imgAlbum.ActualWidth;
-            Height = WinMain.imgAlbum.ActualHeight;
-            if(WinMain.Topmost)
+            Left = MainWindow.Current.Left ; // + 12;
+            Top = MainWindow.Current.Top;// + win.ActualHeight - win.imgAlbum.Height - 16;
+            Width = MainWindow.Current.imgAlbum.ActualWidth;
+            Height = MainWindow.Current.imgAlbum.ActualHeight;
+            if(MainWindow.Current.Topmost)
             {
                 winMainTopMost = true;
             }
@@ -114,7 +114,7 @@ namespace EasyMusic.Windows
                 DefaultExt = "jpg",
                 Title = "保存专辑图",
                 Filter = "JPG图片(*.jpg)|*.jpg",
-                FileName = MusicHelper.CurrentMusic.Name,
+                FileName = MusicListHelper.CurrentMusic.Name,
             };
             sfd.FileOk += delegate
               {
@@ -148,7 +148,7 @@ namespace EasyMusic.Windows
 
         private void WinAlbumPicClosingEventHandler(object sender, EventArgs e)
         {
-            WinMain.Topmost = winMainTopMost;
+            MainWindow.Current.Topmost = winMainTopMost;
         }
     }
 }

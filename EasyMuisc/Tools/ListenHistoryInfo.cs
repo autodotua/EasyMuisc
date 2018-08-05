@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static EasyMusic.GlobalDatas;
-using static EasyMusic.Helper.MusicHelper;
+using static EasyMusic.Helper.MusicListHelper;
 using System.Xml;
 using System.IO;
 

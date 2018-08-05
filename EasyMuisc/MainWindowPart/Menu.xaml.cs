@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using static EasyMusic.Helper.MusicControlHelper;
 
 namespace EasyMusic
 {
@@ -18,7 +19,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void TbiPlayClickEventHandler(object sender, EventArgs e)
         {
-            BtnPlayClickEventHandler(null, null);
+            Music.Play();
             tbiPlay.Visibility = Visibility.Collapsed;
             tbiPause.Visibility = Visibility.Visible;
 
@@ -30,7 +31,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void TbiPauseClickEventHandler(object sender, EventArgs e)
         {
-            BtnPauseClickEventHandler(null, null);
+            Music.Pause();
             tbiPause.Visibility = Visibility.Collapsed;
             tbiPlay.Visibility = Visibility.Visible;
         }
@@ -41,7 +42,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void TbiLastClickEventHandler(object sender, EventArgs e)
         {
-            BtnLastClickEventHandler(null, null);
+            PlayLast();
         }
         /// <summary>
         /// 单击任务栏上的下一曲按钮事件
@@ -50,7 +51,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void TbiNextClickEventHandler(object sender, EventArgs e)
         {
-            BtnNextClickEventHandler(null, null);
+            PlayNext();
         }
 
         #endregion

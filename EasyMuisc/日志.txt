@@ -317,3 +317,8 @@
 	修复了因为增加了历史列表功能导致首次进入时默认歌单错误导致闪退的BUG
 	修复了八个半月后的今天才发现的非界面（命名空间、程序集）的Music写成Muisc的BUG！！！！！！！！！
 	修改了一些命名空间
+	重构开始：
+		新增“MusicControlHelper”类，作为管理多文件播放
+		新增“BassModuleHelper”相关类，作为播放实例
+		新增“FileHelper”类，用于管理文件
+		关于歌词的全部写进LyricHelper类

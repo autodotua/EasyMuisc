@@ -19,6 +19,8 @@ using System.Diagnostics;
 using System.Windows.Interop;
 using static EasyMusic.Tools.Tools;
 using static WpfControls.Dialog.DialogHelper;
+using static EasyMusic.Helper.MusicControlHelper;
+
 namespace EasyMusic.UserControls
 {
     /// <summary>
@@ -35,8 +37,8 @@ namespace EasyMusic.UserControls
         /// </summary>
         public void Load()
         {
-            sldPitch.Value = Pitch;
-            sldTempo.Value = Tempo;
+            sldPitch.Value = Music.Pitch;
+            sldTempo.Value = Music.Tempo;
 
             stkDevices.Children.Clear();
 

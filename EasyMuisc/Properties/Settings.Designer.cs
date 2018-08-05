@@ -361,18 +361,6 @@ namespace EasyMusic.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool MusicSettings {
-            get {
-                return ((bool)(this["MusicSettings"]));
-            }
-            set {
-                this["MusicSettings"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int Pitch {
             get {
@@ -596,6 +584,18 @@ namespace EasyMusic.Properties {
             }
             set {
                 this["SpeechRecognitionCommand"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool KeepMusicSettings {
+            get {
+                return ((bool)(this["KeepMusicSettings"]));
+            }
+            set {
+                this["KeepMusicSettings"] = value;
             }
         }
     }

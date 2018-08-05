@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using static EasyMusic.GlobalDatas;
-using static EasyMusic.Helper.MusicHelper;
+using static EasyMusic.Helper.MusicListHelper;
 using System.IO;
 using static WpfControls.Dialog.DialogHelper;
 using System.Collections.ObjectModel;
@@ -13,38 +13,26 @@ using System.Windows;
 using System.Windows.Media;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using WpfControls.Dialog;
+using static EasyMusic.Helper.MusicControlHelper;
+using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace EasyMusic
 {
     /// <summary>
     /// MusicList.xaml 的交互逻辑
     /// </summary>
-    public partial class MusicList : UserControl
+    public partial class MusicList : UserControl, INotifyPropertyChanged
     {
         public UserControls.ToggleButton lastMusicListBtn;
+        private static ObservableCollection<MusicInfo> musicListBinding;
 
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public MusicList()
         {
             InitializeComponent();
-            //if(!Directory.Exists(ToAbstractPath()))
-            //{
-            //    try
-            //    {
-            //        Directory.CreateDirectory(ToAbstractPath());
-            //        File.Create(ToAbstractPath(set.DefautMusicList));
-            //    }
-            //    catch(Exception ex)
-            //    {
-            //        ShowException("歌单目录不存在且无法创建", ex);
-            //    }
-
-            //    musicDatas = new ObservableCollection<MusicInfo>();
-            //}
-            //else
-            //{
-
-            //ReadFileToList(set.DefautMusicList);
+            DataContext = this;
             if (!Directory.Exists(GetMusicListPath()))
             {
                 try
@@ -94,7 +82,6 @@ namespace EasyMusic
             }
             lastMusicListBtn.RaiseClickEvent();
 
-            ResetItemsSource();
 
         }
         /// <summary>
@@ -205,7 +192,7 @@ namespace EasyMusic
                 }
                 (i as UserControls.ToggleButton).IsPressed = false;
             }
-            if (lastMusicListBtn != null && musicDatas != null)
+            if (lastMusicListBtn != null && MusicDatas != null)
             {
                 SaveListToFile(lastMusicListBtn.Text, false);
             }
@@ -213,14 +200,7 @@ namespace EasyMusic
 
             ReadFileToList(btn.Text);
 
-
-            ResetItemsSource();
-
         }
-        /// <summary>
-        /// 刷新列表
-        /// </summary>
-        public void ResetItemsSource() => lvw.ItemsSource = musicDatas;
 
         /// <summary>
         /// 双击列表项事件
@@ -229,20 +209,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         public void LvwItemPreviewMouseDoubleClickEventHandler(object sender, MouseButtonEventArgs e)
         {
-            if (lvw.ItemsSource == musicDatas)
-
-            {
-                if (CurrentHistoryIndex < HistoryCount - 1)
-                {
-                    RemoveHistory(CurrentHistoryIndex + 1, HistoryCount - CurrentHistoryIndex - 1);
-                }
-                musicIndex = lvw.SelectedIndex;
-                WinMain.PlayCurrent();
-            }
-            else
-            {
-                WinMain.PlayNew(lvw.SelectedItem as MusicInfo);
-            }
+            PlayNew(SelectedMusic);
         }
         /// <summary>
         /// 在列表项上按下按钮事件，包括打开、删除
@@ -275,7 +242,7 @@ namespace EasyMusic
         {
             if (lvw.SelectedIndex != -1)
             {
-                WinMain.BtnListOptionClickEventHanlder(sender, null);
+                MainWindow.Current.BtnListOptionClickEventHanlder(sender, null);
 
             }
         }
@@ -290,21 +257,26 @@ namespace EasyMusic
                 RemoveMusic(i);
             }
         }
-        /// <summary>
-        /// 选择的项的索引
-        /// </summary>
-        public int SelectedIndex => lvw.SelectedIndex;
-        /// <summary>
-        /// 选择的项
-        /// </summary>
-        public MusicInfo SelectedItem => lvw.SelectedItem as MusicInfo;
+        public MusicInfo SelectedMusic { get; set; }
+        public IEnumerable<MusicInfo> SelectedMusics => lvw.SelectedItems.Cast<MusicInfo>();
+
+        public ObservableCollection<MusicInfo> MusicListBinding
+        {
+            get => musicListBinding;
+            set
+            {
+                musicListBinding = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("MusicListBinding"));
+            }
+        }
+
         /// <summary>
         /// 定位到
         /// </summary>
         /// <param name="index"></param>
-        public void SelectAndScroll(int index)
+        public void SelectAndScroll(MusicInfo musicInfo)
         {
-            lvw.SelectedIndex = index;
+            lvw.SelectedItem = musicInfo;
             lvw.ScrollIntoView(lvw.SelectedItem);
         }
         /// <summary>
@@ -354,15 +326,15 @@ namespace EasyMusic
         private void BtnHistoryClickEventHandler(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
-            if (lvw.ItemsSource == musicDatas)
+            if (lvw.ItemsSource == MusicDatas)
             {
                 lvw.ItemsSource = historyList;
-                btn.Background = WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor( WpfControls.DarkerBrushConverter.StringToSolidColorBrush(Setting.BackgroundColor))));
+                btn.Background = WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.StringToSolidColorBrush(Setting.BackgroundColor))));
 
             }
             else
             {
-                lvw.ItemsSource = musicDatas;
+                lvw.ItemsSource = MusicDatas;
                 btn.Background = WpfControls.DarkerBrushConverter.StringToSolidColorBrush(Setting.BackgroundColor);
 
             }

@@ -21,7 +21,7 @@ namespace EasyMusic
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return MusicHelper.GetStringLength((int)value);
+            return MusicListHelper.GetStringLength((int)value);
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

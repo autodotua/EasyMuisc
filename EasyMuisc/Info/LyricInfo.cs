@@ -7,11 +7,17 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WpfCodes.Basic;
+using static EasyMusic.Helper.MusicControlHelper;
+using static EasyMusic.GlobalDatas;
+using System.Windows;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using static WpfControls.Dialog.DialogHelper;
 
 namespace EasyMusic.Helper
 {
-    public class LyricHelper
-    {
+    public class LyricInfo
+    {   
+
         /// <summary>
         /// 歌曲
         /// </summary>
@@ -31,8 +37,9 @@ namespace EasyMusic.Helper
         /// <summary>
         /// 偏移量
         /// </summary>
-        public string Offset { get; set; }
+        public double Offset { get; set; }
 
+        public int CurrentIndex { get; set; } = -1;
         /// <summary>
         /// 歌词
         /// </summary>
@@ -43,7 +50,7 @@ namespace EasyMusic.Helper
         /// </summary>
         /// <param name="LrcPath">歌词路径</param>
         /// <returns>返回歌词信息(Lrc实例)</returns>
-        public LyricHelper(string LrcPath)
+        public LyricInfo(string LrcPath)
         {
             Regex regex = new Regex(@"(?<time>\[[0-9.:\]\[\s]*\])(?<value>.*)", RegexOptions.Compiled);
             Regex timeRegex = new Regex(@"\[(?<time>[0-9.:]*)\]\s*", RegexOptions.Compiled);
@@ -76,7 +83,10 @@ namespace EasyMusic.Helper
                         }
                         else if (line.StartsWith("[offset:"))
                         {
-                            Offset = SplitInfo(line);
+                            if( double.TryParse( SplitInfo(line),out double offset))
+                            {
+                                Offset = offset / 1000;
+                            }
                         }
                         else
                         {
@@ -115,7 +125,6 @@ namespace EasyMusic.Helper
                 LineIndex[LineIndex.Keys.ElementAt(i)] += LineIndex[LineIndex.Keys.ElementAt(i-1)];
             }
         }
-
         /// <summary>
         /// 处理信息
         /// </summary>
@@ -125,5 +134,130 @@ namespace EasyMusic.Helper
         {
             return line.Substring(line.IndexOf(":") + 1).TrimEnd(']');
         }
+
+
+        public  void CopyLyrics()
+        {
+            if (LrcContent.Count != 0)
+            {
+                StringBuilder str = new StringBuilder();
+                for (int i = 0; i < LrcContent.Count - 1; i++)
+                {
+                    str.Append(LrcContent[i] + Environment.NewLine);
+                }
+                str.Append(LrcContent[LrcContent.Count - 1]);
+                Clipboard.SetText(str.ToString());
+            }
+
+
+            /// <summary>
+            /// 保存歌词
+            /// </summary>
+            /// <param name="saveAs"></param>
+        }
+
+        public  void SaveLrc(bool saveAs)
+        {
+            StringBuilder str = new StringBuilder();
+            if (Setting.PreferMusicInfo)
+            {
+                if (Music.MusicInfo.Name != "")
+                {
+                    str.Append("[ti:" + Music.MusicInfo.Name + "]" + Environment.NewLine);
+                }
+                if (Music.MusicInfo.Singer != "")
+                {
+                    str.Append("[ar:" + Music.MusicInfo.Singer + "]" + Environment.NewLine);
+                }
+                if (Music.MusicInfo.Album != "")
+                {
+                    str.Append("[al:" + Music.MusicInfo.Album + "]" + Environment.NewLine);
+                }
+            }
+            else
+            {
+                if (Title != "")
+                {
+                    str.Append("[ti:" + Title + "]" + Environment.NewLine);
+                }
+                if (Artist != "")
+                {
+                    str.Append("[ar:" + Artist + "]" + Environment.NewLine);
+                }
+                if (Album != "")
+                {
+                    str.Append("[al:" + Album + "]" + Environment.NewLine);
+                }
+                if (LrcBy != "")
+                {
+                    str.Append("[by:" + LrcBy + "]" + Environment.NewLine);
+                }
+            }
+            if (Setting.SaveLrcOffsetByTag && Offset != 0)
+            {
+                str.Append("[offset:" + (int)Math.Round(Offset * 1000) + "]" + Environment.NewLine);
+            }
+            List<double> lrcTime = new List<double>();
+            foreach (var i in LrcContent.Keys)
+            {
+                lrcTime.Add((Setting.SaveLrcOffsetByTag) ? i : i + Offset);
+            }
+
+            FileInfo file = new FileInfo(Music.FilePath);
+            for (int i = 0; i < lrcTime.Count; i++)
+            {
+                double time = lrcTime[i];
+                string word = LrcContent[i];
+                int intMinute = (int)time / 60;
+                string minute = string.Format("{0:00}", intMinute);
+                string second = string.Format("{0:00.00}", time - 60 * intMinute);
+                foreach (var j in word.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    str.Append("[" + minute + ":" + second + "]" + j + Environment.NewLine);
+                }
+
+            }
+            if (saveAs)
+            {
+                CommonSaveFileDialog dialog = new CommonSaveFileDialog()
+                {
+                    AlwaysAppendDefaultExtension = true,
+                    InitialDirectory = file.DirectoryName,
+                    Title = "请选择目标文件夹",
+                    DefaultFileName = file.Name.Replace(file.Extension, ".lrc"),
+
+                };
+
+                dialog.Filters.Add(new CommonFileDialogFilter("Lrc歌词", "lrc"));
+                dialog.Filters.Add(new CommonFileDialogFilter());
+
+
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    try
+                    {
+                        File.WriteAllText(dialog.FileName, str.ToString());
+                        ShowPrompt("歌词保存成功");
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowException("无法保存文件", ex);
+                    }
+                }
+            }
+            else
+            {
+                try
+                {
+                    File.WriteAllText(Music.FilePath.Replace(file.Extension, "") + ".lrc", str.ToString());
+                    ShowPrompt("歌词保存成功");
+                }
+                catch (Exception ex)
+                {
+                    ShowException("无法保存文件", ex);
+                }
+            }
+        }
+
     }
 }
