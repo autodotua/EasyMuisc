@@ -33,9 +33,6 @@ namespace EasyMusic
             {
                 GlobalDatas.argPath = e.Args[0];
             }
-            TaskScheduler.UnobservedTaskException += (p1, p2) => { if (!p2.Observed) ShowException(p2.Exception, 3); };//Task
-            AppDomain.CurrentDomain.UnhandledException += (p1, p2) => ShowException((Exception)p2.ExceptionObject, 2);//UI
-            DispatcherUnhandledException += (p1, p2) => ShowException(p2.Exception, 1);//Thread
         }
         private void ShowException(Exception ex, int type)
         {
@@ -61,36 +58,6 @@ namespace EasyMusic
         }
 
 
-        //void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        //{
-        //   ShowAlert(e.Exception.Message);
-        //    string logName = "UnhandledException.log";
-        //    if (File.Exists(logName))
-        //    {
-        //        string oldFile = File.ReadAllText(logName);
-        //        File.WriteAllText(logName,
-        //        oldFile
-        //        + Environment.NewLine + Environment.NewLine
-        //        + DateTime.Now.ToString()
-        //        + Environment.NewLine
-        //        + e.Exception.ToString());
-        //    }
-        //    else
-        //    {
-        //        File.WriteAllText(logName,
-        //          DateTime.Now.ToString()
-        //          +Environment.NewLine
-        //           + e.Exception.ToString());
-        //    }
-        //    Current.Shutdown();
-        //    return;
-        //}
-        //private void ShowAlert(string message)
-        //{
-
-        //        MessageBox.Show(message, "发生异常", MessageBoxButton.OK, MessageBoxImage.Error);
-
-        //}
     }
 
 }

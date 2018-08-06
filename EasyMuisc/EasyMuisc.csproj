@@ -174,46 +174,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CycleMode.cs" />
-    <Compile Include="Helpers\BassModuleHelper.cs" />
-    <Compile Include="Helpers\FileHelper.cs" />
-    <Compile Include="Helpers\MusicControlHelper.cs" />
-    <Compile Include="Helpers\MusicListHelper.cs" />
+    <Compile Include="EasyMusic\Tool.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Helper\BassModuleHelper.cs" />
+    <Compile Include="Helper\FileHelper.cs" />
+    <Compile Include="Helper\MusicControlHelper.cs" />
+    <Compile Include="Helper\MusicListHelper.cs" />
     <Compile Include="Info\LyricInfo.cs" />
-    <Compile Include="MainWindowPart\Header.xaml.cs" />
-    <Compile Include="MainWindowPart\KeyAndMouse.xaml.cs" />
-    <Compile Include="MainWindowPart\ListAndLrc.xaml.cs" />
-    <Compile Include="MainWindowPart\Menu.xaml.cs" />
-    <Compile Include="MainWindowPart\MusicControl.xaml.cs" />
-    <Compile Include="Helpers\FindVisualChildHelper.cs" />
+    <Compile Include="Helper\FileAssociationHelper.cs" />
     <Compile Include="GlobalDatas.cs" />
-    <Compile Include="Tools\ListenHistoryInfo.cs" />
-    <Compile Include="UserControls\ControlButton.xaml.cs">
+    <Compile Include="Info\ListenHistoryInfo.cs" />
+    <Compile Include="UserControl\Control\ControlButton.xaml.cs">
       <DependentUpon>ControlButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\LrcListView.xaml.cs">
+    <Compile Include="Converters.cs" />
+    <Compile Include="UserControl\Panel\LrcListView.xaml.cs">
       <DependentUpon>LrcListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\MusicControlBar.xaml.cs">
+    <Compile Include="UserControl\Panel\MusicControlBar.xaml.cs">
       <DependentUpon>MusicControlBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\MusicFxPopupContent.xaml.cs">
+    <Compile Include="UserControl\Panel\MusicFxPopupContent.xaml.cs">
       <DependentUpon>MusicFxPopupContent.xaml</DependentUpon>
     </Compile>
     <Compile Include="Info\MusicInfo.cs" />
-    <Compile Include="UserControls\MusicList.xaml.cs">
+    <Compile Include="UserControl\Panel\MusicList.xaml.cs">
       <DependentUpon>MusicList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RradualChangedTextBlock.xaml.cs">
+    <Compile Include="UserControl\Control\RradualChangedTextBlock.xaml.cs">
       <DependentUpon>RradualChangedTextBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\SeparatorLine.xaml.cs">
+    <Compile Include="UserControl\Control\SeparatorLine.xaml.cs">
       <DependentUpon>SeparatorLine.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ToggleButton.xaml.cs">
+    <Compile Include="UserControl\Control\ToggleButton.xaml.cs">
       <DependentUpon>ToggleButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\FloatLyrics.xaml.cs">
+    <Compile Include="Window\FloatLyrics.xaml.cs">
       <DependentUpon>FloatLyrics.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -221,88 +218,87 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Tools\Tools.cs" />
-    <Compile Include="UserControls\SpinnerDotCircle.xaml.cs">
+    <Compile Include="UserControl\Control\SpinnerDotCircle.xaml.cs">
       <DependentUpon>SpinnerDotCircle.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\WinAbout.xaml.cs">
+    <Compile Include="Window\WinAbout.xaml.cs">
       <DependentUpon>WinAbout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\WinAlbumPicture.xaml.cs">
+    <Compile Include="Window\WinAlbumPicture.xaml.cs">
       <DependentUpon>WinAlbumPicture.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\WindowHelper.cs" />
-    <Compile Include="Windows\WinHelp.xaml.cs">
+    <Compile Include="Helper\WindowHelper.cs" />
+    <Compile Include="Window\WinHelp.xaml.cs">
       <DependentUpon>WinHelp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\WinListenHistory.xaml.cs">
+    <Compile Include="Window\WinListenHistory.xaml.cs">
       <DependentUpon>WinListenHistory.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\WinLrcEdit.xaml.cs">
+    <Compile Include="Window\WinLrcEdit.xaml.cs">
       <DependentUpon>WinLrcEdit.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\WinMusicInfo.xaml.cs">
+    <Compile Include="Window\WinMusicInfo.xaml.cs">
       <DependentUpon>WinMusicInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\WinSettings.xaml.cs">
+    <Compile Include="Window\WinSettings.xaml.cs">
       <DependentUpon>WinSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Window\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="UserControls\ControlButton.xaml">
+    <Page Include="UserControl\Control\ControlButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\LrcListView.xaml">
+    <Page Include="UserControl\Panel\LrcListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\MusicControlBar.xaml">
+    <Page Include="UserControl\Panel\MusicControlBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\MusicFxPopupContent.xaml">
+    <Page Include="UserControl\Panel\MusicFxPopupContent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\MusicList.xaml">
+    <Page Include="UserControl\Panel\MusicList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\RradualChangedTextBlock.xaml">
+    <Page Include="UserControl\Control\RradualChangedTextBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\SeparatorLine.xaml">
+    <Page Include="UserControl\Control\SeparatorLine.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\ToggleButton.xaml">
+    <Page Include="UserControl\Control\ToggleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\FloatLyrics.xaml">
+    <Page Include="Window\FloatLyrics.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\WinAbout.xaml">
+    <Page Include="Window\WinAbout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\WinHelp.xaml">
+    <Page Include="Window\WinHelp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\WinListenHistory.xaml">
+    <Page Include="Window\WinListenHistory.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\WinLrcEdit.xaml">
+    <Page Include="Window\WinLrcEdit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Window\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -310,19 +306,19 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UserControls\SpinnerDotCircle.xaml">
+    <Page Include="UserControl\Control\SpinnerDotCircle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\WinAlbumPicture.xaml">
+    <Page Include="Window\WinAlbumPicture.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\WinMusicInfo.xaml">
+    <Page Include="Window\WinMusicInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\WinSettings.xaml">
+    <Page Include="Window\WinSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

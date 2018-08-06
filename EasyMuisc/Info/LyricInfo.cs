@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using WpfCodes.Basic;
 using static EasyMusic.Helper.MusicControlHelper;
 using static EasyMusic.GlobalDatas;
@@ -13,7 +11,7 @@ using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using static WpfControls.Dialog.DialogHelper;
 
-namespace EasyMusic.Helper
+namespace EasyMusic.Info
 {
     public class LyricInfo
     {   
@@ -161,17 +159,17 @@ namespace EasyMusic.Helper
             StringBuilder str = new StringBuilder();
             if (Setting.PreferMusicInfo)
             {
-                if (Music.MusicInfo.Name != "")
+                if (Music.Info.Name != "")
                 {
-                    str.Append("[ti:" + Music.MusicInfo.Name + "]" + Environment.NewLine);
+                    str.Append("[ti:" + Music.Info.Name + "]" + Environment.NewLine);
                 }
-                if (Music.MusicInfo.Singer != "")
+                if (Music.Info.Singer != "")
                 {
-                    str.Append("[ar:" + Music.MusicInfo.Singer + "]" + Environment.NewLine);
+                    str.Append("[ar:" + Music.Info.Singer + "]" + Environment.NewLine);
                 }
-                if (Music.MusicInfo.Album != "")
+                if (Music.Info.Album != "")
                 {
-                    str.Append("[al:" + Music.MusicInfo.Album + "]" + Environment.NewLine);
+                    str.Append("[al:" + Music.Info.Album + "]" + Environment.NewLine);
                 }
             }
             else
