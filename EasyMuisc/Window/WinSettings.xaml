@@ -157,6 +157,7 @@
                         <TextBlock Text="字体边框粗细：     " />
                         <text:NumberTextBox MatchMode="PositiveNumber" x:Name="txtFloatBorder"/>
                     </StackPanel>
+                    <TextBlock FontSize="8"/>
                     <StackPanel Orientation="Horizontal" x:Name="stkBlur">
                         <TextBlock Text="字体阴影深度：     " />
                         <text:NumberTextBox MatchMode="PositiveNumber"  x:Name="txtFloatBlur"/>

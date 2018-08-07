@@ -1,13 +1,16 @@
-﻿<UserControl x:Class="EasyMusic.UserControl.ControlButton"
+﻿<UserControl x:Class="EasyMusic.UserControls.ControlButton"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:EasyMusic.UserControl"
+                     xmlns:c="clr-namespace:EasyMusic.Converter"
+     xmlns:local="clr-namespace:EasyMusic.UserControls"
              mc:Ignorable="d"    DataContext="{Binding RelativeSource={RelativeSource Self}}"
               xmlns:sys="clr-namespace:System;assembly=mscorlib"
              d:DesignHeight="32" d:DesignWidth="32">
-   
+    <UserControl.Resources>
+        <c:NullableConvert x:Key="convert"/>
+    </UserControl.Resources>
     <Button x:Name="btn" Background="{DynamicResource backgroundBrushColor}" MouseEnter="BtnAnimitionMouseEnterEventHandler" MouseLeave="BtnAnimitionMouseLeaveEventHandler"  FocusVisualStyle="{x:Null}" Click="btn_Click">
         <Button.Style>
             <Style TargetType="{x:Type Button}">
@@ -28,9 +31,15 @@
                                 <Trigger Property="IsPressed" Value="true">
                                     <Setter Property="Width" Value="{Binding PressedSize}" TargetName="view" />
                                 </Trigger>
-                                <Trigger Property="IsEnabled" Value="false">
-                                    <Setter Property="Opacity" Value="0.5" TargetName="view" />
-                                </Trigger>
+                                <!--<MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Property="IsEnabled" Value="false"/>
+                                        <Condition Binding="{Binding EnableDisableOpacity, Converter={StaticResource convert}}" Value="true"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Opacity" Value="{Binding DisableOpacity, Converter={StaticResource convert}}" TargetName="view" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>-->
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>

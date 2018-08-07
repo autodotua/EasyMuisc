@@ -16,7 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static EasyMusic.GlobalDatas;
 
-namespace EasyMusic.UserControl
+namespace EasyMusic.UserControls
 {
     /// <summary>
     /// RradualChangedTextBlock.xaml 的交互逻辑

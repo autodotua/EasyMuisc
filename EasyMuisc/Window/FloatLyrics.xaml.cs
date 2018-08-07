@@ -1,4 +1,4 @@
-﻿using EasyMusic.UserControl;
+﻿using EasyMusic.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

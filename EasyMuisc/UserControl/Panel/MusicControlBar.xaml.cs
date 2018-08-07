@@ -1,18 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Un4seen.Bass;
-using static EasyMusic.Tool.Tools;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
 using static WpfControls.Dialog.DialogHelper;
@@ -23,8 +11,11 @@ using Microsoft.Win32;
 using System.ComponentModel;
 using System.Diagnostics;
 using EasyMusic.Info;
+using EasyMusic.Enum;
+using System.Windows.Media.Animation;
+using System.Windows.Media;
 
-namespace EasyMusic.UserControl
+namespace EasyMusic.UserControls
 {
     /// <summary>
     /// MusicControlBar.xaml 的交互逻辑
@@ -127,13 +118,13 @@ namespace EasyMusic.UserControl
             switch ((sender as FrameworkElement).Name)
             {
                 case "btnListCycle":
-                    MusicControlHelper.CycleMode = CycleMode.SingleCycle;
+                    MusicControlHelper.CycleMode =Enum. CycleMode.SingleCycle;
                     break;
                 case "btnSingleCycle":
-                    MusicControlHelper.CycleMode = CycleMode.Shuffle;
+                    MusicControlHelper.CycleMode = Enum.CycleMode.Shuffle;
                     break;
                 case "btnShuffle":
-                    MusicControlHelper.CycleMode = CycleMode.ListCycle;
+                    MusicControlHelper.CycleMode = Enum.CycleMode.ListCycle;
                     break;
                 default:
                     ShowError("黑人问号");
@@ -170,10 +161,7 @@ namespace EasyMusic.UserControl
         {
             Notify("SliderPositionBinding", "PostionText");
         }
-
-
-
-
+        
         /// <summary>
         /// 单击切换播放设备按钮事件
         /// </summary>
@@ -187,20 +175,24 @@ namespace EasyMusic.UserControl
             (ppp.Child as MusicFxPopupContent).Load();
 
         }
-
+        ControlStatus lastStatus;
         public void OnStatusChanged(ControlStatus status)
         {
-            switch (status)
+            if (status != lastStatus)
             {
-                case ControlStatus.Play:
-                    btnPlay.Visibility = Visibility.Hidden;
-                    btnPause.Visibility = Visibility.Visible;
-
-                    break;
-                case ControlStatus.Pause:
-                    btnPause.Visibility = Visibility.Hidden;
-                    btnPlay.Visibility = Visibility.Visible;
-                    break;
+                switch (status)
+                {
+                    case ControlStatus.Play:
+                        ShowStatusChangeAnimation(status);
+                        break;
+                    case ControlStatus.Pause:
+                        ShowStatusChangeAnimation(status);
+                        break;
+                }
+            }
+            if(status!=ControlStatus.Initialized)
+            {
+                lastStatus = status;
             }
             Notify("SliderMaxBinding");
             if (CurrentHistoryIndex == 0)
@@ -211,6 +203,59 @@ namespace EasyMusic.UserControl
             {
                 btnLast.IsEnabled = true;
             }
+        }
+        int time = 500;
+        private void ShowStatusChangeAnimation(ControlStatus status)
+        {
+            ControlButton btn1=null;
+            ControlButton btn2=null;
+            double angle=0;
+            if (status==ControlStatus.Play)
+            {
+                 btn1 = btnPlay;
+                 btn2 = btnPause;
+                angle = 360;
+            }
+            else if (status == ControlStatus.Pause)
+            {
+                btn1 = btnPause;
+                btn2 = btnPlay;
+                angle = -360;
+            }
+
+            btn1.IsEnabled = btn2.IsEnabled = false;
+            btn2.Opacity = 0;
+            btn2.Visibility = Visibility.Visible;
+
+            DoubleAnimation aniBtn1Rotate = new DoubleAnimation(angle, TimeSpan.FromMilliseconds(time));
+            DoubleAnimation aniBtn2Rotate = new DoubleAnimation(angle, TimeSpan.FromMilliseconds(time));
+            DoubleAnimation aniBtn1Opacity = new DoubleAnimation(0, TimeSpan.FromMilliseconds(time));
+            DoubleAnimation aniBtn2Opacity = new DoubleAnimation(1, TimeSpan.FromMilliseconds(time));
+
+            aniBtn1Rotate.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut };
+            aniBtn2Rotate.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut };
+
+            Storyboard.SetTarget(aniBtn1Rotate, btn1);
+            Storyboard.SetTarget(aniBtn2Rotate, btn2);
+            Storyboard.SetTarget(aniBtn1Opacity, btn1);
+            Storyboard.SetTarget(aniBtn2Opacity, btn2);
+
+            Storyboard.SetTargetProperty(aniBtn1Rotate, new PropertyPath("RenderTransform.Angle"));
+            Storyboard.SetTargetProperty(aniBtn2Rotate,  new PropertyPath("RenderTransform.Angle"));
+            Storyboard.SetTargetProperty(aniBtn1Opacity, new PropertyPath(OpacityProperty));
+            Storyboard.SetTargetProperty(aniBtn2Opacity, new PropertyPath(OpacityProperty));
+
+            Storyboard storyboard = new Storyboard() {FillBehavior=FillBehavior.Stop, Children = { aniBtn1Opacity, aniBtn2Opacity, aniBtn1Rotate, aniBtn2Rotate } };
+            storyboard.Completed += (p1, p2) =>
+              {
+                  btn1.Visibility = Visibility.Hidden;
+                  btn2.Visibility = Visibility.Visible;
+                  btn1.IsEnabled = btn2.IsEnabled = true;
+                  btn1.Opacity = btn2.Opacity = 1;
+                  (btn1.RenderTransform as RotateTransform).Angle = 0;
+                  (btn2.RenderTransform as RotateTransform).Angle = 0;
+              };
+            storyboard.Begin();
         }
 
         public double SliderPositionBinding
@@ -242,9 +287,7 @@ namespace EasyMusic.UserControl
                 return $"{string.Format("{0:00}", (int)time.TotalMinutes)}:{string.Format("{0:00}", time.Seconds)}";
             }
         }
-
-
-
+        
         private void sldProcess_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (sldProcess.IsMouseCaptured)

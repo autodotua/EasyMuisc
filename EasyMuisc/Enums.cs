@@ -1,4 +1,4 @@
-﻿namespace EasyMusic
+﻿namespace EasyMusic.Enum
 {
     public enum CycleMode {
         SingleCycle,
@@ -11,5 +11,12 @@
         Initialized,
         Play,
         Pause,
+    }
+
+    public enum LyricType
+    {
+        None,
+        LrcFormat,
+        TextFormat
     }
 }

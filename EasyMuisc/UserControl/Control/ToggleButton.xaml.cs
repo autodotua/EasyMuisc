@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace EasyMusic.UserControl
+namespace EasyMusic.UserControls
 {
     /// <summary>
     /// ToggleButton.xaml 的交互逻辑

@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media.Animation;
 using static WpfControls.Dialog.DialogHelper;
 using EasyMusic.Helper;
+using EasyMusic.UserControls;
 
 namespace EasyMusic.Windows
 {
@@ -15,13 +16,13 @@ namespace EasyMusic.Windows
     public partial class WinAlbumPicture : Window
     {
         bool winMainTopMost = false;
-        public WinAlbumPicture()
+        public WinAlbumPicture(Header header)
         {
             InitializeComponent();
             Left = MainWindow.Current.Left ; // + 12;
             Top = MainWindow.Current.Top;// + win.ActualHeight - win.imgAlbum.Height - 16;
-            Width = MainWindow.Current.imgAlbum.ActualWidth;
-            Height = MainWindow.Current.imgAlbum.ActualHeight;
+            Width = header.imgAlbum.ActualWidth;
+            Height = header.imgAlbum.ActualHeight;
             if(MainWindow.Current.Topmost)
             {
                 winMainTopMost = true;

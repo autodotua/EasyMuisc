@@ -6,7 +6,7 @@ using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicControlHelper;
 using System.ComponentModel;
 
-namespace EasyMusic.UserControl
+namespace EasyMusic.UserControls
 {
     /// <summary>
     /// MusicFxPopupContent.xaml 的交互逻辑

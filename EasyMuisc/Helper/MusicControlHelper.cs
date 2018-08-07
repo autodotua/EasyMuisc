@@ -1,4 +1,5 @@
-﻿using EasyMusic.Helper;
+﻿using EasyMusic.Enum;
+using EasyMusic.Helper;
 using EasyMusic.Info;
 using System;
 using System.Collections.Generic;

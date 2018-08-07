@@ -13,13 +13,14 @@ using System.Windows.Media.Imaging;
 using WpfControls.Dialog;
 using System.Windows;
 using static EasyMusic.Helper.MusicListHelper;
+using EasyMusic.Enum;
 
 namespace EasyMusic.Helper
 {
     public class BassModuleHelper : IDisposable
     {
         private int stream;
-
+        private int volumnChangeTime = 500;
 
         /// <summary>
         /// 内部音量
@@ -198,30 +199,20 @@ namespace EasyMusic.Helper
         /// （暂停后）播放
         /// </summary>
         /// <returns></returns>
-        public  void Play()
+        public void Play()
         {
             bool result = false;
             result = BASS_ChannelPlay(stream, false);
             if (result)
             {
-                MainWindow.Current.IsProcessing = true;
                 MainWindow.Current.OnStatusChanged(ControlStatus.Play);
-                BASS_ChannelSlideAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL,Convert.ToSingle( MusicControlHelper.Volumn), 500);
-                //double tick = Setting.Volumn / 50;
-                //double volumn = Volumn;
-                //do
-                //{
-                //    Volumn = volumn + tick;
-                //    await Task.Delay(16);
-                //    volumn = Volumn;
-                //} while (volumn < Setting.Volumn);
-                //Volumn = Setting.Volumn;
+                BASS_ChannelSlideAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, Convert.ToSingle(MusicControlHelper.Volumn), volumnChangeTime);
+
                 if (Setting.RecordListenHistory && notRecordYet)
                 {
                     listenHistory.Record();
                     notRecordYet = false;
                 }
-                MainWindow.Current.IsProcessing = false;
             }
         }
         /// <summary>
@@ -239,22 +230,12 @@ namespace EasyMusic.Helper
         /// <returns></returns>
         public async void Pause()
         {
-            MainWindow.Current.IsProcessing = true;
             MainWindow.Current.OnStatusChanged(ControlStatus.Pause);
-            //double lastPosition = Position;
-            //double tick = Volumn / 50;
-            //double volumn = Setting.Volumn;
-            //do
-            //{
-            //    Volumn = volumn - tick;
-            //    await Task.Delay(16);
-            //    volumn = Volumn;
-            //} while (volumn > 0);
-            //BASS_ChannelPause(stream);
-            BASS_ChannelSlideAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, 0f, 500);
 
+            BASS_ChannelSlideAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, 0f, volumnChangeTime);
+            await Task.Delay(volumnChangeTime);
+            BASS_ChannelPause(stream);
             //Position = lastPosition;
-            MainWindow.Current.IsProcessing = false;
         }
 
         public void PlayOrPause()

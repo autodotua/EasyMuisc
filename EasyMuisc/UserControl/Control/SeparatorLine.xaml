@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="EasyMusic.UserControl.SeparatorLine"
+﻿<UserControl x:Class="EasyMusic.UserControls.SeparatorLine"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:EasyMusic.UserControl"
+             xmlns:local="clr-namespace:EasyMusic.UserControls"
              mc:Ignorable="d" 
 >
     <Line X1="0" X2="140" Y1="0" Y2="0" Stroke="{DynamicResource darker3BrushColor}"/>

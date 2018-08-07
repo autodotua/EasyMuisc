@@ -14,12 +14,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace EasyMusic.UserControl
+namespace EasyMusic.UserControls
 {
     /// <summary>
     /// ControlButton.xaml 的交互逻辑
     /// </summary>
-    public partial class ControlButton : System.Windows.Controls.UserControl
+    public partial class ControlButton : UserControl
     {
         public ControlButton()
         {
@@ -46,6 +46,8 @@ namespace EasyMusic.UserControl
                 opacityAnimation = value;
             }
         }
+        public double DisableOpacity { get; set; } = 0.5;
+        public bool EnableDisableOpacity { get; set; } = true;
         /// <summary>
         /// 路径边框宽度
         /// </summary>

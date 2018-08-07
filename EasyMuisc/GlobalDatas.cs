@@ -1,6 +1,7 @@
 ﻿using EasyMusic.Info;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -101,5 +102,11 @@ namespace EasyMusic
             r.GetBytes(b);
             return (b[0] + b[1] + b[2] + b[3] + b[4] + b[5] + b[6] + b[7]) % (smallerThan - from) + from;
         }
+
+
+        /// <summary>
+        /// 歌词对象
+        /// </summary>
+        public static LyricInfo lrc;
     }
 }

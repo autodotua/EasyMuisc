@@ -102,9 +102,8 @@
     <StartupObject>EasyMusic.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bass.Net, Version=2.4.13.1, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Bass.Net.dll</HintPath>
+    <Reference Include="Bass.Net">
+      <HintPath>dlls\Bass.Net.dll</HintPath>
     </Reference>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
@@ -174,7 +173,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="EasyMusic\Tool.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Helper\BassModuleHelper.cs" />
     <Compile Include="Helper\FileHelper.cs" />
@@ -188,8 +186,14 @@
       <DependentUpon>ControlButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters.cs" />
-    <Compile Include="UserControl\Panel\LrcListView.xaml.cs">
-      <DependentUpon>LrcListView.xaml</DependentUpon>
+    <Compile Include="UserControl\Panel\Header.xaml.cs">
+      <DependentUpon>Header.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControl\Panel\LyricArea.xaml.cs">
+      <DependentUpon>LyricArea.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControl\Panel\LyricList.xaml.cs">
+      <DependentUpon>LyricList.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControl\Panel\MusicControlBar.xaml.cs">
       <DependentUpon>MusicControlBar.xaml</DependentUpon>
@@ -250,7 +254,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControl\Panel\LrcListView.xaml">
+    <Page Include="UserControl\Panel\Header.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControl\Panel\LyricArea.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControl\Panel\LyricList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -376,9 +388,6 @@
     <Resource Include="Properties\Images\last.png" />
     <Resource Include="Properties\Images\next.png" />
     <Resource Include="Properties\Images\pause.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

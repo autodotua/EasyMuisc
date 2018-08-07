@@ -6,15 +6,15 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using static EasyMusic.GlobalDatas;
 
-namespace EasyMusic.UserControl
+namespace EasyMusic.UserControls
 {
     /// <summary>
     /// LrcListView.xaml 的交互逻辑
     /// </summary>
-    public partial class LrcListView : System.Windows.Controls.UserControl
+    public partial class LyricList : UserControl
     {
         //ScrollViewer scroll;
-        public LrcListView()
+        public LyricList()
         {
             InitializeComponent();
             DataContext = this;
