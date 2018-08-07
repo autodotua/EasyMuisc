@@ -130,10 +130,10 @@
 
             </Grid.ColumnDefinitions>
             <TextBlock>音调：</TextBlock>
-            <Slider x:Name="sldPitch" Grid.Column="4" Minimum="-20" Maximum="20" SmallChange="1" LargeChange="5"  Template="{StaticResource SliderHorizontal}" Value="{Binding Pitch}" IsMoveToPointEnabled="True" TickFrequency="1" IsSnapToTickEnabled="True"  PreviewMouseMove="sldPitch_PreviewMouseMove"/>
+            <Slider x:Name="sldPitch" Grid.Column="4" Minimum="-20" Maximum="20" SmallChange="1" LargeChange="5"  Template="{StaticResource SliderHorizontal}" Value="{Binding Pitch}" IsMoveToPointEnabled="True" TickFrequency="1" IsSnapToTickEnabled="True"/>
             <TextBlock x:Name="tbkPitch" Text="{Binding PitchText}" Grid.Column="2"/>
             <TextBlock Grid.Row="2">速度：</TextBlock>
-            <Slider  x:Name="sldTempo" Grid.Row="2" Grid.Column="4" Minimum="-95" Maximum="200" SmallChange="5" LargeChange="20"  Template="{StaticResource SliderHorizontal}" Value="{Binding Tempo}" IsMoveToPointEnabled="True" TickFrequency="5" IsSnapToTickEnabled="True" PreviewMouseMove="sldPitch_PreviewMouseMove"/>
+            <Slider  x:Name="sldTempo" Grid.Row="2" Grid.Column="4" Minimum="-95" Maximum="200" SmallChange="5" LargeChange="20"  Template="{StaticResource SliderHorizontal}" Value="{Binding Tempo}" IsMoveToPointEnabled="True" TickFrequency="5" IsSnapToTickEnabled="True" />
             <TextBlock Text="{Binding TempoText}" Grid.Row="2" Grid.Column="2"/>
             <Button Grid.Column="6" Style="{StaticResource btnStyleAUpDown}" Click="Button_Click" Tag="1">-</Button>
             <Button Grid.Column="8" Style="{StaticResource btnStyleAUpDown}" Click="Button_Click" Tag="2">+</Button>

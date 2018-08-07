@@ -39,7 +39,7 @@ namespace EasyMusic.UserControls
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(item));
             }
         }
-        public bool IsManuallyChangingPosition => sldProcess.IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed;
+        public bool IsManuallyChangingPosition => sldProcess.IsMouseOver && System.Windows.Input.Mouse.LeftButton == MouseButtonState.Pressed;
         public double SliderMaxBinding
         {
             get
@@ -51,9 +51,7 @@ namespace EasyMusic.UserControls
                 return 0;
             }
         }
-
-
-
+        
         public double SliderVolumnBinding
         {
             get => Setting.Volumn;
@@ -65,9 +63,6 @@ namespace EasyMusic.UserControls
                 }
             }
         }
-
-
-
 
         /// <summary>
         /// 单击播放按钮
@@ -204,7 +199,6 @@ namespace EasyMusic.UserControls
                 btnLast.IsEnabled = true;
             }
         }
-        int time = 500;
         private void ShowStatusChangeAnimation(ControlStatus status)
         {
             ControlButton btn1=null;
@@ -227,10 +221,10 @@ namespace EasyMusic.UserControls
             btn2.Opacity = 0;
             btn2.Visibility = Visibility.Visible;
 
-            DoubleAnimation aniBtn1Rotate = new DoubleAnimation(angle, TimeSpan.FromMilliseconds(time));
-            DoubleAnimation aniBtn2Rotate = new DoubleAnimation(angle, TimeSpan.FromMilliseconds(time));
-            DoubleAnimation aniBtn1Opacity = new DoubleAnimation(0, TimeSpan.FromMilliseconds(time));
-            DoubleAnimation aniBtn2Opacity = new DoubleAnimation(1, TimeSpan.FromMilliseconds(time));
+            DoubleAnimation aniBtn1Rotate = new DoubleAnimation(angle,Setting.VolumnChangeTime);
+            DoubleAnimation aniBtn2Rotate = new DoubleAnimation(angle, Setting.VolumnChangeTime);
+            DoubleAnimation aniBtn1Opacity = new DoubleAnimation(0, Setting.VolumnChangeTime);
+            DoubleAnimation aniBtn2Opacity = new DoubleAnimation(1, Setting.VolumnChangeTime);
 
             aniBtn1Rotate.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut };
             aniBtn2Rotate.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut };
@@ -290,16 +284,15 @@ namespace EasyMusic.UserControls
         
         private void sldProcess_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (sldProcess.IsMouseCaptured)
-            {
-                double position = sldProcess.Value;
-                if (IsManuallyChangingPosition)
-                {
-                    Music.Position = position;
-                    //Debug.WriteLine("change");
-                    //MainWindow.Current.UpdatePosition(position);
-                }
-            }
+          // if (sldProcess.IsMouseCaptured)
+          // {
+          //     double position = sldProcess.Value;
+          //     if (IsManuallyChangingPosition)
+          //     {
+          //         Music.Position = position;
+          //         MainWindow.Current.UpdateLyric(position);
+          //     }
+          // }
         }
 
 

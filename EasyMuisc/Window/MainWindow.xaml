@@ -18,10 +18,11 @@
         DragEnter="WindowDragEnterEventHandler"
         Drop="WindowDropEventHandler"
        WindowStartupLocation="CenterScreen" 
-       StateChanged="WinMainStateChangedEventHandler"
+       StateChanged="WinMainStateChanged"
        WindowStyle="None"
        AllowsTransparency="True"
-    Closing="winMain_Closing"
+       Closing="WindowClosing"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
        Background="{DynamicResource backgroundBrushColor}"
        PreviewMouseWheel="MouseWheelEventHandler">
 
@@ -70,10 +71,6 @@
 
 
 
-
-
-
-
     <Grid x:Name="grdMain" Margin="4">
 
         <Grid.RowDefinitions>
@@ -92,8 +89,8 @@
 
 
         <!--播放列表区-->
-        
-            <uc:MusicList  Grid.Row="2" x:Name="lvwMusic" >
+
+        <uc:MusicList  Grid.Row="2" x:Name="lvwMusic" >
             <uc:MusicList.RenderTransform>
                 <TranslateTransform/>
             </uc:MusicList.RenderTransform>
@@ -113,5 +110,6 @@
         <progress:LoadingOverlay x:Name="loading" Margin="-4" OverlayColor="{DynamicResource backgroundBrushColor}" Grid.RowSpan="100" Grid.ColumnSpan="100" RingSize="0.1" Visibility="Collapsed"/>
 
         <uc:Header x:Name="header" Grid.ColumnSpan="3" Margin="-4"/>
+        <Label Content="{Binding Cpu}" Grid.ColumnSpan="5" Grid.RowSpan="5" HorizontalAlignment="Right" Margin="0,18" Opacity="0" PreviewMouseDoubleClick="Label_PreviewMouseDoubleClick"/>
     </Grid>
 </Window>

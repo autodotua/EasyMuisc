@@ -31,8 +31,10 @@ namespace EasyMusic.Windows
         {
 
             InitializeComponent();
-           // tbkLeft.TextAlignment = TextAlignment.Left;
-           // tbkRight.TextAlignment = TextAlignment.Right;
+            Top = Setting.FloatLyricsTop;
+            Left = Setting.FloatLyricsLeft;
+            Height = Setting.FloatLyricsHeight;
+            Width = Setting.FloatLyricsWidth;
             WindowChrome.SetWindowChrome(this, new WindowChrome()
             {
                 CaptionHeight = 0,
@@ -42,39 +44,6 @@ namespace EasyMusic.Windows
 
             //sbdOpacity.Children.Add(aniOpacity);
         }
-        //#region WindowsAPI
-        //public const int WS_EX_TRANSPARENT = 0x00000020;
-        //public const int GWL_EXSTYLE = (-20);
-        //[DllImport("user32.dll")]
-        //public static extern int GetWindowLong(IntPtr hwnd, int index);
-        //[DllImport("user32.dll")]
-        //public static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
-        //int extendedStyle;
-        //#endregion
-        ///// <summary>
-        ///// 设置鼠标穿透
-        ///// </summary>
-        //private void SetToMouseThrough()
-        //{
-
-        //    // Get this window's handle
-        //    IntPtr hwnd = new WindowInteropHelper(this).Handle;
-
-        //    // Change the extended window style to include WS_EX_TRANSPARENT
-        //    extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-        //    SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
-        //}
-        ///// <summary>
-        ///// 取消鼠标穿透
-        ///// </summary>
-        //private void SetToNoMouseThrough()
-        //{
-
-        //    // Get this window's handle
-        //    IntPtr hwnd = new WindowInteropHelper(this).Handle;
-
-        //    SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle);
-        //}
         WpfCodes.WindowsApi.WindowMode windowMode;
         /// <summary>
         /// 在加载时设置鼠标穿透
@@ -162,7 +131,7 @@ namespace EasyMusic.Windows
         /// <param name="index"></param>
         public void Update(int index)
         {
-            if(index==-1)
+            if (index == -1)
             {
                 tbkLeft.Text = tbkRight.Text = "";
                 return;
@@ -174,7 +143,7 @@ namespace EasyMusic.Windows
             //    GetTextBlock( CurrentIndex).ToMinor("");
             //    return;
             //}
-            if(lrc[index].Replace(" ","")=="")
+            if (lrc[index].Replace(" ", "") == "")
             {
                 return;
             }
@@ -186,26 +155,26 @@ namespace EasyMusic.Windows
                 //    return;
                 //}
             }
-            if(index >= lrc.Count - 1)
+            if (index >= lrc.Count - 1)
             {
-                GetTextBlock(1-CurrentIndex).ToMajor(lrc[oldIndex]);
+                GetTextBlock(1 - CurrentIndex).ToMajor(lrc[oldIndex]);
                 GetTextBlock(CurrentIndex).ToMinor("");
                 return;
             }
-                if (index < 0 || lrc == null)
+            if (index < 0 || lrc == null)
             {
                 Clear();
                 return;
             }
             //if (index < lrc.Count - 1)
             //{
-            GetTextBlock( CurrentIndex).ToMinor(lrc[index + 1]);
+            GetTextBlock(CurrentIndex).ToMinor(lrc[index + 1]);
             //}
             //else
             //{
             //    GetTextBlock(1-CurrentIndex).ToMinor("");
             //}
-            GetTextBlock(1-CurrentIndex).ToMajor(lrc[oldIndex]);
+            GetTextBlock(1 - CurrentIndex).ToMajor(lrc[oldIndex]);
             CurrentIndex = 1 - CurrentIndex;
             //currentIndex = index;
         }
@@ -213,22 +182,13 @@ namespace EasyMusic.Windows
 
         private void WindowPreviewMouseLeftButtonDownEventHandler(object sender, MouseButtonEventArgs e)
         {
-            if (!mouseOverButton)
+            if (!btnOk.IsMouseOver)
             {
                 DragMove();
             }
             //base.OnPreviewMouseLeftButtonDown(e);
         }
 
-        public void Close(bool mustTrue)
-        {
-            if(mustTrue)
-            {
-                closing = true;
-            }
-            Close();
-        }
-        private bool closing = false;
         private void WindowClosingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Setting.FloatLyricsTop = Top;
@@ -236,10 +196,6 @@ namespace EasyMusic.Windows
             Setting.FloatLyricsHeight = Height;
             Setting.FloatLyricsWidth = Width;
 
-            if(!closing)
-            {
-                e.Cancel = true;
-            }
         }
 
         private void BtnOkClickEventHandler(object sender, RoutedEventArgs e)
@@ -247,16 +203,7 @@ namespace EasyMusic.Windows
             Adjuest = false;
 
         }
-        bool mouseOverButton = false;
-        private void BtnOkMouseEnterEventHandler(object sender, MouseEventArgs e)
-        {
-            mouseOverButton = true;
-        }
-
-        private void BtnOkMouseLeaveEventHandler(object sender, MouseEventArgs e)
-        {
-            mouseOverButton = false;
-        }
+   
 
         public void Clear()
         {

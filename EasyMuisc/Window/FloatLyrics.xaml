@@ -30,7 +30,7 @@
             <uc:RradualChangedTextBlock x:Name="tbkRight" HorizontalAlignment="Right" FontSize="30" TextAlignment="Right"/>
         </StackPanel>
         <Button BorderThickness="0" Visibility="Hidden" x:Name="btnOk" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="4" Content="确定" 
-                Click="BtnOkClickEventHandler" MouseEnter="BtnOkMouseEnterEventHandler"  MouseLeave="BtnOkMouseLeaveEventHandler"/>
+                Click="BtnOkClickEventHandler" />
 
     </Grid>
 

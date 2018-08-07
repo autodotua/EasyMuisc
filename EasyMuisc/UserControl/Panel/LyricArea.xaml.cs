@@ -82,8 +82,10 @@ namespace EasyMusic.UserControls
                         lbxLrc.Clear();
                         break;
                 }
+                currentLyricType = value;
             }
         }
+
         public LyricArea()
         {
             InitializeComponent();
@@ -105,7 +107,11 @@ namespace EasyMusic.UserControls
                     TextAlignment = TextAlignment.Center,
                     FocusVisualStyle = null,
                 };
-                tbk.MouseLeftButtonUp += (p1, p2) => Music.Position = (lrc.LrcContent.ElementAt((int)tbk.Tag).Key - lrc.Offset - Setting.LrcDefautOffset);
+                tbk.MouseLeftButtonUp += (p1, p2) =>
+                {
+                    var position = (lrc.LrcContent.ElementAt((int)tbk.Tag).Key - lrc.Offset - Setting.LrcDefautOffset);
+                    Music.Position = position;
+                };
 
                 lbxLrc.Add(tbk);
             }
@@ -202,83 +208,30 @@ namespace EasyMusic.UserControls
 
 
             MenuItem menuFloat = new MenuItem() { Header = "悬浮歌词" };
-
-
-
-
-            // StackPanel menuFloatNormalFontSizeSetting = new StackPanel()
-            // {
-            //     Orientation = Orientation.Horizontal,
-            //     Children =
-            //{
-            //    new TextBlock(){Text="正常歌词字体大小："},
-            //    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsNormalFontSize.ToString()},
-            //}
-            // };
-            // StackPanel menuFloatHighlightFontSizeSetting = new StackPanel()
-            // {
-            //     Orientation = Orientation.Horizontal,
-            //     Children =
-            //{
-            //    new TextBlock(){Text="当前歌词字体大小："},
-            //    new TextBox(){Style=Resources["txtStyle"] as Style, Width=36,Text=set.FloatLyricsHighlightFontSize.ToString()},
-            //}
-            // };
+            
             MenuItem menuFloatSwitch = new MenuItem() { Header = (Setting.ShowFloatLyric ? "关闭" : "打开") };
             menuFloatSwitch.Click += (p1, p2) => MainWindow.Current.OpenOrCloseFloatLrc();
             MenuItem menuFloatAdjust = new MenuItem() { Header = "调整位置和大小" };
-            menuFloatAdjust.Click += (p1, p2) => MainWindow.Current.floatLyric.Adjuest = true;
-            //MenuItem menuFloatOK = new MenuItem()
-            //{
-            //    Header = "确定",
-            //};
-
+            menuFloatAdjust.Click += (p1, p2) => MainWindow.Current.FloatLyric.Adjuest = true;
             MenuItem menuFloatOpenSetting = new MenuItem() { Header = "悬浮歌词设置" };
             menuFloatOpenSetting.Click += (p1, p2) => new WinSettings(2) { Owner = MainWindow.Current }.ShowDialog();
-
-            //menuFloatOK.Click += (p1, p2) =>
-            //{
-            //    for (int i = 0; i < 2; i++)
-            //    {
-            //        string text = ((menuFloat.Items[menuFloat.Items.Count - 3 + i] as StackPanel).Children[1] as TextBox).Text;
-            //        if (double.TryParse(text, out double newValue))
-            //        {
-            //            switch (i)
-            //            {
-            //                case 0:
-            //                    set.FloatLyricsNormalFontSize = newValue;
-            //                    break;
-            //                case 1:
-            //                    set.FloatLyricsHighlightFontSize = newValue;
-            //                    break;
-            //            }
-            //        }
-            //    }
-            //};
+            
             menuFloat.Items.Add(menuFloatSwitch);
-            menuFloat.Items.Add(menuFloatAdjust);
+            if (MainWindow.Current.FloatLyric != null)
+            {
+                menuFloat.Items.Add(menuFloatAdjust);
+            }
             menuFloat.Items.Add(menuFloatOpenSetting);
-            //menuFloat.Items.Add(new SeparatorLine());
-            //menuFloat.Items.Add(menuFloatNormalFontSizeSetting);
-            //menuFloat.Items.Add(menuFloatHighlightFontSizeSetting);
-            //menuFloat.Items.Add(menuFloatOK);
 
 
-
-
-
-
-
-
-
-
+            
             menu.Items.Add(menuShowLrc);
             menu.Items.Add(menuReload);
             menu.Items.Add(menuFloat);
             menu.Items.Add(new SeparatorLine());
             menu.Items.Add(menuEdit);
             //if (lrcContent.Count != 0 && (lbxLrc.Visibility == Visibility.Visible || stkLrc.Visibility == Visibility.Visible))
-            if (lrc == null && lbxLrc.Visibility == Visibility.Visible)
+            if (lrc != null &&CurrentLyricType==LyricType.LrcFormat)
             {
 
                 menu.Items.Add(menuCopyLrc);
@@ -308,6 +261,24 @@ namespace EasyMusic.UserControls
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             lbxLrc.RefreshPlaceholder(grdLrcArea.ActualHeight / 2, Setting.HighlightLrcFontSize);
+        }
+
+        private void UserControl_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (CurrentLyricType == LyricType.LrcFormat)
+            {
+                lrc.Offset += e.Delta / 600.0;
+                ShowMessage("当前歌词偏移量：" + (lrc.Offset > 0 ? "+" : "") + Math.Round(lrc.Offset, 2).ToString() + "秒");
+            }
+        }
+
+        private void UserControl_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.MiddleButton==MouseButtonState.Pressed && CurrentLyricType == LyricType.LrcFormat)
+            {
+                lrc.Offset = 0;
+                ShowMessage("恢复歌词偏移量" );
+            }
         }
     }
 }

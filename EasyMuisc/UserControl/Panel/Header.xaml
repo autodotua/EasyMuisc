@@ -27,6 +27,8 @@
                 <Style TargetType="{x:Type Button}">
                     <EventSetter Event="PreviewMouseDoubleClick" Handler="HeaderMouseDoubleClickEventHandler"/>
                     <EventSetter Event="PreviewMouseLeftButtonDown" Handler="HeaderPreviewMouseLeftButtonDownEventHandler"/>
+                    <EventSetter Event="PreviewMouseMove" Handler="Button_PreviewMouseMove"/>
+                    <EventSetter Event="PreviewMouseUp" Handler="Button_PreviewMouseUp"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type Button}">

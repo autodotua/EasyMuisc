@@ -48,7 +48,7 @@ namespace EasyMusic.UserControls
 
         private void MouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
-            e.Handled = true;
+           // e.Handled = true;
         }
 
         public void ScrollTo(int index, List<int> indexArray, double fontSize)

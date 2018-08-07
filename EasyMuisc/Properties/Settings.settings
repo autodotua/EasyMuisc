@@ -146,5 +146,8 @@
     <Setting Name="KeepMusicSettings" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="VolumnChangeTime" Type="System.TimeSpan" Scope="User">
+      <Value Profile="(Default)">00:00:00.8000000</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -11,6 +11,9 @@ using WpfControls.Dialog;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
 using static WpfControls.Dialog.DialogHelper;
+using static Un4seen.Bass.Bass;
+using Un4seen.Bass;
+using System.Windows.Interop;
 
 namespace EasyMusic.Helper
 {
@@ -30,7 +33,35 @@ namespace EasyMusic.Helper
                 bassInstance = value;
             }
         }
+        public static int Device
+        {
+            get =>BASS_GetDevice();
+            set
+            {
+                var devices = BASS_GetDeviceInfos();
+                if (value < devices.Length)
+                {
+                    var device = devices[value];
+                    if (device.status.HasFlag(BASSDeviceInfo.BASS_DEVICE_ENABLED) && !device.status.HasFlag(BASSDeviceInfo.BASS_DEVICE_INIT))
+                    {
+                        BASS_Init(value, Setting.SampleRate, BASSInit.BASS_DEVICE_DEFAULT, MainWindow.Current.Handle);
+                    }
 
+                    if (BASS_SetDevice(value))
+                    {
+                        if (Music != null)
+                        {
+                            Music.Device = value;
+                        }
+                    }
+                    else
+                    {
+                        ShowError("设置总输出设备错误："+BASS_ErrorGetCode().ToString());
+                    }
+                }
+
+            }
+        }
 
         static MusicControlHelper()
         {
@@ -38,7 +69,7 @@ namespace EasyMusic.Helper
         }
 
         public static CycleMode CycleMode { get; set; }
-        
+
         public static double Volumn
         {
             get => Setting.Volumn;
@@ -80,7 +111,7 @@ namespace EasyMusic.Helper
 
         public static void PlayLast()
         {
-            
+
             if (HistoryCount == 0)
             {
                 PlayListLast();
@@ -88,7 +119,7 @@ namespace EasyMusic.Helper
             else
             {
                 CurrentHistoryIndex--;
-                if(CurrentHistoryIndex != -1)
+                if (CurrentHistoryIndex != -1)
                 {
                     PlayNew(GetHistory(CurrentHistoryIndex));
                 }

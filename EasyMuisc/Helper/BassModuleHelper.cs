@@ -20,7 +20,6 @@ namespace EasyMusic.Helper
     public class BassModuleHelper : IDisposable
     {
         private int stream;
-        private int volumnChangeTime = 500;
 
         /// <summary>
         /// 内部音量
@@ -48,6 +47,23 @@ namespace EasyMusic.Helper
             }
         }
 
+        public int Device
+        {
+            get => BASS_ChannelGetDevice(stream);
+            set
+            {
+                if (BASS_ChannelSetDevice(stream, value))
+                {
+                    BASS_ChannelPause(stream);
+                    BASS_ChannelPlay(stream, false);
+                }
+                else
+                {
+                    ShowError("设置音乐输出设备错误：" + BASS_ErrorGetCode().ToString());
+                }
+            }
+        }
+
         public void Dispose()
         {
             BASS_StreamFree(stream);
@@ -57,7 +73,11 @@ namespace EasyMusic.Helper
         {
             get => BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetPosition(stream));
 
-            set => BASS_ChannelSetPosition(stream, value);
+            set
+            {
+                BASS_ChannelSetPosition(stream, value);
+                MainWindow.Current.UpdateLyric(value);
+            }
         }
 
         public bool IsEnd => BASS_ChannelGetLength(stream) - BASS_ChannelGetPosition(stream) <= 144;
@@ -174,6 +194,9 @@ namespace EasyMusic.Helper
                 var tempStream = BASS_StreamCreateFile(FilePath, 0, 0, BASSFlag.BASS_STREAM_DECODE);//获取歌曲句柄
                                                                                                     // var decoder = Bass.BASS_StreamCreateFile(path, 0, 0,BASSFlag. BASS_STREAM_DECODE); // create a "decoding channel" from a file
                 stream = Un4seen.Bass.AddOn.Fx.BassFx.BASS_FX_TempoCreate(tempStream, BASSFlag.BASS_FX_FREESOURCE);
+
+
+                //Device = MusicControlHelper.Device;
                 if (Setting.KeepMusicSettings)
                 {
                     Pitch = Setting.Pitch;
@@ -206,7 +229,7 @@ namespace EasyMusic.Helper
             if (result)
             {
                 MainWindow.Current.OnStatusChanged(ControlStatus.Play);
-                BASS_ChannelSlideAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, Convert.ToSingle(MusicControlHelper.Volumn), volumnChangeTime);
+                BASS_ChannelSlideAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, Convert.ToSingle(MusicControlHelper.Volumn), Convert.ToInt32( Setting.VolumnChangeTime.TotalMilliseconds));
 
                 if (Setting.RecordListenHistory && notRecordYet)
                 {
@@ -232,8 +255,8 @@ namespace EasyMusic.Helper
         {
             MainWindow.Current.OnStatusChanged(ControlStatus.Pause);
 
-            BASS_ChannelSlideAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, 0f, volumnChangeTime);
-            await Task.Delay(volumnChangeTime);
+            BASS_ChannelSlideAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, 0f, Convert.ToInt32(Setting.VolumnChangeTime.TotalMilliseconds));
+            await Task.Delay(Convert.ToInt32(Setting.VolumnChangeTime.TotalMilliseconds));
             BASS_ChannelPause(stream);
             //Position = lastPosition;
         }

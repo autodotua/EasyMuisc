@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:EasyMusic.UserControls"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
+             MouseWheel="MouseWheelEventHandler"
 >
     <UserControl.Resources>
         <sys:Double x:Key="topHalfHeight">0</sys:Double>

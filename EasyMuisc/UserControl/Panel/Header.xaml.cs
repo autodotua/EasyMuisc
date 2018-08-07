@@ -12,6 +12,8 @@ using System.Security.Principal;
 using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace EasyMusic.UserControls
 {
@@ -135,7 +137,7 @@ namespace EasyMusic.UserControls
                 ShowError("需要管理员权限，请用管理员权限打开此程序。");
             }
         }
-
+        double mouseDownY = 1000;
         /// <summary>
         /// 鼠标左键在标题栏上按下事件
         /// </summary>
@@ -143,7 +145,14 @@ namespace EasyMusic.UserControls
         /// <param name="e"></param>
         private void HeaderPreviewMouseLeftButtonDownEventHandler(object sender, MouseButtonEventArgs e)
         {
-            MainWindow.Current.DragMove();
+            if (MainWindow.Current.WindowState == WindowState.Maximized)
+            {
+                mouseDownY = e.MouseDevice.GetPosition(sender as Button).Y;
+            }
+            else
+            {
+                MainWindow.Current.DragMove();
+            }
         }
         /// <summary>
         /// 双击标题栏事件
@@ -153,8 +162,9 @@ namespace EasyMusic.UserControls
         private void HeaderMouseDoubleClickEventHandler(object sender, MouseButtonEventArgs e)
         {
             MainWindow.Current.WindowState = (MainWindow.Current.WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
+            e.Handled = true;
         }
-      
+
         /// <summary>
         /// 单击关闭按钮事件
         /// </summary>
@@ -268,9 +278,44 @@ namespace EasyMusic.UserControls
         }
         #endregion
 
-        private void HeaderPreviewMouseDownEventHandler(object sender, MouseButtonEventArgs e)
-        {
 
+
+
+        double dpi;
+        bool isMoving = false;
+        Point rawPoint;
+        double rawTop;
+        double rawLeft;
+        private void Button_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            Button btn = sender as Button;
+            Point mousePosition = WpfCodes.Device.Mouse.Position;
+            if (isMoving && btn.IsMouseOver)
+            {
+                MainWindow.Current.Top = rawTop + (mousePosition.Y - rawPoint.Y) /dpi;
+                MainWindow.Current.Left = rawLeft + (mousePosition.X - rawPoint.X) / dpi;
+               // Debug.WriteLine(MainWindow.Current.Top + "        " + mousePosition.Y + "       " + rawPoint.Y + "         " + rawTop + "       " + PresentationSource.FromVisual(this).CompositionTarget.TransformFromDevice.M11);
+            }
+
+
+            if (MainWindow.Current.WindowState == WindowState.Maximized && btn.IsMouseCaptured && e.MouseDevice.LeftButton == MouseButtonState.Pressed)
+            {
+                if (mousePosition.Y - mouseDownY > 8)
+                {
+                    MainWindow.Current.Top = 0;
+                    MainWindow.Current.WindowState = WindowState.Normal;
+                    rawPoint = WpfCodes.Device.Mouse.Position;
+                    rawTop = MainWindow.Current.Top;
+                    rawLeft = MainWindow.Current.Left;
+                   dpi = WpfCodes.Device.Mouse.GetDpi(this).DpiScaleX;
+                    isMoving = true;
+                }
+            }
+        }
+
+        private void Button_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            isMoving = false;
         }
     }
 }

@@ -25,8 +25,7 @@ namespace EasyMusic
         /// </summary>
         public static string supportExtensionWithSplit;
         public static Properties.Settings Setting { get; } = new Properties.Settings();
-
-        public static IntPtr windowHandle;
+        
         /// <summary>
         /// 托盘图标
         /// </summary>

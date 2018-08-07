@@ -6,7 +6,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EasyMusic.UserControls"
              mc:Ignorable="d" 
+             PreviewMouseWheel="UserControl_PreviewMouseWheel"
              SizeChanged="UserControl_SizeChanged"
+             PreviewMouseDown="UserControl_PreviewMouseDown"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid x:Name="grdLrcArea" FocusVisualStyle="{x:Null}" Focusable="False"  Background="{DynamicResource backgroundBrushColor}" >
 
