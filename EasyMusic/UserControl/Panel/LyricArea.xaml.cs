@@ -77,7 +77,7 @@ namespace EasyMusic.UserControls
                 {
                     lbxLrc.FontFamily = font;
                 }
-                lbxLrc.Foreground = new BrushConverter().ConvertFrom(Setting.LyricsFontColor) as SolidColorBrush;
+                lbxLrc.Foreground =Setting.LyricsFontColor;
                 lbxLrc.FontWeight = Setting.LyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
 
                 lrcLineSumToIndex.Clear();

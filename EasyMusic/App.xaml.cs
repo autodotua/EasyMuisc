@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using static EasyMusic.GlobalDatas;
 
 namespace EasyMusic
 {
@@ -14,21 +15,20 @@ namespace EasyMusic
     /// </summary>
     public partial class App : Application
     {
-        //    public App()
-        //    {
-        //     if(   WpfCodes.Program.Startup.HaveAnotherInstance("EasyMusic"))
-        //        {
-        //          WpfControls.Dialog.DialogHelper.  ShowError("请勿运行多个实例！这会导致热键异常等问题。");
-        //            Environment.Exit(0);
-        //        }
-        //    }
-
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            if (await WpfCodes.Program.Startup.CheckAnotherInstanceAndOpenWindow<MainWindow>("EasyMusic", this))
+            if (e.Args.Length == 0 || e.Args[0]!= "restart")
             {
-                Shutdown();
+                if (await WpfCodes.Program.Startup.CheckAnotherInstanceAndOpenWindow<MainWindow>("EasyMusic", this))
+                {
+                    Shutdown();
+                }
             }
+            else
+            {
+                WpfCodes.Program.Startup.HaveAnotherInstance("EasyMusic");
+            }
+         
             if (e.Args.Length != 0)
             {
                 GlobalDatas.argPath = e.Args[0];

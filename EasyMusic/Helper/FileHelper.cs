@@ -47,7 +47,7 @@ namespace EasyMusic.Helper
             };
             dialog.Filters.Add(new CommonFileDialogFilter("MP3音乐", ".mp3"));
             dialog.Filters.Add(new CommonFileDialogFilter("WAVE音乐", ".wav"));
-            dialog.Filters.Add(new CommonFileDialogFilter());
+            dialog.Filters.Add(new CommonFileDialogFilter("所有文件","*"));
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok && dialog.FileNames != null)
             {
                 List<string> musics = new List<string>();
@@ -68,7 +68,7 @@ namespace EasyMusic.Helper
                 DefaultExtension = "bin",
             };
             dialog.Filters.Add(new CommonFileDialogFilter("Csv表格", "csv"));
-            dialog.Filters.Add(new CommonFileDialogFilter());
+            dialog.Filters.Add(new CommonFileDialogFilter("所有文件", "*"));
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 try
@@ -90,7 +90,7 @@ namespace EasyMusic.Helper
                 DefaultExtension = "bin",
             };
             dialog.Filters.Add(new CommonFileDialogFilter("Csv表格","csv"));
-            dialog.Filters.Add(new CommonFileDialogFilter());
+            dialog.Filters.Add(new CommonFileDialogFilter("所有文件", "*"));
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 try

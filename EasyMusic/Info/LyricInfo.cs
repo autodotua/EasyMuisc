@@ -227,7 +227,7 @@ namespace EasyMusic.Info
                 };
 
                 dialog.Filters.Add(new CommonFileDialogFilter("Lrc歌词", "lrc"));
-                dialog.Filters.Add(new CommonFileDialogFilter());
+                dialog.Filters.Add(new CommonFileDialogFilter("所有文件", "*"));
 
 
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok)

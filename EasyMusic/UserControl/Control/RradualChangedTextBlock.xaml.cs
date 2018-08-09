@@ -78,12 +78,12 @@ namespace EasyMusic.UserControls
                 gTextBlock.Visibility = Visibility.Visible;
             }
 
-            SolidColorBrush borderBrush = new BrushConverter().ConvertFrom(Setting.FloatLyricsBorderColor) as SolidColorBrush;
+            SolidColorBrush borderBrush = Setting.FloatLyricsBorderColor;
             Resources["borderBrush"] = borderBrush;
             Resources["borderColor"] = borderBrush.Color;
             Resources["thickness"] = Setting.FloatLyricsThickness;
             Resources["blurRadius"] = Setting.FloatLyricsBlurRadius;
-            Resources["fontBrush"] = new BrushConverter().ConvertFrom(Setting.FloatLyricsFontColor) as SolidColorBrush;
+            Resources["fontBrush"] = Setting.FloatLyricsFontColor;
             Resources["bold"] = Setting.FloatLyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
             try
             {

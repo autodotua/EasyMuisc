@@ -151,7 +151,7 @@ namespace EasyMusic
                 ResizeBorderThickness = new Thickness(4),
             });
 
-            UpdateColor(new BrushConverter().ConvertFrom(Setting.BackgroundColor) as SolidColorBrush);
+            UpdateColor(Setting.BackgroundColor);
 
             header.HeaderTextMaxWidth = SystemParameters.WorkArea.Width - 200;
 
@@ -276,6 +276,8 @@ namespace EasyMusic
         #endregion
 
         #region 窗体相关
+
+       public bool SkipSavingSettings { get; set; } = false;
         /// <summary>
         /// 窗体关闭
         /// </summary>
@@ -283,10 +285,15 @@ namespace EasyMusic
         /// <param name="e"></param>
         private async void WindowClosing(object sender, CancelEventArgs e)
         {
+            if(SkipSavingSettings)
+            {
+                return;
+            }
             listenHistory.RecordEnd();
+
             HotKeyHelper.SaveHotKeys();
             SaveListToFile(lvwMusic.lastMusicListBtn.Text, false);
-            Setting.CycleMode = (int)MusicControlHelper.CycleMode;
+            Setting.CycleMode = MusicControlHelper.CycleMode;
             if (Music != null)
             {
                 Setting.LastMusic = Music.FilePath;

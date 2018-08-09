@@ -336,13 +336,13 @@ namespace EasyMusic.UserControls
             if (lvw.ItemsSource == MusicDatas)
             {
                 lvw.ItemsSource = historyList;
-                btn.Background = WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.StringToSolidColorBrush(Setting.BackgroundColor))));
+                btn.Background = WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(Setting.BackgroundColor)));
 
             }
             else
             {
                 lvw.ItemsSource = MusicDatas;
-                btn.Background = WpfControls.DarkerBrushConverter.StringToSolidColorBrush(Setting.BackgroundColor);
+                btn.Background = Setting.BackgroundColor;
 
             }
         }

@@ -16,18 +16,57 @@ namespace EasyMusic
 {
     public static class GlobalDatas
     {
+        static GlobalDatas()
+        {
+            if(File.Exists("ConfigPath.ini"))
+            {
+                try
+                {
+                    string path = File.ReadAllText("ConfigPath.ini");
+                    if(Directory.Exists(path))
+                    {
+                        ConfigPath = path;
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+           if(ConfigPath==null)
+            {
+                ConfigPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyMusic";
+
+            }
+
+
+            string settingPath = ConfigPath + "\\Config.json";
+
+            try
+            {
+                Setting = Settings.GetJsonSetting<Settings>(settingPath);
+            }
+            catch (Exception ex)
+            {
+                WpfControls.Dialog.DialogHelper.ShowException("读取配置文件失败，将重置配置文件", ex, true);
+                Setting = Settings.CreatJsonSetting<Settings>(settingPath);
+            }
+
+            listenHistory = new ListenHistoryHelper();
+        }
+    
         /// <summary>
         /// 支持的格式
         /// </summary>
         public static string[] supportExtension = { ".mp3", ".MP3", ".wav", ".WAV" };
 
-        public static string ConfigPath => Setting.ConfigPath.Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "");
+        public static Settings Setting { get; set; }
+        public static string ConfigPath { get; }
         /// <summary>
         /// 支持的格式，过滤器格式
         /// </summary>
         public static string supportExtensionWithSplit;
-        public static Properties.Settings Setting { get; } = new Properties.Settings();
-        
+
         /// <summary>
         /// 托盘图标
         /// </summary>
@@ -36,7 +75,7 @@ namespace EasyMusic
         /// 程序目录
         /// </summary>
         public static string programDirectory = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).DirectoryName;
-        public static ListenHistoryHelper listenHistory = new ListenHistoryHelper();
+        public static ListenHistoryHelper listenHistory;
 
         public static string argPath = null;
 

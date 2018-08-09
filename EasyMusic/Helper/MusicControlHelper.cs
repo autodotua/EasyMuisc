@@ -147,15 +147,22 @@ namespace EasyMusic.Helper
             {
                 case CycleMode.ListCycle:
                     if (MusicCount > 1)
-                    {
-                        if (MusicDatas.Last() == Music.Info)
+                    {if(Music!=null)
                         {
-                            PlayNew(MusicDatas.First());
+                            if (MusicDatas.Last() == Music.Info)
+                            {
+                                PlayNew(MusicDatas.First());
+                            }
+                            else
+                            {
+                                PlayNew(MusicDatas[MusicDatas.IndexOf(Music.Info) + 1]);
+                            }
                         }
                         else
                         {
-                            PlayNew(MusicDatas[MusicDatas.IndexOf(Music.Info) + 1]);
+                            PlayNew(MusicDatas[0]);
                         }
+                       
                     }
                     else
                     {

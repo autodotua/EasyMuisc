@@ -13,6 +13,10 @@ using EasyMusic.Helper;
 using MahApps.Metro.Controls;
 using System.ComponentModel;
 using System.Linq;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System.IO.Compression;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace EasyMusic.Windows
 {
@@ -40,17 +44,17 @@ namespace EasyMusic.Windows
             txtFloatCurrentFontSize.Text = Setting.FloatLyricsHighlightFontSize.ToString();
             txtFloatNormalFontSize.Text = Setting.FloatLyricsNormalFontSize.ToString();
             cbbFloatFontEffect.SelectedIndex = Setting.FloatLyricsFontEffect;
-            floatFontColor.SetColor(Setting.FloatLyricsFontColor);
-            floatBorderColor.SetColor(Setting.FloatLyricsBorderColor);
+            floatFontColor.ColorBrush = Setting.FloatLyricsFontColor;
+            floatBorderColor.ColorBrush = Setting.FloatLyricsBorderColor;
             cbbFloatFontEffect_SelectionChanged(null, null);
             txtFloatBlur.Text = Setting.FloatLyricsBlurRadius.ToString();
             txtFloatBorder.Text = Setting.FloatLyricsThickness.ToString();
             chkFloatBold.IsChecked = Setting.FloatLyricsFontBold;
-            fontColor.SetColor(Setting.LyricsFontColor);
+            fontColor.ColorBrush = (Setting.LyricsFontColor);
             chkBold.IsChecked = Setting.LyricsFontBold;
             chkListenHitory.IsChecked = Setting.RecordListenHistory;
             txtListenHistoryValue.Text = Setting.ThresholdValueOfListenTime.ToString();
-            mainColor.SetColor(Setting.BackgroundColor);
+            mainColor.ColorBrush = Setting.BackgroundColor;
             if (!cbbFloatFont.SetSelectedFontByString(Setting.FloatLyricsFont) || !cbbFont.SetSelectedFontByString(Setting.LyricsFont))
             {
                 trayIcon.ShowMessage("字体文件设置异常，请重新设置");
@@ -176,8 +180,8 @@ namespace EasyMusic.Windows
                     trayIcon.Show();
                 }
                 Setting.FloatLyricsFontEffect = cbbFloatFontEffect.SelectedIndex;
-                Setting.FloatLyricsBorderColor = floatBorderColor.ColorBrush.ToString();
-                Setting.FloatLyricsFontColor = floatFontColor.ColorBrush.ToString();
+                Setting.FloatLyricsBorderColor = floatBorderColor.ColorBrush;
+                Setting.FloatLyricsFontColor = floatFontColor.ColorBrush;
                 Setting.TrayMode = cbbTrayMode.SelectedIndex;
                 Setting.FloatLyricsThickness = floatBorder.Value;
                 Setting.FloatLyricsBlurRadius = floatBlur.Value;
@@ -185,10 +189,10 @@ namespace EasyMusic.Windows
                 Setting.FloatLyricsFont = cbbFloatFont.GetPreferChineseFontName();
                 Setting.LyricsFontBold = chkBold.IsChecked.Value;
                 Setting.LyricsFont = cbbFont.GetPreferChineseFontName();
-                Setting.LyricsFontColor = fontColor.ColorBrush.ToString();
+                Setting.LyricsFontColor = fontColor.ColorBrush;
                 Setting.RecordListenHistory = chkListenHitory.IsChecked.Value;
                 Setting.ThresholdValueOfListenTime = listenValue.Value;
-                Setting.BackgroundColor = mainColor.ColorBrush.ToString();
+                Setting.BackgroundColor = mainColor.ColorBrush;
                 MainWindow.Current.UpdateColor(mainColor.ColorBrush);
                 if (MusicControlHelper.Music != null)
                 {
@@ -213,80 +217,110 @@ namespace EasyMusic.Windows
         private void ButtonExportClickEventHandler(object sender, RoutedEventArgs e)
         {
             Setting.Save();
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
 
-            SaveFileDialog dialog = new SaveFileDialog() { Filter = "XML文件|*.xml|所有文件|*.*" };
-            if (dialog.ShowDialog() == true)
+            CommonSaveFileDialog dialog = new CommonSaveFileDialog()
             {
-                config.SaveAs(dialog.FileName);
+                Title = "请选择保存位置",
+                AlwaysAppendDefaultExtension = true,
+            };
+
+            int type = ShowMessage("请选择导出类型", WpfControls.Dialog.DialogType.Information, new string[] { "仅设置", "所有文件" });
+            if (type == 0)
+            {
+                dialog.Filters.Add(new CommonFileDialogFilter("Json设置", "json"));
+                dialog.DefaultExtension = "json";
             }
+            else if (type == 1)
+            {
+
+                dialog.Filters.Add(new CommonFileDialogFilter("所有配置", "zip"));
+                dialog.DefaultExtension = "zip";
+            }
+            else
+            {
+                return;
+            }
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                try
+                {
+                    if (dialog.FileName.EndsWith("zip"))
+                    {
+                        ZipFile.CreateFromDirectory(ConfigPath, dialog.FileName);
+                    }
+                    else if (dialog.FileName.EndsWith("json"))
+                    {
+
+                        File.Copy(ConfigPath + "\\Config.json", dialog.FileName);
+
+                    }
+                    else
+                    {
+                        ShowError("请好好选择");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ShowException("导出失败", ex);
+                }
+            }
+
         }
 
         private void ButtonImportClickEventHandler(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog() { Filter = "XML文件|*.xml|所有文件|*.*" };
-            if (dialog.ShowDialog() != true)
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog()
             {
-                return;
-            }
-            if (!File.Exists(dialog.FileName))
+                Title = "请选择文件",
+            };
+            dialog.Filters.Add(new CommonFileDialogFilter("设置文件", "json"));
+            dialog.Filters.Add(new CommonFileDialogFilter("所有配置文件", "zip"));
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                ShowError("文件不存在！");
-                return;
-            }
-
-            try
-            {
-                StringBuilder failedSettings = new StringBuilder();
-                // Open settings file as XML
-                var import = XDocument.Load(dialog.FileName);
-                // Get the <setting> elements
-                var settings = import.XPathSelectElements("//setting");
-                foreach (var setting in settings)
+                try
                 {
-                    string name = setting.Attribute("name").Value;
-                    string value = setting.XPathSelectElement("value").FirstNode.ToString();
-
-                    try
+                    if (dialog.FileName.EndsWith("zip"))
                     {
-                        if (Setting[name] is string)
-                        {
-                            Setting[name] = value;
-                        }
-                        else if (Setting[name] is int)
-                        {
-                            Setting[name] = int.Parse(value);
-                        }
-                        else if (Setting[name] is double)
-                        {
-                            Setting[name] = double.Parse(value);
-                        }
-                        else
-                        {
-                            failedSettings.AppendLine(name + ": 格式不支持");
-                        }
+                        ZipFile.CreateFromDirectory(ConfigPath, new FileInfo(ConfigPath).DirectoryName + "EasyMusic_OldFiles_" + DateTime.Now.ToString("yyyyMMdd_hhMMss"));
+                        Directory.Delete(ConfigPath, true);
+                        ZipFile.ExtractToDirectory(dialog.FileName, ConfigPath);
                     }
-                    catch (Exception ex)
+                    else if (dialog.FileName.EndsWith("json"))
                     {
-                        failedSettings.AppendLine(name + ": " + ex.Message);
+                        if (File.Exists(ConfigPath + "\\Config.json"))
+                        {
+                            if (File.Exists(ConfigPath + "\\Config.json.bak"))
+                            {
+                                File.Delete(ConfigPath + "\\Config.json.bak");
+                            }
+                            File.Move(ConfigPath + "\\Config.json", ConfigPath + "\\Config.json.bak");
+                        }
+                        File.Copy(dialog.FileName, ConfigPath + "\\Config.json");
+
+                    }
+                    else
+                    {
+                        ShowError("只支持Json或Zip文件");
+                        return;
                     }
                 }
+                catch (Exception ex)
+                {
+                    ShowException("导入失败", ex);
+                    return;
+                }
+            }
+            MainWindow.Current.SkipSavingSettings = true;
+            ShowPrompt("导入成功，将重启以生效");
+            //Process.Start(Application.ExecutablePath, "restart");
+            ProcessStartInfo Info = new ProcessStartInfo();
+            Info.Arguments = "/C choice /C Y /N /D Y /T 1 & START \"\" \"" + Assembly.GetExecutingAssembly().Location + "\"";
+            Info.WindowStyle = ProcessWindowStyle.Hidden;
+            Info.CreateNoWindow = true;
+            Info.FileName = "cmd.exe";
+            Process.Start(Info);
+            Application.Current.Shutdown();
 
-                if (failedSettings.Length == 0)
-                {
-                    ShowPrompt("导入成功。部分设置需要重启生效。");
-                }
-                else
-                {
-                    ShowWarn("导入部分失败：" + Environment.NewLine + failedSettings);
-                }
-                Setting.Save();
-            }
-            catch (Exception ex)
-            {
-                ShowException("导入失败", ex);
-                Setting.Reload();
-            }
         }
 
         private void cbbFloatFontEffect_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -389,7 +423,7 @@ namespace EasyMusic.Windows
                 HotKeyHelper.HotKeys[name] = null;
                 return;
             }
-            if (HotKeyHelper.HotKeys.Any(p => p.Key != name && p.Value!=null && p.Value.Key == value.Key && p.Value.Modifiers == value.ModifierKeys))
+            if (HotKeyHelper.HotKeys.Any(p => p.Key != name && p.Value != null && p.Value.Key == value.Key && p.Value.Modifiers == value.ModifierKeys))
             {
                 ShowError("已存在相同热键");
             }
