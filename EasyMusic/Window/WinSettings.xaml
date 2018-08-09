@@ -11,7 +11,8 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        
+        Closed="WindowClosed"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="设置"
         Height="400" Width="480" >
    
@@ -171,10 +172,11 @@
             </win10:ModernTabItem>
 
             <win10:ModernTabItem Header="热键" x:Name="tabHotKey">
-                <Grid>
+                <Grid Margin="4" x:Name="grdHotKey">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="8"/>
+                        <ColumnDefinition Width="192"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -191,16 +193,29 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="8"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="16"/>
+                        <RowDefinition Height="Auto"/>
 
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="下一曲" Grid.Row="0"/>
-                    <TextBlock Text="上一曲" Grid.Row="2"/>
-                    <TextBlock Text="音量加" Grid.Row="4"/>
-                    <TextBlock Text="音量减" Grid.Row="6"/>
-                    <TextBlock Text="播放暂停" Grid.Row="8"/>
-                    <TextBlock Text="悬浮歌词" Grid.Row="10"/>
-                    <TextBlock Text="音量减" Grid.Row="12"/>
+                    <TextBlock VerticalAlignment="Center" Text="下一曲" Grid.Row="0"/>
+                    <TextBlock VerticalAlignment="Center" Text="上一曲" Grid.Row="2"/>
+                    <TextBlock VerticalAlignment="Center" Text="音量加" Grid.Row="4"/>
+                    <TextBlock VerticalAlignment="Center" Text="音量减" Grid.Row="6"/>
+                    <TextBlock VerticalAlignment="Center" Text="播放暂停" Grid.Row="8"/>
+                    <TextBlock VerticalAlignment="Center" Text="悬浮歌词" Grid.Row="10"/>
+                    <TextBlock VerticalAlignment="Center" Text="收放列表" Grid.Row="12"/>
+
+                    <win10:HotKeyBox HotKey="{Binding NextHotKey, Mode=TwoWay}" Grid.Row="0" Grid.Column="2" VerticalContentAlignment="Center"/>
+                    <win10:HotKeyBox HotKey="{Binding LastHotKey, Mode=TwoWay}" Grid.Row="2" Grid.Column="2" VerticalContentAlignment="Center"/>
+                    <win10:HotKeyBox HotKey="{Binding VolumnUpHotKey, Mode=TwoWay}" Grid.Row="4" Grid.Column="2" VerticalContentAlignment="Center"/>
+                    <win10:HotKeyBox HotKey="{Binding VolumnDownHotKey, Mode=TwoWay}" Grid.Row="6" Grid.Column="2" VerticalContentAlignment="Center"/>
+                    <win10:HotKeyBox HotKey="{Binding PlayPauseHotKey, Mode=TwoWay}" Grid.Row="8" Grid.Column="2" VerticalContentAlignment="Center"/>
+                    <win10:HotKeyBox HotKey="{Binding FloatLyricHotKey, Mode=TwoWay}" Grid.Row="10" Grid.Column="2" VerticalContentAlignment="Center"/>
+                    <win10:HotKeyBox HotKey="{Binding ListHotKey, Mode=TwoWay}" Grid.Row="12" Grid.Column="2" VerticalContentAlignment="Center"/>
+
+
+                    <flat:Button Grid.Column="3" Grid.Row="14" HorizontalAlignment="Right" Padding="16,4" Click="TestHotKeysButtonClick">测试</flat:Button>
                 </Grid>
             </win10:ModernTabItem>
 

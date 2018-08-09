@@ -65,23 +65,24 @@ namespace EasyMusic.UserControls
                         txtLrc.Visibility = Visibility.Visible;
                         lbxLrc.Visibility = Visibility.Hidden;
                         txtLrc.FontSize = Setting.TextLrcFontSize;
-                        FontFamily font = new FontFamily(Setting.LyricsFont);
-                        if (font == null)
-                        {
-                            trayIcon.ShowMessage("主界面字体应用失败，请重新设置");
-                        }
-                        else
-                        {
-                            lbxLrc.FontFamily = font;
-                        }
-                        lbxLrc.Foreground = new BrushConverter().ConvertFrom(Setting.LyricsFontColor) as SolidColorBrush;
-                        lbxLrc.FontWeight = Setting.LyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
-
-                        lrcLineSumToIndex.Clear();
-
-                        lbxLrc.Clear();
+                      
                         break;
                 }
+                FontFamily font = new FontFamily(Setting.LyricsFont);
+                if (font == null)
+                {
+                    trayIcon.ShowMessage("主界面字体应用失败，请重新设置");
+                }
+                else
+                {
+                    lbxLrc.FontFamily = font;
+                }
+                lbxLrc.Foreground = new BrushConverter().ConvertFrom(Setting.LyricsFontColor) as SolidColorBrush;
+                lbxLrc.FontWeight = Setting.LyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
+
+                lrcLineSumToIndex.Clear();
+
+                lbxLrc.Clear();
                 currentLyricType = value;
             }
         }
@@ -93,6 +94,8 @@ namespace EasyMusic.UserControls
 
         public void AddLrcs()
         {
+            //lbxLrc.Clear(); lrcLineSumToIndex.Clear();
+
             int index = 0;//用于赋值Tag
             foreach (var i in lrc.LrcContent)
             {
@@ -176,7 +179,7 @@ namespace EasyMusic.UserControls
             menuSearchInNetEase.Click += (p1, p2) => Process.Start($"https://music.163.com/#/search/m/?s={Music.Info.Name}");
 
             MenuItem menuReload = new MenuItem() { Header = "重载歌词" };
-            menuReload.Click += (p1, p2) => MainWindow.Current.InitialiazeLrc();
+            menuReload.Click += (p1, p2) => MainWindow.Current.InitializeLrc();
 
             MenuItem menuEdit = new MenuItem() { Header = (lbxLrc.Visibility == Visibility.Visible || txtLrc.Visibility == Visibility.Visible) ? "编辑歌词" : "新建歌词" };
             menuEdit.Click += (p1, p2) =>
@@ -208,14 +211,14 @@ namespace EasyMusic.UserControls
 
 
             MenuItem menuFloat = new MenuItem() { Header = "悬浮歌词" };
-            
+
             MenuItem menuFloatSwitch = new MenuItem() { Header = (Setting.ShowFloatLyric ? "关闭" : "打开") };
             menuFloatSwitch.Click += (p1, p2) => MainWindow.Current.OpenOrCloseFloatLrc();
             MenuItem menuFloatAdjust = new MenuItem() { Header = "调整位置和大小" };
             menuFloatAdjust.Click += (p1, p2) => MainWindow.Current.FloatLyric.Adjuest = true;
             MenuItem menuFloatOpenSetting = new MenuItem() { Header = "悬浮歌词设置" };
             menuFloatOpenSetting.Click += (p1, p2) => new WinSettings(2) { Owner = MainWindow.Current }.ShowDialog();
-            
+
             menuFloat.Items.Add(menuFloatSwitch);
             if (MainWindow.Current.FloatLyric != null)
             {
@@ -224,14 +227,14 @@ namespace EasyMusic.UserControls
             menuFloat.Items.Add(menuFloatOpenSetting);
 
 
-            
+
             menu.Items.Add(menuShowLrc);
             menu.Items.Add(menuReload);
             menu.Items.Add(menuFloat);
             menu.Items.Add(new SeparatorLine());
             menu.Items.Add(menuEdit);
             //if (lrcContent.Count != 0 && (lbxLrc.Visibility == Visibility.Visible || stkLrc.Visibility == Visibility.Visible))
-            if (lrc != null &&CurrentLyricType==LyricType.LrcFormat)
+            if (lrc != null && CurrentLyricType == LyricType.LrcFormat)
             {
 
                 menu.Items.Add(menuCopyLrc);
@@ -274,10 +277,10 @@ namespace EasyMusic.UserControls
 
         private void UserControl_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.MiddleButton==MouseButtonState.Pressed && CurrentLyricType == LyricType.LrcFormat)
+            if (e.MiddleButton == MouseButtonState.Pressed && CurrentLyricType == LyricType.LrcFormat)
             {
                 lrc.Offset = 0;
-                ShowMessage("恢复歌词偏移量" );
+                ShowMessage("恢复歌词偏移量");
             }
         }
     }

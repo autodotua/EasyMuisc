@@ -43,7 +43,7 @@ namespace EasyMusic.Windows
                   }
                   catch (Exception ex)
                   {
-                      WpfControls.Dialog.DialogHelper.ShowException("加载失败", ex, this);
+                      WpfControls.Dialog.DialogHelper.ShowException("加载失败", ex);
                       Close();
                   }
               };

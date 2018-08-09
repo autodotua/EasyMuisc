@@ -20,6 +20,8 @@ namespace EasyMusic
         /// 支持的格式
         /// </summary>
         public static string[] supportExtension = { ".mp3", ".MP3", ".wav", ".WAV" };
+
+        public static string ConfigPath => Setting.ConfigPath.Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "");
         /// <summary>
         /// 支持的格式，过滤器格式
         /// </summary>
@@ -107,5 +109,7 @@ namespace EasyMusic
         /// 歌词对象
         /// </summary>
         public static LyricInfo lrc;
+
+        public static Settings Set { get; set; }
     }
 }

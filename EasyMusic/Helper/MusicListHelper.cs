@@ -304,7 +304,7 @@ namespace EasyMusic.Helper
         /// <returns></returns>
         public static string GetMusicListPath(string path)
         {
-            return (Setting.ConfigPath + "\\MusicList\\" + path + (path.EndsWith(".csv") ? "" : ".csv")).Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "");
+            return (ConfigPath + "\\MusicList\\" + path + (path.EndsWith(".csv") ? "" : ".csv"));
         }
         /// <summary>
         /// 获取根目录
@@ -312,7 +312,7 @@ namespace EasyMusic.Helper
         /// <returns></returns>
         public static string GetMusicListPath()
         {
-            return (Setting.ConfigPath + "\\MusicList").Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            return (ConfigPath + "\\MusicList");
         }
         /// <summary>
         /// 歌曲数量

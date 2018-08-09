@@ -10,13 +10,16 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Text;
 using EasyMusic.Helper;
+using MahApps.Metro.Controls;
+using System.ComponentModel;
+using System.Linq;
 
 namespace EasyMusic.Windows
 {
     /// <summary>
     /// WinSettings.xaml 的交互逻辑
     /// </summary>
-    public partial class WinSettings : Window
+    public partial class WinSettings : Window, INotifyPropertyChanged
     {
         public WinSettings(int pageIndex = 0)
         {
@@ -48,10 +51,14 @@ namespace EasyMusic.Windows
             chkListenHitory.IsChecked = Setting.RecordListenHistory;
             txtListenHistoryValue.Text = Setting.ThresholdValueOfListenTime.ToString();
             mainColor.SetColor(Setting.BackgroundColor);
-            if(!cbbFloatFont.SetSelectedFontByString(Setting.FloatLyricsFont) || !cbbFont.SetSelectedFontByString(Setting.LyricsFont))
+            if (!cbbFloatFont.SetSelectedFontByString(Setting.FloatLyricsFont) || !cbbFont.SetSelectedFontByString(Setting.LyricsFont))
             {
                 trayIcon.ShowMessage("字体文件设置异常，请重新设置");
             }
+            DefaultDialogOwner = this;
+
+            HotKeyHelper.UnregistAll();
+
         }
 
         private void ButtonClickEventHandler(object sender, RoutedEventArgs e)
@@ -132,7 +139,7 @@ namespace EasyMusic.Windows
                     return;
                 }
 
-                double? floatBlur= txtFloatBlur.DoubleNumber;
+                double? floatBlur = txtFloatBlur.DoubleNumber;
                 if (!floatBlur.HasValue)
                 {
                     ShowError("输入的悬浮歌词阴影深度不是数字！");
@@ -183,15 +190,15 @@ namespace EasyMusic.Windows
                 Setting.ThresholdValueOfListenTime = listenValue.Value;
                 Setting.BackgroundColor = mainColor.ColorBrush.ToString();
                 MainWindow.Current.UpdateColor(mainColor.ColorBrush);
-                if (MusicControlHelper.Music!=null)
+                if (MusicControlHelper.Music != null)
                 {
-                    MainWindow.Current.InitialiazeLrc();
+                    MainWindow.Current.InitializeLrc();
                 }
                 Setting.Save();
             }
             catch (Exception ex)
             {
-                ShowException("保存设置失败", ex, this);
+                ShowException("保存设置失败", ex);
             }
             finally
             {
@@ -294,6 +301,119 @@ namespace EasyMusic.Windows
                 stkBorder.Visibility = Visibility.Collapsed;
                 stkBlur.Visibility = Visibility.Visible;
             }
+        }
+
+
+        public HotKey NextHotKey
+        {
+            get => GetHotKey("下一曲");
+            set
+            {
+                SetHotKey("下一曲", value);
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NextHotKey)));
+            }
+        }
+        public HotKey LastHotKey
+        {
+            get => GetHotKey("上一曲");
+            set
+            {
+                SetHotKey("上一曲", value);
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LastHotKey)));
+            }
+        }
+        public HotKey VolumnUpHotKey
+        {
+            get => GetHotKey("音量加");
+            set
+            {
+                SetHotKey("音量加", value);
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(VolumnUpHotKey)));
+            }
+        }
+        public HotKey VolumnDownHotKey
+        {
+            get => GetHotKey("音量减");
+            set
+            {
+                SetHotKey("音量减", value);
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(VolumnDownHotKey)));
+            }
+        }
+        public HotKey PlayPauseHotKey
+        {
+            get => GetHotKey("播放暂停");
+            set
+            {
+                SetHotKey("播放暂停", value);
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PlayPauseHotKey)));
+            }
+        }
+        public HotKey FloatLyricHotKey
+        {
+            get => GetHotKey("悬浮歌词");
+            set
+            {
+                SetHotKey("悬浮歌词", value);
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FloatLyricHotKey)));
+            }
+        }
+        public HotKey ListHotKey
+        {
+            get => GetHotKey("收放列表");
+            set
+            {
+                SetHotKey("收放列表", value);
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListHotKey)));
+            }
+        }
+        private HotKey GetHotKey(string name)
+        {
+            if (HotKeyHelper.HotKeys.TryGetValue(name, out WpfCodes.WindowsApi.HotKey.HotKeyInfo value))
+            {
+                return value == null ? null : new HotKey(value.Key, value.Modifiers);
+            }
+            return null;
+        }
+        private void SetHotKey(string name, HotKey value)
+        {
+            if (value.Key == System.Windows.Input.Key.Escape)
+            {
+                HotKeyHelper.HotKeys[name] = null;
+                return;
+            }
+            if (HotKeyHelper.HotKeys.Any(p => p.Key != name && p.Value!=null && p.Value.Key == value.Key && p.Value.Modifiers == value.ModifierKeys))
+            {
+                ShowError("已存在相同热键");
+            }
+            else
+            {
+                HotKeyHelper.HotKeys[name] = new WpfCodes.WindowsApi.HotKey.HotKeyInfo(value.Key, value.ModifierKeys);
+            }
+
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void WindowClosed(object sender, EventArgs e)
+        {
+            DefaultDialogOwner = MainWindow.Current;
+            HotKeyHelper.RegistGolbalHotKey();
+        }
+
+        private void TestHotKeysButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (HotKeyHelper.RegistGolbalHotKey())
+            {
+                ShowPrompt("测试通过");
+            }
+            HotKeyHelper.UnregistAll();
         }
     }
 }

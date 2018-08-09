@@ -42,7 +42,7 @@ namespace EasyMusic.Info
 
     public class ListenHistoryHelper
     {
-        public static string XmlPath => Setting.ConfigPath.Replace("%APPDATA%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Replace("\\\\", "")+ "\\ListenHistory.xml";
+        public static string XmlPath => ConfigPath + "\\ListenHistory.xml";
 
         XmlDocument xml = new XmlDocument();
         XmlElement root;

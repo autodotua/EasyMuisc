@@ -111,9 +111,6 @@
     <Reference Include="CsvHelper, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.7.1.1\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
-    <Reference Include="CustomWPFColorPicker">
-      <HintPath>Properties\CustomWPFColorPicker.dll</HintPath>
-    </Reference>
     <Reference Include="Interop.Shell32">
       <HintPath>dlls\Interop.Shell32.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -176,12 +173,14 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Helper\BassModuleHelper.cs" />
     <Compile Include="Helper\FileHelper.cs" />
+    <Compile Include="Helper\HotKeyHelper.cs" />
     <Compile Include="Helper\MusicControlHelper.cs" />
     <Compile Include="Helper\MusicListHelper.cs" />
     <Compile Include="Info\LyricInfo.cs" />
     <Compile Include="Helper\FileAssociationHelper.cs" />
     <Compile Include="GlobalDatas.cs" />
     <Compile Include="Info\ListenHistoryInfo.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="UserControl\Control\ControlButton.xaml.cs">
       <DependentUpon>ControlButton.xaml</DependentUpon>
     </Compile>

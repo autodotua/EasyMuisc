@@ -119,7 +119,7 @@ namespace EasyMusic
         {
             Current = this;
             InitializeComponent();
-            DefautDialogOwner = this;
+            DefaultDialogOwner = this;
 
 
             if (Setting.MaxWindow)
@@ -163,7 +163,7 @@ namespace EasyMusic
         /// <summary>
         /// 初始化定时器事件
         /// </summary>
-        private void InitialiazeField()
+        private void InitializeField()
         {
             UiTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000 / Setting.UpdateSpeed) };
             UiTimer.Tick += UpdateTick;
@@ -187,9 +187,9 @@ namespace EasyMusic
         private async void WindowLoadedEventHandler(object sender, RoutedEventArgs e)
         {
 
-            RegistGolbalHotKey();
+           HotKeyHelper. RegistGolbalHotKey();
 
-            InitialiazeField();
+            InitializeField();
             InitializeAnimation();
 
 
@@ -272,91 +272,6 @@ namespace EasyMusic
             Close();
         }
 
-        /// <summary>
-        /// 注册全局热键
-        /// </summary>
-        private void RegistGolbalHotKey()
-        {
-
-            if (hotKey != null)
-            {
-                hotKey.Dispose();
-            }
-            hotKey = new HotKey();
-            Dictionary<string, HotKey.HotKeyInfo> hotKeys = null;
-
-            try
-            {
-                string json = File.ReadAllText(Setting.ConfigPath + "\\HotKeyConfig.json");
-
-                hotKeys = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, HotKey.HotKeyInfo>>(json);
-            }
-            catch
-            {
-                hotKeys = new Dictionary<string, HotKey.HotKeyInfo>()
-                {
-                    {"下一曲",new HotKey.HotKeyInfo(Key.Right,ModifierKeys.Control) },
-                    {"上一曲",new HotKey.HotKeyInfo(Key.Left,ModifierKeys.Control) },
-                    {"音量加",new HotKey.HotKeyInfo(Key.Up,ModifierKeys.Control) },
-                    {"音量减",new HotKey.HotKeyInfo(Key.Down,ModifierKeys.Control) },
-                    {"播放暂停",new HotKey.HotKeyInfo(Key.OemQuestion,ModifierKeys.Control) },
-                    {"悬浮歌词",new HotKey.HotKeyInfo(Key.OemPeriod,ModifierKeys.Control) },
-                    {"收放列表",new HotKey.HotKeyInfo(Key.OemComma,ModifierKeys.Control) },
-                };
-            }
-
-            string error = "";
-
-            hotKey.KeyPressed += (p1, p2) =>
-            {
-                if (hotKeys.ContainsValue(p2.HotKey))
-                {
-                    string command = hotKeys.First(p => p.Value.Equals(p2.HotKey)).Key;
-                    switch (command)
-                    {
-                        case "下一曲":
-                            PlayNext();
-                            break;
-                        case "上一曲":
-                            PlayLast();
-                            break;
-                        case "音量加":
-                            Volumn += 0.05;
-                            break;
-                        case "音量减":
-                            Volumn -= 0.05;
-                            break;
-                        case "播放暂停":
-                            Music.PlayOrPause();
-                            break;
-                        case "悬浮歌词":
-                            BtnListSwitcherClickEventHandler(null, null);
-                            break;
-                        case "收放列表":
-                            OpenOrCloseFloatLrc();
-                            break;
-                    }
-
-                }
-            };
-
-            foreach (var key in hotKeys)
-            {
-                try
-                {
-                    hotKey.Register(key.Value);
-                }
-                catch
-                {
-                    error += key.Key + "（" + key.Value.ToString() + "）";
-                }
-            }
-
-            if (error != "")
-            {
-                trayIcon.ShowMessage("以下热键无法注册，可能已被占用：" + error.TrimEnd('、'));
-            }
-        }
 
         #endregion
 
@@ -369,6 +284,7 @@ namespace EasyMusic
         private async void WindowClosing(object sender, CancelEventArgs e)
         {
             listenHistory.RecordEnd();
+            HotKeyHelper.SaveHotKeys();
             SaveListToFile(lvwMusic.lastMusicListBtn.Text, false);
             Setting.CycleMode = (int)MusicControlHelper.CycleMode;
             if (Music != null)
@@ -453,7 +369,7 @@ namespace EasyMusic
         /// 初始化歌词
         /// </summary>
         /// <param name="musicLength"></param>
-        public void InitialiazeLrc()
+        public void InitializeLrc()
         {
             try
             {
@@ -504,7 +420,7 @@ namespace EasyMusic
         public void InitializeNewMusic()
         {
             lvwMusic.SelectAndScroll(Music.Info);//选中列表中的歌曲
-            InitialiazeLrc();
+            InitializeLrc();
             header.HeaderText = Title = Music.Name + " - EasyMusic";
             header.AlbumImageSource = Music.AlbumImage;
         }
@@ -558,7 +474,6 @@ namespace EasyMusic
 
         }
 
-        HotKey hotKey;
         #endregion
 
         #region 鼠标滚轮
@@ -601,6 +516,11 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void BtnListSwitcherClickEventHandler(object sender, RoutedEventArgs e)
         {
+            ChangeMusicListVisibility();
+        }
+
+        public  void ChangeMusicListVisibility()
+        {
             ThicknessAnimation aniMargin = new ThicknessAnimation
             {
                 Duration = new Duration(Setting.AnimationDuration),
@@ -635,8 +555,8 @@ namespace EasyMusic
                 // set.ShrinkMusicListManually = true;
             }
             story.Begin();
-
         }
+
         /// <summary>
         /// 将文件拖到列表上方事件
         /// </summary>
@@ -756,7 +676,7 @@ namespace EasyMusic
                 FloatLyric.Show();
                 if (Music != null)
                 {
-                    InitialiazeLrc();
+                    InitializeLrc();
                 }
             }
         }

@@ -54,7 +54,7 @@ namespace EasyMusic.Windows
                 }
                 catch (Exception ex)
                 {
-                    ShowException(ex, this);
+                    ShowException(ex);
                 }
             }
         
@@ -79,12 +79,12 @@ namespace EasyMusic.Windows
                         SetButtonsStatus(false);
                         if (ShowMessage("重载歌词？", WpfControls.Dialog.DialogType.Information, MessageBoxButton.YesNo, this) == 0)
                         {
-                            MainWindow.Current.InitialiazeLrc();
+                            MainWindow.Current.InitializeLrc();
                         }
                     }
                     catch (Exception ex)
                     {
-                        ShowException(ex, this);
+                        ShowException(ex);
                     }
                     break;
                 case "btnSaveAs":
@@ -99,7 +99,7 @@ namespace EasyMusic.Windows
                         }
                         catch (Exception ex)
                         {
-                            ShowException(ex, this);
+                            ShowException(ex);
                         }
                     }
                     break;

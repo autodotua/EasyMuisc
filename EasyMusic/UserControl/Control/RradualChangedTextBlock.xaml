@@ -34,12 +34,12 @@
                                   Fill="{DynamicResource fontBrush}" />
         </Grid>
         <Grid x:Name="gTextBlock">
-            <TextBlock x:Name="tbk1" FontWeight="{DynamicResource bold}" Foreground="{DynamicResource fontBrush}">
+            <TextBlock x:Name="tbk1" FontFamily="{DynamicResource font}" FontWeight="{DynamicResource bold}" Foreground="{DynamicResource fontBrush}">
                 <TextBlock.Effect>
                     <DropShadowEffect Color="{DynamicResource borderColor}" BlurRadius="4"  ShadowDepth="0" Opacity="1" RenderingBias="Quality"/>
                 </TextBlock.Effect>
             </TextBlock>
-            <TextBlock x:Name="tbk2" FontWeight="{DynamicResource bold}" Opacity="0" Foreground="{DynamicResource fontBrush}">
+            <TextBlock x:Name="tbk2"  FontFamily="{DynamicResource font}" FontWeight="{DynamicResource bold}" Opacity="0" Foreground="{DynamicResource fontBrush}">
                 <TextBlock.Effect>
                     <DropShadowEffect Color="{DynamicResource borderColor}" BlurRadius="4"  ShadowDepth="0" Opacity="1" RenderingBias="Quality"/>
                 </TextBlock.Effect>
