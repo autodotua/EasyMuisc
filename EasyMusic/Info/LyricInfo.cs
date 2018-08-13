@@ -202,10 +202,9 @@ namespace EasyMusic.Info
             }
 
             FileInfo file = new FileInfo(Music.FilePath);
-            for (int i = 0; i < lrcTime.Count; i++)
+            foreach (var time in LrcContent.Keys)
             {
-                double time = lrcTime[i];
-                string word = LrcContent[i];
+                string word = LrcContent[time];
                 int intMinute = (int)time / 60;
                 string minute = string.Format("{0:00}", intMinute);
                 string second = string.Format("{0:00.00}", time - 60 * intMinute);
