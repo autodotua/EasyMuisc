@@ -76,7 +76,10 @@ namespace EasyMusic.Helper
             set
             {
                 Setting.Volumn = value;
-                Music.Volumn = value;
+                if (Music != null)
+                {
+                    Music.Volumn = value;
+                }
                 MainWindow.Current.controlBar.Notify("SliderVolumnBinding");
             }
         }

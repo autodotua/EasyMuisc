@@ -200,7 +200,7 @@ namespace EasyMusic.UserControls
         private void BtnMinimizeClickEventHandler(object sender, RoutedEventArgs e)
         {
             reservedTop = MainWindow.Current.Top;
-            NewDoubleAnimation(this, OpacityProperty, 0, 0.1, 0, (p1, p2) =>
+            NewDoubleAnimation(MainWindow.Current, OpacityProperty, 0, 0.1, 0, (p1, p2) =>
             {
                 if (Setting.TrayMode == 2)
                 {

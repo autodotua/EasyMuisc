@@ -24,6 +24,7 @@ namespace EasyMusic.UserControls
         public ControlButton()
         {
             InitializeComponent();
+           // btn.Opacity = NormalOpacity;
         }
         /// <summary>
         /// 矢量形状路径信息

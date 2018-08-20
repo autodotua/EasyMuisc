@@ -102,7 +102,7 @@ namespace EasyMusic
             };
 
 
-            Storyboard.SetTargetName(ani, obj.Name);
+            Storyboard.SetTarget(ani, obj);
             Storyboard.SetTargetProperty(ani, new PropertyPath(property));
             Storyboard story = new Storyboard();
             //Debug.WriteLine(Timeline.GetDesiredFrameRate(story));
@@ -112,7 +112,7 @@ namespace EasyMusic
             {
                 story.Completed += completed;
             }
-            story.Begin(obj);
+            story.Begin();
             return story;
         }
         /// <summary>

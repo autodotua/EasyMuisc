@@ -96,9 +96,10 @@
             </uc:MusicList.RenderTransform>
         </uc:MusicList>
         <Grid x:Name="grdLyricArea" Grid.Column="2" Grid.Row="2">
-            <uc:ControlButton x:Name="btnListSwitcher"   Click="BtnListSwitcherClickEventHandler"  VerticalAlignment="Center" HorizontalAlignment="Left" OpacityAnimation="True" NormalSize="9" MouseOverSize="9" PressedSize="9" FocusVisualStyle="{x:Null}" NormalOpacity="0.4" MouseOverOpacity="0.8"
-               PathData="F1 M 0.000,24.043 L 0.000,2.198 C 0.000,0.989 0.585,0.000 1.300,0.000 C 2.015,0.000 2.601,0.989 2.601,2.198 L 2.601,24.043 C 2.601,25.252 2.015,26.241 1.300,26.241 C 0.585,26.241 0.000,25.252 0.000,24.043 Z"/>
             <uc:LyricArea x:Name="lyricArea"  />
+            <uc:ControlButton x:Name="btnListSwitcher"   Click="BtnListSwitcherClickEventHandler"  VerticalAlignment="Center" HorizontalAlignment="Left" NormalSize="9" MouseOverSize="9" PressedSize="9"  NormalOpacity="0.4" MouseOverOpacity="0.8" OpacityAnimation="True" 
+               PathData="F1 M 0.000,24.043 L 0.000,2.198 C 0.000,0.989 0.585,0.000 1.300,0.000 C 2.015,0.000 2.601,0.989 2.601,2.198 L 2.601,24.043 C 2.601,25.252 2.015,26.241 1.300,26.241 C 0.585,26.241 0.000,25.252 0.000,24.043 Z"/>
+
 
         </Grid>
 
