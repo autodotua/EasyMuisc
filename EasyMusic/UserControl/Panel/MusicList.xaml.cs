@@ -372,7 +372,7 @@ namespace EasyMusic.UserControls
             MenuItem menuOpenAllFolder = new MenuItem() { Header = "文件夹及子文件夹" };
             menuOpenAllFolder.Click += (p1, p2) => FileHelper.ImportMusicsFolder(true);
 
-            MenuItem menuAdd = new MenuItem() { Header = "添加到歌单", Items = { menuOpenFile, menuOpenFolder, menuOpenAllFolder } };
+            MenuItem menuAdd = new MenuItem() { Header = "添加", Items = { menuOpenFile, menuOpenFolder, menuOpenAllFolder } };
 
             MenuItem menuDeleteSelected = new MenuItem() { Header = "删除选中项" };
             menuDeleteSelected.Click += (p1, p2) =>
@@ -500,6 +500,7 @@ namespace EasyMusic.UserControls
                 }
             }
         }
+
 
         #region 歌曲搜索
         /// <summary>

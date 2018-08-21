@@ -186,7 +186,7 @@ namespace EasyMusic.Helper
                         index = r.Next(0, MusicCount);
                         music = MusicDatas[index];
                     }
-                    while (music == Music.Info);
+                    while (music ==((Music==null)?null: Music.Info));
                     PlayNew(music);
                     break;
                 case CycleMode.SingleCycle:

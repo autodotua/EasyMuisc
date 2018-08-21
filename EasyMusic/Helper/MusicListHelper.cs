@@ -14,8 +14,27 @@ using EasyMusic.Info;
 namespace EasyMusic.Helper
 {
     public static class MusicListHelper
-
     {
+        static MusicListHelper() => MusicDatas.CollectionChanged += (p1, p2) => CheckListEmpty();
+
+        public static void CheckListEmpty()
+        {
+            if (MainWindow.Current.controlBar == null)
+            {
+                return;
+            }
+            if (MusicDatas.Count == 0 && MainWindow.Current.controlBar.btnNext.IsEnabled == true)
+            {
+                MainWindow.Current.controlBar.btnNext.IsEnabled = false;
+            }
+            else if (MainWindow.Current.controlBar.btnNext.IsEnabled == false)
+            {
+                MainWindow.Current.controlBar.btnNext.IsEnabled = true;
+
+            }
+        }
+
+
         /// <summary>
         /// 音乐信息，与列表绑定
         /// </summary>
@@ -27,7 +46,6 @@ namespace EasyMusic.Helper
         /// <returns></returns>
         public async static Task<MusicInfo> AddMusic(string path)
         {
-
             try
             {
                 foreach (var i in MusicDatas)
@@ -419,6 +437,7 @@ namespace EasyMusic.Helper
                 copyList.Remove(remove);
                 MusicDatas.Add(remove);
             }
+
             // return outputList;
         }
 

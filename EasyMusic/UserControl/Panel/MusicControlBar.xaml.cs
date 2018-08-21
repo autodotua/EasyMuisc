@@ -295,6 +295,9 @@ namespace EasyMusic.UserControls
           // }
         }
 
-
+        private void BarLoaded(object sender, RoutedEventArgs e)
+        {
+            CheckListEmpty();
+        }
     }
 }
