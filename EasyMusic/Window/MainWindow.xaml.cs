@@ -187,7 +187,7 @@ namespace EasyMusic
         private async void WindowLoadedEventHandler(object sender, RoutedEventArgs e)
         {
 
-           HotKeyHelper. RegistGolbalHotKey();
+            HotKeyHelper.RegistGolbalHotKey();
 
             InitializeField();
             InitializeAnimation();
@@ -277,7 +277,7 @@ namespace EasyMusic
 
         #region 窗体相关
 
-       public bool SkipSavingSettings { get; set; } = false;
+        public bool SkipSavingSettings { get; set; } = false;
         /// <summary>
         /// 窗体关闭
         /// </summary>
@@ -285,7 +285,9 @@ namespace EasyMusic
         /// <param name="e"></param>
         private async void WindowClosing(object sender, CancelEventArgs e)
         {
-            if(SkipSavingSettings)
+            e.Cancel = true;
+            NewDoubleAnimation(this, OpacityProperty, 0, 0.1, 0);
+            if (SkipSavingSettings)
             {
                 return;
             }
@@ -294,10 +296,7 @@ namespace EasyMusic
             HotKeyHelper.SaveHotKeys();
             SaveListToFile(lvwMusic.lastMusicListBtn.Text, false);
             Setting.CycleMode = MusicControlHelper.CycleMode;
-            if (Music != null)
-            {
-                Setting.LastMusic = Music.FilePath;
-            }
+      
             Setting.LastMusicList = lvwMusic.lastMusicListBtn.Text;
             Setting.Top = Top;
             Setting.Left = Left;
@@ -309,7 +308,6 @@ namespace EasyMusic
             {
                 FloatLyric?.Close();
             }
-
             Setting.Save();
             if (readyToExit)
             {
@@ -317,10 +315,12 @@ namespace EasyMusic
                 {
                     if (Music.Status == BASSActive.BASS_ACTIVE_PLAYING)
                     {
-                        e.Cancel = true;
-                        Hide();
                         Music.Pause();
                         await Task.Delay(Setting.VolumnChangeTime);
+                    }
+                    else
+                    {
+                        await Task.Delay(100);
                     }
                     Music.Dispose();
                 }
@@ -328,6 +328,7 @@ namespace EasyMusic
             }
             else
             {
+                await Task.Delay(100);
                 Hide();
             }
         }
@@ -341,12 +342,12 @@ namespace EasyMusic
             if (WindowState == WindowState.Maximized)
             {
                 grdMain.Margin = new Thickness(8);
-               WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(0);
+                WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(0);
             }
             else
             {
                 grdMain.Margin = new Thickness(4);
-               WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(4);
+                WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(4);
             }
         }
         #endregion
@@ -526,7 +527,7 @@ namespace EasyMusic
             ChangeMusicListVisibility();
         }
 
-        public  void ChangeMusicListVisibility()
+        public void ChangeMusicListVisibility()
         {
             ThicknessAnimation aniMargin = new ThicknessAnimation
             {

@@ -14,6 +14,7 @@ using WpfControls.Dialog;
 using System.Windows;
 using static EasyMusic.Helper.MusicListHelper;
 using EasyMusic.Enum;
+using System.Diagnostics;
 
 namespace EasyMusic.Helper
 {
@@ -36,14 +37,14 @@ namespace EasyMusic.Helper
                 {
                     value = 0;
                 }
-                BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, (float)Math.Pow(value, 2));
+                BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, (float)value);
 
             }
             get
             {
                 float value = 0;
                 BASS_ChannelGetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, ref value);
-                return Math.Sqrt(value);
+                return value;
             }
         }
 
@@ -172,8 +173,8 @@ namespace EasyMusic.Helper
                 listenHistory.RecordEnd();
                 notRecordYet = false;
             }
-            Volumn = Setting.Volumn;
             InitialiazeMusic();//初始化歌曲
+            Volumn = Setting.Volumn;
 
             if (Setting.RecordListenHistory)
             {

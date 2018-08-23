@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ namespace EasyMusic
 
             foreach (var file in neededFiles)
             {
-                if (!File.Exists(file))
+                if (!File.Exists(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName) + "\\" + file))
                 {
                     MessageBox.Show("缺少依赖文件" + file, "打开EasyMusic失败", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(-1);
@@ -50,9 +51,9 @@ namespace EasyMusic
         {
 
             CheckFiles();
-#if !DEBUG
-            CollectExceptions();
-#endif
+
+            new WpfCodes.Program.Exception(true);
+
             if (e.Args.Length == 0 || e.Args[0] != "restart")
             {
                 if (await WpfCodes.Program.Startup.CheckAnotherInstanceAndOpenWindow<MainWindow>("EasyMusic", this))
@@ -71,27 +72,32 @@ namespace EasyMusic
             }
         }
 
-        private void CollectExceptions() => new WpfCodes.Program.Exception().UnhandledException += (p1, p2) =>
-        {
-            try
-            {
-                Dispatcher.Invoke(() => WpfControls.Dialog.DialogHelper.ShowException("程序发生了未捕获的错误，类型" + p2.Source.ToString(), p2.Exception));
+        //private void CollectExceptions() => new WpfCodes.Program.Exception().UnhandledException += (p1, p2) =>
+        //{
+        //    try
+        //    {
+        //        Dispatcher.Invoke(() => WpfControls.Dialog.DialogHelper.ShowException("程序发生了未捕获的错误，类型" + p2.Source.ToString(), p2.Exception));
 
-                File.AppendAllText("Exception.log", Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + p2.Exception.ToString());
-            }
-            catch (Exception ex)
-            {
-                Dispatcher.Invoke(() => WpfControls.Dialog.DialogHelper.ShowException("错误信息无法写入", ex));
-            }
-            finally
-            {
-                Environment.Exit(-1);
-            }
-        };
+        //        File.AppendAllText("UnhandledException.log", Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + p2.Exception.ToString());
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Dispatcher.Invoke(() => WpfControls.Dialog.DialogHelper.ShowException("错误信息无法写入", ex));
+        //    }
+        //    finally
+        //    {
+        //        Environment.Exit(-1);
+        //    }
+        //};
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            GlobalDatas.trayIcon.Dispose();
+            if (Helper.MusicControlHelper.Music != null)
+            {
+                Setting.LastMusic = Helper.MusicControlHelper.Music.FilePath;
+            }
+            Setting.Save();
+            trayIcon.Dispose();
         }
 
 

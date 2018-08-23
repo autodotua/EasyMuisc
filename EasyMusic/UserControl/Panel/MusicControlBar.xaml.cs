@@ -28,7 +28,7 @@ namespace EasyMusic.UserControls
             //DataContext = this;
         }
 
-        public CycleMode CycleModeButtonVisibility => 
+        public CycleMode CycleModeButtonVisibility =>
             MusicControlHelper.CycleMode;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -51,17 +51,11 @@ namespace EasyMusic.UserControls
                 return 0;
             }
         }
-        
+
         public double SliderVolumnBinding
         {
-            get => Setting.Volumn;
-            set
-            {
-                if (Music != null)
-                {
-                    Volumn = value;
-                }
-            }
+            get => Math.Sqrt(Setting.Volumn);
+            set => Volumn = value * value;
         }
 
         /// <summary>
@@ -113,7 +107,7 @@ namespace EasyMusic.UserControls
             switch ((sender as FrameworkElement).Name)
             {
                 case "btnListCycle":
-                    MusicControlHelper.CycleMode =Enum. CycleMode.SingleCycle;
+                    MusicControlHelper.CycleMode = Enum.CycleMode.SingleCycle;
                     break;
                 case "btnSingleCycle":
                     MusicControlHelper.CycleMode = Enum.CycleMode.Shuffle;
@@ -156,7 +150,7 @@ namespace EasyMusic.UserControls
         {
             Notify("SliderPositionBinding", "PostionText");
         }
-        
+
         /// <summary>
         /// 单击切换播放设备按钮事件
         /// </summary>
@@ -185,7 +179,7 @@ namespace EasyMusic.UserControls
                         break;
                 }
             }
-            if(status!=ControlStatus.Initialized)
+            if (status != ControlStatus.Initialized)
             {
                 lastStatus = status;
             }
@@ -201,13 +195,13 @@ namespace EasyMusic.UserControls
         }
         private void ShowStatusChangeAnimation(ControlStatus status)
         {
-            ControlButton btn1=null;
-            ControlButton btn2=null;
-            double angle=0;
-            if (status==ControlStatus.Play)
+            ControlButton btn1 = null;
+            ControlButton btn2 = null;
+            double angle = 0;
+            if (status == ControlStatus.Play)
             {
-                 btn1 = btnPlay;
-                 btn2 = btnPause;
+                btn1 = btnPlay;
+                btn2 = btnPause;
                 angle = 360;
             }
             else if (status == ControlStatus.Pause)
@@ -221,7 +215,7 @@ namespace EasyMusic.UserControls
             btn2.Opacity = 0;
             btn2.Visibility = Visibility.Visible;
 
-            DoubleAnimation aniBtn1Rotate = new DoubleAnimation(angle,Setting.VolumnChangeTime);
+            DoubleAnimation aniBtn1Rotate = new DoubleAnimation(angle, Setting.VolumnChangeTime);
             DoubleAnimation aniBtn2Rotate = new DoubleAnimation(angle, Setting.VolumnChangeTime);
             DoubleAnimation aniBtn1Opacity = new DoubleAnimation(0, Setting.VolumnChangeTime);
             DoubleAnimation aniBtn2Opacity = new DoubleAnimation(1, Setting.VolumnChangeTime);
@@ -235,11 +229,11 @@ namespace EasyMusic.UserControls
             Storyboard.SetTarget(aniBtn2Opacity, btn2);
 
             Storyboard.SetTargetProperty(aniBtn1Rotate, new PropertyPath("RenderTransform.Angle"));
-            Storyboard.SetTargetProperty(aniBtn2Rotate,  new PropertyPath("RenderTransform.Angle"));
+            Storyboard.SetTargetProperty(aniBtn2Rotate, new PropertyPath("RenderTransform.Angle"));
             Storyboard.SetTargetProperty(aniBtn1Opacity, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetProperty(aniBtn2Opacity, new PropertyPath(OpacityProperty));
 
-            Storyboard storyboard = new Storyboard() {FillBehavior=FillBehavior.Stop, Children = { aniBtn1Opacity, aniBtn2Opacity, aniBtn1Rotate, aniBtn2Rotate } };
+            Storyboard storyboard = new Storyboard() { FillBehavior = FillBehavior.Stop, Children = { aniBtn1Opacity, aniBtn2Opacity, aniBtn1Rotate, aniBtn2Rotate } };
             storyboard.Completed += (p1, p2) =>
               {
                   btn1.Visibility = Visibility.Hidden;
@@ -281,18 +275,18 @@ namespace EasyMusic.UserControls
                 return $"{string.Format("{0:00}", (int)time.TotalMinutes)}:{string.Format("{0:00}", time.Seconds)}";
             }
         }
-        
+
         private void sldProcess_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-          // if (sldProcess.IsMouseCaptured)
-          // {
-          //     double position = sldProcess.Value;
-          //     if (IsManuallyChangingPosition)
-          //     {
-          //         Music.Position = position;
-          //         MainWindow.Current.UpdateLyric(position);
-          //     }
-          // }
+            // if (sldProcess.IsMouseCaptured)
+            // {
+            //     double position = sldProcess.Value;
+            //     if (IsManuallyChangingPosition)
+            //     {
+            //         Music.Position = position;
+            //         MainWindow.Current.UpdateLyric(position);
+            //     }
+            // }
         }
 
         private void BarLoaded(object sender, RoutedEventArgs e)
