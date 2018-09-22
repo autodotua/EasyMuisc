@@ -27,7 +27,7 @@ using System.Text.RegularExpressions;
 using WpfControls.Dialog;
 using EasyMusic.UserControls;
 using System.Threading.Tasks;
-using WpfCodes.WindowsApi;
+
 using EasyMusic.Enum;
 
 namespace EasyMusic.UserControls
@@ -220,7 +220,7 @@ namespace EasyMusic.UserControls
             menuFloatOpenSetting.Click += (p1, p2) => new WinSettings(2) { Owner = MainWindow.Current }.ShowDialog();
 
             menuFloat.Items.Add(menuFloatSwitch);
-            if (MainWindow.Current.FloatLyric != null)
+            if (Setting.ShowFloatLyric)
             {
                 menuFloat.Items.Add(menuFloatAdjust);
             }

@@ -25,6 +25,7 @@ namespace EasyMusic.UserControls
         public MusicControlBar()
         {
             InitializeComponent();
+            ppp = FindResource("ppp") as Popup;
             //DataContext = this;
         }
 
@@ -150,7 +151,7 @@ namespace EasyMusic.UserControls
         {
             Notify("SliderPositionBinding", "PostionText");
         }
-
+        Popup ppp;
         /// <summary>
         /// 单击切换播放设备按钮事件
         /// </summary>
@@ -158,11 +159,15 @@ namespace EasyMusic.UserControls
         /// <param name="e"></param>
         private void BtnDeviceSwitchClickEventHandler(object sender, RoutedEventArgs e)
         {
-            Popup ppp = FindResource("ppp") as Popup;
             ppp.PlacementTarget = sender as FrameworkElement;
             ppp.IsOpen = true;
-            (ppp.Child as MusicFxPopupContent).Load();
+            ReLoadFx();
 
+        }
+
+        public void ReLoadFx()
+        {
+            (ppp.Child as MusicFxPopupContent).Load();
         }
         ControlStatus lastStatus;
         public void OnStatusChanged(ControlStatus status)

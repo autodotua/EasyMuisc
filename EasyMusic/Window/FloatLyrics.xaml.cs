@@ -18,7 +18,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Shell;
 using static EasyMusic.GlobalDatas;
-using static WpfCodes.WindowsApi.WindowMode;
 
 namespace EasyMusic.Windows
 {
@@ -44,7 +43,7 @@ namespace EasyMusic.Windows
 
             //sbdOpacity.Children.Add(aniOpacity);
         }
-        WpfCodes.WindowsApi.WindowMode windowMode;
+        WpfCodes.System.WindowMode windowMode;
         /// <summary>
         /// 在加载时设置鼠标穿透
         /// </summary>
@@ -53,7 +52,7 @@ namespace EasyMusic.Windows
         {
             base.OnSourceInitialized(e);
             //SetToMouseThrough();
-            windowMode = new WpfCodes.WindowsApi.WindowMode(this);
+            windowMode = new WpfCodes.System.WindowMode(this);
             windowMode.SetToMouseThrough();
         }
         /// <summary>
@@ -92,7 +91,7 @@ namespace EasyMusic.Windows
         /// 加载歌词
         /// </summary>
         /// <param name="lrc"></param>
-        public void Reload(List<string> lrc)
+        public void Reload(List<string> lrc,int position=0)
         {
             CurrentIndex = 0;
             this.lrc = lrc.ToList();
@@ -109,7 +108,7 @@ namespace EasyMusic.Windows
 
             try
             {
-                Update(0);
+                Update(position);
             }
             catch
             { }

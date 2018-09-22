@@ -20,7 +20,7 @@ using WpfCodes.Basic;
 using EasyMusic.Info;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WpfCodes.WindowsApi;
+
 using EasyMusic.Enum;
 using System.ComponentModel;
 using System.Windows.Controls;
@@ -39,21 +39,11 @@ namespace EasyMusic
         /// 当前窗体实例
         /// </summary>
         public static MainWindow Current { get; private set; }
-        private FloatLyrics floatLyric = new FloatLyrics();
+        //private FloatLyrics floatLyric = new FloatLyrics();
         /// <summary>
         /// 悬浮歌词
         /// </summary>
-        public FloatLyrics FloatLyric
-        {
-            get
-            {
-                if (Setting.ShowFloatLyric)
-                {
-                    return floatLyric;
-                }
-                return null;
-            }
-        }
+        public FloatLyrics FloatLyric { get; set; }= new FloatLyrics();
         public IntPtr Handle { get; private set; }
         /// <summary>
         /// 是否显示加载动画
@@ -186,6 +176,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         private async void WindowLoadedEventHandler(object sender, RoutedEventArgs e)
         {
+            InitializeTray();
 
             HotKeyHelper.RegistGolbalHotKey();
 
@@ -193,7 +184,6 @@ namespace EasyMusic
             InitializeAnimation();
 
 
-            InitializeTray();
 
             if (argPath != null && File.Exists(argPath))
             {
@@ -306,7 +296,7 @@ namespace EasyMusic
 
             if (Setting.ShowFloatLyric)
             {
-                FloatLyric?.Close();
+                FloatLyric.Close();
             }
             Setting.Save();
             if (readyToExit)
@@ -382,8 +372,10 @@ namespace EasyMusic
             try
             {
                 lrc = null;
-                FloatLyric?.SetFontEffect();
-
+                if (Setting.ShowFloatLyric)
+                {
+                    FloatLyric.SetFontEffect();
+                }
                 FileInfo file = new FileInfo(Music.FilePath);
                 file = new FileInfo(file.FullName.Replace(file.Extension, ".lrc"));
                 if (file.Exists)//判断是否存在歌词文件
@@ -393,7 +385,7 @@ namespace EasyMusic
                     lrc.Offset /= 1000.0;
 
                     lyricArea.AddLrcs();
-                    if (FloatLyric != null)
+                    if (Setting.ShowFloatLyric)
                     {
                         FloatLyric.Reload(lrc.LrcContent.Values.ToList());
                         FloatLyric.Visibility = Visibility.Visible;
@@ -403,7 +395,7 @@ namespace EasyMusic
                 {
                     lyricArea.LoadTextFormatLyric(File.ReadAllText(file.FullName, EncodingType.GetType(file.FullName)));
                     lyricArea.CurrentLyricType = LyricType.TextFormat;
-                    if (FloatLyric != null)
+                    if (Setting.ShowFloatLyric)
                     {
                         FloatLyric.Visibility = Visibility.Collapsed;
                     }
@@ -411,7 +403,7 @@ namespace EasyMusic
                 else
                 {
                     lyricArea.CurrentLyricType = LyricType.None;
-                    if (FloatLyric != null)
+                    if (Setting.ShowFloatLyric)
                     {
                         FloatLyric.Visibility = Visibility.Collapsed;
                     }
@@ -429,6 +421,7 @@ namespace EasyMusic
         {
             lvwMusic.SelectAndScroll(Music.Info);//选中列表中的歌曲
             InitializeLrc();
+            controlBar.ReLoadFx();
             header.HeaderText = Title = Music.Name + " - EasyMusic";
             header.AlbumImageSource = Music.AlbumImage;
         }
@@ -674,17 +667,19 @@ namespace EasyMusic
         /// </summary>
         public void OpenOrCloseFloatLrc()
         {
-            if (FloatLyric != null)
+            if (Setting.ShowFloatLyric)
             {
                 FloatLyric.Hide();
             }
             Setting.ShowFloatLyric = !Setting.ShowFloatLyric;
-            if (FloatLyric != null)
+            if (Setting.ShowFloatLyric)
             {
+               
                 FloatLyric.Show();
                 if (Music != null)
                 {
-                    InitializeLrc();
+                    //InitializeLrc(); 
+                    FloatLyric.Reload(lrc.LrcContent.Values.ToList(), lrc.CurrentIndex);
                 }
             }
         }

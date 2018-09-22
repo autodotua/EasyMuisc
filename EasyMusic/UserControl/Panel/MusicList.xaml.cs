@@ -85,7 +85,7 @@ namespace EasyMusic.UserControls
             if (lastMusicListBtn == null)
             {
                 // (stkMusiList.Children[1] as UserControls.ToggleButton).IsPressed = true;
-                lastMusicListBtn = stkMusiList.Children[2] as UserControls.ToggleButton;
+                lastMusicListBtn = stkMusiList.Children[2] as ToggleButton;
             }
             lastMusicListBtn.RaiseClickEvent();
 
@@ -180,7 +180,7 @@ namespace EasyMusic.UserControls
                 //    ShowPrompt("默认歌单被删除，请重新选择默认歌单。");
                 //    new Windows.WinSettings().ShowDialog();
                 //}
-                (stkMusiList.Children[1] as UserControls.ToggleButton).RaiseClickEvent();
+                (stkMusiList.Children[2] as ToggleButton).RaiseClickEvent();
             }
         }
         /// <summary>

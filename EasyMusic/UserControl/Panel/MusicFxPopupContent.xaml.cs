@@ -1,14 +1,11 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicControlHelper;
-using System.ComponentModel;
 using static Un4seen.Bass.Bass;
-using System.Windows.Interop;
-using Un4seen.Bass;
-using System.Diagnostics;
 
 namespace EasyMusic.UserControls
 {
@@ -29,10 +26,7 @@ namespace EasyMusic.UserControls
         /// </summary>
         public void Load()
         {
-
             stkDevices.Children.Clear();
-
-
             if (BASS_GetDeviceCount() - 2 <= 0)
             {
                 return;
@@ -51,7 +45,7 @@ namespace EasyMusic.UserControls
                 {
                     continue;
                 }
-                
+
                 Button btn = new Button
                 {
                     Content = device.name,
@@ -65,6 +59,12 @@ namespace EasyMusic.UserControls
                 };
                 stkDevices.Children.Add(btn);
             }
+            
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Pitch"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Tempo"));
+            Pitch = Pitch;
+            Tempo = Tempo;
+
         }
         private void ScrollViewerPreviewMouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
@@ -79,7 +79,7 @@ namespace EasyMusic.UserControls
                 scv.LineRight();
             }
         }
-    
+
         ///// <summary>
         ///// 单击关闭按钮事件
         ///// </summary>
@@ -89,8 +89,8 @@ namespace EasyMusic.UserControls
         {
             (Parent as Popup).IsOpen = false;
         }
-      
-      
+
+
         /// <summary>
         /// 单击恢复初始化事件
         /// </summary>

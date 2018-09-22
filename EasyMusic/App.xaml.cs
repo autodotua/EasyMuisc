@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using static EasyMusic.GlobalDatas;
@@ -56,9 +52,16 @@ namespace EasyMusic
 
             if (e.Args.Length == 0 || e.Args[0] != "restart")
             {
-                if (await WpfCodes.Program.Startup.CheckAnotherInstanceAndOpenWindow<MainWindow>("EasyMusic", this))
+                if (WpfCodes.Program.Startup.HaveAnotherInstance("EasyMusic"))
                 {
-                    Shutdown();
+                    bool opened = false;
+                    WpfCodes.Program.Startup.CheckAnotherInstanceAndOpenWindow<MainWindow>("EasyMusic", this).ContinueWith(p => opened = true);
+                    await Task.Delay(1000);
+                    if (!opened)
+                    {
+                        WpfControls.Dialog.DialogHelper.ShowError("已存在另一实例且无法打开，请手动打开已存在的实例");
+                    }
+                    Environment.Exit(0);
                 }
             }
             else
@@ -68,8 +71,11 @@ namespace EasyMusic
 
             if (e.Args.Length != 0)
             {
-                GlobalDatas.argPath = e.Args[0];
+                argPath = e.Args[0];
             }
+
+            MainWindow = new MainWindow();
+            MainWindow.Show();
         }
 
         //private void CollectExceptions() => new WpfCodes.Program.Exception().UnhandledException += (p1, p2) =>

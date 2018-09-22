@@ -111,6 +111,6 @@
         <progress:LoadingOverlay x:Name="loading" Margin="-4" OverlayColor="{DynamicResource backgroundBrushColor}" Grid.RowSpan="100" Grid.ColumnSpan="100" RingSize="0.1" Visibility="Collapsed"/>
 
         <uc:Header x:Name="header" Grid.ColumnSpan="3" Margin="-4"/>
-        <Label Content="{Binding Cpu}" Grid.ColumnSpan="5" Grid.RowSpan="5" HorizontalAlignment="Right" Margin="0,18" Opacity="0" PreviewMouseDoubleClick="Label_PreviewMouseDoubleClick"/>
+        <Label Content="{Binding Cpu}" Grid.ColumnSpan="5" Grid.RowSpan="5" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,18" Opacity="0" PreviewMouseDoubleClick="Label_PreviewMouseDoubleClick"/>
     </Grid>
 </Window>

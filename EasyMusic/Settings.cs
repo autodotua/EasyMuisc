@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using WpfCodes.Program;
-using WpfCodes.WindowsApi;
+
 
 namespace EasyMusic
 {

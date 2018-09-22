@@ -410,7 +410,7 @@ namespace EasyMusic.Windows
         }
         private HotKey GetHotKey(string name)
         {
-            if (HotKeyHelper.HotKeys.TryGetValue(name, out WpfCodes.WindowsApi.HotKey.HotKeyInfo value))
+            if (HotKeyHelper.HotKeys.TryGetValue(name, out WpfCodes.Device.HotKey.HotKeyInfo value))
             {
                 return value == null ? null : new HotKey(value.Key, value.Modifiers);
             }
@@ -429,7 +429,7 @@ namespace EasyMusic.Windows
             }
             else
             {
-                HotKeyHelper.HotKeys[name] = new WpfCodes.WindowsApi.HotKey.HotKeyInfo(value.Key, value.ModifierKeys);
+                HotKeyHelper.HotKeys[name] = new WpfCodes.Device.HotKey.HotKeyInfo(value.Key, value.ModifierKeys);
             }
 
         }
