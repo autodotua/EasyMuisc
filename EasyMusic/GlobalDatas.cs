@@ -44,12 +44,12 @@ namespace EasyMusic
 
             try
             {
-                Setting = Settings.GetJsonSetting<Settings>(settingPath);
+                Setting = Settings.OpenOrCreat<Settings>(settingPath);
             }
             catch (Exception ex)
             {
                 WpfControls.Dialog.DialogHelper.ShowException("读取配置文件失败，将重置配置文件", ex, true);
-                Setting = Settings.CreatJsonSetting<Settings>(settingPath);
+                Setting = Settings.Creat<Settings>(settingPath);
             }
 
             listenHistory = new ListenHistoryHelper();
@@ -70,7 +70,7 @@ namespace EasyMusic
         /// <summary>
         /// 托盘图标
         /// </summary>
-        public static WpfCodes.Program.TrayIcon trayIcon = null;
+        public static WpfCodes.Program.Notify.TrayIcon trayIcon = null;
         /// <summary>
         /// 程序目录
         /// </summary>
@@ -148,7 +148,6 @@ namespace EasyMusic
         /// 歌词对象
         /// </summary>
         public static LyricInfo lrc;
-
-        public static Settings Set { get; set; }
+        
     }
 }

@@ -34,6 +34,59 @@
         <RoutedUICommand x:Key="HotKeyNext"/>
         <RoutedUICommand x:Key="HotKeyLast"/>
 
+        <ControlTemplate x:Key="scroll_background" TargetType="RepeatButton">
+            <Border Background="Transparent"/>
+        </ControlTemplate>
+        <Style x:Key="scroll_thumb_style" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Rectangle x:Name="rect" Width="12" Fill="{DynamicResource darker2BrushColor}" RadiusX="6" RadiusY="6"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="rect" Property="Fill" Value="{DynamicResource darker3BrushColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="true">
+                                <Setter TargetName="rect" Property="Fill" Value="{DynamicResource darker4BrushColor}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style  TargetType="ScrollBar">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Width="12">
+                            <Border x:Name="bd" Width="12" HorizontalAlignment="Center" CornerRadius="6" Background="{DynamicResource backgroundBrushColor}">
+                            </Border>
+                            <Track HorizontalAlignment="Center" Name="PART_Track" Width="{TemplateBinding Width}" Maximum="{TemplateBinding Maximum}" Minimum="{TemplateBinding Minimum}"  
+                                    Value="{TemplateBinding Value}"  IsDirectionReversed="true">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Template="{StaticResource scroll_background}" Command="ScrollBar.LineUpCommand"  />
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Template="{StaticResource scroll_background}" Command="ScrollBar.LineDownCommand" />
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource scroll_thumb_style}" />
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker1BrushColor}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
     </Window.Resources>
     <Window.InputBindings>

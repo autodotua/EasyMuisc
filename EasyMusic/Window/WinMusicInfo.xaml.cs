@@ -19,7 +19,7 @@ namespace EasyMusic.Windows
     /// <summary>
     /// winMusicInfo.xaml 的交互逻辑
     /// </summary>
-    public partial class WinMusicInfo : Window
+    public partial class WinMusicInfo : WindowBase
     {
         public WinMusicInfo(MusicInfo music)
         {

@@ -1,4 +1,4 @@
-﻿<Window x:Class="EasyMusic.Windows.WinMusicInfo"
+﻿<local:WindowBase x:Class="EasyMusic.Windows.WinMusicInfo"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -39,4 +39,4 @@
         </TextBlock>
         <TextBox x:Name="txt" IsReadOnly="True" Grid.Column="2" BorderThickness="0"/>
     </Grid>
-</Window>
+</local:WindowBase>

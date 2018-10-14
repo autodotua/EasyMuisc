@@ -15,7 +15,7 @@ namespace EasyMusic.Windows
     /// <summary>
     /// WinListenHistory.xaml 的交互逻辑
     /// </summary>
-    public partial class WinListenHistory : Window
+    public partial class WinListenHistory : WindowBase
     {
 
         //public static ObservableCollection<ListenHistory> listenHistories;

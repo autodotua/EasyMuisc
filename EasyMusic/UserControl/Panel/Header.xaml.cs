@@ -307,7 +307,7 @@ namespace EasyMusic.UserControls
                     rawPoint = WpfCodes.Device.Mouse.Position;
                     rawTop = MainWindow.Current.Top;
                     rawLeft = MainWindow.Current.Left;
-                   dpi = WpfCodes.Device.Mouse.GetDpi(this).DpiScaleX;
+                   dpi = VisualTreeHelper.GetDpi(MainWindow.Current).DpiScaleX;
                     isMoving = true;
                 }
             }

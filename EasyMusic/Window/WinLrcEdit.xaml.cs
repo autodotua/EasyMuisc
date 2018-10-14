@@ -11,7 +11,7 @@ namespace EasyMusic.Windows
     /// <summary>
     /// WinLrcEdit.xaml 的交互逻辑
     /// </summary>
-    public partial class WinLrcEdit : Window
+    public partial class WinLrcEdit : WindowBase
     {
         private string filePath = "";
         public WinLrcEdit(string path)
@@ -50,7 +50,7 @@ namespace EasyMusic.Windows
                 }
                 try
                 {
-                    txt.Text = File.ReadAllText(filePath, EncodingType.GetType(filePath));
+                    txt.Text = File.ReadAllText(filePath, WpfCodes.Basic.String.GetEncoding(filePath));
                 }
                 catch (Exception ex)
                 {
@@ -75,7 +75,7 @@ namespace EasyMusic.Windows
                 case "btnSave":
                     try
                     {
-                        File.WriteAllText(filePath, txt.Text, EncodingType.GetType(filePath));
+                        File.WriteAllText(filePath, txt.Text, WpfCodes.Basic.String.GetEncoding(filePath));
                         SetButtonsStatus(false);
                         if (ShowMessage("重载歌词？", WpfControls.Dialog.DialogType.Information, MessageBoxButton.YesNo, this) == 0)
                         {
@@ -93,7 +93,7 @@ namespace EasyMusic.Windows
                     {
                         try
                         {
-                            File.WriteAllText(dialog.FileName, txt.Text, EncodingType.GetType(filePath));
+                            File.WriteAllText(dialog.FileName, txt.Text, WpfCodes.Basic.String.GetEncoding(filePath));
                             SetButtonsStatus(false);
 
                         }

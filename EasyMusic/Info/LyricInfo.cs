@@ -59,7 +59,7 @@ namespace EasyMusic.Info
             using (FileStream fs = new FileStream(LrcPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 string line;
-                using (StreamReader sr = new StreamReader(fs, EncodingType.GetType(LrcPath)))
+                using (StreamReader sr = new StreamReader(fs, WpfCodes.Basic.String.GetEncoding(LrcPath)))
                 {
                     while ((line = sr.ReadLine()) != null)
                     {

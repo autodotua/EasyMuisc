@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using static EasyMusic.GlobalDatas;
 
 namespace EasyMusic
@@ -48,14 +49,16 @@ namespace EasyMusic
 
             CheckFiles();
 
-            new WpfCodes.Program.Exception(true);
+             WpfCodes.Program.Runtime.UnhandledException.RegistAll();
 
             if (e.Args.Length == 0 || e.Args[0] != "restart")
             {
-                if (WpfCodes.Program.Startup.HaveAnotherInstance("EasyMusic"))
+                if (WpfCodes.Program.Runtime.SingleInstance.HaveAnotherInstance("EasyMusic"))
                 {
                     bool opened = false;
-                    WpfCodes.Program.Startup.CheckAnotherInstanceAndOpenWindow<MainWindow>("EasyMusic", this).ContinueWith(p => opened = true);
+#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+                    WpfCodes.Program.Runtime.SingleInstance.CheckAnotherInstanceAndOpenWindow<MainWindow>("EasyMusic", this).ContinueWith(p => opened = true);
+#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
                     await Task.Delay(1000);
                     if (!opened)
                     {
@@ -66,16 +69,34 @@ namespace EasyMusic
             }
             else
             {
-                WpfCodes.Program.Startup.HaveAnotherInstance("EasyMusic");
+                WpfCodes.Program.Runtime.SingleInstance.HaveAnotherInstance("EasyMusic");
             }
 
             if (e.Args.Length != 0)
             {
                 argPath = e.Args[0];
             }
-
+            UpdateColor();
             MainWindow = new MainWindow();
             MainWindow.Show();
+        }
+        /// <summary>
+        /// 更新主题颜色
+        /// </summary>
+        public void UpdateColor()
+        {
+            var color = Setting.BackgroundColor;
+            Resources["backgroundBrushColor"] = color;
+            WpfControls.DarkerBrushConverter.GetDarkerColor(color, out SolidColorBrush darker1, out SolidColorBrush darker2, out SolidColorBrush darker3, out SolidColorBrush darker4);
+            Resources["darker1BrushColor"] = darker1;
+            Resources["darker2BrushColor"] = darker2;
+            Resources["darker3BrushColor"] = darker3;
+            Resources["darker4BrushColor"] = darker4;
+            Resources["backgroundColor"] = color.Color;
+            Resources["backgroundTransparentColor"] = Color.FromArgb(0, color.Color.R, color.Color.G, color.Color.B);
+
+            Resources["foregroundBrushColor"] = new SolidColorBrush(Colors.Black);
+
         }
 
         //private void CollectExceptions() => new WpfCodes.Program.Exception().UnhandledException += (p1, p2) =>

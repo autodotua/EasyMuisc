@@ -43,7 +43,7 @@ namespace EasyMusic.Windows
 
             //sbdOpacity.Children.Add(aniOpacity);
         }
-        WpfCodes.System.WindowMode windowMode;
+        WpfCodes.Windows.WindowStyle windowMode;
         /// <summary>
         /// 在加载时设置鼠标穿透
         /// </summary>
@@ -52,7 +52,7 @@ namespace EasyMusic.Windows
         {
             base.OnSourceInitialized(e);
             //SetToMouseThrough();
-            windowMode = new WpfCodes.System.WindowMode(this);
+            windowMode = new WpfCodes.Windows.WindowStyle(this);
             windowMode.SetToMouseThrough();
         }
         /// <summary>

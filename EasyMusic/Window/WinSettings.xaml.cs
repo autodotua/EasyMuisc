@@ -23,7 +23,7 @@ namespace EasyMusic.Windows
     /// <summary>
     /// WinSettings.xaml 的交互逻辑
     /// </summary>
-    public partial class WinSettings : Window, INotifyPropertyChanged
+    public partial class WinSettings : WindowBase, INotifyPropertyChanged
     {
         public WinSettings(int pageIndex = 0)
         {
@@ -193,7 +193,7 @@ namespace EasyMusic.Windows
                 Setting.RecordListenHistory = chkListenHitory.IsChecked.Value;
                 Setting.ThresholdValueOfListenTime = listenValue.Value;
                 Setting.BackgroundColor = mainColor.ColorBrush;
-                MainWindow.Current.UpdateColor(mainColor.ColorBrush);
+              ( App.Current as App).UpdateColor();
                 if (MusicControlHelper.Music != null)
                 {
                     MainWindow.Current.InitializeLrc();

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using WpfCodes.Program;
-
+using WpfCodes.Program.Config;
 
 namespace EasyMusic
 {
-    public class Settings : SettingsBase
+    public class Settings : JsonConfigBase
     {
         public double NormalLrcFontSize { get; set; } = 24;
         public double HighlightLrcFontSize { get; set; } = 36;

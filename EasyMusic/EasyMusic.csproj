@@ -215,6 +215,7 @@
     <Compile Include="UserControl\Control\ToggleButton.xaml.cs">
       <DependentUpon>ToggleButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Window\WindowBase.cs" />
     <Compile Include="Window\FloatLyrics.xaml.cs">
       <DependentUpon>FloatLyrics.xaml</DependentUpon>
     </Compile>

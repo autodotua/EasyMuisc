@@ -251,13 +251,13 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Thumb">
-                        <Rectangle x:Name="rect" Width="12" Fill="{DynamicResource darker2BrushColor}" RadiusX="6" RadiusY="6"/>
+                        <Rectangle x:Name="rect" Width="12" Fill="#DDDDDD" RadiusX="6" RadiusY="6"/>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter TargetName="rect" Property="Fill" Value="{DynamicResource darker3BrushColor}"/>
+                                <Setter TargetName="rect" Property="Fill" Value="#CCCCCC"/>
                             </Trigger>
                             <Trigger Property="IsDragging" Value="true">
-                                <Setter TargetName="rect" Property="Fill" Value="{DynamicResource darker4BrushColor}"/>
+                                <Setter TargetName="rect" Property="Fill" Value="#BBBBBB"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -269,7 +269,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ScrollBar">
                         <Grid Width="12">
-                            <Border x:Name="bd" Width="12" HorizontalAlignment="Center" CornerRadius="6" Background="{DynamicResource backgroundBrushColor}">
+                            <Border x:Name="bd" Width="12" HorizontalAlignment="Center" CornerRadius="6" Background="White">
                             </Border>
                             <Track HorizontalAlignment="Center" Name="PART_Track" Width="{TemplateBinding Width}" Maximum="{TemplateBinding Maximum}" Minimum="{TemplateBinding Minimum}"  
                                     Value="{TemplateBinding Value}"  IsDirectionReversed="true">
@@ -286,7 +286,7 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker1BrushColor}"/>
+                                <Setter TargetName="bd" Property="Background" Value="#EEEEEE"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

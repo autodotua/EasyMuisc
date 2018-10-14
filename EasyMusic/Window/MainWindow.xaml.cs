@@ -83,23 +83,6 @@ namespace EasyMusic
 
         #region 初始化和配置
 
-        /// <summary>
-        /// 更新主题颜色
-        /// </summary>
-        public void UpdateColor(SolidColorBrush color)
-        {
-            Resources["backgroundBrushColor"] = color;
-            WpfControls.DarkerBrushConverter.GetDarkerColor(color, out SolidColorBrush darker1, out SolidColorBrush darker2, out SolidColorBrush darker3, out SolidColorBrush darker4);
-            Resources["darker1BrushColor"] = darker1;
-            Resources["darker2BrushColor"] = darker2;
-            Resources["darker3BrushColor"] = darker3;
-            Resources["darker4BrushColor"] = darker4;
-            Resources["backgroundColor"] = color.Color;
-            Resources["backgroundTransparentColor"] = Color.FromArgb(0, color.Color.R, color.Color.G, color.Color.B);
-
-            Resources["foregroundBrushColor"] = new SolidColorBrush(Colors.Black);
-
-        }
 
 
         /// <summary>
@@ -141,7 +124,7 @@ namespace EasyMusic
                 ResizeBorderThickness = new Thickness(4),
             });
 
-            UpdateColor(Setting.BackgroundColor);
+            //UpdateColor(Setting.BackgroundColor);
 
             header.HeaderTextMaxWidth = SystemParameters.WorkArea.Width - 200;
 
@@ -223,7 +206,7 @@ namespace EasyMusic
         /// </summary>
         private void InitializeTray()
         {
-            trayIcon = new WpfCodes.Program.TrayIcon(Properties.Resources.icon, "EasyMusic");
+            trayIcon = new WpfCodes.Program.Notify.TrayIcon(Properties.Resources.icon, "EasyMusic");
 
             trayIcon.MouseLeftClick += (p1, p2) =>
             {
@@ -246,7 +229,7 @@ namespace EasyMusic
             //    FloatLyric.Visibility = FloatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
             //    FloatLyric.Update(lrc.CurrentIndex);
             //});
-            trayIcon.AddContextMenu("退出", () => CloseWindow(true));
+            trayIcon.AddContextMenuItem("退出", () => CloseWindow(true));
 
             if (Setting.TrayMode != 0)
             {
@@ -393,7 +376,7 @@ namespace EasyMusic
                 }
                 else if ((file = new FileInfo(file.FullName.Replace(file.Extension, ".txt"))).Exists)
                 {
-                    lyricArea.LoadTextFormatLyric(File.ReadAllText(file.FullName, EncodingType.GetType(file.FullName)));
+                    lyricArea.LoadTextFormatLyric(File.ReadAllText(file.FullName, WpfCodes.Basic.String.GetEncoding(file.FullName)));
                     lyricArea.CurrentLyricType = LyricType.TextFormat;
                     if (Setting.ShowFloatLyric)
                     {

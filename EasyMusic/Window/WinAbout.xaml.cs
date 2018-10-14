@@ -17,7 +17,7 @@ namespace EasyMusic.Windows
     /// <summary>
     /// WinAbout.xaml 的交互逻辑
     /// </summary>
-    public partial class WinAbout : Window
+    public partial class WinAbout : WindowBase
     {
         public WinAbout()
         {

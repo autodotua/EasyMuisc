@@ -18,7 +18,7 @@ namespace EasyMusic.Windows
     /// <summary>
     /// WinHelp.xaml 的交互逻辑
     /// </summary>
-    public partial class WinHelp : Window
+    public partial class WinHelp : WindowBase
     {
         public WinHelp()
         {
