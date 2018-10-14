@@ -93,6 +93,7 @@ namespace EasyMusic
             Resources["darker3BrushColor"] = darker3;
             Resources["darker4BrushColor"] = darker4;
             Resources["backgroundColor"] = color.Color;
+            Resources["veryDarkColor"] = darker4.Color;
             Resources["backgroundTransparentColor"] = Color.FromArgb(0, color.Color.R, color.Color.G, color.Color.B);
 
             Resources["foregroundBrushColor"] = new SolidColorBrush(Colors.Black);

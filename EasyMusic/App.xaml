@@ -20,6 +20,7 @@
 
 
         <Color x:Key="backgroundColor">White</Color>
+        <Color x:Key="veryDarkColor">White</Color>
         <Color x:Key="backgroundTransparentColor">Transparent</Color>
 
 

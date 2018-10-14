@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using WpfControls.FlatStyle;
-using static EasyMusic.GlobalDatas;
 
 namespace EasyMusic.Windows
 {
@@ -15,8 +15,17 @@ namespace EasyMusic.Windows
             //FontFamily = new System.Windows.Media.FontFamily("微软雅黑");
             //Resources.Add("DefaultFont", FontFamily);
             //WindowTitleBrush = Setting.BackgroundColor;
-            Initialized+=(p2,p3) =>
-            WindowHeader.CreatTitle(this);
+            Initialized += (p2, p3) =>  Header = WindowHeader.CreatTitle(this);
+            BorderThickness = new Thickness(16);
+            var effect = new DropShadowEffect();
+            effect.BlurRadius = 16;
+            effect.ShadowDepth = 0;
+            effect.Opacity = 0.5;
+            effect.Color = Colors.Gray;
+            Effect = effect;
+
         }
+
+        public WindowHeader Header { get; private set; }
     }
 }

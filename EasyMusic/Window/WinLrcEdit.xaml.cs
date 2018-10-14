@@ -1,9 +1,10 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using WpfCodes.Basic;
+using System.Windows.Input;
 using static WpfControls.Dialog.DialogHelper;
 
 namespace EasyMusic.Windows
@@ -14,12 +15,35 @@ namespace EasyMusic.Windows
     public partial class WinLrcEdit : WindowBase
     {
         private string filePath = "";
-        public WinLrcEdit(string path)
+        private WinLrcEdit()
         {
             InitializeComponent();
 
-            filePath = path;
         }
+
+        public static void Edit(Window owner, string path)
+        {
+            WinLrcEdit win = new WinLrcEdit() { Owner = owner };
+            win.filePath = path;
+            win.Load();
+            win.Show();
+        }
+
+        public static void ShowOnly(Window owner, IEnumerable<string> texts)
+        {
+            WinLrcEdit win = new WinLrcEdit() { Owner = owner };
+            win.rich.Visibility = Visibility.Visible;
+            foreach (var line in texts)
+            {
+                win.rich.AppendText(line + Environment.NewLine);
+            }
+            win.rich.Document.LineHeight = 1;
+            win.rich.Document.TextAlignment = TextAlignment.Center;
+            win.rich.FontSize = GlobalDatas.Setting.TextLrcFontSize;
+            win.Header.Background = GlobalDatas.Setting.BackgroundColor;
+            win.Show();
+        }
+
 
         private void Load()
         {
@@ -38,7 +62,7 @@ namespace EasyMusic.Windows
                     Close();
                     return;
                 }
-               
+
             }
             else
             {
@@ -57,12 +81,11 @@ namespace EasyMusic.Windows
                     ShowException(ex);
                 }
             }
-        
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Load();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -114,6 +137,15 @@ namespace EasyMusic.Windows
         private void txt_TextChanged(object sender, TextChangedEventArgs e)
         {
             SetButtonsStatus(true);
+        }
+
+        private void rich_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                rich.FontSize += e.Delta / 120.0;
+                e.Handled = true;
+            }
         }
     }
 }

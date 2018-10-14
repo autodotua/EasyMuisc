@@ -139,11 +139,15 @@ namespace EasyMusic.Info
             if (LrcContent.Count != 0)
             {
                 StringBuilder str = new StringBuilder();
-                for (int i = 0; i < LrcContent.Count - 1; i++)
+                //for (int i = 0; i < LrcContent.Count - 1; i++)
+                //{
+                //    str.Append(LrcContent[i] + Environment.NewLine);
+                //}
+                //str.Append(LrcContent[LrcContent.Count - 1]);
+                foreach (var line in LrcContent)
                 {
-                    str.Append(LrcContent[i] + Environment.NewLine);
+                    str.AppendLine(line.Value);
                 }
-                str.Append(LrcContent[LrcContent.Count - 1]);
                 Clipboard.SetText(str.ToString());
             }
 

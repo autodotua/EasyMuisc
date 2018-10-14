@@ -22,10 +22,13 @@
        WindowStyle="None"
        AllowsTransparency="True"
        Closing="WindowClosing"
+    BorderThickness="16"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
        Background="{DynamicResource backgroundBrushColor}"
        PreviewMouseWheel="MouseWheelEventHandler">
-
+    <Window.Effect>
+        <DropShadowEffect BlurRadius="16" Color="{DynamicResource veryDarkColor}"  ShadowDepth="0"/>
+    </Window.Effect>
     <Window.Resources>
 
         <RoutedUICommand x:Key="HotKeyFoward"/>

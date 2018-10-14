@@ -187,25 +187,34 @@ namespace EasyMusic.UserControls
                 FileInfo file = new FileInfo(Music.FilePath);
                 if (lbxLrc.Visibility == Visibility.Visible)
                 {
-                    new WinLrcEdit(file.FullName.TrimEnd(file.Extension.ToCharArray()) + ".lrc") { Owner = MainWindow.Current }.Show();
+                    WinLrcEdit.Edit(MainWindow.Current, file.FullName.RemoveEnd(file.Extension) + ".lrc");
                 }
                 else if (txtLrc.Visibility == Visibility.Visible)
                 {
-                    new WinLrcEdit(file.FullName.TrimEnd(file.Extension.ToCharArray()) + ".txt") { Owner = MainWindow.Current }.Show();
+                    WinLrcEdit.Edit(MainWindow.Current, file.FullName.RemoveEnd(file.Extension) + ".txt");
                 }
                 else
                 {
                     int index = DialogHelper.ShowMessage("Lrc歌词文件还是Txt文本文件？", DialogType.Information, new string[] { "Lrc文件", "Txt文件", "取消" });
                     if (index == 0)
                     {
-                        new WinLrcEdit(file.FullName.TrimEnd(file.Extension.ToCharArray()) + ".lrc") { Owner = MainWindow.Current }.Show();
+                    WinLrcEdit.Edit(MainWindow.Current, file.FullName.RemoveEnd(file.Extension) + ".lrc");
                     }
                     else if (index == 1)
                     {
-                        new WinLrcEdit(file.FullName.TrimEnd(file.Extension.ToCharArray()) + ".txt") { Owner = MainWindow.Current }.Show();
+                        WinLrcEdit.Edit(MainWindow.Current, file.FullName.RemoveEnd(file.Extension) + ".txt");
                     }
                 }
             };
+
+            MenuItem menuShow = new MenuItem() {Header="展示歌词" };
+            menuShow.Click += (p1, p2) =>
+            {
+
+                    WinLrcEdit.ShowOnly(MainWindow.Current,lrc.LrcContent.Values);
+           
+            };
+
             MenuItem menuOpenSetting = new MenuItem() { Header = "主界面歌词设置" };
             menuOpenSetting.Click += (p1, p2) => new WinSettings(1) { Owner = MainWindow.Current }.ShowDialog();
 
@@ -236,7 +245,7 @@ namespace EasyMusic.UserControls
             //if (lrcContent.Count != 0 && (lbxLrc.Visibility == Visibility.Visible || stkLrc.Visibility == Visibility.Visible))
             if (lrc != null && CurrentLyricType == LyricType.LrcFormat)
             {
-
+                menu.Items.Add(menuShow);
                 menu.Items.Add(menuCopyLrc);
                 menu.Items.Add(menuSave);
                 menu.Items.Add(menuSaveAs);

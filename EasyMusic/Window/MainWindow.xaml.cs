@@ -314,11 +314,13 @@ namespace EasyMusic
         {
             if (WindowState == WindowState.Maximized)
             {
+               BorderThickness = new Thickness();
                 grdMain.Margin = new Thickness(8);
                 WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(0);
             }
             else
             {
+                BorderThickness = new Thickness(16);
                 grdMain.Margin = new Thickness(4);
                 WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(4);
             }
