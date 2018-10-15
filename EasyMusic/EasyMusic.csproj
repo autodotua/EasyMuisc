@@ -56,7 +56,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationIcon>Properties\Images\icon.ico</ApplicationIcon>
+    <ApplicationIcon>Images\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>Custom</TargetZone>
@@ -349,8 +349,10 @@
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Images\icon.ico.bak" />
+    <None Include="Images\icon.psd" />
+    <None Include="Images\icon256.psd" />
     <None Include="packages.config" />
-    <None Include="Properties\Images\icon.psd" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -371,16 +373,18 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Properties\Images\icon.ico" />
-    <Resource Include="Properties\Images\icon.png" />
+    <None Include="Images\icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Properties\Images\play.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Properties\Images\last.png" />
-    <Resource Include="Properties\Images\next.png" />
-    <Resource Include="Properties\Images\pause.png" />
+    <Resource Include="Images\icon.png" />
+    <Content Include="Images\icon.svg" />
+    <Resource Include="Images\last.png" />
+    <Resource Include="Images\music.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\next.png" />
+    <Resource Include="Images\pause.png" />
+    <Resource Include="Images\play.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

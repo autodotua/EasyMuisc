@@ -112,10 +112,10 @@
         <TaskbarItemInfo x:Name="taskBar">
             <TaskbarItemInfo.ThumbButtonInfos>
                 <ThumbButtonInfoCollection>
-                    <ThumbButtonInfo  ImageSource="../Properties/Images/last.png" Click="ThumbButtonClick" Description="上一曲" IsBackgroundVisible="False" />
-                    <ThumbButtonInfo x:Name="tbiPlay"  ImageSource="../Properties/Images/play.png" Click="ThumbButtonClick" Description="播放" IsBackgroundVisible="False"/>
-                    <ThumbButtonInfo x:Name="tbiPause"  ImageSource="../Properties/Images/pause.png" Click="ThumbButtonClick" Visibility="Collapsed" Description="暂停" IsBackgroundVisible="False"/>
-                    <ThumbButtonInfo  ImageSource="../Properties/Images/next.png" Click="ThumbButtonClick" Description="下一曲" IsBackgroundVisible="False"/>
+                    <ThumbButtonInfo  ImageSource="../Images/last.png" Click="ThumbButtonClick" Description="上一曲" IsBackgroundVisible="False" />
+                    <ThumbButtonInfo x:Name="tbiPlay"  ImageSource="../Images/play.png" Click="ThumbButtonClick" Description="播放" IsBackgroundVisible="False"/>
+                    <ThumbButtonInfo x:Name="tbiPause"  ImageSource="../Images/pause.png" Click="ThumbButtonClick" Visibility="Collapsed" Description="暂停" IsBackgroundVisible="False"/>
+                    <ThumbButtonInfo  ImageSource="../Images/next.png" Click="ThumbButtonClick" Description="下一曲" IsBackgroundVisible="False"/>
 
                 </ThumbButtonInfoCollection>
             </TaskbarItemInfo.ThumbButtonInfos>
