@@ -1,10 +1,15 @@
-﻿using System;
+﻿using EasyMusic.Helper;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using WpfCodes.Program;
+using WpfCodes.Program.Runtime;
+using WpfControls.Dialog;
 using static EasyMusic.GlobalDatas;
+using EasyMusic;
 
 namespace EasyMusic
 {
@@ -43,43 +48,113 @@ namespace EasyMusic
                 }
             }
         }
-
+        
+        SingleInstance single;
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
 
             CheckFiles();
 
-             WpfCodes.Program.Runtime.UnhandledException.RegistAll();
-
-            if (e.Args.Length == 0 || e.Args[0] != "restart")
+            UnhandledException.RegistAll();
+            single= new SingleInstance(EasyMusic.Properties.Resources.AppName);
+                if (e.Args.Length > 0 && single.ExistAnotherInstance)
             {
-                if (WpfCodes.Program.Runtime.SingleInstance.HaveAnotherInstance("EasyMusic"))
-                {
-                    bool opened = false;
-#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
-                    WpfCodes.Program.Runtime.SingleInstance.CheckAnotherInstanceAndOpenWindow<MainWindow>("EasyMusic", this).ContinueWith(p => opened = true);
-#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
-                    await Task.Delay(1000);
-                    if (!opened)
-                    {
-                        WpfControls.Dialog.DialogHelper.ShowError("已存在另一实例且无法打开，请手动打开已存在的实例");
-                    }
-                    Environment.Exit(0);
-                }
+                await PipeHelper.Send("play " + e.Args[0]);
+                Environment.Exit(0);
             }
             else
             {
-                WpfCodes.Program.Runtime.SingleInstance.HaveAnotherInstance("EasyMusic");
-            }
-
-            if (e.Args.Length != 0)
-            {
-                argPath = e.Args[0];
+                if (e.Args.Length != 0)
+                {
+                    argPath = e.Args[0];
+                }
+                await CheckInstance();
+                PipeHelper.RegistClinet();
             }
             UpdateColor();
             MainWindow = new MainWindow();
             MainWindow.Show();
         }
+
+        private async Task CheckInstance()
+        {
+            bool ok = false;
+#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+            //Task.Delay(1000).ContinueWith(p =>
+            //{
+            //    if (!ok)
+            //    {
+            //        Dispatcher.Invoke(() => DialogHelper.ShowError("存在另一实例，但无法唤醒"));
+            //        Environment.Exit(-1);
+            //    }
+            //}
+            //);
+#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+            if (await single.CheckAndOpenWindow<MainWindow>(this))
+            {
+                Environment.Exit(-1);
+            }
+            else
+            {
+                ok = true;
+
+            }
+        }
+        //public async  Task<bool> CheckAnotherInstanceAndOpenWindow<T>(Application app) where T : Window, new()
+        //{
+        //    string programName = EasyMusic.Properties.Resources.AppName;
+        //    if (single.ExistAnotherInstance)
+        //    {
+        //        SinglePipe.Server pipe = new SinglePipe.Server(programName + "Mutex");
+        //        await pipe.SendMessageAsync("OpenWindow");
+        //        //await pipe.StopClinetAsync();
+        //        pipe.Dispose();
+        //        app.Shutdown();
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        SinglePipe.Clinet pipe = new SinglePipe.Clinet(programName + "Mutex");
+        //        pipe.Start();
+        //        pipe.GotMessage += (p1, p2) =>
+        //        {
+        //            if (p2.Message == "OpenWindow")
+        //            {
+        //                app.Dispatcher.Invoke(() =>
+        //                {
+        //                    if (app.MainWindow == null)
+        //                    {
+        //                        app.MainWindow = new T();
+        //                    }
+        //                    try
+        //                    {
+
+        //                        app.MainWindow.Show();
+        //                    }
+        //                    catch (InvalidOperationException)
+        //                    {
+        //                        app.MainWindow = new T();
+        //                        app.MainWindow.Show();
+        //                    }
+        //                    if (app.MainWindow.Visibility != Visibility.Visible)
+        //                    {
+        //                        app.MainWindow.Visibility = Visibility.Visible;
+        //                    }
+        //                    if (app.MainWindow.WindowState == WindowState.Minimized)
+        //                    {
+        //                        app.MainWindow.WindowState = WindowState.Normal;
+        //                    }
+        //                    app.MainWindow.Activate();
+        //                    //pipe.Dispose();
+        //                    //pipe.Start();
+        //                    //SetForegroundWindow(new WindowInteropHelper(app.MainWindow).Handle);
+        //                });
+        //            }
+        //        };
+        //        return false;
+        //    }
+        //}
+
         /// <summary>
         /// 更新主题颜色
         /// </summary>
@@ -100,24 +175,6 @@ namespace EasyMusic
 
         }
 
-        //private void CollectExceptions() => new WpfCodes.Program.Exception().UnhandledException += (p1, p2) =>
-        //{
-        //    try
-        //    {
-        //        Dispatcher.Invoke(() => WpfControls.Dialog.DialogHelper.ShowException("程序发生了未捕获的错误，类型" + p2.Source.ToString(), p2.Exception));
-
-        //        File.AppendAllText("UnhandledException.log", Environment.NewLine + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + p2.Exception.ToString());
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Dispatcher.Invoke(() => WpfControls.Dialog.DialogHelper.ShowException("错误信息无法写入", ex));
-        //    }
-        //    finally
-        //    {
-        //        Environment.Exit(-1);
-        //    }
-        //};
-
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             if (Helper.MusicControlHelper.Music != null)
@@ -125,7 +182,7 @@ namespace EasyMusic
                 Setting.LastMusic = Helper.MusicControlHelper.Music.FilePath;
             }
             Setting.Save();
-            trayIcon.Dispose();
+            trayIcon?.Dispose();
         }
 
 

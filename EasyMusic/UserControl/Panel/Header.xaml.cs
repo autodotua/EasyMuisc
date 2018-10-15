@@ -14,6 +14,7 @@ using System.Windows.Controls.Primitives;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using WpfCodes.Windows;
 
 namespace EasyMusic.UserControls
 {
@@ -129,7 +130,7 @@ namespace EasyMusic.UserControls
             WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
             if (windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator))
             {
-                FileAssociationHelper.Associate(".mp3", "EasyMusic", "mp3 文件", AppDomain.CurrentDomain.BaseDirectory + "icon.ico", Process.GetCurrentProcess().MainModule.FileName);
+                FileFotmatAssociation.Associate(".mp3", EasyMusic.Properties.Resources.AppName, "mp3 文件",WpfCodes.Program.Information.ProgramDirectoryPath + "\\icon.ico", Process.GetCurrentProcess().MainModule.FileName);
                 ShowPrompt("成功");
             }
             else

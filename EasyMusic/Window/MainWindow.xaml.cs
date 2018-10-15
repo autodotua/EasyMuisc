@@ -206,7 +206,7 @@ namespace EasyMusic
         /// </summary>
         private void InitializeTray()
         {
-            trayIcon = new WpfCodes.Program.Notify.TrayIcon(Properties.Resources.icon, "EasyMusic");
+            trayIcon = new WpfCodes.Program.Notify.TrayIcon(Properties.Resources.icon, EasyMusic.Properties.Resources.AppName);
 
             trayIcon.MouseLeftClick += (p1, p2) =>
             {
@@ -490,8 +490,8 @@ namespace EasyMusic
             {
                 FloatLyric.Clear();
             }
-            Title = "EasyMusic";
-            header.HeaderText = "EasyMusic";
+            Title = EasyMusic.Properties.Resources.AppName;
+            header.HeaderText = EasyMusic.Properties.Resources.AppName;
             header.AlbumImageSource = null;
             controlBar.OnStatusChanged(ControlStatus.Pause);
         }

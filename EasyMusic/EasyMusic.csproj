@@ -178,8 +178,8 @@
     <Compile Include="Helper\HotKeyHelper.cs" />
     <Compile Include="Helper\MusicControlHelper.cs" />
     <Compile Include="Helper\MusicListHelper.cs" />
+    <Compile Include="Helper\PipeHelper.cs" />
     <Compile Include="Info\LyricInfo.cs" />
-    <Compile Include="Helper\FileAssociationHelper.cs" />
     <Compile Include="GlobalDatas.cs" />
     <Compile Include="Info\ListenHistoryInfo.cs" />
     <Compile Include="Settings.cs" />

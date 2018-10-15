@@ -69,11 +69,12 @@ namespace EasyMusic.Helper
                     Path = path,
                     Album = album,
                 };
+
                 MusicDatas.Add(item);
-                // DoEvents();
-                return MusicDatas[MusicDatas.Count - 1];
+
+                return item;
             }
-            catch
+            catch(Exception ex)
             {
                 return null;
             }

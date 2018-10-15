@@ -1,6 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using System.Windows.Shell;
 using WpfControls.FlatStyle;
 
 namespace EasyMusic.Windows
@@ -23,9 +26,23 @@ namespace EasyMusic.Windows
             effect.Opacity = 0.5;
             effect.Color = Colors.Gray;
             Effect = effect;
-
         }
 
         public WindowHeader Header { get; private set; }
+
+        protected override void OnStateChanged(EventArgs e)
+        {
+            base.OnStateChanged(e);
+       
+                if (WindowState == WindowState.Maximized)
+                {
+                    BorderThickness = new Thickness(4);
+                }
+                else
+                {
+                    BorderThickness = new Thickness(16);
+                }
+          
+        }
     }
 }
