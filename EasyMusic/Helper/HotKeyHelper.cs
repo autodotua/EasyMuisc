@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using WpfCodes.Device;
+using FzLib.Device;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicControlHelper;
-using static WpfControls.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogHelper;
 
 namespace EasyMusic.Helper
 {

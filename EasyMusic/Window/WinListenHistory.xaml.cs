@@ -8,7 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using static EasyMusic.GlobalDatas;
-using static WpfControls.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogHelper;
 
 namespace EasyMusic.Windows
 {

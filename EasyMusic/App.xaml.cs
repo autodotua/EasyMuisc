@@ -5,9 +5,9 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using WpfCodes.Program;
-using WpfCodes.Program.Runtime;
-using WpfControls.Dialog;
+using FzLib.Program;
+using FzLib.Program.Runtime;
+using FzLib.Control.Dialog;
 using static EasyMusic.GlobalDatas;
 using EasyMusic;
 
@@ -27,14 +27,13 @@ namespace EasyMusic
                 "Interop.Shell32.dll",
                 "MahApps.Metro.dll",
                 "Microsoft.WindowsAPICodePack.dll",
-                "Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll",
-                "Microsoft.WindowsAPICodePack.Sensors.dll",
                 "Microsoft.WindowsAPICodePack.Shell.dll",
-                "Microsoft.WindowsAPICodePack.ShellExtensions.dll",
                 "Newtonsoft.Json.dll",
                 "System.Windows.Interactivity.dll",
-                "WpfCodes.dll",
-                "WpfControls.dll",
+                "FzStandardLib.dll",
+                "FzWpfControlLib.dll",
+                "FzWpfLib.dll",
+                "music.png",
                 "bass.dll",
                 "bass_fx.dll"};
 
@@ -162,7 +161,7 @@ namespace EasyMusic
         {
             var color = Setting.BackgroundColor;
             Resources["backgroundBrushColor"] = color;
-            WpfControls.DarkerBrushConverter.GetDarkerColor(color, out SolidColorBrush darker1, out SolidColorBrush darker2, out SolidColorBrush darker3, out SolidColorBrush darker4);
+            FzLib.Control.DarkerBrushConverter.GetDarkerColor(color, out SolidColorBrush darker1, out SolidColorBrush darker2, out SolidColorBrush darker3, out SolidColorBrush darker4);
             Resources["darker1BrushColor"] = darker1;
             Resources["darker2BrushColor"] = darker2;
             Resources["darker3BrushColor"] = darker3;

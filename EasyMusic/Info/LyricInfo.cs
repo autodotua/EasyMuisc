@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using WpfCodes.Basic;
+using FzLib.Basic;
 using static EasyMusic.Helper.MusicControlHelper;
 using static EasyMusic.GlobalDatas;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using static WpfControls.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogHelper;
 
 namespace EasyMusic.Info
 {
@@ -59,7 +59,7 @@ namespace EasyMusic.Info
             using (FileStream fs = new FileStream(LrcPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 string line;
-                using (StreamReader sr = new StreamReader(fs, WpfCodes.Basic.String.GetEncoding(LrcPath)))
+                using (StreamReader sr = new StreamReader(fs, FzLib.Basic.String.GetEncoding(LrcPath)))
                 {
                     while ((line = sr.ReadLine()) != null)
                     {

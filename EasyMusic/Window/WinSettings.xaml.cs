@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using static EasyMusic.GlobalDatas;
-using static WpfControls.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogHelper;
 using Microsoft.Win32;
 using System.IO;
 using System;
@@ -37,7 +37,7 @@ namespace EasyMusic.Windows
             txtOffset.Text = Setting.LrcDefautOffset.ToString();
             txtUpdateSpeed.Text = Setting.UpdateSpeed.ToString();
             chkMusicSettings.IsChecked = Setting.KeepMusicSettings;
-            cbbTrayMode.SelectedIndex = Setting.TrayMode;
+            chkShowTray.IsChecked = Setting.ShowTray;
             txtCurrentFontSize.Text = Setting.HighlightLrcFontSize.ToString();
             txtNormalFontSize.Text = Setting.NormalLrcFontSize.ToString();
             txtTextFontSize.Text = Setting.TextLrcFontSize.ToString();
@@ -53,6 +53,7 @@ namespace EasyMusic.Windows
             fontColor.ColorBrush = (Setting.LyricsFontColor);
             chkBold.IsChecked = Setting.LyricsFontBold;
             chkListenHitory.IsChecked = Setting.RecordListenHistory;
+            chkOneLineFloatLyric.IsChecked = Setting.ShowOneLineInFloatLyric;
             txtListenHistoryValue.Text = Setting.ThresholdValueOfListenTime.ToString();
             mainColor.ColorBrush = Setting.BackgroundColor;
             if (!cbbFloatFont.SetSelectedFontByString(Setting.FloatLyricsFont) || !cbbFont.SetSelectedFontByString(Setting.LyricsFont))
@@ -171,18 +172,18 @@ namespace EasyMusic.Windows
                 Setting.HighlightLrcFontSize = current.Value;
                 Setting.FloatLyricsHighlightFontSize = floatCurrent.Value;
                 Setting.FloatLyricsNormalFontSize = floatNormal.Value;
-                if (cbbTrayMode.SelectedIndex == 0 && cbbTrayMode.SelectedIndex != Setting.TrayMode)
+                if (chkShowTray.IsChecked.Value==false && Setting.ShowTray)
                 {
                     trayIcon.Hide();
                 }
-                else if (cbbTrayMode.SelectedIndex != 0 && Setting.TrayMode == 0)
+                else if (chkShowTray.IsChecked.Value&& Setting.ShowTray == false)
                 {
                     trayIcon.Show();
                 }
+                Setting.ShowTray = chkShowTray.IsChecked.Value;
                 Setting.FloatLyricsFontEffect = cbbFloatFontEffect.SelectedIndex;
                 Setting.FloatLyricsBorderColor = floatBorderColor.ColorBrush;
                 Setting.FloatLyricsFontColor = floatFontColor.ColorBrush;
-                Setting.TrayMode = cbbTrayMode.SelectedIndex;
                 Setting.FloatLyricsThickness = floatBorder.Value;
                 Setting.FloatLyricsBlurRadius = floatBlur.Value;
                 Setting.FloatLyricsFontBold = chkFloatBold.IsChecked.Value;
@@ -193,6 +194,7 @@ namespace EasyMusic.Windows
                 Setting.RecordListenHistory = chkListenHitory.IsChecked.Value;
                 Setting.ThresholdValueOfListenTime = listenValue.Value;
                 Setting.BackgroundColor = mainColor.ColorBrush;
+                Setting.ShowOneLineInFloatLyric = chkOneLineFloatLyric.IsChecked.Value;
               ( App.Current as App).UpdateColor();
                 if (MusicControlHelper.Music != null)
                 {
@@ -224,7 +226,7 @@ namespace EasyMusic.Windows
                 AlwaysAppendDefaultExtension = true,
             };
 
-            int type = ShowMessage("请选择导出类型", WpfControls.Dialog.DialogType.Information, new string[] { "仅设置", "所有文件" });
+            int type = ShowMessage("请选择导出类型", FzLib.Control.Dialog.DialogType.Information, new string[] { "仅设置", "所有文件" });
             if (type == 0)
             {
                 dialog.Filters.Add(new CommonFileDialogFilter("Json设置", "json"));
@@ -410,7 +412,7 @@ namespace EasyMusic.Windows
         }
         private HotKey GetHotKey(string name)
         {
-            if (HotKeyHelper.HotKeys.TryGetValue(name, out WpfCodes.Device.HotKey.HotKeyInfo value))
+            if (HotKeyHelper.HotKeys.TryGetValue(name, out FzLib.Device.HotKey.HotKeyInfo value))
             {
                 return value == null ? null : new HotKey(value.Key, value.Modifiers);
             }
@@ -429,7 +431,7 @@ namespace EasyMusic.Windows
             }
             else
             {
-                HotKeyHelper.HotKeys[name] = new WpfCodes.Device.HotKey.HotKeyInfo(value.Key, value.ModifierKeys);
+                HotKeyHelper.HotKeys[name] = new FzLib.Device.HotKey.HotKeyInfo(value.Key, value.ModifierKeys);
             }
 
         }

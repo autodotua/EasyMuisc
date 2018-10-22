@@ -5,7 +5,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using static WpfControls.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogHelper;
 
 namespace EasyMusic.Windows
 {
@@ -74,7 +74,7 @@ namespace EasyMusic.Windows
                 }
                 try
                 {
-                    txt.Text = File.ReadAllText(filePath, WpfCodes.Basic.String.GetEncoding(filePath));
+                    txt.Text = File.ReadAllText(filePath, FzLib.Basic.String.GetEncoding(filePath));
                 }
                 catch (Exception ex)
                 {
@@ -98,9 +98,9 @@ namespace EasyMusic.Windows
                 case "btnSave":
                     try
                     {
-                        File.WriteAllText(filePath, txt.Text, WpfCodes.Basic.String.GetEncoding(filePath));
+                        File.WriteAllText(filePath, txt.Text, FzLib.Basic.String.GetEncoding(filePath));
                         SetButtonsStatus(false);
-                        if (ShowMessage("重载歌词？", WpfControls.Dialog.DialogType.Information, MessageBoxButton.YesNo, this) == 0)
+                        if (ShowMessage("重载歌词？", FzLib.Control.Dialog.DialogType.Information, MessageBoxButton.YesNo, this) == 0)
                         {
                             MainWindow.Current.InitializeLrc();
                         }
@@ -116,7 +116,7 @@ namespace EasyMusic.Windows
                     {
                         try
                         {
-                            File.WriteAllText(dialog.FileName, txt.Text, WpfCodes.Basic.String.GetEncoding(filePath));
+                            File.WriteAllText(dialog.FileName, txt.Text, FzLib.Basic.String.GetEncoding(filePath));
                             SetButtonsStatus(false);
 
                         }

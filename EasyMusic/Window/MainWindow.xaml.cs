@@ -13,10 +13,10 @@ using System.Windows.Shell;
 using EasyMusic.Windows;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
-using static WpfControls.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogHelper;
 using static EasyMusic.Helper.MusicControlHelper;
 using EasyMusic.Helper;
-using WpfCodes.Basic;
+using FzLib.Basic;
 using EasyMusic.Info;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -206,20 +206,18 @@ namespace EasyMusic
         /// </summary>
         private void InitializeTray()
         {
-            trayIcon = new WpfCodes.Program.Notify.TrayIcon(Properties.Resources.icon, EasyMusic.Properties.Resources.AppName);
+            trayIcon = new FzLib.Program.Notify.TrayIcon(Properties.Resources.icon, Properties.Resources.AppName);
 
             trayIcon.MouseLeftClick += (p1, p2) =>
             {
-                if (Visibility == Visibility.Hidden)
+                if (Visibility != Visibility.Visible)
                 {
                     Show();
-                    Topmost = true;
-                    Topmost = Setting.Topmost;
                     Activate();
                 }
                 else
                 {
-                    Visibility = Visibility.Hidden;
+                    Hide();
                 }
             };
 
@@ -229,28 +227,22 @@ namespace EasyMusic
             //    FloatLyric.Visibility = FloatLyric.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
             //    FloatLyric.Update(lrc.CurrentIndex);
             //});
-            trayIcon.AddContextMenuItem("退出", () => CloseWindow(true));
+            trayIcon.AddContextMenuItem("退出", Close);
 
-            if (Setting.TrayMode != 0)
+            if (Setting.ShowTray)
             {
                 trayIcon.Show();
             }
         }
 
-        private bool readyToExit = false;
-
-        public void CloseWindow(bool exitApp = false)
-        {
-            readyToExit = exitApp;
-            Close();
-        }
-
+  
 
         #endregion
 
         #region 窗体相关
 
         public bool SkipSavingSettings { get; set; } = false;
+        bool appShutingDown = false;
         /// <summary>
         /// 窗体关闭
         /// </summary>
@@ -282,8 +274,8 @@ namespace EasyMusic
                 FloatLyric.Close();
             }
             Setting.Save();
-            if (readyToExit)
-            {
+            //if (Setting.TrayMode==0 || Setting.TrayMode == 3 || appShutingDown)
+            //{
                 if (Music != null)
                 {
                     if (Music.Status == BASSActive.BASS_ACTIVE_PLAYING)
@@ -298,12 +290,12 @@ namespace EasyMusic
                     Music.Dispose();
                 }
                 App.Current.Shutdown();
-            }
-            else
-            {
-                await Task.Delay(100);
-                Hide();
-            }
+            //}
+            //else
+            //{
+            //    await Task.Delay(100);
+            //    Hide();
+            //}
         }
         /// <summary>
         /// 窗体状态改变事件
@@ -378,7 +370,7 @@ namespace EasyMusic
                 }
                 else if ((file = new FileInfo(file.FullName.Replace(file.Extension, ".txt"))).Exists)
                 {
-                    lyricArea.LoadTextFormatLyric(File.ReadAllText(file.FullName, WpfCodes.Basic.String.GetEncoding(file.FullName)));
+                    lyricArea.LoadTextFormatLyric(File.ReadAllText(file.FullName, FzLib.Basic.String.GetEncoding(file.FullName)));
                     lyricArea.CurrentLyricType = LyricType.TextFormat;
                     if (Setting.ShowFloatLyric)
                     {

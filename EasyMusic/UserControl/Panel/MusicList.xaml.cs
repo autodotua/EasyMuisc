@@ -5,13 +5,13 @@ using System.Windows.Input;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
 using System.IO;
-using static WpfControls.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogHelper;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
-using WpfControls.Dialog;
+using FzLib.Control.Dialog;
 using static EasyMusic.Helper.MusicControlHelper;
 using System.ComponentModel;
 using System.Collections.Generic;
@@ -113,7 +113,7 @@ namespace EasyMusic.UserControls
                   }
                   else
                   {
-                      if (GetInput("请输入目标名称（不含后缀名）：", out string name, WpfControls.DarkerBrushConverter.GetDarkerColor(lvw.Background as SolidColorBrush), btn.Text, @"^[^\/:*\?\”“\<>|,]+$"))
+                      if (GetInput("请输入目标名称（不含后缀名）：", out string name, FzLib.Control.DarkerBrushConverter.GetDarkerColor(lvw.Background as SolidColorBrush), btn.Text, @"^[^\/:*\?\”“\<>|,]+$"))
                       {
                           try
                           {
@@ -293,7 +293,7 @@ namespace EasyMusic.UserControls
         /// <param name="e"></param>
         private void BtnAddClickEventHandler(object sender, RoutedEventArgs e)
         {
-            if (GetInput("请输入文件名：", out string name, WpfControls.DarkerBrushConverter.GetDarkerColor(lvw.Background as SolidColorBrush)))
+            if (GetInput("请输入文件名：", out string name, FzLib.Control.DarkerBrushConverter.GetDarkerColor(lvw.Background as SolidColorBrush)))
             {
                 var button = new UserControls.ToggleButton() { Text = new FileInfo(name).Name };
 
@@ -336,7 +336,7 @@ namespace EasyMusic.UserControls
             if (lvw.ItemsSource == MusicDatas)
             {
                 lvw.ItemsSource = historyList;
-                btn.Background = WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(WpfControls.DarkerBrushConverter.GetDarkerColor(Setting.BackgroundColor)));
+                btn.Background = FzLib.Control.DarkerBrushConverter.GetDarkerColor(FzLib.Control.DarkerBrushConverter.GetDarkerColor(FzLib.Control.DarkerBrushConverter.GetDarkerColor(Setting.BackgroundColor)));
 
             }
             else

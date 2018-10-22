@@ -4,18 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMusic.Windows"
-        xmlns:flat="clr-namespace:WpfControls.FlatStyle;assembly=WpfControls"
-        xmlns:text="clr-namespace:WpfControls.Text;assembly=WpfControls"
-        xmlns:picker="clr-namespace:WpfControls.Picker;assembly=WpfControls"
-        xmlns:win10="clr-namespace:WpfControls.Win10Style;assembly=WpfControls"
+        xmlns:flat="clr-namespace:FzLib.Control.FlatStyle;assembly=FzWpfControlLib"
+        xmlns:text="clr-namespace:FzLib.Control.Text;assembly=FzWpfControlLib"
+        xmlns:picker="clr-namespace:FzLib.Control.Picker;assembly=FzWpfControlLib"
+        xmlns:win10="clr-namespace:FzLib.Control.Win10Style;assembly=FzWpfControlLib"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         Closed="WindowClosed"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="设置"
-        Height="400" Width="480" >
-   
+        Height="440" Width="480" >
+
 
     <Grid>
         <Grid.RowDefinitions>
@@ -35,6 +35,8 @@
                     <flat:CheckBox x:Name="chkMusicSettings" Content="音乐设置对所有歌曲生效" />
                     <TextBlock FontSize="8"/>
                     <flat:CheckBox x:Name="chkListenHitory" Content="记录聆听历史" />
+                    <TextBlock FontSize="8"/>
+                    <flat:CheckBox x:Name="chkShowTray" Content="显示托盘图标" />
                     <TextBlock FontSize="8"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="聆听历史阙值（s）：   " />
@@ -58,7 +60,7 @@
                     </StackPanel>
                     <TextBlock FontSize="8"/>
 
-                    <StackPanel Orientation="Horizontal">
+                    <!--<StackPanel Orientation="Horizontal">
                         <TextBlock Text="最小化到托盘图标方式：" Margin="0,0,8,0" VerticalAlignment="Center"/>
                         <flat:UneditableComboBox x:Name="cbbTrayMode">
                             <ComboBoxItem>不显示托盘图标</ComboBoxItem>
@@ -67,7 +69,7 @@
                             <ComboBoxItem>仅点击托盘图标最小化到托盘图标</ComboBoxItem>
                         </flat:UneditableComboBox>
                     </StackPanel>
-                    <TextBlock FontSize="8"/>
+                    <TextBlock FontSize="8"/>-->
 
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="主题颜色：" Margin="0,0,8,0" VerticalAlignment="Center"/>
@@ -79,7 +81,7 @@
             </win10:ModernTabItem>
 
             <win10:ModernTabItem Header="主界面歌词">
-                
+
                 <StackPanel Margin="4">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="字体：     "  VerticalAlignment="Center"/>
@@ -165,9 +167,10 @@
                     </StackPanel>
 
                     <TextBlock FontSize="8"/>
-                    <StackPanel Orientation="Horizontal">
-                        <flat:CheckBox x:Name="chkFloatBold" Content="粗体字形" />
-                    </StackPanel>
+                    <flat:CheckBox x:Name="chkFloatBold" Content="粗体字形" />
+
+                    <TextBlock FontSize="8"/>
+                    <flat:CheckBox x:Name="chkOneLineFloatLyric" Content="多行歌词时仅显示首行"/>
                 </StackPanel>
             </win10:ModernTabItem>
 
@@ -239,7 +242,7 @@
 
             <flat:Button x:Name="btnOk" Padding="16,4" Content="确定" Grid.Column="6" Click="ButtonClickEventHandler"/>
         </Grid>
-        
-        
+
+
     </Grid>
 </local:WindowBase>

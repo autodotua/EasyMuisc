@@ -118,6 +118,12 @@
 
         <!--ContextMenu-->
         <Style TargetType="{x:Type ContextMenu}">
+            <!--<Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="8" Color="Black" Opacity="0.5"  ShadowDepth="0"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness" Value="8"/>-->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ContextMenu}">

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EasyMusic.UserControls"
-             xmlns:text="clr-namespace:WpfControls.Text;assembly=WpfControls"
+             xmlns:text="clr-namespace:FzLib.Control.Text;assembly=FzWpfControlLib"
               xmlns:sys="clr-namespace:System;assembly=mscorlib"
              Loaded="UserControl_Loaded"
              Padding="8"

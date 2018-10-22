@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMusic"
         xmlns:uc="clr-namespace:EasyMusic.UserControls"
-        xmlns:progress="clr-namespace:WpfControls.Progress;assembly=WpfControls"
+        xmlns:progress="clr-namespace:FzLib.Control.Progress;assembly=FzWpfControlLib"
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" 
         x:Name="winMain" 
         x:Class="EasyMusic.MainWindow"
@@ -27,7 +27,7 @@
        Background="{DynamicResource backgroundBrushColor}"
        PreviewMouseWheel="MouseWheelEventHandler">
     <Window.Effect>
-        <DropShadowEffect BlurRadius="16" Color="{DynamicResource veryDarkColor}"  ShadowDepth="0"/>
+        <DropShadowEffect BlurRadius="16"  Opacity="0.7"  Color="{DynamicResource veryDarkColor}"  ShadowDepth="0"/>
     </Window.Effect>
     <Window.Resources>
 

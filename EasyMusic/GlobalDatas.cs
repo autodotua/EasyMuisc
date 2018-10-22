@@ -48,7 +48,7 @@ namespace EasyMusic
             }
             catch (Exception ex)
             {
-                WpfControls.Dialog.DialogHelper.ShowException("读取配置文件失败，将重置配置文件", ex, true);
+                FzLib.Control.Dialog.DialogHelper.ShowException("读取配置文件失败，将重置配置文件", ex, true);
                 Setting = Settings.Creat<Settings>(settingPath);
             }
 
@@ -70,7 +70,7 @@ namespace EasyMusic
         /// <summary>
         /// 托盘图标
         /// </summary>
-        public static WpfCodes.Program.Notify.TrayIcon trayIcon = null;
+        public static FzLib.Program.Notify.TrayIcon trayIcon = null;
         /// <summary>
         /// 程序目录
         /// </summary>

@@ -43,7 +43,7 @@ namespace EasyMusic.Windows
 
             //sbdOpacity.Children.Add(aniOpacity);
         }
-        WpfCodes.Windows.WindowStyle windowMode;
+        FzLib.Windows.WindowStyle windowMode;
         /// <summary>
         /// 在加载时设置鼠标穿透
         /// </summary>
@@ -52,7 +52,7 @@ namespace EasyMusic.Windows
         {
             base.OnSourceInitialized(e);
             //SetToMouseThrough();
-            windowMode = new WpfCodes.Windows.WindowStyle(this);
+            windowMode = new FzLib.Windows.WindowStyle(this);
             windowMode.SetToMouseThrough();
         }
         /// <summary>
@@ -86,7 +86,7 @@ namespace EasyMusic.Windows
         /// <summary>
         /// 歌词列表
         /// </summary>
-        List<string> lrc;
+        string[] lrc;
         /// <summary>
         /// 加载歌词
         /// </summary>
@@ -94,9 +94,17 @@ namespace EasyMusic.Windows
         public void Reload(List<string> lrc,int position=0)
         {
             CurrentIndex = 0;
-            this.lrc = lrc.ToList();
+            if (Setting.ShowOneLineInFloatLyric)
+            {
+                this.lrc = lrc.Select(p=>p.Contains(Environment.NewLine)?p.Split(new string[] { Environment.NewLine },StringSplitOptions.RemoveEmptyEntries)[0]:p).ToArray();
+            }
+            else
+            {
+                this.lrc = lrc.ToArray();
+
+            }
             //lrc.Add("\t");
-            //if (lrc.Count > 0)
+            //if (lrc.Count > 0))
             //{
             //    tbkLeft.Text = lrc[0];
             //    //  Update(0);
@@ -146,7 +154,7 @@ namespace EasyMusic.Windows
             {
                 return;
             }
-            while (index < lrc.Count - 1 && lrc[index + 1].Replace(" ", "") == "")
+            while (index < lrc.Length - 1 && lrc[index + 1].Replace(" ", "") == "")
             {
                 index++;
                 //if (index >= lrc.Count - 1)
@@ -154,7 +162,7 @@ namespace EasyMusic.Windows
                 //    return;
                 //}
             }
-            if (index >= lrc.Count - 1)
+            if (index >= lrc.Length - 1)
             {
                 GetTextBlock(1 - CurrentIndex).ToMajor(lrc[oldIndex]);
                 GetTextBlock(CurrentIndex).ToMinor("");

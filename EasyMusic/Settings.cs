@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using WpfCodes.Program;
-using WpfCodes.Program.Config;
+using FzLib.Program;
+using FzLib.Data.Serialization;
 
 namespace EasyMusic
 {
-    public class Settings : JsonConfigBase
+    public class Settings : JsonSerializationBase
     {
         public double NormalLrcFontSize { get; set; } = 24;
         public double HighlightLrcFontSize { get; set; } = 36;
@@ -40,8 +40,7 @@ namespace EasyMusic
         public int Tempo { get; set; } = 100;
         public int SampleRate { get; set; } = 48000;
         public int ThresholdValueOfListenTime { get; set; } = 30;
-
-        public int TrayMode { get; set; } = 3;
+        
         public int FloatLyricsFontEffect { get; set; } = 1;
 
         public bool Topmost { get; set; } = false;
@@ -52,6 +51,7 @@ namespace EasyMusic
         public bool MaxWindow { get; set; } = false;
         public bool RecordListenHistory { get; set; } = true;
         public bool KeepMusicSettings { get; set; } = false;
+        public bool ShowTray { get; set; } = true;
 
         public bool ShowFloatLyric { get; set; } = true;
         public bool FloatLyricsFontBold { get; set; } = false;
@@ -72,5 +72,7 @@ namespace EasyMusic
 
         public TimeSpan AnimationDuration { get; set; } = TimeSpan.FromMilliseconds(800);
     
-        public TimeSpan VolumnChangeTime { get; set; } = TimeSpan.FromMilliseconds(800);}
+        public TimeSpan VolumnChangeTime { get; set; } = TimeSpan.FromMilliseconds(800);
+        public bool ShowOneLineInFloatLyric { get; set; } = false;
+    }
 }

@@ -6,7 +6,7 @@ using System.Windows.Media;
 using System.Windows.Shell;
 using EasyMusic.Windows;
 using static EasyMusic.GlobalDatas;
-using static WpfControls.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogHelper;
 using EasyMusic.Helper;
 using System.Security.Principal;
 using System.Diagnostics;
@@ -14,8 +14,8 @@ using System.Windows.Controls.Primitives;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-using WpfCodes.Windows;
-using WpfCodes.Program;
+using FzLib.Windows;
+using FzLib.Program;
 
 namespace EasyMusic.UserControls
 {
@@ -132,7 +132,7 @@ namespace EasyMusic.UserControls
             WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
             //if (windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator))
             //{
-            //    FileFotmatAssociation.Associate(".mp3", EasyMusic.Properties.Resources.AppName, "mp3 文件",WpfCodes.Program.Information.ProgramDirectoryPath + "\\icon.ico", Process.GetCurrentProcess().MainModule.FileName);
+            //    FileFotmatAssociation.Associate(".mp3", EasyMusic.Properties.Resources.AppName, "mp3 文件",FzLib.Program.Information.ProgramDirectoryPath + "\\icon.ico", Process.GetCurrentProcess().MainModule.FileName);
             //    ShowPrompt("成功");
             //}
             //else
@@ -183,14 +183,14 @@ namespace EasyMusic.UserControls
         /// <param name="e"></param>
         private void BtnCloseClickEventHandler(object sender, RoutedEventArgs e)
         {
-            if (Setting.TrayMode == 1)
-            {
-                NewDoubleAnimation(this, OpacityProperty, 0, 0.1, 0, (p1, p2) => { MainWindow.Current.Hide(); }, true);
-            }
-            else
-            {
-                MainWindow.Current.CloseWindow(true);
-            }
+            //if (Setting.TrayMode == 1)
+            //{
+            //    NewDoubleAnimation(this, OpacityProperty, 0, 0.1, 0, (p1, p2) => { MainWindow.Current.Hide(); }, true);
+            //}
+            //else
+            //{
+                MainWindow.Current.Close();
+           // }
         }
         /// <summary>
         /// 单击最大化按钮事件
@@ -213,14 +213,14 @@ namespace EasyMusic.UserControls
             reservedTop = MainWindow.Current.Top;
             NewDoubleAnimation(MainWindow.Current, OpacityProperty, 0, 0.1, 0, (p1, p2) =>
             {
-                if (Setting.TrayMode == 2)
-                {
-                    MainWindow.Current.Hide();
-                }
-                else
-                {
+                //if (Setting.TrayMode == 2)
+                //{
+                //    MainWindow.Current.Hide();
+                //}
+                //else
+                //{
                     MainWindow.Current.WindowState = WindowState.Minimized;
-                }
+                //}
                 // Opacity = 1;
             }, true);
         }
@@ -300,7 +300,7 @@ namespace EasyMusic.UserControls
         private void Button_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             Button btn = sender as Button;
-            Point mousePosition = WpfCodes.Device.Mouse.Position;
+            Point mousePosition = FzLib.Device.Mouse.Position;
             if (isMoving && btn.IsMouseOver)
             {
                 MainWindow.Current.Top = rawTop + (mousePosition.Y - rawPoint.Y) /dpi;
@@ -315,7 +315,7 @@ namespace EasyMusic.UserControls
                 {
                     MainWindow.Current.Top = 0;
                     MainWindow.Current.WindowState = WindowState.Normal;
-                    rawPoint = WpfCodes.Device.Mouse.Position;
+                    rawPoint = FzLib.Device.Mouse.Position;
                     rawTop = MainWindow.Current.Top;
                     rawLeft = MainWindow.Current.Left;
                    dpi = VisualTreeHelper.GetDpi(MainWindow.Current).DpiScaleX;
