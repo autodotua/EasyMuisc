@@ -116,7 +116,6 @@ namespace EasyMusic
                 ShowError("无法初始化音乐引擎：" + Environment.NewLine + Bass.BASS_ErrorGetCode());
                 Application.Current.Shutdown();
             }
-            WindowHelper.RepairWindowBehavior(this);
 
             WindowChrome.SetWindowChrome(this, new WindowChrome()
             {
@@ -129,7 +128,8 @@ namespace EasyMusic
             header.HeaderTextMaxWidth = SystemParameters.WorkArea.Width - 200;
 
 
-
+           //Initialized+=(p1,p2) =>
+           //WindowHelper.RepairWindowBehavior(this); 
         }
 
 
@@ -314,7 +314,7 @@ namespace EasyMusic
             {
                 BorderThickness = new Thickness(16);
                 grdMain.Margin = new Thickness(4);
-                WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(4);
+                WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(16);
             }
         }
         #endregion

@@ -1,22 +1,17 @@
-﻿using System.Configuration;
+﻿using EasyMusic.Helper;
+using MahApps.Metro.Controls;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using static EasyMusic.GlobalDatas;
 using static FzLib.Control.Dialog.DialogHelper;
-using Microsoft.Win32;
-using System.IO;
-using System;
-using System.Xml.Linq;
-using System.Xml.XPath;
-using System.Text;
-using EasyMusic.Helper;
-using MahApps.Metro.Controls;
-using System.ComponentModel;
-using System.Linq;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using System.IO.Compression;
-using System.Diagnostics;
-using System.Reflection;
 
 namespace EasyMusic.Windows
 {
@@ -172,11 +167,11 @@ namespace EasyMusic.Windows
                 Setting.HighlightLrcFontSize = current.Value;
                 Setting.FloatLyricsHighlightFontSize = floatCurrent.Value;
                 Setting.FloatLyricsNormalFontSize = floatNormal.Value;
-                if (chkShowTray.IsChecked.Value==false && Setting.ShowTray)
+                if (chkShowTray.IsChecked.Value == false && Setting.ShowTray)
                 {
                     trayIcon.Hide();
                 }
-                else if (chkShowTray.IsChecked.Value&& Setting.ShowTray == false)
+                else if (chkShowTray.IsChecked.Value && Setting.ShowTray == false)
                 {
                     trayIcon.Show();
                 }
@@ -195,7 +190,7 @@ namespace EasyMusic.Windows
                 Setting.ThresholdValueOfListenTime = listenValue.Value;
                 Setting.BackgroundColor = mainColor.ColorBrush;
                 Setting.ShowOneLineInFloatLyric = chkOneLineFloatLyric.IsChecked.Value;
-              ( App.Current as App).UpdateColor();
+                (App.Current as App).UpdateColor();
                 if (MusicControlHelper.Music != null)
                 {
                     MainWindow.Current.InitializeLrc();
