@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
-using static FzLib.Control.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogBox;
 using static EasyMusic.Helper.MusicControlHelper;
 using EasyMusic.Helper;
 using System.Windows.Controls.Primitives;

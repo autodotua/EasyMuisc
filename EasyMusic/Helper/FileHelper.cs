@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using static EasyMusic.Helper.MusicListHelper;
 using static EasyMusic.GlobalDatas;
 using System.IO;
-using static FzLib.Control.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogBox;
 
 namespace EasyMusic.Helper
 {

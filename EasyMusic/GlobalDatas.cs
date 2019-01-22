@@ -1,4 +1,6 @@
 ﻿using EasyMusic.Info;
+using FzLib.Control.Dialog;
+using FzLib.Program.Runtime;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,12 +46,12 @@ namespace EasyMusic
 
             try
             {
-                Setting = Settings.OpenOrCreat<Settings>(settingPath);
+                Setting = Settings.OpenOrCreate<Settings>(settingPath);
             }
             catch (Exception ex)
             {
-                FzLib.Control.Dialog.DialogHelper.ShowException("读取配置文件失败，将重置配置文件", ex, true);
-                Setting = Settings.Creat<Settings>(settingPath);
+                DialogBox.ShowException("读取配置文件失败，将重置配置文件", ex, true);
+                Setting = Settings.Create<Settings>(settingPath);
             }
 
             listenHistory = new ListenHistoryHelper();
@@ -70,7 +72,7 @@ namespace EasyMusic
         /// <summary>
         /// 托盘图标
         /// </summary>
-        public static FzLib.Program.Notify.TrayIcon trayIcon = null;
+        public static TrayIcon trayIcon = null;
         /// <summary>
         /// 程序目录
         /// </summary>

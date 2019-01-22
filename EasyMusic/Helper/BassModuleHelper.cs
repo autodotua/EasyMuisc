@@ -8,7 +8,7 @@ using static Un4seen.Bass.Bass;
 using static EasyMusic.GlobalDatas;
 using static FzLib.Basic.String;
 using System.IO;
-using static FzLib.Control.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogBox;
 using System.Windows.Media.Imaging;
 using FzLib.Control.Dialog;
 using System.Windows;

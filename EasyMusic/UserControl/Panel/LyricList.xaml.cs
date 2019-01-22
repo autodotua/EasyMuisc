@@ -24,10 +24,15 @@ namespace EasyMusic.UserControls
         //{
         //    lbx.ItemsSource = Lrcs;
         //}
-
-        public void Add(TextBlock txt)
+        List<double> sumHeights = new List<double>() { 0 };
+        List<double> heights = new List<double>();
+        public void Add(TextBlock tbk)
         {
-            var item = new ListBoxItem() { Content = txt, Foreground = Foreground, FontWeight = FontWeight };
+            var item = new ListBoxItem() { Content = tbk, Foreground = Foreground, FontWeight = FontWeight };
+            item.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            double height = item.DesiredSize.Height;
+            sumHeights.Add(sumHeights[sumHeights.Count-1] + height);
+            heights.Add(height);
             lbx.Items.Add(item);
         }
 
@@ -38,6 +43,9 @@ namespace EasyMusic.UserControls
         public void Clear()
         {
             lbx.Items.Clear();
+            sumHeights.Clear();
+            sumHeights.Add(0);
+            heights.Clear();
         }
         public void RefreshPlaceholder(double height, double highLightFontSize)
         {
@@ -48,13 +56,16 @@ namespace EasyMusic.UserControls
 
         private void MouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
-           // e.Handled = true;
+            // e.Handled = true;
         }
 
-        public void ScrollTo(int index, List<int> indexArray, double fontSize)
+        public void ScrollTo(int index, List<int> indexArray)
         {
-            double height = (indexArray[index] - 1) * fontSize * FontFamily.LineSpacing * (1 + 1.8 / fontSize);//瞎几把乱写的公式
+            //double fontSize = Setting.NormalLrcFontSize;
+            //int lines = (index == 0 ? 0 : (indexArray[index - 1] - 1));
+            //double height = lines * fontSize * FontFamily.LineSpacing * FontFamily.Baseline;// (1 + 1.8 / fontSize);//瞎几把乱写的公式
 
+            double height = sumHeights[index] + 0.5 * heights[index];
             DoubleAnimation ani = new DoubleAnimation(-height, Setting.AnimationDuration) { EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } };
             Storyboard.SetTarget(ani, lbx);
             Storyboard.SetTargetProperty(ani, new PropertyPath("(UIElement.RenderTransform).(TranslateTransform.Y)"));
@@ -106,8 +117,7 @@ namespace EasyMusic.UserControls
         }
 
     }
-    }
+}
 
 
 
-    

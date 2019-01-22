@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using FzLib.Program;
-using FzLib.Data.Serialization;
+using FzLib.DataStorage.Serialization;
 
 namespace EasyMusic
 {

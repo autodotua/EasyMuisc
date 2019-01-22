@@ -5,7 +5,7 @@ using System.Windows.Input;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
 using System.IO;
-using static FzLib.Control.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogBox;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Globalization;
@@ -113,7 +113,7 @@ namespace EasyMusic.UserControls
                   }
                   else
                   {
-                      if (GetInput("请输入目标名称（不含后缀名）：", out string name, FzLib.Control.DarkerBrushConverter.GetDarkerColor(lvw.Background as SolidColorBrush), btn.Text, @"^[^\/:*\?\”“\<>|,]+$"))
+                      if (InputBox.GetInput("请输入目标名称（不含后缀名）：", out string name, FzLib.Control.DarkerBrushConverter.GetDarkerColor(lvw.Background as SolidColorBrush), btn.Text, @"^[^\/:*\?\”“\<>|,]+$"))
                       {
                           try
                           {
@@ -293,7 +293,7 @@ namespace EasyMusic.UserControls
         /// <param name="e"></param>
         private void BtnAddClickEventHandler(object sender, RoutedEventArgs e)
         {
-            if (GetInput("请输入文件名：", out string name, FzLib.Control.DarkerBrushConverter.GetDarkerColor(lvw.Background as SolidColorBrush)))
+            if (InputBox.GetInput("请输入文件名：", out string name, FzLib.Control.DarkerBrushConverter.GetDarkerColor(lvw.Background as SolidColorBrush)))
             {
                 var button = new UserControls.ToggleButton() { Text = new FileInfo(name).Name };
 

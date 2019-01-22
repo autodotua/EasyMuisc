@@ -13,7 +13,7 @@ using System.Windows.Shell;
 using EasyMusic.Windows;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
-using static FzLib.Control.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogBox;
 using static EasyMusic.Helper.MusicControlHelper;
 using EasyMusic.Helper;
 using FzLib.Basic;
@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using EasyMusic.Enum;
 using System.ComponentModel;
 using System.Windows.Controls;
+using FzLib.Program.Runtime;
 
 namespace EasyMusic
 {
@@ -120,7 +121,7 @@ namespace EasyMusic
             WindowChrome.SetWindowChrome(this, new WindowChrome()
             {
                 CaptionHeight = 0,
-                ResizeBorderThickness = new Thickness(4),
+                ResizeBorderThickness = new Thickness(16),
             });
 
             //UpdateColor(Setting.BackgroundColor);
@@ -196,9 +197,7 @@ namespace EasyMusic
 
         }
 
-
-        public string Cpu { get; private set; } = "       ";
-        private bool enableCpu = false;
+        
 
 
         /// <summary>
@@ -206,7 +205,7 @@ namespace EasyMusic
         /// </summary>
         private void InitializeTray()
         {
-            trayIcon = new FzLib.Program.Notify.TrayIcon(Properties.Resources.icon, Properties.Resources.AppName);
+            trayIcon = new TrayIcon(Properties.Resources.icon, Properties.Resources.AppName);
 
             trayIcon.MouseLeftClick += (p1, p2) =>
             {
@@ -364,7 +363,7 @@ namespace EasyMusic
                     lyricArea.AddLrcs();
                     if (Setting.ShowFloatLyric)
                     {
-                        FloatLyric.Reload(lrc.LrcContent.Values.ToList());
+                        FloatLyric.Reload(lrc.LrcContent.Values);
                         FloatLyric.Visibility = Visibility.Visible;
                     }
                 }
@@ -731,11 +730,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void UpdateTick(object sender, EventArgs e)
         {
-            if (enableCpu)
-            {
-                Cpu = Bass.BASS_GetCPU().ToString("0.00") + "%";
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Cpu"));
-            }
+           
             if (Music == null || Music.Status != BASSActive.BASS_ACTIVE_PLAYING)
             {
                 UiTimer.Stop();
@@ -758,7 +753,7 @@ namespace EasyMusic
         /// </summary>
         public void UpdateLyric(double position)
         {
-            controlBar.UpdatePosition(position);
+            //controlBar.UpdatePosition(position);
             if (lrc == null || lrc.LrcContent.Count == 0)
             {
                 return;
@@ -805,11 +800,6 @@ namespace EasyMusic
 
         #endregion
 
-        private void Label_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            enableCpu = !enableCpu;
-            (sender as Label).Opacity = enableCpu ? 1 : 0;
-        }
     }
 
 }

@@ -6,7 +6,7 @@ using System.Windows.Media;
 using System.Windows.Shell;
 using EasyMusic.Windows;
 using static EasyMusic.GlobalDatas;
-using static FzLib.Control.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogBox;
 using EasyMusic.Helper;
 using System.Security.Principal;
 using System.Diagnostics;

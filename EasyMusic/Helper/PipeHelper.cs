@@ -41,7 +41,7 @@ namespace EasyMusic.Helper
                 }
                 else
                 {
-                    App.Current.Dispatcher.Invoke(() =>  FzLib.Control.Dialog.DialogHelper.ShowError($"文件{path}不存在"));
+                    App.Current.Dispatcher.Invoke(() =>  FzLib.Control.Dialog.DialogBox.ShowError($"文件{path}不存在"));
                 }
             }
         }

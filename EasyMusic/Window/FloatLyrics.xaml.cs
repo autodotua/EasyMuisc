@@ -91,7 +91,7 @@ namespace EasyMusic.Windows
         /// 加载歌词
         /// </summary>
         /// <param name="lrc"></param>
-        public void Reload(List<string> lrc,int position=0)
+        public void Reload(IEnumerable<string> lrc,int position=0)
         {
             CurrentIndex = 0;
             if (Setting.ShowOneLineInFloatLyric)

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using static EasyMusic.GlobalDatas;
 using System.Windows.Shell;
 using Shell32;
-using static FzLib.Control.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogBox;
 using EasyMusic.Info;
 
 namespace EasyMusic.Helper

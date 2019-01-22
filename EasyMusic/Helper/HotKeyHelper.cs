@@ -8,7 +8,7 @@ using System.Windows.Input;
 using FzLib.Device;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicControlHelper;
-using static FzLib.Control.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogBox;
 
 namespace EasyMusic.Helper
 {

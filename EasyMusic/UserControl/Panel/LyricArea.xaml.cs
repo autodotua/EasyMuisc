@@ -14,7 +14,7 @@ using System.Windows.Shell;
 using EasyMusic.Windows;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
-using static FzLib.Control.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogBox;
 using static EasyMusic.Helper.MusicControlHelper;
 using EasyMusic.Helper;
 using FzLib.Basic;
@@ -27,7 +27,7 @@ using System.Text.RegularExpressions;
 using FzLib.Control.Dialog;
 using EasyMusic.UserControls;
 using System.Threading.Tasks;
-
+using static System.Math;
 using EasyMusic.Enum;
 
 namespace EasyMusic.UserControls
@@ -109,16 +109,16 @@ namespace EasyMusic.UserControls
                     Cursor = Cursors.Hand,
                     TextAlignment = TextAlignment.Center,
                     FocusVisualStyle = null,
+                    //Margin=new Thickness(0,0,0, lbxLrc.FontFamily.Baseline),
                 };
                 tbk.MouseLeftButtonUp += (p1, p2) =>
                 {
-                    var position = (lrc.LrcContent.ElementAt((int)tbk.Tag).Key - lrc.Offset - Setting.LrcDefautOffset);
+                    var position = lrc.LrcContent.ElementAt((int)tbk.Tag).Key - lrc.Offset - Setting.LrcDefautOffset;
                     Music.Position = position;
                 };
-
                 lbxLrc.Add(tbk);
             }
-            foreach (var i in lrc.LineIndex)
+            foreach (var i in lrc.LineCount)
             {
                 lrcLineSumToIndex.Add(i.Value);
             }
@@ -195,7 +195,7 @@ namespace EasyMusic.UserControls
                 }
                 else
                 {
-                    int index = DialogHelper.ShowMessage("Lrc歌词文件还是Txt文本文件？", DialogType.Information, new string[] { "Lrc文件", "Txt文件", "取消" });
+                    int index = DialogBox.ShowMessage("Lrc歌词文件还是Txt文本文件？", DialogType.Information, new string[] { "Lrc文件", "Txt文件", "取消" });
                     if (index == 0)
                     {
                     WinLrcEdit.Edit(MainWindow.Current, file.FullName.RemoveEnd(file.Extension) + ".lrc");
@@ -259,7 +259,7 @@ namespace EasyMusic.UserControls
         public void Update()
         {
             lbxLrc.RefreshFontSize(lrc.CurrentIndex);
-            lbxLrc.ScrollTo(lrc.CurrentIndex, lrcLineSumToIndex, Setting.NormalLrcFontSize);
+            lbxLrc.ScrollTo(lrc.CurrentIndex, lrcLineSumToIndex);
 
         }
 
@@ -280,7 +280,7 @@ namespace EasyMusic.UserControls
             if (CurrentLyricType == LyricType.LrcFormat)
             {
                 lrc.Offset += e.Delta / 600.0;
-                ShowMessage("当前歌词偏移量：" + (lrc.Offset > 0 ? "+" : "") + Math.Round(lrc.Offset, 2).ToString() + "秒");
+                ShowMessage("当前歌词偏移量：" + (lrc.Offset > 0 ? "+" : "") + Round(lrc.Offset, 2).ToString() + "秒");
             }
         }
 

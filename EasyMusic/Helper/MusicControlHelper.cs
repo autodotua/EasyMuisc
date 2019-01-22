@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using FzLib.Control.Dialog;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
-using static FzLib.Control.Dialog.DialogHelper;
+using static FzLib.Control.Dialog.DialogBox;
 using static Un4seen.Bass.Bass;
 using Un4seen.Bass;
 using System.Windows.Interop;
