@@ -1,9 +1,11 @@
 ﻿namespace EasyMusic.Enum
 {
-    public enum CycleMode {
+    public enum CycleMode
+    {
         SingleCycle,
         ListCycle,
-        Shuffle }
+        Shuffle
+    }
 
 
     public enum ControlStatus
@@ -18,5 +20,12 @@
         None,
         LrcFormat,
         TextFormat
+    }
+
+    public enum MusicFxRemainMode
+    {
+        Not,
+        All,
+        Each
     }
 }

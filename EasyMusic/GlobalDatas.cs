@@ -1,4 +1,5 @@
-﻿using EasyMusic.Info;
+﻿using EasyMusic.Helper;
+using EasyMusic.Info;
 using FzLib.Control.Dialog;
 using FzLib.Program.Runtime;
 using System;

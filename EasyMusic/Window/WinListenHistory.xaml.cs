@@ -1,4 +1,5 @@
-﻿using EasyMusic.Info;
+﻿using EasyMusic.Helper;
+using EasyMusic.Info;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

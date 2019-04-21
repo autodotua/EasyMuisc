@@ -126,8 +126,8 @@
     </Window.TaskbarItemInfo>
 
 
-
-    <Grid x:Name="grdMain" Margin="4">
+    <Grid ClipToBounds="True">
+            <Grid x:Name="grdMain" Margin="4">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -168,5 +168,7 @@
 
         <uc:Header x:Name="header" Grid.ColumnSpan="3" Margin="-4"/>
         <!--<Label Content="{Binding Cpu}" Grid.ColumnSpan="5" Grid.RowSpan="5" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,18" Opacity="0" PreviewMouseDoubleClick="Label_PreviewMouseDoubleClick"/>-->
+    </Grid>
+
     </Grid>
 </Window>

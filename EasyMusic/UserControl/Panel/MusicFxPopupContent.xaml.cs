@@ -106,10 +106,10 @@ namespace EasyMusic.UserControls
             switch ((sender as Button).Tag as string)
             {
                 case "1":
-                    Pitch--;
+                    sldPitch.Value--;
                     break;
                 case "2":
-                    Pitch++;
+                    sldPitch.Value++;
                     break;
                 case "3":
                     sldTempo.Value--;
@@ -129,7 +129,7 @@ namespace EasyMusic.UserControls
             {
                 if (Music == null)
                 {
-                    if (Setting.KeepMusicSettings)
+                    if (Setting.MusicFxMode==Enum.MusicFxRemainMode.All)
                     {
                         return Setting.Pitch;
                     }
@@ -157,7 +157,7 @@ namespace EasyMusic.UserControls
             {
                 if (Music == null)
                 {
-                    if (Setting.KeepMusicSettings)
+                    if (Setting.MusicFxMode == Enum.MusicFxRemainMode.All)
                     {
                         return Setting.Tempo;
                     }

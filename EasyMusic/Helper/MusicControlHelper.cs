@@ -103,6 +103,10 @@ namespace EasyMusic.Helper
         /// <returns></returns>
         public static void PlayNew(MusicInfo music, bool playAtOnce = true)
         {
+            if(Music!=null && Setting.MusicFxMode==Enum.MusicFxRemainMode.Each)
+            {
+                MusicFxConfigHelper.Instance.Set(Music.FilePath, new MusicFxInfo(Music.Pitch, Music.Tempo));
+            }
             Music = new BassModuleHelper(music);
             Music.Initialiaze();
             if (playAtOnce)
@@ -110,8 +114,7 @@ namespace EasyMusic.Helper
                 Music.Play();
             }
         }
-
-
+        
         public static void PlayLast()
         {
 

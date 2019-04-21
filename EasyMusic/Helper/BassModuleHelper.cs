@@ -198,10 +198,16 @@ namespace EasyMusic.Helper
 
 
                 //Device = MusicControlHelper.Device;
-                if (Setting.KeepMusicSettings)
+                if (Setting.MusicFxMode == MusicFxRemainMode.All)
                 {
                     Pitch = Setting.Pitch;
                     Tempo = Setting.Tempo;
+                }
+                else if(Setting.MusicFxMode == MusicFxRemainMode.Each)
+                {
+                    var fx = MusicFxConfigHelper.Instance.Get(FilePath);
+                    Pitch = fx.Pitch;
+                    Tempo = fx.Tempo;
                 }
 
                 Name = MusicFile.Name.RemoveEnd(MusicFile.Extension);
@@ -209,7 +215,7 @@ namespace EasyMusic.Helper
             }
             catch (Exception ex)
             {
-                ShowException("初始化失败", ex);
+                ShowException("初始化音乐失败", ex);
                 return;
             }
             AlbumImage = GetMusicAlbumImage();
@@ -225,9 +231,7 @@ namespace EasyMusic.Helper
         /// <returns></returns>
         public void Play()
         {
-            bool result = false;
-            result = BASS_ChannelPlay(stream, false);
-            if (result)
+            if (BASS_ChannelPlay(stream, false))
             {
                 MainWindow.Current.OnStatusChanged(ControlStatus.Play);
                 BASS_ChannelSlideAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, Convert.ToSingle(MusicControlHelper.Volumn), Convert.ToInt32( Setting.VolumnChangeTime.TotalMilliseconds));

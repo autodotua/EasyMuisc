@@ -50,7 +50,7 @@ namespace EasyMusic
         public bool LrcAnimation { get; set; } = true;
         public bool MaxWindow { get; set; } = false;
         public bool RecordListenHistory { get; set; } = true;
-        public bool KeepMusicSettings { get; set; } = false;
+        public MusicFxRemainMode MusicFxMode { get; set; } = MusicFxRemainMode.Each;
         public bool ShowTray { get; set; } = true;
 
         public bool ShowFloatLyric { get; set; } = true;

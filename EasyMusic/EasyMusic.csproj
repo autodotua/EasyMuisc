@@ -181,11 +181,14 @@
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Helper\HotKeyHelper.cs" />
     <Compile Include="Helper\MusicControlHelper.cs" />
+    <Compile Include="Helper\MusicFxConfigHelper.cs" />
     <Compile Include="Helper\MusicListHelper.cs" />
     <Compile Include="Helper\PipeHelper.cs" />
+    <Compile Include="Helper\ListenHistoryHelper.cs" />
     <Compile Include="Info\LyricInfo.cs" />
     <Compile Include="GlobalDatas.cs" />
     <Compile Include="Info\ListenHistoryInfo.cs" />
+    <Compile Include="Info\MusicFxInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="UserControl\Control\ControlButton.xaml.cs">
       <DependentUpon>ControlButton.xaml</DependentUpon>

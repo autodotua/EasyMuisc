@@ -31,7 +31,18 @@ namespace EasyMusic.Windows
             txtAnimationFps.Text = Setting.AnimationFps.ToString();
             txtOffset.Text = Setting.LrcDefautOffset.ToString();
             txtUpdateSpeed.Text = Setting.UpdateSpeed.ToString();
-            chkMusicSettings.IsChecked = Setting.KeepMusicSettings;
+            switch(Setting.MusicFxMode)
+            {
+                case Enum.MusicFxRemainMode.Not:
+                    cbbMusicFx.SelectedIndex = 0;
+                    break;
+                case Enum.MusicFxRemainMode.All:
+                    cbbMusicFx.SelectedIndex = 1;
+                    break;
+                case Enum.MusicFxRemainMode.Each:
+                    cbbMusicFx.SelectedIndex = 2;
+                    break;
+            }
             chkShowTray.IsChecked = Setting.ShowTray;
             txtCurrentFontSize.Text = Setting.HighlightLrcFontSize.ToString();
             txtNormalFontSize.Text = Setting.NormalLrcFontSize.ToString();
@@ -155,7 +166,18 @@ namespace EasyMusic.Windows
                 Setting.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
                 Setting.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
                 Setting.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
-                Setting.KeepMusicSettings = chkMusicSettings.IsChecked.Value;
+                switch(cbbMusicFx.SelectedIndex)
+                {
+                    case 0:
+                        Setting.MusicFxMode = Enum.MusicFxRemainMode.Not;
+                        break;
+                    case 1:
+                        Setting.MusicFxMode = Enum.MusicFxRemainMode.All;
+                        break;
+                    case 2:
+                        Setting.MusicFxMode = Enum.MusicFxRemainMode.Each;
+                        break;
+                }
                 if (fps != Setting.AnimationFps)
                 {
                     ShowPrompt("动画帧率将在下次启动后生效");
