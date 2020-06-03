@@ -52,6 +52,7 @@ namespace EasyMusic.Helper
 
         public MusicFxInfo Get(string path)
         {
+            path = Path.GetFileNameWithoutExtension(path);
             if (fxs.ContainsKey(path))
             {
                 return fxs[path];
@@ -64,6 +65,7 @@ namespace EasyMusic.Helper
 
         public void Set(string path, MusicFxInfo info)
         {
+            path = Path.GetFileNameWithoutExtension(path);
             if (fxs.ContainsKey(path))
             {
                 fxs[path] = info;
