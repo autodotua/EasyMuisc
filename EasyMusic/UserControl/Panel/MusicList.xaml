@@ -1,8 +1,8 @@
 ﻿<UserControl x:Class="EasyMusic.UserControls.MusicList"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:helper="clr-namespace:EasyMusic.Helper"
             xmlns:local="clr-namespace:EasyMusic.UserControls"
           xmlns:c="clr-namespace:EasyMusic.Converter"
@@ -10,12 +10,12 @@
              FocusVisualStyle="{x:Null}"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <c:LengthToStringConverter x:Key="lengthConverter"/>
-        <c:WidthConverter x:Key="conver"/>
+        <c:LengthToStringConverter x:Key="lengthConverter" />
+        <c:WidthConverter x:Key="conver" />
         <!--ListView-->
         <ControlTemplate x:Key="tmpForThumb" TargetType="{x:Type Thumb}">
             <Border>
-                <Rectangle Width="1.5" x:Name="rec" Fill="{DynamicResource darker2BrushColor}"/>
+                <Rectangle Width="1.5" x:Name="rec" Fill="{DynamicResource darker2BrushColor}" />
             </Border>
         </ControlTemplate>
         <Style x:Key="musicListStyle" TargetType="{x:Type GridViewColumnHeader}">
@@ -25,29 +25,27 @@
                     <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
                         <Grid x:Name="g" Background="{DynamicResource backgroundBrushColor}">
                             <Border x:Name="bd" Padding="{TemplateBinding Padding}">
-                                <ContentPresenter Margin="2"  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                                <ContentPresenter Margin="2"  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
                             </Border>
-                            <Thumb x:Name="PART_HeaderGripper" Template="{StaticResource tmpForThumb}" HorizontalAlignment="Right" Margin="0"/>
+                            <Thumb x:Name="PART_HeaderGripper" Template="{StaticResource tmpForThumb}" HorizontalAlignment="Right" Margin="0" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-
-
         <Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
-            <Setter Property="OverridesDefaultStyle" Value="true"/>
-            <Setter Property="AllowDrop" Value="true"/>
-            <Setter Property="MinWidth" Value="0"/>
-            <Setter Property="MinHeight" Value="0"/>
-            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
-            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="AllowDrop" Value="true" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
-                        <ScrollViewer x:Name="PART_ContentHost" Background="Transparent" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        <ScrollViewer x:Name="PART_ContentHost" Background="Transparent" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -55,67 +53,65 @@
         <ControlTemplate x:Key="ComboBoxEditableTemplate" TargetType="{x:Type ComboBox}">
             <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0" />
                 </Grid.ColumnDefinitions>
                 <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
                     <Border x:Name="dropDownBorder" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}" Background="{DynamicResource darker1BrushColor}">
                         <ScrollViewer x:Name="DropDownScrollViewer">
                             <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
-                                    <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                    <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}" />
                                 </Canvas>
-                                <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                             </Grid>
                         </ScrollViewer>
                     </Border>
                 </Popup>
                 <Border x:Name="border" Background="{DynamicResource backgroundBrushColor}" Margin="{TemplateBinding BorderThickness}">
-                    <TextBox x:Name="PART_EditableTextBox" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" Margin="{TemplateBinding Padding}" Style="{StaticResource ComboBoxEditableTextBox}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" TextChanged="ComboBoxTextBoxTextChangedEventHandler" KeyDown="ComboBoxTextBoxKeyDownEventHandler"/>
+                    <TextBox x:Name="PART_EditableTextBox" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" Margin="{TemplateBinding Padding}" Style="{StaticResource ComboBoxEditableTextBox}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" TextChanged="ComboBoxTextBoxTextChangedEventHandler" KeyDown="ComboBoxTextBoxKeyDownEventHandler" />
                 </Border>
             </Grid>
             <ControlTemplate.Triggers>
                 <Trigger Property="IsEnabled" Value="false">
-                    <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                    <Setter Property="Opacity" TargetName="border" Value="0.56" />
                 </Trigger>
                 <Trigger Property="IsKeyboardFocusWithin" Value="true">
-                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Foreground" Value="Black" />
                 </Trigger>
                 <Trigger Property="HasItems" Value="false">
-                    <Setter Property="Height" TargetName="dropDownBorder" Value="95"/>
+                    <Setter Property="Height" TargetName="dropDownBorder" Value="95" />
                 </Trigger>
                 <MultiTrigger>
                     <MultiTrigger.Conditions>
-                        <Condition Property="IsGrouping" Value="true"/>
-                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                        <Condition Property="IsGrouping" Value="true" />
+                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false" />
                     </MultiTrigger.Conditions>
-                    <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                    <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
                 </MultiTrigger>
                 <Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
-                    <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
-                    <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
+                    <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}" />
+                    <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}" />
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-
     </UserControl.Resources>
-    <Grid >
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="4"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="4"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="4" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="4" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="4"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="4" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Text=" 搜索：" VerticalAlignment="Center"/>
-            <ComboBox x:Name="cbbSearch" FocusVisualStyle="{x:Null}"  Grid.Column="2" IsEditable="True" VerticalAlignment="Center" IsSynchronizedWithCurrentItem="False" IsTextSearchEnabled="False" Template="{StaticResource ComboBoxEditableTemplate}" ItemContainerStyle="{DynamicResource ComboBoxItemStyle}"/>
-
+            <TextBlock Text=" 搜索：" VerticalAlignment="Center" />
+            <ComboBox x:Name="cbbSearch" FocusVisualStyle="{x:Null}"  Grid.Column="2" IsEditable="True" VerticalAlignment="Center" IsSynchronizedWithCurrentItem="False" IsTextSearchEnabled="False" Template="{StaticResource ComboBoxEditableTemplate}" ItemContainerStyle="{DynamicResource ComboBoxItemStyle}" />
         </Grid>
         <ListView x:Name="lvw" Grid.Row="2" ItemsSource="{Binding MusicListBinding}" SelectedItem="{Binding SelectedMusic}" ScrollViewer.CanContentScroll="False" FocusVisualStyle="{x:Null}"
                       Background="{DynamicResource backgroundBrushColor}" Foreground="Black" BorderThickness="0"
@@ -123,23 +119,23 @@
 
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
-                    <EventSetter Event="UIElement.PreviewKeyDown" Handler="LvwItemPreviewKeyDownEventHandler"/>
-                    <EventSetter Event="Control.MouseDoubleClick" Handler="LvwItemPreviewMouseDoubleClickEventHandler"/>
-                    <EventSetter Event="MouseRightButtonUp" Handler="ListViewItemMouseRightButtonUpEvetnHandler"/>
+                    <EventSetter Event="UIElement.PreviewKeyDown" Handler="LvwItemPreviewKeyDownEventHandler" />
+                    <EventSetter Event="Control.MouseDoubleClick" Handler="LvwItemPreviewMouseDoubleClickEventHandler" />
+                    <EventSetter Event="MouseRightButtonUp" Handler="ListViewItemMouseRightButtonUpEvetnHandler" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
                                 <Border x:Name="bd" Background="{DynamicResource backgroundBrushColor}"  BorderThickness="1"   Padding="{TemplateBinding Padding}"  SnapsToDevicePixels="True">
-                                    <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
-                                                  Margin="3"/>
+                                    <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Margin="3" />
                                 </Border>
                                 <ControlTemplate.Triggers>
-                                    <Trigger Property="IsSelected" Value="True" >
-                                        <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker2BrushColor}"/>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker2BrushColor}" />
                                     </Trigger>
 
-                                    <Trigger Property="IsMouseOver"  Value="True" >
-                                        <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker3BrushColor}"/>
+                                    <Trigger Property="IsMouseOver"  Value="True">
+                                        <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker3BrushColor}" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -150,15 +146,14 @@
             <ListView.View>
                 <GridView ColumnHeaderContainerStyle="{StaticResource musicListStyle}">
 
-                    <GridViewColumn  Header="歌名" Width="144" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="歌手" Width="96" DisplayMemberBinding="{Binding Singer}"/>
-                    <GridViewColumn Header="时长" Width="64" DisplayMemberBinding="{Binding Length, Converter={StaticResource lengthConverter}}"/>
+                    <GridViewColumn  Header="歌名" Width="144" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="歌手" Width="96" DisplayMemberBinding="{Binding Singer}" />
+                    <GridViewColumn Header="时长" Width="64" DisplayMemberBinding="{Binding Length, Converter={StaticResource lengthConverter}}" />
                 </GridView>
             </ListView.View>
-
         </ListView>
 
-        <ScrollViewer Grid.Row="4" x:Name="scv"   VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="ScrollViewerPreviewMouseWheelEventHandler" HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=lvw, Mode=OneWay,Converter={StaticResource conver}}" >
+        <ScrollViewer Grid.Row="4" x:Name="scv"   VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="ScrollViewerPreviewMouseWheelEventHandler" HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=lvw, Mode=OneWay,Converter={StaticResource conver}}">
             <StackPanel x:Name="stkMusiList" Orientation="Horizontal">
                 <Button Grid.Column="2" FocusVisualStyle="{x:Null}"   Background="{DynamicResource backgroundBrushColor}" Width="24" Height="24"  Click="BtnHistoryClickEventHandler"  HorizontalAlignment="Left">
                     <Button.Style>
@@ -171,15 +166,12 @@
                                             <Canvas x:Name="btnCvs" Background="{TemplateBinding Background}">
                                                 <Viewbox Width="20" Height="20" Margin="2">
                                                     <Grid>
-                                                        <Path  Fill="{DynamicResource foregroundBrushColor}"  Data="M150,125h-16.7v33.3h33.3v-16.7H150L150,125z M25,83.3h87.5c10-5,21.7-8.3,33.3-8.3c10,0,20,2.5,29.2,6.7v-15H25V83.3L25,83.3z M25,25v16.7h150V25H25z M25,125h53.3c1.7-5.8,4.2-11.7,7.5-16.7H25V125z M25,150v16.7h53.3c-1.7-5-2.5-10.8-2.5-16.7H25z"/>
+                                                        <Path  Fill="{DynamicResource foregroundBrushColor}"  Data="M150,125h-16.7v33.3h33.3v-16.7H150L150,125z M25,83.3h87.5c10-5,21.7-8.3,33.3-8.3c10,0,20,2.5,29.2,6.7v-15H25V83.3L25,83.3z M25,25v16.7h150V25H25z M25,125h53.3c1.7-5.8,4.2-11.7,7.5-16.7H25V125z M25,150v16.7h53.3c-1.7-5-2.5-10.8-2.5-16.7H25z" />
 
-                                                        <Path Fill="{DynamicResource foregroundBrushColor}" Data="M145.8,91.7c-30,0-54.2,24.2-54.2,54.2s24.2,54.2,54.2,54.2s54.2-24.2,54.2-54.2S175.8,91.7,145.8,91.7z M145.8,183.3c-20.8,0-37.5-16.7-37.5-37.5s16.7-37.5,37.5-37.5s37.5,16.7,37.5,37.5S166.7,183.3,145.8,183.3z"/>
-
+                                                        <Path Fill="{DynamicResource foregroundBrushColor}" Data="M145.8,91.7c-30,0-54.2,24.2-54.2,54.2s24.2,54.2,54.2,54.2s54.2-24.2,54.2-54.2S175.8,91.7,145.8,91.7z M145.8,183.3c-20.8,0-37.5-16.7-37.5-37.5s16.7-37.5,37.5-37.5s37.5,16.7,37.5,37.5S166.7,183.3,145.8,183.3z" />
                                                     </Grid>
                                                 </Viewbox>
                                             </Canvas>
-
-
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
@@ -204,7 +196,6 @@
                                                 <Line x:Name="btnLine1" X1="12" X2="12" Y1="4" Y2=" 20" Stroke="Black" StrokeThickness="2" />
                                                 <Line x:Name="btnLine2" X1="4" X2="20" Y1="12" Y2=" 12" Stroke="Black" StrokeThickness="2" />
                                             </Canvas>
-
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
@@ -217,11 +208,9 @@
                         </Style>
                     </Button.Style>
                 </Button>
-
             </StackPanel>
         </ScrollViewer>
         <uc:ControlButton x:Name="btnListOption" Width="32" Height="32"  Click="BtnListOptionClickEventHanlder"  VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="0,0,20,1" Grid.RowSpan="5"  NormalSize="28" PressedSize="24" MouseOverSize="28" NormalOpacity="0.4" MouseOverOpacity="0.8" OpacityAnimation="True"  FocusVisualStyle="{x:Null}"
-                             PathData="F1 M 24.173,26.110 L 2.198,26.110 C 0.989,26.110 0.000,25.121 0.000,23.912 C 0.000,22.704 0.989,21.715 2.198,21.715 L 24.170,21.715 C 25.379,21.715 26.368,22.704 26.368,23.912 C 26.371,25.121 25.382,26.110 24.173,26.110 Z M 24.173,15.155 L 2.328,15.155 C 1.120,15.155 0.130,14.166 0.130,12.957 C 0.130,11.748 1.120,10.759 2.328,10.759 L 24.173,10.759 C 25.382,10.759 26.371,11.748 26.371,12.957 C 26.371,14.166 25.382,15.155 24.173,15.155 Z M 24.173,4.396 L 2.198,4.396 C 0.989,4.396 0.000,3.407 0.000,2.198 C 0.000,0.989 0.989,0.000 2.198,0.000 L 24.170,0.000 C 25.379,0.000 26.368,0.989 26.368,2.198 C 26.371,3.407 25.382,4.396 24.173,4.396 Z"/>
-
+                             PathData="F1 M 24.173,26.110 L 2.198,26.110 C 0.989,26.110 0.000,25.121 0.000,23.912 C 0.000,22.704 0.989,21.715 2.198,21.715 L 24.170,21.715 C 25.379,21.715 26.368,22.704 26.368,23.912 C 26.371,25.121 25.382,26.110 24.173,26.110 Z M 24.173,15.155 L 2.328,15.155 C 1.120,15.155 0.130,14.166 0.130,12.957 C 0.130,11.748 1.120,10.759 2.328,10.759 L 24.173,10.759 C 25.382,10.759 26.371,11.748 26.371,12.957 C 26.371,14.166 25.382,15.155 24.173,15.155 Z M 24.173,4.396 L 2.198,4.396 C 0.989,4.396 0.000,3.407 0.000,2.198 C 0.000,0.989 0.989,0.000 2.198,0.000 L 24.170,0.000 C 25.379,0.000 26.368,0.989 26.368,2.198 C 26.371,3.407 25.382,4.396 24.173,4.396 Z" />
     </Grid>
 </UserControl>

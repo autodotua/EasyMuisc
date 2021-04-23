@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 using static EasyMusic.GlobalDatas;
 
@@ -24,14 +23,16 @@ namespace EasyMusic.UserControls
         //{
         //    lbx.ItemsSource = Lrcs;
         //}
-        List<double> sumHeights = new List<double>() { 0 };
-        List<double> heights = new List<double>();
+        private List<double> sumHeights = new List<double>() { 0 };
+
+        private List<double> heights = new List<double>();
+
         public void Add(TextBlock tbk)
         {
             var item = new ListBoxItem() { Content = tbk, Foreground = Foreground, FontWeight = FontWeight };
             item.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             double height = item.DesiredSize.Height;
-            sumHeights.Add(sumHeights[sumHeights.Count-1] + height);
+            sumHeights.Add(sumHeights[sumHeights.Count - 1] + height);
             heights.Add(height);
             lbx.Items.Add(item);
         }
@@ -47,11 +48,11 @@ namespace EasyMusic.UserControls
             sumHeights.Add(0);
             heights.Clear();
         }
+
         public void RefreshPlaceholder(double height, double highLightFontSize)
         {
             Resources["topHalfHeight"] = height - highLightFontSize / 2;
             Resources["bottomHalfHeight"] = height - highLightFontSize;
-
         }
 
         private void MouseWheelEventHandler(object sender, MouseWheelEventArgs e)
@@ -73,9 +74,7 @@ namespace EasyMusic.UserControls
             storyToSmall.Begin();
         }
 
-
-
-        DoubleAnimation aniFontSize = new DoubleAnimation
+        private DoubleAnimation aniFontSize = new DoubleAnimation
         {
             Duration = Setting.AnimationDuration,// new Duration(TimeSpan.FromSeconds(0.8)),//动画时间1秒
             EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut },
@@ -84,7 +83,6 @@ namespace EasyMusic.UserControls
 
         public void RefreshFontSize(int index)
         {
-
             //return;
 
             for (int i = 0; i < lbx.Items.Count; i++)
@@ -102,7 +100,6 @@ namespace EasyMusic.UserControls
                     aniFontSize.To = Setting.HighlightLrcFontSize;
                     txt.BeginAnimation(TextBlock.FontSizeProperty, aniFontSize);
                     //BeginStoryboard(story);
-
                 }
                 else if (txt.FontSize != Setting.NormalLrcFontSize)
                 {
@@ -111,13 +108,6 @@ namespace EasyMusic.UserControls
                     txt.BeginAnimation(TextBlock.FontSizeProperty, aniFontSize);
                 }
             }
-
-
-
         }
-
     }
 }
-
-
-

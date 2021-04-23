@@ -6,12 +6,12 @@
         xmlns:local="clr-namespace:EasyMusic.Windows"
         mc:Ignorable="d"
         Closing="WinAlbumPicClosingEventHandler"
-        Title="专辑图" 
-        SizeToContent="Height" 
-        Width="500" 
+        Title="专辑图"
+        SizeToContent="Height"
+        Width="500"
         ResizeMode="NoResize"
         WindowStyle="None"
-        Loaded="WindowLoadedEventHandler" 
+        Loaded="WindowLoadedEventHandler"
         KeyDown="WinAlbumPicKeyDownEventHandler">
     <Window.Resources>
         <!--ContextMenu-->
@@ -20,7 +20,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ContextMenu}">
                         <Border x:Name="Border" Background="#FFEEEEEE"  BorderThickness="0">
-                            <ItemsPresenter/>
+                            <ItemsPresenter />
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -30,18 +30,18 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type MenuItem}">
-                        <Border Margin="1" MinWidth="80" >
+                        <Border Margin="1" MinWidth="80">
                             <Border.Background>
                                 <SolidColorBrush x:Name="MyAnimatedBrushBackground" Color="Transparent" />
                             </Border.Background>
                             <StackPanel Orientation="Horizontal" Margin="8">
-                                <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </StackPanel>
                         </Border>
                         <ControlTemplate.Triggers>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True" />
                                 </MultiTrigger.Conditions>
                                 <MultiTrigger.EnterActions>
                                     <BeginStoryboard>
@@ -73,10 +73,9 @@
     <Image x:Name="img" PreviewMouseLeftButtonDown="ImgPreviewMouseLeftButtonDownEventHandler" PreviewKeyDown="ImgPreviewKeyDownEventHandler">
         <Image.ContextMenu>
             <ContextMenu>
-                <MenuItem Header="另存为" Click="MenuSaveClickEventHandler"/>
-                <MenuItem Header="关闭" Click="MenuCloseClickEventHandler"/>
+                <MenuItem Header="另存为" Click="MenuSaveClickEventHandler" />
+                <MenuItem Header="关闭" Click="MenuCloseClickEventHandler" />
             </ContextMenu>
         </Image.ContextMenu>
     </Image>
-        
 </Window>

@@ -1,16 +1,17 @@
-﻿using System;
+﻿using FzLib.Control.FlatStyle;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Shell;
-using FzLib.Control.FlatStyle;
 
 namespace EasyMusic.Windows
 {
     public class WindowBase : Window
     {
-        Grid mainGrid;
+        private Grid mainGrid;
+
         public WindowBase()
         {
             //WindowTitleBrushBindingSystemThemeColor = false;
@@ -23,7 +24,7 @@ namespace EasyMusic.Windows
             {
                 mainGrid = Content as Grid;
                 Header = WindowHeader.CreatTitle(this);
-                WindowChrome.SetWindowChrome(this, new WindowChrome() { ResizeBorderThickness = new Thickness(16,0,16,16),CaptionHeight=0 });
+                WindowChrome.SetWindowChrome(this, new WindowChrome() { ResizeBorderThickness = new Thickness(16, 0, 16, 16), CaptionHeight = 0 });
                 WindowHelper.RepairWindowBehavior(this);
             };
             BorderThickness = new Thickness(16);
@@ -33,11 +34,11 @@ namespace EasyMusic.Windows
             effect.Opacity = 0.5;
             effect.Color = Colors.Gray;
             Effect = effect;
-
         }
 
         public WindowHeader Header { get; private set; }
         private Thickness defaultMargin = default;
+
         protected override void OnStateChanged(EventArgs e)
         {
             base.OnStateChanged(e);
@@ -53,10 +54,9 @@ namespace EasyMusic.Windows
             {
                 BorderThickness = new Thickness(16);
                 //Header.Margin = new Thickness(0, -WindowHeader.marginTop, 0, 0);
-               // mainGrid.Margin = defaultMargin;
+                // mainGrid.Margin = defaultMargin;
                 WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(16, 0, 16, 16);
             };
-      
         }
     }
 }

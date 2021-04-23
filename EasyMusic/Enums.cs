@@ -7,7 +7,6 @@
         Shuffle
     }
 
-
     public enum ControlStatus
     {
         Initialized,

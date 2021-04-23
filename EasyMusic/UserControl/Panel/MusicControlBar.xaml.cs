@@ -1,19 +1,19 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Input;
-using static EasyMusic.GlobalDatas;
-using static EasyMusic.Helper.MusicListHelper;
-using static FzLib.Control.Dialog.DialogBox;
-using static EasyMusic.Helper.MusicControlHelper;
+﻿using EasyMusic.Enum;
 using EasyMusic.Helper;
-using System.Windows.Controls.Primitives;
+using EasyMusic.Info;
 using Microsoft.Win32;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using EasyMusic.Info;
-using EasyMusic.Enum;
-using System.Windows.Media.Animation;
+using System.Windows;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using static EasyMusic.GlobalDatas;
+using static EasyMusic.Helper.MusicControlHelper;
+using static EasyMusic.Helper.MusicListHelper;
+using static FzLib.Control.Dialog.DialogBox;
 
 namespace EasyMusic.UserControls
 {
@@ -31,6 +31,7 @@ namespace EasyMusic.UserControls
 
         public CycleMode CycleModeButtonVisibility =>
             MusicControlHelper.CycleMode;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void Notify(params string[] properties)
@@ -40,7 +41,9 @@ namespace EasyMusic.UserControls
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(item));
             }
         }
+
         public bool IsManuallyChangingPosition => sldProcess.IsMouseOver && System.Windows.Input.Mouse.LeftButton == MouseButtonState.Pressed;
+
         public double SliderMaxBinding
         {
             get
@@ -67,8 +70,8 @@ namespace EasyMusic.UserControls
         private void BtnPlayClickEventHandler(object sender, RoutedEventArgs e)
         {
             PlayOrPlayNew();
-
         }
+
         /// <summary>
         /// 单击暂停按钮
         /// </summary>
@@ -78,6 +81,7 @@ namespace EasyMusic.UserControls
         {
             Music.Pause();
         }
+
         /// <summary>
         /// 单击上一首按钮
         /// </summary>
@@ -87,6 +91,7 @@ namespace EasyMusic.UserControls
         {
             PlayLast();
         }
+
         /// <summary>
         /// 单击下一首按钮
         /// </summary>
@@ -96,6 +101,7 @@ namespace EasyMusic.UserControls
         {
             PlayNext();
         }
+
         /// <summary>
         /// 单击循环模式按钮事件
         /// </summary>
@@ -110,19 +116,22 @@ namespace EasyMusic.UserControls
                 case "btnListCycle":
                     MusicControlHelper.CycleMode = Enum.CycleMode.SingleCycle;
                     break;
+
                 case "btnSingleCycle":
                     MusicControlHelper.CycleMode = Enum.CycleMode.Shuffle;
                     break;
+
                 case "btnShuffle":
                     MusicControlHelper.CycleMode = Enum.CycleMode.ListCycle;
                     break;
+
                 default:
                     ShowError("黑人问号");
                     break;
             }
             Notify("CycleModeButtonVisibility");
-
         }
+
         /// <summary>
         /// 单击打开文件按钮事件
         /// </summary>
@@ -143,7 +152,6 @@ namespace EasyMusic.UserControls
                 {
                     PlayNew(temp);
                 }
-
             }
         }
 
@@ -151,7 +159,9 @@ namespace EasyMusic.UserControls
         {
             Notify("SliderPositionBinding", "PostionText");
         }
-        Popup ppp;
+
+        private Popup ppp;
+
         /// <summary>
         /// 单击切换播放设备按钮事件
         /// </summary>
@@ -162,14 +172,15 @@ namespace EasyMusic.UserControls
             ppp.PlacementTarget = sender as FrameworkElement;
             ppp.IsOpen = true;
             ReLoadFx();
-
         }
 
         public void ReLoadFx()
         {
             (ppp.Child as MusicFxPopupContent).Load();
         }
-        ControlStatus lastStatus;
+
+        private ControlStatus lastStatus;
+
         public void OnStatusChanged(ControlStatus status)
         {
             if (status != lastStatus)
@@ -179,6 +190,7 @@ namespace EasyMusic.UserControls
                     case ControlStatus.Play:
                         ShowStatusChangeAnimation(status);
                         break;
+
                     case ControlStatus.Pause:
                         ShowStatusChangeAnimation(status);
                         break;
@@ -198,6 +210,7 @@ namespace EasyMusic.UserControls
                 btnLast.IsEnabled = true;
             }
         }
+
         private void ShowStatusChangeAnimation(ControlStatus status)
         {
             ControlButton btn1 = null;
@@ -267,7 +280,6 @@ namespace EasyMusic.UserControls
                 {
                     Music.Position = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PostionText"));
-
                 }
             }
         }

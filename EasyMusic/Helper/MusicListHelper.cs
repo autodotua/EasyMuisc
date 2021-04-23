@@ -1,15 +1,15 @@
-﻿using System;
+﻿using EasyMusic.Info;
+using Shell32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static EasyMusic.GlobalDatas;
 using System.Windows.Shell;
-using Shell32;
+using static EasyMusic.GlobalDatas;
 using static FzLib.Control.Dialog.DialogBox;
-using EasyMusic.Info;
 
 namespace EasyMusic.Helper
 {
@@ -30,15 +30,14 @@ namespace EasyMusic.Helper
             else if (MainWindow.Current.controlBar.btnNext.IsEnabled == false)
             {
                 MainWindow.Current.controlBar.btnNext.IsEnabled = true;
-
             }
         }
-
 
         /// <summary>
         /// 音乐信息，与列表绑定
         /// </summary>
         public static ObservableCollection<MusicInfo> MusicDatas { get; } = new ObservableCollection<MusicInfo>();
+
         /// <summary>
         /// 增加新的歌曲到列表中
         /// </summary>
@@ -74,17 +73,18 @@ namespace EasyMusic.Helper
 
                 return item;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
-
         }
+
         private static int GetIntLength(string length)
         {
             int[] lengthArray = length.Split(':').Select(p => int.Parse(p)).ToArray();
             return lengthArray[0] * 3600 + lengthArray[1] * 60 + lengthArray[2];
         }
+
         public static string GetStringLength(int length)
         {
             int hour = length / 3600;
@@ -97,14 +97,17 @@ namespace EasyMusic.Helper
             }
             return minute.ToString("00") + ":" + second.ToString("00");
         }
+
         /// <summary>
         /// 历史记录
         /// </summary>
         public static List<MusicInfo> historyList = new List<MusicInfo>();
+
         /// <summary>
         /// 当前播放历史索引
         /// </summary>
         private static int historyIndex = -1;
+
         /// <summary>
         /// 获取音乐的信息
         /// </summary>
@@ -135,6 +138,7 @@ namespace EasyMusic.Helper
             album = dir.GetDetailsOf(item, 14);
             return true;
         }
+
         /// <summary>
         /// 增加一组歌曲到列表中
         /// </summary>
@@ -159,13 +163,13 @@ namespace EasyMusic.Helper
                 /* mainWindow.Dispatcher.Invoke(() =>*/
                 taskBar.ProgressValue = 1.0 * (n++) / musics.Length;//);
             }
-            //}); 
+            //});
 
             //}
             taskBar.ProgressState = TaskbarItemProgressState.None;
             MainWindow.Current.LoadingSpinner = false;
-
         }
+
         /// <summary>
         /// 保存歌曲列表到程序目录
         /// </summary>
@@ -180,6 +184,7 @@ namespace EasyMusic.Helper
                 ShowException("保存歌单失败", ex);
             }
         }
+
         /// <summary>
         /// 保存歌曲列表到指定位置
         /// </summary>
@@ -197,7 +202,6 @@ namespace EasyMusic.Helper
             //File.WriteAllBytes(path, SerializeObject(musicDatas));
             try
             {
-
                 using (StreamWriter stream = new StreamWriter(File.Open(path, FileMode.Create), new UTF8Encoding(true)))
                 {
                     CsvHelper.CsvWriter writer = new CsvHelper.CsvWriter(stream);
@@ -208,8 +212,8 @@ namespace EasyMusic.Helper
             {
                 ShowException("保存歌单文件" + new FileInfo(path).Name + "失败：", ex);
             }
-
         }
+
         /// <summary>
         /// 读取音乐列表
         /// </summary>
@@ -218,7 +222,6 @@ namespace EasyMusic.Helper
         {
             if (File.Exists(GetMusicListPath(path)))
             {
-
                 try
                 {
                     ReadFileToList(path, false);
@@ -242,9 +245,8 @@ namespace EasyMusic.Helper
                 }
                 MusicDatas.Clear();
             }
-
-
         }
+
         /// <summary>
         /// 读取音乐列表
         /// </summary>
@@ -266,7 +268,6 @@ namespace EasyMusic.Helper
                 }
             }
 
-
             //byte[] bytes;
             //try
             //{
@@ -284,10 +285,8 @@ namespace EasyMusic.Helper
             //{
             //    throw new Exception("二进制文件存在错误。");
             //}
-
-
-
         }
+
         /// <summary>
         /// 删除音乐列表
         /// </summary>
@@ -301,6 +300,7 @@ namespace EasyMusic.Helper
             }
             File.Delete(path);
         }
+
         /// <summary>
         /// 重命名歌单
         /// </summary>
@@ -316,6 +316,7 @@ namespace EasyMusic.Helper
             }
             File.Move(oldPath, newPath);
         }
+
         /// <summary>
         /// 转换到绝对地址
         /// </summary>
@@ -325,6 +326,7 @@ namespace EasyMusic.Helper
         {
             return (ConfigPath + "\\MusicList\\" + path + (path.EndsWith(".csv") ? "" : ".csv"));
         }
+
         /// <summary>
         /// 获取根目录
         /// </summary>
@@ -333,10 +335,12 @@ namespace EasyMusic.Helper
         {
             return (ConfigPath + "\\MusicList");
         }
+
         /// <summary>
         /// 歌曲数量
         /// </summary>
         public static int MusicCount => MusicDatas.Count;
+
         /// <summary>
         /// 删除所有歌曲
         /// </summary>
@@ -345,6 +349,7 @@ namespace EasyMusic.Helper
             MusicDatas.Clear();
             MainWindow.Current.AfterClearList();
         }
+
         /// <summary>
         /// 删除指定歌曲
         /// </summary>
@@ -357,6 +362,7 @@ namespace EasyMusic.Helper
                 MainWindow.Current.AfterClearList();
             }
         }
+
         public static void RemoveMusic(MusicInfo music)
         {
             MusicDatas.Remove(music);
@@ -366,11 +372,11 @@ namespace EasyMusic.Helper
             }
         }
 
-
         /// <summary>
         /// 歌曲历史总数
         /// </summary>
         public static int HistoryCount => historyList.Count;
+
         /// <summary>
         /// 当前歌曲历史索引
         /// </summary>
@@ -379,10 +385,12 @@ namespace EasyMusic.Helper
             get => historyIndex;
             set => historyIndex = value;
         }
+
         /// <summary>
         /// 获取当前歌曲历史实例
         /// </summary>
         public static MusicInfo CurrentHistory => historyList[historyIndex];
+
         /// <summary>
         /// 新增歌曲历史
         /// </summary>
@@ -395,6 +403,7 @@ namespace EasyMusic.Helper
                 historyIndex++;
             }
         }
+
         /// <summary>
         /// 移除一定的歌曲历史
         /// </summary>
@@ -405,6 +414,7 @@ namespace EasyMusic.Helper
             historyList.RemoveRange(index, count);
             historyIndex = index - 1;
         }
+
         /// <summary>
         /// 获取历史
         /// </summary>
@@ -414,6 +424,7 @@ namespace EasyMusic.Helper
         {
             return historyList[index];
         }
+
         public static void RandomizeList()
         {
             //Copy to a array
@@ -441,6 +452,5 @@ namespace EasyMusic.Helper
 
             // return outputList;
         }
-
     }
 }

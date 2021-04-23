@@ -1,11 +1,9 @@
-﻿using System;
+﻿using FzLib.Device;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using FzLib.Device;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicControlHelper;
 using static FzLib.Control.Dialog.DialogBox;
@@ -14,14 +12,14 @@ namespace EasyMusic.Helper
 {
     public static class HotKeyHelper
     {
-        static HotKey hotKey = new HotKey();
+        private static HotKey hotKey = new HotKey();
         public static Dictionary<string, HotKey.HotKeyInfo> HotKeys { get; set; } = null;
+
         /// <summary>
         /// 注册全局热键
         /// </summary>
         public static bool RegistGolbalHotKey()
         {
-
             hotKey.UnregisterAll();
 
             if (HotKeys == null)
@@ -59,26 +57,31 @@ namespace EasyMusic.Helper
                         case "下一曲":
                             PlayNext();
                             break;
+
                         case "上一曲":
                             PlayLast();
                             break;
+
                         case "音量加":
                             Volumn += 0.05;
                             break;
+
                         case "音量减":
                             Volumn -= 0.05;
                             break;
+
                         case "播放暂停":
                             Music.PlayOrPause();
                             break;
+
                         case "悬浮歌词":
                             MainWindow.Current.ChangeMusicListVisibility();
                             break;
+
                         case "收放列表":
                             MainWindow.Current.OpenOrCloseFloatLrc();
                             break;
                     }
-
                 }
             };
 
@@ -109,9 +112,9 @@ namespace EasyMusic.Helper
         {
             hotKey.UnregisterAll();
         }
+
         //public static bool TryUpdateHotKey(string name, HotKey.HotKeyInfo oldValue, HotKey.HotKeyInfo newValue)
         //{
-
         //        if (hotKey.RegisteredKeys.Contains(oldValue))
         //        {
         //            try
@@ -141,7 +144,6 @@ namespace EasyMusic.Helper
         {
             try
             {
-
                 File.WriteAllText(ConfigPath + "\\HotKeyConfig.json", Newtonsoft.Json.JsonConvert.SerializeObject(HotKeys));
             }
             catch (Exception ex)

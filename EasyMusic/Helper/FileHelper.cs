@@ -1,9 +1,9 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
-using static EasyMusic.Helper.MusicListHelper;
-using static EasyMusic.GlobalDatas;
 using System.IO;
+using static EasyMusic.GlobalDatas;
+using static EasyMusic.Helper.MusicListHelper;
 using static FzLib.Control.Dialog.DialogBox;
 
 namespace EasyMusic.Helper
@@ -24,7 +24,7 @@ namespace EasyMusic.Helper
 
                 foreach (var folderName in fbd.FileNames)
                 {
-                    foreach (var i in EnumerateFiles(folderName, supportExtensionWithSplit, includeChildren?SearchOption.AllDirectories: SearchOption.TopDirectoryOnly))
+                    foreach (var i in EnumerateFiles(folderName, supportExtensionWithSplit, includeChildren ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
                     {
                         musics.Add(i);
                     }
@@ -39,7 +39,6 @@ namespace EasyMusic.Helper
 
         public static void ImportMusicsFiles()
         {
-
             CommonOpenFileDialog dialog = new CommonOpenFileDialog
             {
                 Title = "请选择音乐文件",
@@ -47,7 +46,7 @@ namespace EasyMusic.Helper
             };
             dialog.Filters.Add(new CommonFileDialogFilter("MP3音乐", ".mp3"));
             dialog.Filters.Add(new CommonFileDialogFilter("WAVE音乐", ".wav"));
-            dialog.Filters.Add(new CommonFileDialogFilter("所有文件","*"));
+            dialog.Filters.Add(new CommonFileDialogFilter("所有文件", "*"));
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok && dialog.FileNames != null)
             {
                 List<string> musics = new List<string>();
@@ -61,6 +60,7 @@ namespace EasyMusic.Helper
                 }
             }
         }
+
         public static void ExportMusicList()
         {
             CommonSaveFileDialog dialog = new CommonSaveFileDialog()
@@ -79,7 +79,6 @@ namespace EasyMusic.Helper
                 {
                     ShowException("无法保存文件", ex);
                 }
-
             }
         }
 
@@ -89,7 +88,7 @@ namespace EasyMusic.Helper
             {
                 DefaultExtension = "bin",
             };
-            dialog.Filters.Add(new CommonFileDialogFilter("Csv表格","csv"));
+            dialog.Filters.Add(new CommonFileDialogFilter("Csv表格", "csv"));
             dialog.Filters.Add(new CommonFileDialogFilter("所有文件", "*"));
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {

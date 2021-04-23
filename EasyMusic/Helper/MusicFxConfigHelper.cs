@@ -4,9 +4,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static EasyMusic.GlobalDatas;
 
 namespace EasyMusic.Helper
@@ -14,6 +11,7 @@ namespace EasyMusic.Helper
     public class MusicFxConfigHelper
     {
         private static readonly string path = ConfigPath + "\\MusicFxConfig.json";
+
         public MusicFxConfigHelper()
         {
             if (!File.Exists(path))
@@ -32,10 +30,10 @@ namespace EasyMusic.Helper
                     fxs = new Dictionary<string, MusicFxInfo>();
                 }
             }
-
         }
 
         private static MusicFxConfigHelper instance;
+
         public static MusicFxConfigHelper Instance
         {
             get

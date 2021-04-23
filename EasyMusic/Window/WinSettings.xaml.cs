@@ -31,14 +31,16 @@ namespace EasyMusic.Windows
             txtAnimationFps.Text = Setting.AnimationFps.ToString();
             txtOffset.Text = Setting.LrcDefautOffset.ToString();
             txtUpdateSpeed.Text = Setting.UpdateSpeed.ToString();
-            switch(Setting.MusicFxMode)
+            switch (Setting.MusicFxMode)
             {
                 case Enum.MusicFxRemainMode.Not:
                     cbbMusicFx.SelectedIndex = 0;
                     break;
+
                 case Enum.MusicFxRemainMode.All:
                     cbbMusicFx.SelectedIndex = 1;
                     break;
+
                 case Enum.MusicFxRemainMode.Each:
                     cbbMusicFx.SelectedIndex = 2;
                     break;
@@ -69,14 +71,12 @@ namespace EasyMusic.Windows
             DefaultDialogOwner = this;
 
             HotKeyHelper.UnregistAll();
-
         }
 
         private void ButtonClickEventHandler(object sender, RoutedEventArgs e)
         {
             try
             {
-
                 int? speed = txtUpdateSpeed.IntNumber;
                 if (!speed.HasValue || speed <= 0)
                 {
@@ -88,7 +88,6 @@ namespace EasyMusic.Windows
                 {
                     ShowError("输入的速度值过大！");
                     return;
-
                 }
 
                 int? fps = txtAnimationFps.IntNumber;
@@ -101,7 +100,6 @@ namespace EasyMusic.Windows
                 {
                     ShowError("输入的速度值过大！");
                     return;
-
                 }
 
                 double? offset = txtOffset.DoubleNumber;
@@ -166,14 +164,16 @@ namespace EasyMusic.Windows
                 Setting.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
                 Setting.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
                 Setting.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
-                switch(cbbMusicFx.SelectedIndex)
+                switch (cbbMusicFx.SelectedIndex)
                 {
                     case 0:
                         Setting.MusicFxMode = Enum.MusicFxRemainMode.Not;
                         break;
+
                     case 1:
                         Setting.MusicFxMode = Enum.MusicFxRemainMode.All;
                         break;
+
                     case 2:
                         Setting.MusicFxMode = Enum.MusicFxRemainMode.Each;
                         break;
@@ -230,7 +230,6 @@ namespace EasyMusic.Windows
                     Close();
                 }
             }
-
         }
 
         private void ButtonExportClickEventHandler(object sender, RoutedEventArgs e)
@@ -251,7 +250,6 @@ namespace EasyMusic.Windows
             }
             else if (type == 1)
             {
-
                 dialog.Filters.Add(new CommonFileDialogFilter("所有配置", "zip"));
                 dialog.DefaultExtension = "zip";
             }
@@ -269,9 +267,7 @@ namespace EasyMusic.Windows
                     }
                     else if (dialog.FileName.EndsWith("json"))
                     {
-
                         File.Copy(ConfigPath + "\\Config.json", dialog.FileName);
-
                     }
                     else
                     {
@@ -283,7 +279,6 @@ namespace EasyMusic.Windows
                     ShowException("导出失败", ex);
                 }
             }
-
         }
 
         private void ButtonImportClickEventHandler(object sender, RoutedEventArgs e)
@@ -315,7 +310,6 @@ namespace EasyMusic.Windows
                             File.Move(ConfigPath + "\\Config.json", ConfigPath + "\\Config.json.bak");
                         }
                         File.Copy(dialog.FileName, ConfigPath + "\\Config.json");
-
                     }
                     else
                     {
@@ -339,7 +333,6 @@ namespace EasyMusic.Windows
             Info.FileName = "cmd.exe";
             Process.Start(Info);
             Application.Current.Shutdown();
-
         }
 
         private void cbbFloatFontEffect_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -356,7 +349,6 @@ namespace EasyMusic.Windows
             }
         }
 
-
         public HotKey NextHotKey
         {
             get => GetHotKey("下一曲");
@@ -367,6 +359,7 @@ namespace EasyMusic.Windows
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NextHotKey)));
             }
         }
+
         public HotKey LastHotKey
         {
             get => GetHotKey("上一曲");
@@ -377,6 +370,7 @@ namespace EasyMusic.Windows
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LastHotKey)));
             }
         }
+
         public HotKey VolumnUpHotKey
         {
             get => GetHotKey("音量加");
@@ -387,6 +381,7 @@ namespace EasyMusic.Windows
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(VolumnUpHotKey)));
             }
         }
+
         public HotKey VolumnDownHotKey
         {
             get => GetHotKey("音量减");
@@ -397,6 +392,7 @@ namespace EasyMusic.Windows
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(VolumnDownHotKey)));
             }
         }
+
         public HotKey PlayPauseHotKey
         {
             get => GetHotKey("播放暂停");
@@ -407,6 +403,7 @@ namespace EasyMusic.Windows
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PlayPauseHotKey)));
             }
         }
+
         public HotKey FloatLyricHotKey
         {
             get => GetHotKey("悬浮歌词");
@@ -417,6 +414,7 @@ namespace EasyMusic.Windows
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FloatLyricHotKey)));
             }
         }
+
         public HotKey ListHotKey
         {
             get => GetHotKey("收放列表");
@@ -427,6 +425,7 @@ namespace EasyMusic.Windows
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListHotKey)));
             }
         }
+
         private HotKey GetHotKey(string name)
         {
             if (HotKeyHelper.HotKeys.TryGetValue(name, out FzLib.Device.HotKey.HotKeyInfo value))
@@ -435,6 +434,7 @@ namespace EasyMusic.Windows
             }
             return null;
         }
+
         private void SetHotKey(string name, HotKey value)
         {
             if (value.Key == System.Windows.Input.Key.Escape)
@@ -450,8 +450,8 @@ namespace EasyMusic.Windows
             {
                 HotKeyHelper.HotKeys[name] = new FzLib.Device.HotKey.HotKeyInfo(value.Key, value.ModifierKeys);
             }
-
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void WindowClosed(object sender, EventArgs e)

@@ -8,12 +8,12 @@
 
         mc:Ignorable="d"
         x:Name="winFloatLyrics"
-        Title="悬浮歌词" 
+        Title="悬浮歌词"
         Topmost="True"
         AllowsTransparency="True"
         WindowStyle="None"
         Background="Transparent"
-        Height="100" 
+        Height="100"
         BorderBrush="#FFCCCCCC"
         Focusable="False"
         ShowInTaskbar="False"
@@ -26,12 +26,10 @@
     <Grid>
 
         <StackPanel x:Name="stk">
-            <uc:RradualChangedTextBlock x:Name="tbkLeft" HorizontalAlignment="Left" FontSize="40" TextAlignment="Left"/>
-            <uc:RradualChangedTextBlock x:Name="tbkRight" HorizontalAlignment="Right" FontSize="30" TextAlignment="Right"/>
+            <uc:RradualChangedTextBlock x:Name="tbkLeft" HorizontalAlignment="Left" FontSize="40" TextAlignment="Left" />
+            <uc:RradualChangedTextBlock x:Name="tbkRight" HorizontalAlignment="Right" FontSize="30" TextAlignment="Right" />
         </StackPanel>
-        <Button BorderThickness="0" Visibility="Hidden" x:Name="btnOk" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="4" Content="确定" 
+        <Button BorderThickness="0" Visibility="Hidden" x:Name="btnOk" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="4" Content="确定"
                 Click="BtnOkClickEventHandler" />
-
     </Grid>
-
 </Window>

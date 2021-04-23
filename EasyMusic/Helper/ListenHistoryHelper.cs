@@ -1,11 +1,11 @@
-﻿using System;
+﻿using EasyMusic.Info;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using static EasyMusic.GlobalDatas;
-using System.Xml;
 using System.IO;
+using System.Linq;
+using System.Xml;
+using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicControlHelper;
-using EasyMusic.Info;
 
 namespace EasyMusic.Helper
 {
@@ -13,12 +13,12 @@ namespace EasyMusic.Helper
     {
         public static string XmlPath => ConfigPath + "\\ListenHistory.xml";
 
-        XmlDocument xml = new XmlDocument();
-        XmlElement root;
+        private XmlDocument xml = new XmlDocument();
+        private XmlElement root;
 
-        XmlElement lastTimeElement;
+        private XmlElement lastTimeElement;
 
-        IEnumerable<XmlElement> Histories => root.ChildNodes.Cast<XmlElement>();
+        private IEnumerable<XmlElement> Histories => root.ChildNodes.Cast<XmlElement>();
 
         public ListenHistoryHelper()
         {
@@ -53,7 +53,6 @@ namespace EasyMusic.Helper
             }
             catch (Exception ex)
             {
-
             }
         }
 
@@ -73,7 +72,7 @@ namespace EasyMusic.Helper
                     if (child.HasAttribute("EndTime"))
                     {
                         end = DateTime.Parse(child.GetAttribute("EndTime"));
-                        if((end.Value-start).TotalSeconds<Setting.ThresholdValueOfListenTime)
+                        if ((end.Value - start).TotalSeconds < Setting.ThresholdValueOfListenTime)
                         {
                             continue;
                         }
@@ -83,7 +82,7 @@ namespace EasyMusic.Helper
                         times.Add(start, end);
                     }
                 }
-                if(times.Count==0)
+                if (times.Count == 0)
                 {
                     continue;
                 }
@@ -125,7 +124,6 @@ namespace EasyMusic.Helper
             }
             catch (Exception ex)
             {
-
             }
             return false;
         }

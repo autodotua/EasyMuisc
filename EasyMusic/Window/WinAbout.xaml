@@ -10,16 +10,15 @@
         Title="关于" SizeToContent="WidthAndHeight">
     <Grid Margin="4">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="8"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Image Source="/EasyMusic;component/Properties/Images/icon.ico" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <StackPanel Grid.Column="2" >
+        <Image Source="/EasyMusic;component/Properties/Images/icon.ico" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <StackPanel Grid.Column="2">
             <TextBlock FontSize="20">EasyMusic</TextBlock>
-            <TextBox x:Name="txt1" IsReadOnly="True"   BorderThickness="0"/>
-            <TextBox x:Name="txt2" IsReadOnly="True"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" BorderThickness="0" MaxHeight="300"/>
-
+            <TextBox x:Name="txt1" IsReadOnly="True"   BorderThickness="0" />
+            <TextBox x:Name="txt2" IsReadOnly="True"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" BorderThickness="0" MaxHeight="300" />
         </StackPanel>
     </Grid>
 </local:WindowBase>

@@ -5,38 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasyMusic.Windows"
         mc:Ignorable="d"
-        Title="音乐信息" 
-        SizeToContent="WidthAndHeight"  
-        ResizeMode="NoResize" 
+        Title="音乐信息"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner">
 
     <Grid Margin="4">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="4"/>
-            <ColumnDefinition Width="Auto"/>
-
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="4" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <TextBlock>
             文件名
-            <LineBreak/>
+            <LineBreak />
             地址
-                        <LineBreak/>
+                        <LineBreak />
 
             大小
-            <LineBreak/>
+            <LineBreak />
 
             标题
-            <LineBreak/>
+            <LineBreak />
 
             时长
-            <LineBreak/>
+            <LineBreak />
 
             艺术家
-            <LineBreak/>
+            <LineBreak />
 
             专辑
         </TextBlock>
-        <TextBox x:Name="txt" IsReadOnly="True" Grid.Column="2" BorderThickness="0"/>
+        <TextBox x:Name="txt" IsReadOnly="True" Grid.Column="2" BorderThickness="0" />
     </Grid>
 </local:WindowBase>

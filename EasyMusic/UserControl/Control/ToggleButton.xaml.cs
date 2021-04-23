@@ -23,8 +23,10 @@ namespace EasyMusic.UserControls
             //      }
             //  };
         }
+
         private bool isPressed = false;
-        public  bool IsPressed
+
+        public bool IsPressed
         {
             get => isPressed;
             set
@@ -35,7 +37,6 @@ namespace EasyMusic.UserControls
                 //    border.Padding = value ? new Thickness(12, 8, 12, 8) : new Thickness(8,2,8,2);
                 //}
                 FontWeight = value ? FontWeights.Bold : FontWeights.Normal;
-                
             }
         }
 
@@ -44,7 +45,6 @@ namespace EasyMusic.UserControls
             get => btn.Content as string;
             set => btn.Content = value;
         }
-        
 
         public event EventHandler Select;
 

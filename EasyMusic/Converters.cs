@@ -1,9 +1,9 @@
-﻿using System;
-using System.Windows.Data;
+﻿using EasyMusic.Enum;
+using EasyMusic.Helper;
+using System;
 using System.Globalization;
 using System.Windows;
-using EasyMusic.Helper;
-using EasyMusic.Enum;
+using System.Windows.Data;
 
 namespace EasyMusic.Converter
 {
@@ -26,6 +26,7 @@ namespace EasyMusic.Converter
             }
             return Visibility.Hidden;
         }
+
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 
@@ -35,9 +36,10 @@ namespace EasyMusic.Converter
         {
             return MusicListHelper.GetStringLength((int)value);
         }
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
+
     public class WidthConverter : IValueConverter
     {
         //当值从绑定源传播给绑定目标时，调用方法Convert
@@ -45,9 +47,11 @@ namespace EasyMusic.Converter
         {
             return (double)value - 64;
         }
+
         //当值从绑定目标传播给绑定源时，调用此方法ConvertBack
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
+
     public class NullableConvert : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -62,6 +66,7 @@ namespace EasyMusic.Converter
                 return isCheck.Value;
             }
         }
+
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

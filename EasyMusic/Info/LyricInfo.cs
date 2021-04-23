@@ -1,5 +1,4 @@
-﻿using FzLib.Basic;
-using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,34 +15,40 @@ namespace EasyMusic.Info
 {
     public class LyricInfo
     {
-
         /// <summary>
         /// 歌曲
         /// </summary>
         public string Title { get; set; }
+
         /// <summary>
         /// 艺术家
         /// </summary>
         public string Artist { get; set; }
+
         /// <summary>
         /// 专辑
         /// </summary>
         public string Album { get; set; }
+
         /// <summary>
         /// 歌词作者
         /// </summary>
         public string LrcBy { get; set; }
+
         /// <summary>
         /// 偏移量
         /// </summary>
         public double Offset { get; set; }
 
         public int CurrentIndex { get; set; } = -1;
+
         /// <summary>
         /// 歌词
         /// </summary>
         public Dictionary<double, string> LrcContent { get; set; }
+
         public Dictionary<double, int> LineCount { get; set; }
+
         /// <summary>
         /// 获得歌词信息
         /// </summary>
@@ -106,7 +111,6 @@ namespace EasyMusic.Info
                                         }
                                         else
                                         {
-
                                         }
                                     }
                                     else//第一次出现这个时间的歌词
@@ -116,7 +120,7 @@ namespace EasyMusic.Info
                                     }
                                 }
                             }
-                            catch 
+                            catch
                             {
                             }
                         }
@@ -131,16 +135,16 @@ namespace EasyMusic.Info
                 LineCount[LineCount.Keys.ElementAt(i)] += LineCount[LineCount.Keys.ElementAt(i - 1)];
             }
         }
+
         /// <summary>
         /// 处理信息
         /// </summary>
         /// <param name="line"></param>
         /// <returns>返回基础信息</returns>
-        static string SplitInfo(string line)
+        private static string SplitInfo(string line)
         {
             return line.Substring(line.IndexOf(":") + 1).TrimEnd(']');
         }
-
 
         public void CopyLyrics()
         {
@@ -158,7 +162,6 @@ namespace EasyMusic.Info
                 }
                 Clipboard.SetText(str.ToString());
             }
-
 
             /// <summary>
             /// 保存歌词
@@ -224,7 +227,6 @@ namespace EasyMusic.Info
                 {
                     str.Append("[" + minute + ":" + second + "]" + j + Environment.NewLine);
                 }
-
             }
             if (saveAs)
             {
@@ -234,12 +236,10 @@ namespace EasyMusic.Info
                     InitialDirectory = file.DirectoryName,
                     Title = "请选择目标文件夹",
                     DefaultFileName = file.Name.Replace(file.Extension, ".lrc"),
-
                 };
 
                 dialog.Filters.Add(new CommonFileDialogFilter("Lrc歌词", "lrc"));
                 dialog.Filters.Add(new CommonFileDialogFilter("所有文件", "*"));
-
 
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
@@ -267,6 +267,5 @@ namespace EasyMusic.Info
                 }
             }
         }
-
     }
 }

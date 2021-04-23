@@ -1,7 +1,4 @@
-﻿using EasyMusic.Helper;
-using System;
-using System.Globalization;
-using System.Windows.Data;
+﻿using System;
 
 namespace EasyMusic.Info
 {
@@ -15,6 +12,4 @@ namespace EasyMusic.Info
         public string Album { get; set; }
         public string Path { get; set; }
     }
-
-   
 }

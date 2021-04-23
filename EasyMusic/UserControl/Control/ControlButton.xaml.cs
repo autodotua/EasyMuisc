@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace EasyMusic.UserControls
 {
@@ -24,8 +14,9 @@ namespace EasyMusic.UserControls
         public ControlButton()
         {
             InitializeComponent();
-           // btn.Opacity = NormalOpacity;
+            // btn.Opacity = NormalOpacity;
         }
+
         /// <summary>
         /// 矢量形状路径信息
         /// </summary>
@@ -34,7 +25,8 @@ namespace EasyMusic.UserControls
         /// <summary>
         /// 透明度动画
         /// </summary>
-        bool opacityAnimation = false;
+        private bool opacityAnimation = false;
+
         /// <summary>
         /// 透明度动画
         /// </summary>
@@ -47,24 +39,30 @@ namespace EasyMusic.UserControls
                 opacityAnimation = value;
             }
         }
+
         public double DisableOpacity { get; set; } = 0.5;
         public bool EnableDisableOpacity { get; set; } = true;
+
         /// <summary>
         /// 路径边框宽度
         /// </summary>
         public double PathThickness { get; set; }
+
         /// <summary>
         /// 正常宽度
         /// </summary>
         public double NormalSize { get; set; } = 22;
+
         /// <summary>
         /// 鼠标在上方的宽度
         /// </summary>
         public double MouseOverSize { get; set; } = 19;
+
         /// <summary>
         /// 鼠标点击时的宽度
         /// </summary>
         public double PressedSize { get; set; } = 16;
+
         /// <summary>
         /// 正常时的透明度
         /// </summary>
@@ -79,6 +77,7 @@ namespace EasyMusic.UserControls
         /// 单击事件
         /// </summary>
         public event RoutedEventHandler Click;
+
         /// <summary>
         /// 创建并启动一个新的浮点数据类型动画
         /// </summary>
@@ -91,7 +90,6 @@ namespace EasyMusic.UserControls
         /// <returns></returns>
         private Storyboard NewDoubleAnimation(FrameworkElement obj, DependencyProperty property, double to, double duration, double decelerationRatio = 0, EventHandler completed = null, bool stopAfterComplete = false)
         {
-
             DoubleAnimation ani = new DoubleAnimation
             {
                 To = to,
@@ -110,6 +108,7 @@ namespace EasyMusic.UserControls
             story.Begin(obj);
             return story;
         }
+
         /// <summary>
         /// 鼠标进入动画事件
         /// </summary>
@@ -122,6 +121,7 @@ namespace EasyMusic.UserControls
                 NewDoubleAnimation(sender as Button, OpacityProperty, MouseOverOpacity, 0.5, 0.3);
             }
         }
+
         /// <summary>
         /// 鼠标离开动画事件
         /// </summary>

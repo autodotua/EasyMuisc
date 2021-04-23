@@ -6,18 +6,18 @@
         xmlns:local="clr-namespace:EasyMusic"
         xmlns:uc="clr-namespace:EasyMusic.UserControls"
         xmlns:progress="clr-namespace:FzLib.Control.Progress;assembly=FzWpfControlLib"
-        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" 
-        x:Name="winMain" 
+        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+        x:Name="winMain"
         x:Class="EasyMusic.MainWindow"
         mc:Ignorable="d"
         Title="EasyMusic"
-        Height="600" 
+        Height="600"
         Width="1000"
-        Loaded="WindowLoadedEventHandler" 
+        Loaded="WindowLoadedEventHandler"
         AllowDrop="True"
         DragEnter="WindowDragEnterEventHandler"
         Drop="WindowDropEventHandler"
-       WindowStartupLocation="CenterScreen" 
+       WindowStartupLocation="CenterScreen"
        StateChanged="WinMainStateChanged"
        WindowStyle="None"
        AllowsTransparency="True"
@@ -27,34 +27,34 @@
        Background="{DynamicResource backgroundBrushColor}"
        PreviewMouseWheel="MouseWheelEventHandler">
     <Window.Effect>
-        <DropShadowEffect BlurRadius="16"  Opacity="0.7"  Color="{DynamicResource veryDarkColor}"  ShadowDepth="0"/>
+        <DropShadowEffect BlurRadius="16"  Opacity="0.7"  Color="{DynamicResource veryDarkColor}"  ShadowDepth="0" />
     </Window.Effect>
     <Window.Resources>
 
-        <RoutedUICommand x:Key="HotKeyFoward"/>
-        <RoutedUICommand x:Key="HotKeyBack"/>
-        <RoutedUICommand x:Key="HotKeyPlayAndPauseMusic"  />
-        <RoutedUICommand x:Key="HotKeyNext"/>
-        <RoutedUICommand x:Key="HotKeyLast"/>
+        <RoutedUICommand x:Key="HotKeyFoward" />
+        <RoutedUICommand x:Key="HotKeyBack" />
+        <RoutedUICommand x:Key="HotKeyPlayAndPauseMusic" />
+        <RoutedUICommand x:Key="HotKeyNext" />
+        <RoutedUICommand x:Key="HotKeyLast" />
 
         <ControlTemplate x:Key="scroll_background" TargetType="RepeatButton">
-            <Border Background="Transparent"/>
+            <Border Background="Transparent" />
         </ControlTemplate>
         <Style x:Key="scroll_thumb_style" TargetType="Thumb">
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="true"/>
-            <Setter Property="IsTabStop" Value="false"/>
-            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Thumb">
-                        <Rectangle x:Name="rect" Width="12" Fill="{DynamicResource darker2BrushColor}" RadiusX="6" RadiusY="6"/>
+                        <Rectangle x:Name="rect" Width="12" Fill="{DynamicResource darker2BrushColor}" RadiusX="6" RadiusY="6" />
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter TargetName="rect" Property="Fill" Value="{DynamicResource darker3BrushColor}"/>
+                                <Setter TargetName="rect" Property="Fill" Value="{DynamicResource darker3BrushColor}" />
                             </Trigger>
                             <Trigger Property="IsDragging" Value="true">
-                                <Setter TargetName="rect" Property="Fill" Value="{DynamicResource darker4BrushColor}"/>
+                                <Setter TargetName="rect" Property="Fill" Value="{DynamicResource darker4BrushColor}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -68,10 +68,10 @@
                         <Grid Width="12">
                             <Border x:Name="bd" Width="12" HorizontalAlignment="Center" CornerRadius="6" Background="{DynamicResource backgroundBrushColor}">
                             </Border>
-                            <Track HorizontalAlignment="Center" Name="PART_Track" Width="{TemplateBinding Width}" Maximum="{TemplateBinding Maximum}" Minimum="{TemplateBinding Minimum}"  
+                            <Track HorizontalAlignment="Center" Name="PART_Track" Width="{TemplateBinding Width}" Maximum="{TemplateBinding Maximum}" Minimum="{TemplateBinding Minimum}"
                                     Value="{TemplateBinding Value}"  IsDirectionReversed="true">
                                 <Track.DecreaseRepeatButton>
-                                    <RepeatButton Template="{StaticResource scroll_background}" Command="ScrollBar.LineUpCommand"  />
+                                    <RepeatButton Template="{StaticResource scroll_background}" Command="ScrollBar.LineUpCommand" />
                                 </Track.DecreaseRepeatButton>
                                 <Track.IncreaseRepeatButton>
                                     <RepeatButton Template="{StaticResource scroll_background}" Command="ScrollBar.LineDownCommand" />
@@ -83,40 +83,37 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker1BrushColor}"/>
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource darker1BrushColor}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-
     </Window.Resources>
     <Window.InputBindings>
-        <KeyBinding Gesture="Right" Command="{StaticResource HotKeyFoward}"/>
-        <KeyBinding Gesture="Left" Command="{StaticResource HotKeyBack}"/>
-        <KeyBinding Gesture="Space" Command="{StaticResource HotKeyPlayAndPauseMusic}"/>
-        <KeyBinding Gesture="PageUp" Command="{StaticResource HotKeyLast}"/>
-        <KeyBinding Gesture="PageDown" Command="{StaticResource HotKeyNext}"/>
-
+        <KeyBinding Gesture="Right" Command="{StaticResource HotKeyFoward}" />
+        <KeyBinding Gesture="Left" Command="{StaticResource HotKeyBack}" />
+        <KeyBinding Gesture="Space" Command="{StaticResource HotKeyPlayAndPauseMusic}" />
+        <KeyBinding Gesture="PageUp" Command="{StaticResource HotKeyLast}" />
+        <KeyBinding Gesture="PageDown" Command="{StaticResource HotKeyNext}" />
     </Window.InputBindings>
     <Window.CommandBindings>
-        <CommandBinding Command="{StaticResource HotKeyFoward}" Executed="HotKeyFowardEventHandler"/>
-        <CommandBinding Command="{StaticResource HotKeyBack}" Executed="HotKeyBackEventHandler"/>
-        <CommandBinding Command="{StaticResource HotKeyPlayAndPauseMusic}" Executed="HotKeyPlayAndPauseEventHandler"/>
-        <CommandBinding Command="{StaticResource HotKeyNext}" Executed="HotKeyNextEventHandler"/>
+        <CommandBinding Command="{StaticResource HotKeyFoward}" Executed="HotKeyFowardEventHandler" />
+        <CommandBinding Command="{StaticResource HotKeyBack}" Executed="HotKeyBackEventHandler" />
+        <CommandBinding Command="{StaticResource HotKeyPlayAndPauseMusic}" Executed="HotKeyPlayAndPauseEventHandler" />
+        <CommandBinding Command="{StaticResource HotKeyNext}" Executed="HotKeyNextEventHandler" />
 
-        <CommandBinding Command="{StaticResource HotKeyLast}" Executed="HotKeyLastEventHandler"/>
+        <CommandBinding Command="{StaticResource HotKeyLast}" Executed="HotKeyLastEventHandler" />
     </Window.CommandBindings>
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="taskBar">
             <TaskbarItemInfo.ThumbButtonInfos>
                 <ThumbButtonInfoCollection>
                     <ThumbButtonInfo  ImageSource="../Images/last.png" Click="ThumbButtonClick" Description="上一曲" IsBackgroundVisible="False" />
-                    <ThumbButtonInfo x:Name="tbiPlay"  ImageSource="../Images/play.png" Click="ThumbButtonClick" Description="播放" IsBackgroundVisible="False"/>
-                    <ThumbButtonInfo x:Name="tbiPause"  ImageSource="../Images/pause.png" Click="ThumbButtonClick" Visibility="Collapsed" Description="暂停" IsBackgroundVisible="False"/>
-                    <ThumbButtonInfo  ImageSource="../Images/next.png" Click="ThumbButtonClick" Description="下一曲" IsBackgroundVisible="False"/>
-
+                    <ThumbButtonInfo x:Name="tbiPlay"  ImageSource="../Images/play.png" Click="ThumbButtonClick" Description="播放" IsBackgroundVisible="False" />
+                    <ThumbButtonInfo x:Name="tbiPause"  ImageSource="../Images/pause.png" Click="ThumbButtonClick" Visibility="Collapsed" Description="暂停" IsBackgroundVisible="False" />
+                    <ThumbButtonInfo  ImageSource="../Images/next.png" Click="ThumbButtonClick" Description="下一曲" IsBackgroundVisible="False" />
                 </ThumbButtonInfoCollection>
             </TaskbarItemInfo.ThumbButtonInfos>
             <TaskbarItemInfo.Description>
@@ -125,50 +122,44 @@
         </TaskbarItemInfo>
     </Window.TaskbarItemInfo>
 
-
     <Grid ClipToBounds="True">
             <Grid x:Name="grdMain" Margin="4">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="8"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="4"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="8" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="4" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="8"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-
-
 
         <!--播放列表区-->
 
-        <uc:MusicList  Grid.Row="2" x:Name="lvwMusic" >
+        <uc:MusicList  Grid.Row="2" x:Name="lvwMusic">
             <uc:MusicList.RenderTransform>
-                <TranslateTransform/>
+                <TranslateTransform />
             </uc:MusicList.RenderTransform>
         </uc:MusicList>
         <Grid x:Name="grdLyricArea" Grid.Column="2" Grid.Row="2">
-            <uc:LyricArea x:Name="lyricArea"  />
-            <uc:ControlButton x:Name="btnListSwitcher"   Click="BtnListSwitcherClickEventHandler"  VerticalAlignment="Center" HorizontalAlignment="Left" NormalSize="9" MouseOverSize="9" PressedSize="9"  NormalOpacity="0.4" MouseOverOpacity="0.8" OpacityAnimation="True" 
-               PathData="F1 M 0.000,24.043 L 0.000,2.198 C 0.000,0.989 0.585,0.000 1.300,0.000 C 2.015,0.000 2.601,0.989 2.601,2.198 L 2.601,24.043 C 2.601,25.252 2.015,26.241 1.300,26.241 C 0.585,26.241 0.000,25.252 0.000,24.043 Z"/>
-
-
+            <uc:LyricArea x:Name="lyricArea" />
+            <uc:ControlButton x:Name="btnListSwitcher"   Click="BtnListSwitcherClickEventHandler"  VerticalAlignment="Center" HorizontalAlignment="Left" NormalSize="9" MouseOverSize="9" PressedSize="9"  NormalOpacity="0.4" MouseOverOpacity="0.8" OpacityAnimation="True"
+               PathData="F1 M 0.000,24.043 L 0.000,2.198 C 0.000,0.989 0.585,0.000 1.300,0.000 C 2.015,0.000 2.601,0.989 2.601,2.198 L 2.601,24.043 C 2.601,25.252 2.015,26.241 1.300,26.241 C 0.585,26.241 0.000,25.252 0.000,24.043 Z" />
         </Grid>
 
         <!--歌词区-->
         <!--播放控制区-->
-        <uc:MusicControlBar x:Name="controlBar" Grid.Row="4" Grid.ColumnSpan="3"/>
+        <uc:MusicControlBar x:Name="controlBar" Grid.Row="4" Grid.ColumnSpan="3" />
         <!--加载动画-->
 
-        <progress:LoadingOverlay x:Name="loading" Margin="-4" OverlayColor="{DynamicResource backgroundBrushColor}" Grid.RowSpan="100" Grid.ColumnSpan="100" RingSize="0.1" Visibility="Collapsed"/>
+        <progress:LoadingOverlay x:Name="loading" Margin="-4" OverlayColor="{DynamicResource backgroundBrushColor}" Grid.RowSpan="100" Grid.ColumnSpan="100" RingSize="0.1" Visibility="Collapsed" />
 
-        <uc:Header x:Name="header" Grid.ColumnSpan="3" Margin="-4"/>
-        <!--<Label Content="{Binding Cpu}" Grid.ColumnSpan="5" Grid.RowSpan="5" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,18" Opacity="0" PreviewMouseDoubleClick="Label_PreviewMouseDoubleClick"/>-->
+        <uc:Header x:Name="header" Grid.ColumnSpan="3" Margin="-4" />
+        <!--<Label Content="{Binding Cpu}" Grid.ColumnSpan="5" Grid.RowSpan="5" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,18" Opacity="0" PreviewMouseDoubleClick="Label_PreviewMouseDoubleClick" />-->
     </Grid>
-
     </Grid>
 </Window>

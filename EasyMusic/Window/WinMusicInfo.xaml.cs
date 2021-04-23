@@ -1,18 +1,6 @@
 ﻿using EasyMusic.Info;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace EasyMusic.Windows
 {
@@ -28,7 +16,6 @@ namespace EasyMusic.Windows
               {
                   try
                   {
-
                       FileInfo fileInfo = new FileInfo(music.Path);
                       Title = fileInfo.Name + "-音乐信息";
                       string l = Environment.NewLine;

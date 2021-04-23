@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static EasyMusic.Helper.MusicListHelper;
 
 namespace EasyMusic.Info
 {
     public class ListenHistoryInfo
     {
-
         public Dictionary<DateTime, DateTime?> ListenTimes { get; set; }
         public string LastListenTime => ListenTimes.Last().Key.ToString();
         public string Name { get; set; }

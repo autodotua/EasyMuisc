@@ -11,16 +11,16 @@
         Title="歌词" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="2"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="2" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <flat:TextBox x:Name="txt"  AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextChanged="txt_TextChanged"/>
+        <flat:TextBox x:Name="txt"  AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextChanged="txt_TextChanged" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
             <flat:Button x:Name="btnReload" IsEnabled="False" Margin="4" Click="Button_Click">重置</flat:Button>
             <flat:Button x:Name="btnSave" IsEnabled="False" Margin="4" Click="Button_Click">保存</flat:Button>
             <flat:Button x:Name="btnSaveAs" IsEnabled="False" Margin="4" Click="Button_Click">另存为</flat:Button>
         </StackPanel>
-        <RichTextBox Grid.RowSpan="3" IsReadOnly="True" PreviewMouseWheel="rich_PreviewMouseWheel" BorderThickness="0" Background="{DynamicResource backgroundBrushColor}" x:Name="rich" Visibility="Collapsed"/>
+        <RichTextBox Grid.RowSpan="3" IsReadOnly="True" PreviewMouseWheel="rich_PreviewMouseWheel" BorderThickness="0" Background="{DynamicResource backgroundBrushColor}" x:Name="rich" Visibility="Collapsed" />
     </Grid>
 </local:WindowBase>

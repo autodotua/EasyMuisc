@@ -10,6 +10,6 @@
         Title="帮助" SizeToContent="WidthAndHeight">
     <Grid>
 
-        <RichTextBox x:Name="rtx" Margin="4" IsReadOnly="True" BorderThickness="0" Width="400"/>
+        <RichTextBox x:Name="rtx" Margin="4" IsReadOnly="True" BorderThickness="0" Width="400" />
     </Grid>
 </local:WindowBase>

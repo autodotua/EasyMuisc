@@ -1,12 +1,12 @@
-﻿using Microsoft.Win32;
+﻿using EasyMusic.Helper;
+using EasyMusic.UserControls;
+using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using static FzLib.Control.Dialog.DialogBox;
-using EasyMusic.Helper;
-using EasyMusic.UserControls;
 
 namespace EasyMusic.Windows
 {
@@ -15,28 +15,28 @@ namespace EasyMusic.Windows
     /// </summary>
     public partial class WinAlbumPicture : Window
     {
-        bool winMainTopMost = false;
+        private bool winMainTopMost = false;
+
         public WinAlbumPicture(Header header)
         {
             InitializeComponent();
-            Left = MainWindow.Current.Left ; // + 12;
+            Left = MainWindow.Current.Left; // + 12;
             Top = MainWindow.Current.Top;// + win.ActualHeight - win.imgAlbum.Height - 16;
             Width = header.imgAlbum.ActualWidth;
             Height = header.imgAlbum.ActualHeight;
-            if(MainWindow.Current.Topmost)
+            if (MainWindow.Current.Topmost)
             {
                 winMainTopMost = true;
             }
         }
-        
+
         private void ImgPreviewMouseLeftButtonDownEventHandler(object sender, MouseButtonEventArgs e)
         {
             DragMove();
         }
 
         private void WindowLoadedEventHandler(object sender, RoutedEventArgs e)
-        { 
-
+        {
             double screenWidth = SystemParameters.WorkArea.Width;
             double screenHeight = SystemParameters.WorkArea.Height;
             double targetHeight = 500;
@@ -44,7 +44,7 @@ namespace EasyMusic.Windows
             DoubleAnimation aniTop = new DoubleAnimation()
             {
                 To = 0.5 * (screenHeight - targetHeight),
-            Duration = new Duration(TimeSpan.FromSeconds(0.5)),//动画时间1秒
+                Duration = new Duration(TimeSpan.FromSeconds(0.5)),//动画时间1秒
                 DecelerationRatio = 0.3,
             };
             Storyboard.SetTargetName(aniTop, Name);
@@ -76,11 +76,11 @@ namespace EasyMusic.Windows
             };
             Storyboard.SetTargetName(aniHeigth, Name);
             Storyboard.SetTargetProperty(aniHeigth, new PropertyPath(HeightProperty));
-             
+
             Storyboard story1 = new Storyboard();
             story1.Children.Add(aniTop);
             story1.Children.Add(aniLeft);
-            story1.Completed += (p1,p2)=>
+            story1.Completed += (p1, p2) =>
               {
                   Storyboard story2 = new Storyboard();
                   story2.Children.Add(aniHeigth);
@@ -111,9 +111,9 @@ namespace EasyMusic.Windows
                   {
                       File.Copy(new Uri(img.Source.ToString()).AbsolutePath, sfd.FileName, true);
                   }
-                  catch(Exception ex)
+                  catch (Exception ex)
                   {
-                      ShowException("保存文件失败" , ex);
+                      ShowException("保存文件失败", ex);
                   }
               };
             sfd.ShowDialog();
@@ -121,7 +121,7 @@ namespace EasyMusic.Windows
 
         private void ImgPreviewKeyDownEventHandler(object sender, KeyEventArgs e)
         {
-            if(e.Key==Key.Escape)
+            if (e.Key == Key.Escape)
             {
                 Close();
             }

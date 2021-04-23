@@ -1,15 +1,12 @@
 ﻿using EasyMusic.Helper;
+using FzLib.Program.Runtime;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using FzLib.Program;
-using FzLib.Program.Runtime;
-using FzLib.Control.Dialog;
 using static EasyMusic.GlobalDatas;
-using EasyMusic;
 
 namespace EasyMusic
 {
@@ -47,16 +44,16 @@ namespace EasyMusic
                 }
             }
         }
-        
-        SingleInstance single;
+
+        private SingleInstance single;
+
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-
             CheckFiles();
 
             UnhandledException.RegistAll();
-            single= new SingleInstance(EasyMusic.Properties.Resources.AppName);
-                if (e.Args.Length > 0 && single.ExistAnotherInstance)
+            single = new SingleInstance(EasyMusic.Properties.Resources.AppName);
+            if (e.Args.Length > 0 && single.ExistAnotherInstance)
             {
                 await PipeHelper.Send("play " + e.Args[0]);
                 Environment.Exit(0);
@@ -96,9 +93,9 @@ namespace EasyMusic
             else
             {
                 ok = true;
-
             }
         }
+
         //public async  Task<bool> CheckAnotherInstanceAndOpenWindow<T>(Application app) where T : Window, new()
         //{
         //    string programName = EasyMusic.Properties.Resources.AppName;
@@ -127,7 +124,6 @@ namespace EasyMusic
         //                    }
         //                    try
         //                    {
-
         //                        app.MainWindow.Show();
         //                    }
         //                    catch (InvalidOperationException)
@@ -171,7 +167,6 @@ namespace EasyMusic
             Resources["backgroundTransparentColor"] = Color.FromArgb(0, color.Color.R, color.Color.G, color.Color.B);
 
             Resources["foregroundBrushColor"] = new SolidColorBrush(Colors.Black);
-
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)
@@ -183,8 +178,5 @@ namespace EasyMusic
             Setting.Save();
             trayIcon?.Dispose();
         }
-
-
     }
-
 }

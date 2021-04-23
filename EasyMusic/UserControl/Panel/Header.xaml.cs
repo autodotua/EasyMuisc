@@ -1,21 +1,14 @@
-﻿using System;
+﻿using EasyMusic.Windows;
+using FzLib.Program;
+using FzLib.Windows;
+using System.ComponentModel;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shell;
-using EasyMusic.Windows;
 using static EasyMusic.GlobalDatas;
-using static FzLib.Control.Dialog.DialogBox;
-using EasyMusic.Helper;
-using System.Security.Principal;
-using System.Diagnostics;
-using System.Windows.Controls.Primitives;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using FzLib.Windows;
-using FzLib.Program;
 
 namespace EasyMusic.UserControls
 {
@@ -30,14 +23,17 @@ namespace EasyMusic.UserControls
         }
 
         #region 标题栏
+
         /// <summary>
         /// 主菜单
         /// </summary>
-        ContextMenu mainContextMenu;
+        private ContextMenu mainContextMenu;
+
         /// <summary>
         /// 窗体上边界
         /// </summary>
-        double reservedTop;
+        private double reservedTop;
+
         /// <summary>
         /// 单击菜单按钮事件
         /// </summary>
@@ -45,7 +41,6 @@ namespace EasyMusic.UserControls
         /// <param name="e"></param>
         private void BtnSettingsClickEventHandler(object sender, RoutedEventArgs e)
         {
-
             if (mainContextMenu != null)
             {
                 (mainContextMenu.Items[0] as MenuItem).Header = MainWindow.Current.Topmost ? "取消置顶" : "置顶";
@@ -62,7 +57,7 @@ namespace EasyMusic.UserControls
                 MainWindow.Current.Topmost = !MainWindow.Current.Topmost;
                 Setting.Topmost = MainWindow.Current.Topmost;
             };
-            MenuItem menuFileAssociation = new MenuItem() { Header = FileFormatAssociation.IsAssociated(".mp3", Properties.Resources.AppName) ? "取关格式": "关联格式" };
+            MenuItem menuFileAssociation = new MenuItem() { Header = FileFormatAssociation.IsAssociated(".mp3", Properties.Resources.AppName) ? "取关格式" : "关联格式" };
             menuFileAssociation.Click += MenuFileAssociationClick;
             MenuItem menuListenHistory = new MenuItem() { Header = "聆听历史" };
             menuListenHistory.Click += (p1, p2) =>
@@ -148,7 +143,9 @@ namespace EasyMusic.UserControls
                 FileFormatAssociation.SetAssociation(".mp3", Properties.Resources.AppName, "mp3 文件", Information.ProgramDirectoryPath + "\\music.png");
             }
         }
-        double mouseDownY = 1000;
+
+        private double mouseDownY = 1000;
+
         /// <summary>
         /// 鼠标左键在标题栏上按下事件
         /// </summary>
@@ -165,6 +162,7 @@ namespace EasyMusic.UserControls
                 MainWindow.Current.DragMove();
             }
         }
+
         /// <summary>
         /// 双击标题栏事件
         /// </summary>
@@ -189,9 +187,10 @@ namespace EasyMusic.UserControls
             //}
             //else
             //{
-                MainWindow.Current.Close();
-           // }
+            MainWindow.Current.Close();
+            // }
         }
+
         /// <summary>
         /// 单击最大化按钮事件
         /// </summary>
@@ -201,7 +200,6 @@ namespace EasyMusic.UserControls
         {
             MainWindow.Current.WindowState = (MainWindow.Current.WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
         }
-
 
         /// <summary>
         /// 单击最小化按钮事件
@@ -219,15 +217,17 @@ namespace EasyMusic.UserControls
                 //}
                 //else
                 //{
-                    MainWindow.Current.WindowState = WindowState.Minimized;
+                MainWindow.Current.WindowState = WindowState.Minimized;
                 //}
                 // Opacity = 1;
             }, true);
         }
+
         /// <summary>
         /// 鼠标是否在专辑图上按下了
         /// </summary>
-        bool imgAlbumMousePress = false;
+        private bool imgAlbumMousePress = false;
+
         private string headerText = "EasuMusic";
         private ImageSource albumImageSource;
 
@@ -248,6 +248,7 @@ namespace EasyMusic.UserControls
                 imgAlbumMousePress = false;
             }
         }
+
         /// <summary>
         /// 鼠标按下专辑图事件
         /// </summary>
@@ -258,6 +259,7 @@ namespace EasyMusic.UserControls
             //不知什么原因，鼠标在Header上按下会出发DragMove然后触发了鼠标在专辑图上抬起事件，所以写此事件确保鼠标确实是在专辑图上
             imgAlbumMousePress = true;
         }
+
         /// <summary>
         /// 鼠标离开专辑图事件
         /// </summary>
@@ -267,6 +269,7 @@ namespace EasyMusic.UserControls
         {
             imgAlbumMousePress = false;
         }
+
         public string HeaderText
         {
             get => headerText;
@@ -276,6 +279,7 @@ namespace EasyMusic.UserControls
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("HeaderText"));
             }
         }
+
         public double HeaderTextMaxWidth { get; set; }
 
         public ImageSource AlbumImageSource
@@ -287,27 +291,25 @@ namespace EasyMusic.UserControls
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AlbumImageSource"));
             }
         }
-        #endregion
 
+        #endregion 标题栏
 
+        private double dpi;
+        private bool isMoving = false;
+        private Point rawPoint;
+        private double rawTop;
+        private double rawLeft;
 
-
-        double dpi;
-        bool isMoving = false;
-        Point rawPoint;
-        double rawTop;
-        double rawLeft;
         private void Button_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             Button btn = sender as Button;
             Point mousePosition = FzLib.Device.Mouse.Position;
             if (isMoving && btn.IsMouseOver)
             {
-                MainWindow.Current.Top = rawTop + (mousePosition.Y - rawPoint.Y) /dpi;
+                MainWindow.Current.Top = rawTop + (mousePosition.Y - rawPoint.Y) / dpi;
                 MainWindow.Current.Left = rawLeft + (mousePosition.X - rawPoint.X) / dpi;
-               // Debug.WriteLine(MainWindow.Current.Top + "        " + mousePosition.Y + "       " + rawPoint.Y + "         " + rawTop + "       " + PresentationSource.FromVisual(this).CompositionTarget.TransformFromDevice.M11);
+                // Debug.WriteLine(MainWindow.Current.Top + "        " + mousePosition.Y + "       " + rawPoint.Y + "         " + rawTop + "       " + PresentationSource.FromVisual(this).CompositionTarget.TransformFromDevice.M11);
             }
-
 
             if (MainWindow.Current.WindowState == WindowState.Maximized && btn.IsMouseCaptured && e.MouseDevice.LeftButton == MouseButtonState.Pressed)
             {
@@ -318,7 +320,7 @@ namespace EasyMusic.UserControls
                     rawPoint = FzLib.Device.Mouse.Position;
                     rawTop = MainWindow.Current.Top;
                     rawLeft = MainWindow.Current.Left;
-                   dpi = VisualTreeHelper.GetDpi(MainWindow.Current).DpiScaleX;
+                    dpi = VisualTreeHelper.GetDpi(MainWindow.Current).DpiScaleX;
                     isMoving = true;
                 }
             }

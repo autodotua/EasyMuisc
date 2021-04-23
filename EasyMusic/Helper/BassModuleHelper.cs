@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using EasyMusic.Enum;
+using FzLib.Control.Dialog;
+using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Un4seen.Bass;
-using static Un4seen.Bass.Bass;
-using static EasyMusic.GlobalDatas;
-using static FzLib.Basic.String;
-using System.IO;
-using static FzLib.Control.Dialog.DialogBox;
-using System.Windows.Media.Imaging;
-using FzLib.Control.Dialog;
 using System.Windows;
+using System.Windows.Media.Imaging;
+using Un4seen.Bass;
+using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
-using EasyMusic.Enum;
-using System.Diagnostics;
+using static FzLib.Basic.String;
+using static FzLib.Control.Dialog.DialogBox;
+using static Un4seen.Bass.Bass;
 
 namespace EasyMusic.Helper
 {
@@ -38,7 +35,6 @@ namespace EasyMusic.Helper
                     value = 0;
                 }
                 BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, (float)value);
-
             }
             get
             {
@@ -69,7 +65,9 @@ namespace EasyMusic.Helper
         {
             BASS_StreamFree(stream);
         }
+
         public Info.MusicInfo Info { get; private set; }
+
         public double Position
         {
             get => BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetPosition(stream));
@@ -82,6 +80,7 @@ namespace EasyMusic.Helper
         }
 
         public bool IsEnd => BASS_ChannelGetLength(stream) - BASS_ChannelGetPosition(stream) <= 144;
+
         public int Pitch
         {
             get
@@ -104,6 +103,7 @@ namespace EasyMusic.Helper
                 Setting.Pitch = value;
             }
         }
+
         public int Tempo
         {
             get
@@ -134,14 +134,12 @@ namespace EasyMusic.Helper
         public double Length { get; private set; }
         public BitmapImage AlbumImage { get; private set; }
 
-
         #region 播放控制
-
 
         /// <summary>
         /// 若在PlayNew时没立即播放则暂时不记录
         /// </summary>
-        bool notRecordYet = false;
+        private bool notRecordYet = false;
 
         public BassModuleHelper(Info.MusicInfo music)
         {
@@ -149,8 +147,8 @@ namespace EasyMusic.Helper
 
             FilePath = music.Path;
             MusicFile = new FileInfo(FilePath);
-
         }
+
         public bool Initialiaze()
         {
             if (!File.Exists(FilePath))
@@ -178,11 +176,9 @@ namespace EasyMusic.Helper
 
             if (Setting.RecordListenHistory)
             {
-
                 notRecordYet = true;
             }
             return true;
-
         }
 
         /// <summary>
@@ -196,14 +192,13 @@ namespace EasyMusic.Helper
                                                                                                     // var decoder = Bass.BASS_StreamCreateFile(path, 0, 0,BASSFlag. BASS_STREAM_DECODE); // create a "decoding channel" from a file
                 stream = Un4seen.Bass.AddOn.Fx.BassFx.BASS_FX_TempoCreate(tempStream, BASSFlag.BASS_FX_FREESOURCE);
 
-
                 //Device = MusicControlHelper.Device;
                 if (Setting.MusicFxMode == MusicFxRemainMode.All)
                 {
                     Pitch = Setting.Pitch;
                     Tempo = Setting.Tempo;
                 }
-                else if(Setting.MusicFxMode == MusicFxRemainMode.Each)
+                else if (Setting.MusicFxMode == MusicFxRemainMode.Each)
                 {
                     var fx = MusicFxConfigHelper.Instance.Get(FilePath);
                     Pitch = fx.Pitch;
@@ -234,7 +229,7 @@ namespace EasyMusic.Helper
             if (BASS_ChannelPlay(stream, false))
             {
                 MainWindow.Current.OnStatusChanged(ControlStatus.Play);
-                BASS_ChannelSlideAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, Convert.ToSingle(MusicControlHelper.Volumn), Convert.ToInt32( Setting.VolumnChangeTime.TotalMilliseconds));
+                BASS_ChannelSlideAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, Convert.ToSingle(MusicControlHelper.Volumn), Convert.ToInt32(Setting.VolumnChangeTime.TotalMilliseconds));
 
                 if (Setting.RecordListenHistory && notRecordYet)
                 {
@@ -243,6 +238,7 @@ namespace EasyMusic.Helper
                 }
             }
         }
+
         /// <summary>
         /// 播放当前歌曲
         /// </summary>
@@ -252,6 +248,7 @@ namespace EasyMusic.Helper
             Position = 0;
             Play();
         }
+
         /// <summary>
         /// 暂停
         /// </summary>
@@ -278,7 +275,8 @@ namespace EasyMusic.Helper
             }
         }
 
-        #endregion
+        #endregion 播放控制
+
         /// <summary>
         /// 读取Mp3信息
         /// </summary>
@@ -367,12 +365,15 @@ namespace EasyMusic.Helper
                     case 0:
                         str = Encoding.GetEncoding("ISO-8859-1").GetString(b, 1, length);
                         break;
+
                     case 1:
                         str = Encoding.GetEncoding("UTF-16LE").GetString(b, 1, length);
                         break;
+
                     case 2:
                         str = Encoding.GetEncoding("UTF-16BE").GetString(b, 1, length);
                         break;
+
                     case 3:
                         str = Encoding.UTF8.GetString(b, 1, length);
                         break;
@@ -380,6 +381,5 @@ namespace EasyMusic.Helper
                 return str;
             }
         }
-
     }
 }

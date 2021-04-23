@@ -1,34 +1,20 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Windows;
-using System.Windows.Interop;
-using Un4seen.Bass;
-using System.Windows.Input;
-using System.Windows.Threading;
-using System.Windows.Controls;
-using System.Windows.Media.Animation;
-using System.Windows.Media;
-using System.Linq;
-using System.Windows.Shell;
+﻿using EasyMusic.Enum;
 using EasyMusic.Windows;
-using static EasyMusic.GlobalDatas;
-using static EasyMusic.Helper.MusicListHelper;
-using static FzLib.Control.Dialog.DialogBox;
-using static EasyMusic.Helper.MusicControlHelper;
-using EasyMusic.Helper;
 using FzLib.Basic;
-using EasyMusic.Info;
-using System.Security.Principal;
+using FzLib.Control.Dialog;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows.Controls.Primitives;
-using System.Text.RegularExpressions;
-using FzLib.Control.Dialog;
-using EasyMusic.UserControls;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
+using static EasyMusic.GlobalDatas;
+using static EasyMusic.Helper.MusicControlHelper;
 using static System.Math;
-using EasyMusic.Enum;
 
 namespace EasyMusic.UserControls
 {
@@ -37,12 +23,13 @@ namespace EasyMusic.UserControls
     /// </summary>
     public partial class LyricArea : UserControl
     {
-
         /// <summary>
         /// 到某一条歌词一共有多少行
         /// </summary>
-        List<int> lrcLineSumToIndex = new List<int>();
+        private List<int> lrcLineSumToIndex = new List<int>();
+
         private LyricType currentLyricType = LyricType.None;
+
         public LyricType CurrentLyricType
         {
             get => currentLyricType;
@@ -55,17 +42,19 @@ namespace EasyMusic.UserControls
                         txtLrc.Visibility = Visibility.Hidden;
                         lbxLrc.Visibility = Visibility.Hidden;
                         break;
+
                     case LyricType.LrcFormat:
                         grdLrc.Visibility = Visibility.Visible;
                         txtLrc.Visibility = Visibility.Hidden;
                         lbxLrc.Visibility = Visibility.Visible;
                         break;
+
                     case LyricType.TextFormat:
                         grdLrc.Visibility = Visibility.Hidden;
                         txtLrc.Visibility = Visibility.Visible;
                         lbxLrc.Visibility = Visibility.Hidden;
                         txtLrc.FontSize = Setting.TextLrcFontSize;
-                      
+
                         break;
                 }
                 FontFamily font = new FontFamily(Setting.LyricsFont);
@@ -77,7 +66,7 @@ namespace EasyMusic.UserControls
                 {
                     lbxLrc.FontFamily = font;
                 }
-                lbxLrc.Foreground =Setting.LyricsFontColor;
+                lbxLrc.Foreground = Setting.LyricsFontColor;
                 lbxLrc.FontWeight = Setting.LyricsFontBold ? FontWeights.Bold : FontWeights.Normal;
 
                 lrcLineSumToIndex.Clear();
@@ -122,7 +111,6 @@ namespace EasyMusic.UserControls
             {
                 lrcLineSumToIndex.Add(i.Value);
             }
-
         }
 
         public void LoadTextFormatLyric(string text)
@@ -130,9 +118,8 @@ namespace EasyMusic.UserControls
             txtLrc.Text = text;
         }
 
-
-
         private int showingMessageCount = 0;
+
         /// <summary>
         /// 显示不重要的信息
         /// </summary>
@@ -149,6 +136,7 @@ namespace EasyMusic.UserControls
             }
             showingMessageCount--;
         }
+
         /// <summary>
         /// 单击歌词选项按钮事件
         /// </summary>
@@ -163,10 +151,8 @@ namespace EasyMusic.UserControls
                 IsOpen = true
             };
 
-
             MenuItem menuShowLrc = new MenuItem() { Header = "不显示歌词" };
             menuShowLrc.Click += (p1, p2) => MainWindow.Current.ShrinkLyricsArea();
-
 
             MenuItem menuCopyLrc = new MenuItem() { Header = "复制歌词" };
             menuCopyLrc.Click += (p1, p2) => lrc.CopyLyrics();
@@ -198,7 +184,7 @@ namespace EasyMusic.UserControls
                     int index = DialogBox.ShowMessage("Lrc歌词文件还是Txt文本文件？", DialogType.Information, new string[] { "Lrc文件", "Txt文件", "取消" });
                     if (index == 0)
                     {
-                    WinLrcEdit.Edit(MainWindow.Current, file.FullName.RemoveEnd(file.Extension) + ".lrc");
+                        WinLrcEdit.Edit(MainWindow.Current, file.FullName.RemoveEnd(file.Extension) + ".lrc");
                     }
                     else if (index == 1)
                     {
@@ -207,17 +193,14 @@ namespace EasyMusic.UserControls
                 }
             };
 
-            MenuItem menuShow = new MenuItem() {Header="展示歌词" };
+            MenuItem menuShow = new MenuItem() { Header = "展示歌词" };
             menuShow.Click += (p1, p2) =>
             {
-
-                    WinLrcEdit.ShowOnly(MainWindow.Current,lrc.LrcContent.Values);
-           
+                WinLrcEdit.ShowOnly(MainWindow.Current, lrc.LrcContent.Values);
             };
 
             MenuItem menuOpenSetting = new MenuItem() { Header = "主界面歌词设置" };
             menuOpenSetting.Click += (p1, p2) => new WinSettings(1) { Owner = MainWindow.Current }.ShowDialog();
-
 
             MenuItem menuFloat = new MenuItem() { Header = "悬浮歌词" };
 
@@ -235,8 +218,6 @@ namespace EasyMusic.UserControls
             }
             menuFloat.Items.Add(menuFloatOpenSetting);
 
-
-
             menu.Items.Add(menuShowLrc);
             menu.Items.Add(menuReload);
             menu.Items.Add(menuFloat);
@@ -249,25 +230,22 @@ namespace EasyMusic.UserControls
                 menu.Items.Add(menuCopyLrc);
                 menu.Items.Add(menuSave);
                 menu.Items.Add(menuSaveAs);
-
             }
             menu.Items.Add(new SeparatorLine());
             menu.Items.Add(menuSearchInNetEase);
             menu.Items.Add(menuOpenSetting);
-
         }
+
         public void Update()
         {
             lbxLrc.RefreshFontSize(lrc.CurrentIndex);
             lbxLrc.ScrollTo(lrc.CurrentIndex, lrcLineSumToIndex);
-
         }
 
         public void HideAll()
         {
             txtLrc.Visibility = Visibility.Hidden;
             lbxLrc.Visibility = Visibility.Hidden;
-
         }
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -1,16 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace EasyMusic.Windows
 {
@@ -27,7 +15,7 @@ namespace EasyMusic.Windows
                 + "邮箱：autodotua@outlook.com" + newLine
                 + "编译时间：" + System.IO.File.GetLastWriteTime(GetType().Assembly.Location) + newLine
                 + "日志：";
-                txt2.Text= Properties.Resources.日志;
+            txt2.Text = Properties.Resources.日志;
         }
     }
 }

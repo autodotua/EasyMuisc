@@ -1,13 +1,7 @@
 ﻿using EasyMusic.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Windows.Media;
-using FzLib.Program;
 using FzLib.DataStorage.Serialization;
+using System;
+using System.Windows.Media;
 
 namespace EasyMusic
 {
@@ -33,14 +27,13 @@ namespace EasyMusic
         public double Height { get; set; } = 600;
         public double Width { get; set; } = 1000;
 
-
         public int UpdateSpeed { get; set; } = 30;
         public int AnimationFps { get; set; } = 60;
         public int Pitch { get; set; } = 0;
         public int Tempo { get; set; } = 100;
         public int SampleRate { get; set; } = 48000;
         public int ThresholdValueOfListenTime { get; set; } = 30;
-        
+
         public int FloatLyricsFontEffect { get; set; } = 1;
 
         public bool Topmost { get; set; } = false;
@@ -71,7 +64,7 @@ namespace EasyMusic
         public CycleMode CycleMode { get; set; } = CycleMode.ListCycle;
 
         public TimeSpan AnimationDuration { get; set; } = TimeSpan.FromMilliseconds(800);
-    
+
         public TimeSpan VolumnChangeTime { get; set; } = TimeSpan.FromMilliseconds(800);
         public bool ShowOneLineInFloatLyric { get; set; } = false;
     }

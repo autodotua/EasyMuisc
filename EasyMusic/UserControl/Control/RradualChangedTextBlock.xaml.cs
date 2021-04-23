@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using static EasyMusic.GlobalDatas;
 
 namespace EasyMusic.UserControls
@@ -23,8 +12,9 @@ namespace EasyMusic.UserControls
     /// </summary>
     public partial class RradualChangedTextBlock : System.Windows.Controls.UserControl
     {
-        dynamic text1;
-        dynamic text2;
+        private dynamic text1;
+        private dynamic text2;
+
         public RradualChangedTextBlock()
         {
             InitializeComponent();
@@ -42,7 +32,6 @@ namespace EasyMusic.UserControls
                 Duration = TimeSpan.FromSeconds(0.4),
                 EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut },
                 FillBehavior = FillBehavior.Stop
-
             };
             Storyboard.SetTargetName(ani1, text1.Name);
             Storyboard.SetTargetName(ani2, text2.Name);
@@ -55,10 +44,7 @@ namespace EasyMusic.UserControls
                 //story.Stop();
                 text1.Opacity = 1;
                 text2.Opacity = 0;
-
             };
-
-
         }
 
         public void SetEffect()
@@ -112,7 +98,6 @@ namespace EasyMusic.UserControls
              Setting.FloatLyricsNormalFontSize
              );
             ChangeText(text);
-
         }
 
         public void ChangeText(string text)
@@ -124,13 +109,14 @@ namespace EasyMusic.UserControls
             story.Begin(this);
         }
 
-        Storyboard story = new Storyboard();
+        private Storyboard story = new Storyboard();
 
         public void ToMajor(string text)
         {
             text1.Text = text;
             ToMajor();
         }
+
         public void ToMajor()
         {
             FontSizeAnimation
@@ -151,7 +137,6 @@ namespace EasyMusic.UserControls
                 EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
             };
 
-
             Storyboard.SetTargetName(ani, obj.Name);
             Storyboard.SetTargetProperty(ani, new PropertyPath(FontSizeProperty));
             Storyboard story = new Storyboard();
@@ -162,7 +147,6 @@ namespace EasyMusic.UserControls
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             text1.FontSize = Setting.FloatLyricsNormalFontSize;
-
         }
 
         public TextAlignment TextAlignment

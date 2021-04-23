@@ -1,26 +1,19 @@
 ﻿using EasyMusic.Enum;
-using EasyMusic.Helper;
 using EasyMusic.Info;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FzLib.Control.Dialog;
+using Un4seen.Bass;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
 using static FzLib.Control.Dialog.DialogBox;
 using static Un4seen.Bass.Bass;
-using Un4seen.Bass;
-using System.Windows.Interop;
 
 namespace EasyMusic.Helper
 {
     public static class MusicControlHelper
     {
-
         private static BassModuleHelper bassInstance;
+
         public static BassModuleHelper Music
         {
             get
@@ -33,9 +26,10 @@ namespace EasyMusic.Helper
                 bassInstance = value;
             }
         }
+
         public static int Device
         {
-            get =>BASS_GetDevice();
+            get => BASS_GetDevice();
             set
             {
                 var devices = BASS_GetDeviceInfos();
@@ -56,10 +50,9 @@ namespace EasyMusic.Helper
                     }
                     else
                     {
-                        ShowError("设置总输出设备错误："+BASS_ErrorGetCode().ToString());
+                        ShowError("设置总输出设备错误：" + BASS_ErrorGetCode().ToString());
                     }
                 }
-
             }
         }
 
@@ -83,6 +76,7 @@ namespace EasyMusic.Helper
                 MainWindow.Current.controlBar.Notify("SliderVolumnBinding");
             }
         }
+
         public static void PlayOrPlayNew()
         {
             if (Music == null)
@@ -96,6 +90,7 @@ namespace EasyMusic.Helper
 
             Music?.Play();
         }
+
         /// <summary>
         /// 播放新的歌曲
         /// </summary>
@@ -103,7 +98,7 @@ namespace EasyMusic.Helper
         /// <returns></returns>
         public static void PlayNew(MusicInfo music, bool playAtOnce = true)
         {
-            if(Music!=null && Setting.MusicFxMode==Enum.MusicFxRemainMode.Each)
+            if (Music != null && Setting.MusicFxMode == Enum.MusicFxRemainMode.Each)
             {
                 MusicFxConfigHelper.Instance.Set(Music.FilePath, new MusicFxInfo(Music.Pitch, Music.Tempo));
             }
@@ -114,10 +109,9 @@ namespace EasyMusic.Helper
                 Music.Play();
             }
         }
-        
+
         public static void PlayLast()
         {
-
             if (HistoryCount == 0)
             {
                 PlayListLast();
@@ -153,7 +147,8 @@ namespace EasyMusic.Helper
             {
                 case CycleMode.ListCycle:
                     if (MusicCount > 1)
-                    {if(Music!=null)
+                    {
+                        if (Music != null)
                         {
                             if (MusicDatas.Last() == Music.Info)
                             {
@@ -168,13 +163,13 @@ namespace EasyMusic.Helper
                         {
                             PlayNew(MusicDatas[0]);
                         }
-                       
                     }
                     else
                     {
                         Music.PlayAgain();
                     }
                     break;
+
                 case CycleMode.Shuffle:
                     if (MusicCount == 1)
                     {
@@ -189,14 +184,16 @@ namespace EasyMusic.Helper
                         index = r.Next(0, MusicCount);
                         music = MusicDatas[index];
                     }
-                    while (music ==((Music==null)?null: Music.Info));
+                    while (music == ((Music == null) ? null : Music.Info));
                     PlayNew(music);
                     break;
+
                 case CycleMode.SingleCycle:
                     Music.PlayAgain();
                     break;
             }
         }
+
         public static void PlayListLast()
         {
             if (MusicCount > 1)
@@ -214,8 +211,6 @@ namespace EasyMusic.Helper
             {
                 Music.PlayAgain();
             }
-
         }
-
     }
 }

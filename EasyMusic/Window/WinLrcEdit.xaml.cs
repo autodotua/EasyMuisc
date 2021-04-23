@@ -15,10 +15,10 @@ namespace EasyMusic.Windows
     public partial class WinLrcEdit : WindowBase
     {
         private string filePath = "";
+
         private WinLrcEdit()
         {
             InitializeComponent();
-
         }
 
         public static void Edit(Window owner, string path)
@@ -44,7 +44,6 @@ namespace EasyMusic.Windows
             win.Show();
         }
 
-
         private void Load()
         {
             Title = "歌词编辑 - " + filePath;
@@ -62,7 +61,6 @@ namespace EasyMusic.Windows
                     Close();
                     return;
                 }
-
             }
             else
             {
@@ -81,7 +79,6 @@ namespace EasyMusic.Windows
                     ShowException(ex);
                 }
             }
-
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -95,6 +92,7 @@ namespace EasyMusic.Windows
                 case "btnReload":
                     Load();
                     break;
+
                 case "btnSave":
                     try
                     {
@@ -110,6 +108,7 @@ namespace EasyMusic.Windows
                         ShowException(ex);
                     }
                     break;
+
                 case "btnSaveAs":
                     SaveFileDialog dialog = new SaveFileDialog() { FileName = new FileInfo(filePath).Name, DefaultExt = new FileInfo(filePath).DirectoryName };
                     if (dialog.ShowDialog() == true)
@@ -118,7 +117,6 @@ namespace EasyMusic.Windows
                         {
                             File.WriteAllText(dialog.FileName, txt.Text, FzLib.Basic.String.GetEncoding(filePath));
                             SetButtonsStatus(false);
-
                         }
                         catch (Exception ex)
                         {

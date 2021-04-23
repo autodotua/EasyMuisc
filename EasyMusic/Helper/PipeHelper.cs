@@ -8,14 +8,14 @@ namespace EasyMusic.Helper
     public static class PipeHelper
     {
         private static Clinet clinet;
+
         public static void RegistClinet()
         {
             clinet = new Clinet(EasyMusic.Properties.Resources.AppName + "_Play");
             clinet.Start();
             clinet.GotMessage += ClinetGotMessage;
-
-
         }
+
         //C:\Users\autod\Documents\个人文件\音乐\2015\Avril Lavigne - Innocence.mp3
 
         private static async void ClinetGotMessage(object sender, PipeMessageEventArgs e)
@@ -41,7 +41,7 @@ namespace EasyMusic.Helper
                 }
                 else
                 {
-                    App.Current.Dispatcher.Invoke(() =>  FzLib.Control.Dialog.DialogBox.ShowError($"文件{path}不存在"));
+                    App.Current.Dispatcher.Invoke(() => FzLib.Control.Dialog.DialogBox.ShowError($"文件{path}不存在"));
                 }
             }
         }

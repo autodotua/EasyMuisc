@@ -1,30 +1,26 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Windows;
-using System.Windows.Interop;
-using Un4seen.Bass;
-using System.Windows.Input;
-using System.Windows.Threading;
-using System.Windows.Media.Animation;
-using System.Windows.Media;
-using System.Linq;
-using System.Windows.Shell;
+﻿using EasyMusic.Enum;
+using EasyMusic.Helper;
+using EasyMusic.Info;
 using EasyMusic.Windows;
+using FzLib.Program.Runtime;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media.Animation;
+using System.Windows.Shell;
+using System.Windows.Threading;
+using Un4seen.Bass;
 using static EasyMusic.GlobalDatas;
+using static EasyMusic.Helper.MusicControlHelper;
 using static EasyMusic.Helper.MusicListHelper;
 using static FzLib.Control.Dialog.DialogBox;
-using static EasyMusic.Helper.MusicControlHelper;
-using EasyMusic.Helper;
-using FzLib.Basic;
-using EasyMusic.Info;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using EasyMusic.Enum;
-using System.ComponentModel;
-using System.Windows.Controls;
-using FzLib.Program.Runtime;
 
 namespace EasyMusic
 {
@@ -33,19 +29,21 @@ namespace EasyMusic
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-
-
         #region 属性
+
         /// <summary>
         /// 当前窗体实例
         /// </summary>
         public static MainWindow Current { get; private set; }
+
         //private FloatLyrics floatLyric = new FloatLyrics();
         /// <summary>
         /// 悬浮歌词
         /// </summary>
-        public FloatLyrics FloatLyric { get; set; }= new FloatLyrics();
+        public FloatLyrics FloatLyric { get; set; } = new FloatLyrics();
+
         public IntPtr Handle { get; private set; }
+
         /// <summary>
         /// 是否显示加载动画
         /// </summary>
@@ -56,6 +54,7 @@ namespace EasyMusic
                 loading.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
             }
         }
+
         ///// <summary>
         ///// 动画帧率
         ///// </summary>
@@ -78,13 +77,11 @@ namespace EasyMusic
         /// <summary>
         /// 主定时器
         /// </summary>
-        DispatcherTimer UiTimer { get; set; }
+        private DispatcherTimer UiTimer { get; set; }
 
-        #endregion
+        #endregion 属性
 
         #region 初始化和配置
-
-
 
         /// <summary>
         /// 构造函数
@@ -94,7 +91,6 @@ namespace EasyMusic
             Current = this;
             InitializeComponent();
             DefaultDialogOwner = this;
-
 
             if (Setting.MaxWindow)
             {
@@ -109,7 +105,6 @@ namespace EasyMusic
                 Left = Setting.Left;
                 Width = Setting.Width;
                 Height = Setting.Height;
-
             }
             Handle = new WindowInteropHelper(this).EnsureHandle();
             if (!Un4seen.Bass.AddOn.Fx.BassFx.LoadMe() || !Bass.BASS_Init(-1, Setting.SampleRate/*无设置界面*/, BASSInit.BASS_DEVICE_DEFAULT, Handle))
@@ -128,11 +123,9 @@ namespace EasyMusic
 
             header.HeaderTextMaxWidth = SystemParameters.WorkArea.Width - 200;
 
-
-           //Initialized+=(p1,p2) =>
-           //WindowHelper.RepairWindowBehavior(this); 
+            //Initialized+=(p1,p2) =>
+            //WindowHelper.RepairWindowBehavior(this);
         }
-
 
         /// <summary>
         /// 初始化定时器事件
@@ -153,6 +146,7 @@ namespace EasyMusic
                 FloatLyric.Show();
             }
         }
+
         /// <summary>
         /// 窗体载入事件，获取音乐列表
         /// </summary>
@@ -166,8 +160,6 @@ namespace EasyMusic
 
             InitializeField();
             InitializeAnimation();
-
-
 
             if (argPath != null && File.Exists(argPath))
             {
@@ -190,15 +182,10 @@ namespace EasyMusic
                 grdMain.ColumnDefinitions[2].Width = new GridLength(0);
                 grdMain.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
                 Width = grdMain.ColumnDefinitions[0].ActualWidth + 32;
-
             }
 
             Topmost = Setting.Topmost;
-
         }
-
-        
-
 
         /// <summary>
         /// 托盘图标
@@ -234,14 +221,13 @@ namespace EasyMusic
             }
         }
 
-  
-
-        #endregion
+        #endregion 初始化和配置
 
         #region 窗体相关
 
         public bool SkipSavingSettings { get; set; } = false;
-        bool appShutingDown = false;
+        private bool appShutingDown = false;
+
         /// <summary>
         /// 窗体关闭
         /// </summary>
@@ -260,7 +246,7 @@ namespace EasyMusic
             HotKeyHelper.SaveHotKeys();
             SaveListToFile(lvwMusic.lastMusicListBtn.Text, false);
             Setting.CycleMode = MusicControlHelper.CycleMode;
-      
+
             Setting.LastMusicList = lvwMusic.lastMusicListBtn.Text;
             Setting.Top = Top;
             Setting.Left = Left;
@@ -275,20 +261,20 @@ namespace EasyMusic
             Setting.Save();
             //if (Setting.TrayMode==0 || Setting.TrayMode == 3 || appShutingDown)
             //{
-                if (Music != null)
+            if (Music != null)
+            {
+                if (Music.Status == BASSActive.BASS_ACTIVE_PLAYING)
                 {
-                    if (Music.Status == BASSActive.BASS_ACTIVE_PLAYING)
-                    {
-                        Music.Pause();
-                        await Task.Delay(Setting.VolumnChangeTime);
-                    }
-                    else
-                    {
-                        await Task.Delay(100);
-                    }
-                    Music.Dispose();
+                    Music.Pause();
+                    await Task.Delay(Setting.VolumnChangeTime);
                 }
-                App.Current.Shutdown();
+                else
+                {
+                    await Task.Delay(100);
+                }
+                Music.Dispose();
+            }
+            App.Current.Shutdown();
             //}
             //else
             //{
@@ -296,6 +282,7 @@ namespace EasyMusic
             //    Hide();
             //}
         }
+
         /// <summary>
         /// 窗体状态改变事件
         /// </summary>
@@ -305,7 +292,7 @@ namespace EasyMusic
         {
             if (WindowState == WindowState.Maximized)
             {
-               BorderThickness = new Thickness();
+                BorderThickness = new Thickness();
                 grdMain.Margin = new Thickness(8);
                 WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(0);
             }
@@ -316,9 +303,11 @@ namespace EasyMusic
                 WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(16);
             }
         }
-        #endregion
+
+        #endregion 窗体相关
 
         #region 音乐相关
+
         public void OnStatusChanged(ControlStatus status)
         {
             switch (status)
@@ -331,6 +320,7 @@ namespace EasyMusic
                         UiTimer.Start();
                     }
                     break;
+
                 case ControlStatus.Pause:
                     tbiPause.Visibility = Visibility.Collapsed;
                     tbiPlay.Visibility = Visibility.Visible;
@@ -390,6 +380,7 @@ namespace EasyMusic
                 ShowException("初始化歌词失败！", ex);
             }
         }
+
         /// <summary>
         /// 在即将播放新歌曲时初始化界面
         /// </summary>
@@ -401,9 +392,11 @@ namespace EasyMusic
             header.HeaderText = Title = Music.Name + " - EasyMusic";
             header.AlbumImageSource = Music.AlbumImage;
         }
-        #endregion
+
+        #endregion 音乐相关
 
         #region 快捷键
+
         /// <summary>
         /// 执行前进快捷键
         /// </summary>
@@ -413,6 +406,7 @@ namespace EasyMusic
         {
             Music.Position += 4;
         }
+
         /// <summary>
         /// 执行后退快捷键
         /// </summary>
@@ -422,6 +416,7 @@ namespace EasyMusic
         {
             MusicControlHelper.Music.Position -= 4;
         }
+
         /// <summary>
         /// 执行播放暂停快捷键
         /// </summary>
@@ -431,6 +426,7 @@ namespace EasyMusic
         {
             Music.PlayOrPause();
         }
+
         /// <summary>
         /// 执行下一曲快捷键
         /// </summary>
@@ -440,6 +436,7 @@ namespace EasyMusic
         {
             MusicControlHelper.PlayListNext();
         }
+
         /// <summary>
         /// 执行上一曲快捷键
         /// </summary>
@@ -448,12 +445,12 @@ namespace EasyMusic
         private void HotKeyLastEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             PlayLast();
-
         }
 
-        #endregion
+        #endregion 快捷键
 
         #region 鼠标滚轮
+
         /// <summary>
         /// 鼠标滚轮事件
         /// </summary>
@@ -467,9 +464,10 @@ namespace EasyMusic
             }
         }
 
-        #endregion
+        #endregion 鼠标滚轮
 
         #region 列表相关
+
         /// <summary>
         /// 执行清空列表后的清理工作
         /// </summary>
@@ -486,6 +484,7 @@ namespace EasyMusic
             header.AlbumImageSource = null;
             controlBar.OnStatusChanged(ControlStatus.Pause);
         }
+
         /// <summary>
         /// 单击收放列表事件
         /// </summary>
@@ -502,13 +501,11 @@ namespace EasyMusic
             {
                 Duration = new Duration(Setting.AnimationDuration),
                 EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
-
             };
             DoubleAnimation aniOpacity = new DoubleAnimation
             {
                 Duration = new Duration(Setting.AnimationDuration),
                 EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
-
             };
             Storyboard.SetTarget(aniMargin, lvwMusic);
             Storyboard.SetTarget(aniOpacity, lvwMusic);
@@ -541,7 +538,6 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void WindowDragEnterEventHandler(object sender, DragEventArgs e)
         {
-
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effects = DragDropEffects.All;
@@ -550,8 +546,8 @@ namespace EasyMusic
             {
                 e.Effects = DragDropEffects.None;
             }
-
         }
+
         /// <summary>
         /// 将文件拖到窗体上释放事件
         /// </summary>
@@ -608,9 +604,11 @@ namespace EasyMusic
                 AddMusic(musics.ToArray());
             }
         }
-        #endregion
+
+        #endregion 列表相关
 
         #region 歌词相关
+
         /// <summary>
         /// 展开歌词区域
         /// </summary>
@@ -623,6 +621,7 @@ namespace EasyMusic
 
             NewDoubleAnimation(this, WidthProperty, 1000, 0.5, 0.3);
         }
+
         /// <summary>
         /// 收缩歌词区域
         /// </summary>
@@ -638,6 +637,7 @@ namespace EasyMusic
                 grdMain.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
             });
         }
+
         /// <summary>
         /// 打开关闭悬浮歌词
         /// </summary>
@@ -650,18 +650,19 @@ namespace EasyMusic
             Setting.ShowFloatLyric = !Setting.ShowFloatLyric;
             if (Setting.ShowFloatLyric)
             {
-               
                 FloatLyric.Show();
                 if (Music != null)
                 {
-                    //InitializeLrc(); 
+                    //InitializeLrc();
                     FloatLyric.Reload(lrc.LrcContent.Values.ToList(), lrc.CurrentIndex);
                 }
             }
         }
-        #endregion
+
+        #endregion 歌词相关
 
         #region 任务栏按钮
+
         /// <summary>
         /// 单击任务栏上的播放按钮事件
         /// </summary>
@@ -677,14 +678,17 @@ namespace EasyMusic
                     case "下一曲":
                         PlayNext();
                         break;
+
                     case "上一曲":
                         PlayLast();
                         break;
+
                     case "播放":
                         Music.Play();
                         tbiPlay.Visibility = Visibility.Collapsed;
                         tbiPause.Visibility = Visibility.Visible;
                         break;
+
                     case "暂停":
 
                         Music.Pause();
@@ -696,17 +700,19 @@ namespace EasyMusic
             }
         }
 
-        #endregion
+        #endregion 任务栏按钮
 
         #region 动画和定时器
+
         /// <summary>
         /// 歌词故事板
         /// </summary>
-        Storyboard storyLrc = new Storyboard();
+        private Storyboard storyLrc = new Storyboard();
+
         /// <summary>
         /// 歌词动画
         /// </summary>
-        ThicknessAnimation aniLrc = new ThicknessAnimation() { Duration = new Duration(TimeSpan.FromSeconds(0.8)), DecelerationRatio = 0.5 };
+        private ThicknessAnimation aniLrc = new ThicknessAnimation() { Duration = new Duration(TimeSpan.FromSeconds(0.8)), DecelerationRatio = 0.5 };
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -723,6 +729,7 @@ namespace EasyMusic
             }
             AnimationFps = -1;
         }
+
         /// <summary>
         /// 定时更新各项数据
         /// </summary>
@@ -730,7 +737,6 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void UpdateTick(object sender, EventArgs e)
         {
-           
             if (Music == null || Music.Status != BASSActive.BASS_ACTIVE_PLAYING)
             {
                 UiTimer.Stop();
@@ -748,6 +754,7 @@ namespace EasyMusic
                 }
             }
         }
+
         /// <summary>
         /// 更新当前时间的歌词
         /// </summary>
@@ -798,8 +805,6 @@ namespace EasyMusic
             }
         }
 
-        #endregion
-
+        #endregion 动画和定时器
     }
-
 }

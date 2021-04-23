@@ -1,21 +1,10 @@
 ﻿using EasyMusic.UserControls;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Shell;
 using static EasyMusic.GlobalDatas;
 
@@ -28,7 +17,6 @@ namespace EasyMusic.Windows
     {
         public FloatLyrics()
         {
-
             InitializeComponent();
             Top = Setting.FloatLyricsTop;
             Left = Setting.FloatLyricsLeft;
@@ -40,10 +28,11 @@ namespace EasyMusic.Windows
                 ResizeBorderThickness = new Thickness(4),
             });
 
-
             //sbdOpacity.Children.Add(aniOpacity);
         }
-        FzLib.Windows.WindowStyle windowMode;
+
+        private FzLib.Windows.WindowStyle windowMode;
+
         /// <summary>
         /// 在加载时设置鼠标穿透
         /// </summary>
@@ -55,10 +44,12 @@ namespace EasyMusic.Windows
             windowMode = new FzLib.Windows.WindowStyle(this);
             windowMode.SetToMouseThrough();
         }
+
         /// <summary>
         /// 是否正在调整歌词位置、大小
         /// </summary>
         private bool adjuesting;
+
         /// <summary>
         /// 调整歌词位置、大小
         /// </summary>
@@ -83,25 +74,26 @@ namespace EasyMusic.Windows
             }
             get => adjuesting;
         }
+
         /// <summary>
         /// 歌词列表
         /// </summary>
-        string[] lrc;
+        private string[] lrc;
+
         /// <summary>
         /// 加载歌词
         /// </summary>
         /// <param name="lrc"></param>
-        public void Reload(IEnumerable<string> lrc,int position=0)
+        public void Reload(IEnumerable<string> lrc, int position = 0)
         {
             CurrentIndex = 0;
             if (Setting.ShowOneLineInFloatLyric)
             {
-                this.lrc = lrc.Select(p=>p.Contains(Environment.NewLine)?p.Split(new string[] { Environment.NewLine },StringSplitOptions.RemoveEmptyEntries)[0]:p).ToArray();
+                this.lrc = lrc.Select(p => p.Contains(Environment.NewLine) ? p.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)[0] : p).ToArray();
             }
             else
             {
                 this.lrc = lrc.ToArray();
-
             }
             //lrc.Add("\t");
             //if (lrc.Count > 0))
@@ -131,7 +123,9 @@ namespace EasyMusic.Windows
         {
             return (stk.Children[index] as RradualChangedTextBlock);
         }
+
         private int CurrentIndex = 0;
+
         /// <summary>
         /// 通知改变当前歌词
         /// </summary>
@@ -186,7 +180,6 @@ namespace EasyMusic.Windows
             //currentIndex = index;
         }
 
-
         private void WindowPreviewMouseLeftButtonDownEventHandler(object sender, MouseButtonEventArgs e)
         {
             if (!btnOk.IsMouseOver)
@@ -202,15 +195,12 @@ namespace EasyMusic.Windows
             Setting.FloatLyricsLeft = Left;
             Setting.FloatLyricsHeight = Height;
             Setting.FloatLyricsWidth = Width;
-
         }
 
         private void BtnOkClickEventHandler(object sender, RoutedEventArgs e)
         {
             Adjuest = false;
-
         }
-   
 
         public void Clear()
         {

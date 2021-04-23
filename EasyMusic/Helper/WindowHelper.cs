@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 
 namespace EasyMusic.Windows
 {
-    class WindowHelper
+    internal class WindowHelper
     {
         /// <summary>
         /// WPF最大化避免覆盖任务栏
@@ -69,10 +65,12 @@ namespace EasyMusic.Windows
 
         [DllImport("user32")]
         internal static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
+
         [DllImport("User32")]
         internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
 
         #region Nested type: MINMAXINFO
+
         [StructLayout(LayoutKind.Sequential)]
         internal struct MINMAXINFO
         {
@@ -82,9 +80,11 @@ namespace EasyMusic.Windows
             public POINT ptMinTrackSize;
             public POINT ptMaxTrackSize;
         }
-        #endregion
+
+        #endregion Nested type: MINMAXINFO
 
         #region Nested type: MONITORINFO
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         internal class MONITORINFO
         {
@@ -93,23 +93,28 @@ namespace EasyMusic.Windows
             public RECT rcWork;
             public int dwFlags;
         }
-        #endregion
+
+        #endregion Nested type: MONITORINFO
 
         #region Nested type: POINT
+
         [StructLayout(LayoutKind.Sequential)]
         internal struct POINT
         {
             public int x;
             public int y;
+
             public POINT(int x, int y)
             {
                 this.x = x;
                 this.y = y;
             }
         }
-        #endregion
+
+        #endregion Nested type: POINT
 
         #region Nested type: RECT
+
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
         internal struct RECT
         {
@@ -124,6 +129,7 @@ namespace EasyMusic.Windows
             {
                 get { return Math.Abs(right - left); }
             }
+
             public int Height
             {
                 get { return bottom - top; }
@@ -186,6 +192,7 @@ namespace EasyMusic.Windows
                 return !(rect1 == rect2);
             }
         }
-        #endregion
+
+        #endregion Nested type: RECT
     }
 }
