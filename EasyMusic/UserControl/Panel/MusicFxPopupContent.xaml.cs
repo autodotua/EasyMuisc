@@ -27,48 +27,43 @@ namespace EasyMusic.UserControls
         public void Load()
         {
             stkDevices.Children.Clear();
-            if (BASS_GetDeviceCount() - 2 <= 0)
+            if (BASS_GetDeviceCount() - 2 > 0)
             {
-                return;
+                var devices = BASS_GetDeviceInfos();
+
+                int n = -1;
+                foreach (var device in devices)
+                {
+                    if (++n == 0)
+                    {
+                        continue;
+                    }
+                    if (Device == n)
+                    {
+                        continue;
+                    }
+
+                    Button btn = new Button
+                    {
+                        Content = device.name,
+                        Style = Resources["btnStyleNormal"] as Style,
+                    };
+                    int value = n;
+                    btn.Click += (p1, p2) =>
+                    {
+                        Device = value;
+                        BtnCloseEventHandler(null, null);
+                    };
+                    stkDevices.Children.Add(btn);
+                }
             }
 
-            var devices = BASS_GetDeviceInfos();
-
-            int n = -1;
-            foreach (var device in devices)
-            {
-                if (++n == 0)
-                {
-                    continue;
-                }
-                if (Device == n)
-                {
-                    continue;
-                }
-
-                Button btn = new Button
-                {
-                    Content = device.name,
-                    Style = Resources["btnStyleNormal"] as Style,
-                };
-                int value = n;
-                btn.Click += (p1, p2) =>
-                {
-                    Device = value;
-                    BtnCloseEventHandler(null, null);
-                };
-                stkDevices.Children.Add(btn);
-            }
-            
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Pitch"));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Tempo"));
             Pitch = Pitch;
             Tempo = Tempo;
-
         }
+
         private void ScrollViewerPreviewMouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
-
             var scv = sender as ScrollViewer;
             if (e.Delta > 0)
             {
@@ -90,7 +85,6 @@ namespace EasyMusic.UserControls
             (Parent as Popup).IsOpen = false;
         }
 
-
         /// <summary>
         /// 单击恢复初始化事件
         /// </summary>
@@ -108,19 +102,21 @@ namespace EasyMusic.UserControls
                 case "1":
                     sldPitch.Value--;
                     break;
+
                 case "2":
                     sldPitch.Value++;
                     break;
+
                 case "3":
                     sldTempo.Value--;
                     break;
+
                 case "4":
                     sldTempo.Value++;
                     break;
             }
-
-
         }
+
         public string PitchText { get; set; } = "±0";
 
         public int Pitch
@@ -129,7 +125,7 @@ namespace EasyMusic.UserControls
             {
                 if (Music == null)
                 {
-                    if (Setting.MusicFxMode==Enum.MusicFxRemainMode.All)
+                    if (Setting.MusicFxMode == Enum.MusicFxRemainMode.All)
                     {
                         return Setting.Pitch;
                     }
@@ -145,7 +141,8 @@ namespace EasyMusic.UserControls
                 }
                 PitchText = Setting.Pitch == 0 ? "±0" : ((Setting.Pitch > 0 ? "+" : "") + Setting.Pitch.ToString());
 
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PitchText"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PitchText)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Pitch)));
             }
         }
 
@@ -173,9 +170,9 @@ namespace EasyMusic.UserControls
                 }
                 TempoText = (Setting.Tempo + 100).ToString() + "%";
 
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TempoText"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TempoText)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tempo)));
             }
         }
-
     }
 }
