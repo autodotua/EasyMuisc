@@ -409,7 +409,7 @@ namespace EasyMusic.Helper
         /// </summary>
         /// <param name="index"></param>
         /// <param name="count"></param>
-        public static void RemoveHistory(int index, int count)
+        public static void RemoveHistories(int index, int count)
         {
             historyList.RemoveRange(index, count);
             historyIndex = index - 1;

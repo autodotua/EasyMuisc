@@ -126,11 +126,11 @@ namespace EasyMusic.Helper
             }
         }
 
-        public static void PlayNext()
+        public static void PlayNext(bool manual)
         {
             if (CurrentHistoryIndex == HistoryCount - 1)
             {
-                PlayListNext();
+                PlayListNext(manual);
             }
             else
             {
@@ -141,9 +141,13 @@ namespace EasyMusic.Helper
         /// <summary>
         /// 根据不同的播放循环模式播放下一首
         /// </summary>
-        public static void PlayListNext()
+        public static void PlayListNext(bool manual, CycleMode? mode = null)
         {
-            switch (CycleMode)
+            if (!mode.HasValue)
+            {
+                mode = CycleMode;
+            }
+            switch (mode.Value)
             {
                 case CycleMode.ListCycle:
                     if (MusicCount > 1)
@@ -176,20 +180,44 @@ namespace EasyMusic.Helper
                         Music.PlayAgain();
                         break;
                     }
-                    int index;
+
                     Random r = new Random();
-                    MusicInfo music = null;
-                    do
+                    MusicInfo[] playedMusics;
+                    //如果有n首歌曲，那么就随机从不存在于历史记录最后的n首歌中随机选取一首
+                    if (historyList.Count < MusicCount)
                     {
-                        index = r.Next(0, MusicCount);
-                        music = MusicDatas[index];
+                        playedMusics = historyList.Distinct().ToArray();
                     }
-                    while (music == ((Music == null) ? null : Music.Info));
+                    else
+                    {
+                        playedMusics = historyList.Skip(historyList.Count - MusicCount).Distinct().ToArray();
+                    }
+                    var notPlayedMusics = MusicDatas.Except(playedMusics).ToArray();
+                    MusicInfo music;
+                    if (notPlayedMusics.Length == 0)
+                    {
+                        music = MusicDatas[r.Next(MusicCount)];
+                    }
+                    else
+                    {
+                        do
+                        {
+                            music = notPlayedMusics[r.Next(notPlayedMusics.Length)];
+                        } while (music == Music?.Info);
+                    }
                     PlayNew(music);
                     break;
 
                 case CycleMode.SingleCycle:
-                    Music.PlayAgain();
+                    if (manual)
+                    {
+                        //手动点击下一曲，还是得下一曲的
+                        PlayListNext(true, CycleMode.ListCycle);
+                    }
+                    else
+                    {
+                        Music.PlayAgain();
+                    }
                     break;
             }
         }

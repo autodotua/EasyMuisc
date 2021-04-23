@@ -55,7 +55,7 @@ namespace EasyMusic.Helper
                     switch (command)
                     {
                         case "下一曲":
-                            PlayNext();
+                            PlayNext(true);
                             break;
 
                         case "上一曲":

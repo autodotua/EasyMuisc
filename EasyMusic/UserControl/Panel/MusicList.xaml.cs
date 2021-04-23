@@ -28,7 +28,7 @@ namespace EasyMusic.UserControls
     /// </summary>
     public partial class MusicList : System.Windows.Controls.UserControl, INotifyPropertyChanged
     {
-        public UserControls.ToggleButton lastMusicListBtn;
+        public ToggleButton lastMusicListBtn;
         private static ObservableCollection<MusicInfo> musicListBinding;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -183,14 +183,14 @@ namespace EasyMusic.UserControls
         /// <param name="e"></param>
         private void BtnSelectEventHandler(object sender, EventArgs e)
         {
-            UserControls.ToggleButton btn = sender as UserControls.ToggleButton;
+            ToggleButton btn = sender as ToggleButton;
             foreach (var i in stkMusiList.Children)
             {
-                if (!(i is UserControls.ToggleButton) || i == sender)
+                if (!(i is ToggleButton) || i == sender)
                 {
                     continue;
                 }
-                (i as UserControls.ToggleButton).IsPressed = false;
+                (i as ToggleButton).IsPressed = false;
             }
             if (lastMusicListBtn != null && lastMusicListBtn != btn && MusicDatas != null)
             {
@@ -257,6 +257,7 @@ namespace EasyMusic.UserControls
             {
                 RemoveMusic(i);
             }
+            SaveListToFile(lastMusicListBtn.Text, false);
         }
 
         public MusicInfo SelectedMusic { get; set; }
@@ -405,7 +406,7 @@ namespace EasyMusic.UserControls
             {
                 if (CurrentHistoryIndex < HistoryCount - 1)
                 {
-                    RemoveHistory(CurrentHistoryIndex + 1, HistoryCount - CurrentHistoryIndex - 1);
+                    RemoveHistories(CurrentHistoryIndex + 1, HistoryCount - CurrentHistoryIndex - 1);
                 }
                 AddHistory(SelectedMusic, false);
             };

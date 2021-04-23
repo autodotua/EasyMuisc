@@ -99,7 +99,7 @@ namespace EasyMusic.UserControls
         /// <param name="e"></param>
         private void BtnNextClickEventHandler(object sender, RoutedEventArgs e)
         {
-            PlayNext();
+            PlayNext(true);
         }
 
         /// <summary>

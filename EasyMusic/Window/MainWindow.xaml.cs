@@ -434,7 +434,7 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void HotKeyNextEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            MusicControlHelper.PlayListNext();
+            MusicControlHelper.PlayListNext(true);
         }
 
         /// <summary>
@@ -676,7 +676,7 @@ namespace EasyMusic
 
                 {
                     case "下一曲":
-                        PlayNext();
+                        PlayNext(true);
                         break;
 
                     case "上一曲":
@@ -750,7 +750,7 @@ namespace EasyMusic
                 UpdateLyric(position);
                 if (Music.IsEnd)
                 {
-                    PlayNext();
+                    PlayNext(false);
                 }
             }
         }
