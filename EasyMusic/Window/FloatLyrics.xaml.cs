@@ -18,10 +18,23 @@ namespace EasyMusic.Windows
         public FloatLyrics()
         {
             InitializeComponent();
-            Top = Setting.FloatLyricsTop;
-            Left = Setting.FloatLyricsLeft;
-            Height = Setting.FloatLyricsHeight;
-            Width = Setting.FloatLyricsWidth;
+            if (Setting.FloatLyricsTop >= 0
+                && Setting.FloatLyricsTop < SystemParameters.WorkArea.Height
+                && Setting.FloatLyricsLeft >= 0
+                && Setting.FloatLyricsLeft < SystemParameters.WorkArea.Width)
+            {
+                Top = Setting.FloatLyricsTop;
+                Left = Setting.FloatLyricsLeft;
+                Height = Setting.FloatLyricsHeight;
+                Width = Setting.FloatLyricsWidth;
+            }
+            else
+            {
+                Top = SystemParameters.WorkArea.Height * 0.75;
+                Left = SystemParameters.WorkArea.Width * 0.2;
+                Height = SystemParameters.WorkArea.Height * 0.2;
+                Width = SystemParameters.WorkArea.Width * 0.6;
+            }
             WindowChrome.SetWindowChrome(this, new WindowChrome()
             {
                 CaptionHeight = 0,

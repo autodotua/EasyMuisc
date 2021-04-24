@@ -2,6 +2,7 @@
 using FzLib.Program;
 using FzLib.Windows;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
@@ -57,26 +58,15 @@ namespace EasyMusic.UserControls
                 MainWindow.Current.Topmost = !MainWindow.Current.Topmost;
                 Setting.Topmost = MainWindow.Current.Topmost;
             };
-            MenuItem menuFileAssociation = new MenuItem() { Header = FileFormatAssociation.IsAssociated(".mp3", Properties.Resources.AppName) ? "取关格式" : "关联格式" };
+            MenuItem menuFileAssociation = new MenuItem() { Header = FileFormatAssociation.IsAssociated(".mp3", Properties.Resources.AppName) ? "取消关联格式" : "关联格式" };
             menuFileAssociation.Click += MenuFileAssociationClick;
-            MenuItem menuListenHistory = new MenuItem() { Header = "聆听历史" };
+            MenuItem menuListenHistory = new MenuItem() { Header = "聆听历史记录" };
             menuListenHistory.Click += (p1, p2) =>
             {
                 WinListenHistory win = new WinListenHistory();
                 win.Owner = MainWindow.Current;
                 win.Show();
             };
-
-            //StackPanel menuColor = new StackPanel()
-            //{
-            //    Orientation = Orientation.Horizontal,
-            //    Children =
-            //    {
-            //        new TextBlock{Text="背景"},
-            //        colorPicker,
-            //    },
-            //};
-            //colorPicker.ChooseComplete((p1, p2) => mainContextMenu.IsOpen = false);
 
             MenuItem menuSettings = new MenuItem()
             {
@@ -85,6 +75,14 @@ namespace EasyMusic.UserControls
             menuSettings.Click += (p1, p2) =>
             {
                 new WinSettings() { Owner = MainWindow.Current }.ShowDialog();
+            };
+            MenuItem menuConfigFolder = new MenuItem()
+            {
+                Header = "打开配置目录"
+            };
+            menuConfigFolder.Click += (p1, p2) =>
+            {
+                Process.Start("explorer.exe", ConfigPath);
             };
             MenuItem menuHelp = new MenuItem()
             {
@@ -115,6 +113,7 @@ namespace EasyMusic.UserControls
                 mainContextMenu.Items.Add(menuListenHistory);
             }
             mainContextMenu.Items.Add(menuSettings);
+            mainContextMenu.Items.Add(menuConfigFolder);
             mainContextMenu.Items.Add(menuHelp);
             mainContextMenu.Items.Add(menuAbout);
 

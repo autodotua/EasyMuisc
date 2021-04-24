@@ -17,8 +17,8 @@ namespace EasyMusic
         public double FloatLyricsNormalFontSize { get; set; } = 30;
         public double FloatLyricsHeight { get; set; } = 200;
         public double FloatLyricsWidth { get; set; } = 800;
-        public double FloatLyricsTop { get; set; } = 100;
-        public double FloatLyricsLeft { get; set; } = 100;
+        public double FloatLyricsTop { get; set; } = -1;
+        public double FloatLyricsLeft { get; set; } = -1;
         public double FloatLyricsThickness { get; set; } = 1.5;
         public double FloatLyricsBlurRadius { get; set; } = 5;
 
