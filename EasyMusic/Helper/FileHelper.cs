@@ -24,7 +24,7 @@ namespace EasyMusic.Helper
 
                 foreach (var folderName in fbd.FileNames)
                 {
-                    foreach (var i in EnumerateFiles(folderName, supportExtensionWithSplit, includeChildren ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
+                    foreach (var i in EnumerateMusics(folderName, includeChildren ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
                     {
                         musics.Add(i);
                     }
@@ -44,9 +44,11 @@ namespace EasyMusic.Helper
                 Title = "请选择音乐文件",
                 Multiselect = true
             };
-            dialog.Filters.Add(new CommonFileDialogFilter("MP3音乐", ".mp3"));
-            dialog.Filters.Add(new CommonFileDialogFilter("WAVE音乐", ".wav"));
-            dialog.Filters.Add(new CommonFileDialogFilter("所有文件", "*"));
+            //dialog.Filters.Add(new CommonFileDialogFilter("MP3音乐", ".mp3"));
+            //dialog.Filters.Add(new CommonFileDialogFilter("波形音乐", ".wav"));
+            //dialog.Filters.Add(new CommonFileDialogFilter("FLAC无损音乐", ".flac"));
+            //dialog.Filters.Add(new CommonFileDialogFilter("AAC音乐", ".aac"));
+            dialog.Filters.Add(new CommonFileDialogFilter("支持的格式", GetExtensionFilter()));
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok && dialog.FileNames != null)
             {
                 List<string> musics = new List<string>();

@@ -16,8 +16,6 @@ namespace EasyMusic.Helper
             clinet.GotMessage += ClinetGotMessage;
         }
 
-        //C:\Users\autod\Documents\个人文件\音乐\2015\Avril Lavigne - Innocence.mp3
-
         private static async void ClinetGotMessage(object sender, PipeMessageEventArgs e)
         {
             if (e.Message.StartsWith("play"))

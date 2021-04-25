@@ -48,16 +48,22 @@ namespace EasyMusic
                     break;
                 }
             }
-
-            if (x64)
+            try
             {
-                File.Copy(Path.Combine(p, "dlls/bass_x64.dll"), Path.Combine(p, "bass.dll"), true);
-                File.Copy(Path.Combine(p, "dlls/bass_fx_x64.dll"), Path.Combine(p, "bass_fx.dll"), true);
+                if (x64)
+                {
+                    File.Copy(Path.Combine(p, "dlls/bass_x64.dll"), Path.Combine(p, "bass.dll"), true);
+                    File.Copy(Path.Combine(p, "dlls/bass_fx_x64.dll"), Path.Combine(p, "bass_fx.dll"), true);
+                }
+                else
+                {
+                    File.Copy(Path.Combine(p, "dlls/bass_x86.dll"), Path.Combine(p, "bass.dll"), true);
+                    File.Copy(Path.Combine(p, "dlls/bass_fx_x86.dll"), Path.Combine(p, "bass_fx.dll"), true);
+                }
             }
-            else
+            catch
             {
-                File.Copy(Path.Combine(p, "dlls/bass_x86.dll"), Path.Combine(p, "bass.dll"), true);
-                File.Copy(Path.Combine(p, "dlls/bass_fx_x86.dll"), Path.Combine(p, "bass_fx.dll"), true);
+
             }
         }
 

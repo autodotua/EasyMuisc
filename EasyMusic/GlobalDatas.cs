@@ -9,6 +9,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Media.Animation;
+using System.Linq;
 
 namespace EasyMusic
 {
@@ -53,15 +54,20 @@ namespace EasyMusic
         /// <summary>
         /// 支持的格式
         /// </summary>
-        public static string[] supportExtension = { ".mp3", ".MP3", ".wav", ".WAV" };
+        public readonly static string[] supportedExtension = { "mp3", ".wav", "flac", "aac" };
 
         public static Settings Setting { get; set; }
         public static string ConfigPath { get; }
 
-        /// <summary>
-        /// 支持的格式，过滤器格式
-        /// </summary>
-        public static string supportExtensionWithSplit;
+        public static bool IsExtensionSupported(string ext)
+        {
+            return supportedExtension.Contains(ext.Trim().Trim('.').ToLower());
+        }
+
+        public static string GetExtensionFilter()
+        {
+            return string.Join(",", supportedExtension.Select(p => "." + p));
+        }
 
         /// <summary>
         /// 托盘图标
@@ -119,15 +125,9 @@ namespace EasyMusic
         /// <param name="searchPattern"></param>
         /// <param name="searchOption"></param>
         /// <returns></returns>
-        public static string[] EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
+        public static IList<string> EnumerateMusics(string path, SearchOption searchOption)
         {
-            string[] searchPatterns = searchPattern.Split('|');
-            List<string> files = new List<string>();
-            foreach (string i in searchPatterns)
-            {
-                files.AddRange(Directory.EnumerateFiles(path, i, searchOption));
-            }
-            return files.ToArray();
+            return Directory.EnumerateFiles(path).Where(p => IsExtensionSupported(Path.GetExtension(p))).ToList();
         }
 
         public static double ScreenHight => SystemParameters.PrimaryScreenHeight;

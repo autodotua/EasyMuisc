@@ -1,4 +1,5 @@
 ﻿using EasyMusic.Windows;
+using FzLib.Basic;
 using FzLib.Program;
 using FzLib.Windows;
 using System.ComponentModel;
@@ -45,7 +46,7 @@ namespace EasyMusic.UserControls
             if (mainContextMenu != null)
             {
                 (mainContextMenu.Items[0] as MenuItem).Header = MainWindow.Current.Topmost ? "取消置顶" : "置顶";
-                (mainContextMenu.Items[1] as MenuItem).Header = FileFormatAssociation.IsAssociated(".mp3", Properties.Resources.AppName) ? "取关格式" : "关联格式";
+                (mainContextMenu.Items[1] as MenuItem).Header = FileFormatAssociation.IsAssociated(".mp3", Properties.Resources.AppName + "_mp3") ? "取消关联格式" : "关联格式";
                 mainContextMenu.IsOpen = true;
                 return;
             }
@@ -123,23 +124,19 @@ namespace EasyMusic.UserControls
         private void MenuFileAssociationClick(object sender, RoutedEventArgs e)
         {
             WindowsIdentity current = WindowsIdentity.GetCurrent();
-            WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
-            //if (windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator))
-            //{
-            //    FileFotmatAssociation.Associate(".mp3", EasyMusic.Properties.Resources.AppName, "mp3 文件",FzLib.Program.Information.ProgramDirectoryPath + "\\icon.ico", Process.GetCurrentProcess().MainModule.FileName);
-            //    ShowPrompt("成功");
-            //}
-            //else
-            //{
-            //    ShowError("需要管理员权限，请用管理员权限打开此程序。");
-            //}
-            if (FileFormatAssociation.IsAssociated(".mp3", Properties.Resources.AppName))
+            if (FileFormatAssociation.IsAssociated(".mp3", Properties.Resources.AppName+"_mp3"))
             {
-                FileFormatAssociation.DeleteAssociation(".mp3", Properties.Resources.AppName);
+                supportedExtension.ForEach(p =>
+                {
+                    FileFormatAssociation.DeleteAssociation("." + p, Properties.Resources.AppName + "_" + p);
+                });
             }
             else
             {
-                FileFormatAssociation.SetAssociation(".mp3", Properties.Resources.AppName, "mp3 文件", FzLib.Program.App.ProgramDirectoryPath + "\\music.png");
+                supportedExtension.ForEach(p =>
+                {
+                    FileFormatAssociation.SetAssociation("." + p, Properties.Resources.AppName + "_" + p, p + " 文件", FzLib.Program.App.ProgramDirectoryPath + "\\music.png");
+                });
             }
         }
 

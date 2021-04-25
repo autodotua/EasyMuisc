@@ -167,7 +167,8 @@
                             <TextBlock
                                 x:Name="tbkArrow" Margin="0,0,8,0"
                                 HorizontalAlignment="Right"
-                                VerticalAlignment="Center" Text="&gt;"
+                                VerticalAlignment="Center"
+                                Text="&gt;"
                                 Visibility="Hidden" />
                             <Popup
                                 AllowsTransparency="True"

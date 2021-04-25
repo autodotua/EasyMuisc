@@ -92,20 +92,6 @@ namespace EasyMusic
             InitializeComponent();
             DefaultOwner = new FzLib.UI.Dialog.WindowOwner(this);
 
-            if (Setting.MaxWindow)
-            {
-                WindowState = WindowState.Maximized;
-                grdMain.Margin = new Thickness(8);
-            }
-            else
-            {
-                WindowStartupLocation = WindowStartupLocation.Manual;
-
-                Top = Setting.Top;
-                Left = Setting.Left;
-                Width = Setting.Width;
-                Height = Setting.Height;
-            }
             Handle = new WindowInteropHelper(this).EnsureHandle();
             if (!Un4seen.Bass.AddOn.Fx.BassFx.LoadMe() || !Bass.BASS_Init(-1, Setting.SampleRate/*无设置界面*/, BASSInit.BASS_DEVICE_DEFAULT, Handle))
             {
@@ -135,13 +121,6 @@ namespace EasyMusic
         {
             UiTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000 / Setting.UpdateSpeed) };
             UiTimer.Tick += UpdateTick;
-            StringBuilder str = new StringBuilder();
-            foreach (var i in supportExtension)
-            {
-                str.Append($"*{i}|");
-            }
-            str.Remove(str.Length - 1, 1);
-            supportExtensionWithSplit = str.ToString();
             if (Setting.ShowFloatLyric)
             {
                 FloatLyric.Show();
@@ -161,6 +140,22 @@ namespace EasyMusic
 
             InitializeField();
             InitializeAnimation();
+
+            if (Setting.MaxWindow)
+            {
+                WindowState = WindowState.Maximized;
+                //grdMain.Margin = new Thickness(8);
+            }
+            else
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual;
+
+                Top = Setting.Top;
+                Left = Setting.Left;
+                Width = Setting.Width;
+                Height = Setting.Height;
+            }
+            Visibility = Visibility.Visible;
 
             if (argPath != null && File.Exists(argPath))
             {
@@ -565,7 +560,7 @@ namespace EasyMusic
             {
                 int currentCount = MusicCount;
                 string extension = new FileInfo(files[0]).Extension;
-                if (supportExtension.Contains(extension))
+                if (IsExtensionSupported(extension))
                 {
                     await AddMusic(files[0]);
                     if (MusicCount > currentCount + 1)
@@ -582,7 +577,7 @@ namespace EasyMusic
                     FileInfo file = new FileInfo(i);
                     if (file.Attributes.HasFlag(FileAttributes.Directory))
                     {
-                        foreach (var j in EnumerateFiles(i, supportExtensionWithSplit, SearchOption.AllDirectories))
+                        foreach (var j in EnumerateMusics(i, SearchOption.AllDirectories))
                         {
                             if (!musics.Contains(j))
                             {
@@ -593,7 +588,7 @@ namespace EasyMusic
                     else
                     {
                         string extension = file.Extension;
-                        if (supportExtension.Contains(extension))
+                        if (IsExtensionSupported(extension))
                         {
                             if (!musics.Contains(i))
                             {

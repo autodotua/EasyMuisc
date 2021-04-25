@@ -1,7 +1,9 @@
 ﻿using EasyMusic.Enum;
 using EasyMusic.Helper;
 using EasyMusic.Info;
+using FzLib.UI.Dialog;
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -13,7 +15,6 @@ using System.Windows.Media.Animation;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicControlHelper;
 using static EasyMusic.Helper.MusicListHelper;
-using static FzLib.UI.Dialog.MessageBox;
 
 namespace EasyMusic.UserControls
 {
@@ -126,7 +127,7 @@ namespace EasyMusic.UserControls
                     break;
 
                 default:
-                    ShowError("黑人问号");
+                    throw new Exception();
                     break;
             }
             Notify("CycleModeButtonVisibility");
@@ -139,15 +140,15 @@ namespace EasyMusic.UserControls
         /// <param name="e"></param>
         private async void BtnOpenFileClickEventHandler(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog opd = new OpenFileDialog()
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
             {
-                Title = "请选择音乐文件。",
-                Filter = "MP3文件(*.mp3)|*.mp3|WAVE文件(*.wav)|*.wav|所有文件(*.*) | *.*",
+                Title = "请选择音乐文件",
                 Multiselect = false
             };
-            if (opd.ShowDialog() == true && opd.FileNames != null)
+            dialog.Filters.Add(new CommonFileDialogFilter("支持的格式", GetExtensionFilter()));
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok && dialog.FileNames != null)
             {
-                MusicInfo temp = await AddMusic(opd.FileName);
+                MusicInfo temp = await AddMusic(dialog.FileName);
                 if (temp != null)
                 {
                     PlayNew(temp);

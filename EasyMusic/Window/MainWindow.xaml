@@ -22,6 +22,7 @@
     Loaded="WindowLoadedEventHandler"
     PreviewMouseWheel="MouseWheelEventHandler"
     StateChanged="WinMainStateChanged"
+    Visibility="Collapsed"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None" mc:Ignorable="d">
     <Window.Effect>
