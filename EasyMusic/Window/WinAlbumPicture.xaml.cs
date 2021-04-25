@@ -6,7 +6,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using static FzLib.Control.Dialog.DialogBox;
+using static FzLib.UI.Dialog.MessageBox;
 
 namespace EasyMusic.Windows
 {

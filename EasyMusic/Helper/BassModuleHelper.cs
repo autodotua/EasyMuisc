@@ -1,5 +1,5 @@
 ﻿using EasyMusic.Enum;
-using FzLib.Control.Dialog;
+using FzLib.UI.Dialog;
 using System;
 using System.IO;
 using System.Text;
@@ -10,7 +10,7 @@ using Un4seen.Bass;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
 using static FzLib.Basic.String;
-using static FzLib.Control.Dialog.DialogBox;
+using static FzLib.UI.Dialog.MessageBox;
 using static Un4seen.Bass.Bass;
 
 namespace EasyMusic.Helper
@@ -190,6 +190,7 @@ namespace EasyMusic.Helper
             {
                 var tempStream = BASS_StreamCreateFile(FilePath, 0, 0, BASSFlag.BASS_STREAM_DECODE);//获取歌曲句柄
                                                                                                     // var decoder = Bass.BASS_StreamCreateFile(path, 0, 0,BASSFlag. BASS_STREAM_DECODE); // create a "decoding channel" from a file
+
                 stream = Un4seen.Bass.AddOn.Fx.BassFx.BASS_FX_TempoCreate(tempStream, BASSFlag.BASS_FX_FREESOURCE);
 
                 //Device = MusicControlHelper.Device;

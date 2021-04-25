@@ -1,6 +1,6 @@
 ﻿using EasyMusic.Helper;
 using EasyMusic.Info;
-using FzLib.Control.Dialog;
+using FzLib.UI.Dialog;
 using FzLib.Program.Runtime;
 using System;
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace EasyMusic
             }
             catch (Exception ex)
             {
-                DialogBox.ShowException("读取配置文件失败，将重置配置文件", ex, true);
+                FzLib.UI.Dialog.MessageBox.ShowException("读取配置文件失败，将重置配置文件", ex, true);
                 Setting = Settings.Create<Settings>(settingPath);
             }
 

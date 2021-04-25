@@ -13,7 +13,7 @@ using System.Windows.Media.Animation;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicControlHelper;
 using static EasyMusic.Helper.MusicListHelper;
-using static FzLib.Control.Dialog.DialogBox;
+using static FzLib.UI.Dialog.MessageBox;
 
 namespace EasyMusic.UserControls
 {

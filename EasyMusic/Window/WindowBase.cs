@@ -1,4 +1,4 @@
-﻿using FzLib.Control.FlatStyle;
+﻿using FzLib.UI.FlatStyle;
 using System;
 using System.Windows;
 using System.Windows.Controls;

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Input;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicControlHelper;
-using static FzLib.Control.Dialog.DialogBox;
+using static FzLib.UI.Dialog.MessageBox;
 
 namespace EasyMusic.Helper
 {

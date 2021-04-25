@@ -1,5 +1,5 @@
 ﻿using EasyMusic.Info;
-using FzLib.Control.Dialog;
+using FzLib.UI.Dialog;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace EasyMusic.Helper
                 }
                 catch (Exception ex)
                 {
-                    DialogBox.ShowException("读取音乐效果配置失败", ex);
+                    FzLib.UI.Dialog.MessageBox.ShowException("读取音乐效果配置失败", ex);
                     fxs = new Dictionary<string, MusicFxInfo>();
                 }
             }
@@ -83,7 +83,7 @@ namespace EasyMusic.Helper
             }
             catch (Exception ex)
             {
-                DialogBox.ShowException("保存音乐效果配置失败", ex);
+                FzLib.UI.Dialog.MessageBox.ShowException("保存音乐效果配置失败", ex);
             }
         }
     }

@@ -5,7 +5,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using static FzLib.Control.Dialog.DialogBox;
+using static FzLib.UI.Dialog.MessageBox;
 
 namespace EasyMusic.Windows
 {
@@ -98,7 +98,7 @@ namespace EasyMusic.Windows
                     {
                         File.WriteAllText(filePath, txt.Text, FzLib.Basic.String.GetEncoding(filePath));
                         SetButtonsStatus(false);
-                        if (ShowMessage("重载歌词？", FzLib.Control.Dialog.DialogType.Information, MessageBoxButton.YesNo, this) == 0)
+                        if (ShowMessage("重载歌词？", FzLib.UI.Dialog.DialogType.Information, MessageBoxButton.YesNo, this) == 0)
                         {
                             MainWindow.Current.InitializeLrc();
                         }

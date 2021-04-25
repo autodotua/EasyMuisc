@@ -5,7 +5,7 @@ using System.Linq;
 using Un4seen.Bass;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicListHelper;
-using static FzLib.Control.Dialog.DialogBox;
+using static FzLib.UI.Dialog.MessageBox;
 using static Un4seen.Bass.Bass;
 
 namespace EasyMusic.Helper

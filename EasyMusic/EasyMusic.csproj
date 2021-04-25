@@ -42,8 +42,9 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>7.1</LangVersion>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -106,7 +107,8 @@
     <StartupObject>EasyMusic.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bass.Net">
+    <Reference Include="Bass.Net, Version=2.4.12.7, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>dlls\Bass.Net.dll</HintPath>
     </Reference>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
@@ -115,17 +117,14 @@
     <Reference Include="CsvHelper, Version=12.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.12.1.0\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
-    <Reference Include="FzStandardLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\模块\Release\x64\FzStandardLib.dll</HintPath>
+    <Reference Include="FzDesktopLib.Windows">
+      <HintPath>..\..\模块\Release\AnyCPU\FzDesktopLib.Windows.dll</HintPath>
     </Reference>
-    <Reference Include="FzWpfControlLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\模块\Release\x64\FzWpfControlLib.dll</HintPath>
+    <Reference Include="FzStandardLib">
+      <HintPath>..\..\模块\Release\AnyCPU\netstandard2.0\FzStandardLib.dll</HintPath>
     </Reference>
-    <Reference Include="FzWpfLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\模块\Release\x64\FzWpfLib.dll</HintPath>
+    <Reference Include="FzUILib.WPF">
+      <HintPath>..\..\模块\Release\AnyCPU\FzUILib.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Interop.Shell32">
       <HintPath>dlls\Interop.Shell32.dll</HintPath>
@@ -383,13 +382,21 @@
     <None Include="Images\icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bass.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="bass_fx.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="Images\icon.png" />
+    <None Include="dlls\Bass.Net.dll" />
+    <None Include="dlls\bass_fx_x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="dlls\bass_fx_x86.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="dlls\bass_x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="dlls\bass_x86.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="dlls\Interop.Shell32.dll" />
     <Content Include="Images\icon.svg" />
     <Resource Include="Images\last.png" />
     <Content Include="music.png">

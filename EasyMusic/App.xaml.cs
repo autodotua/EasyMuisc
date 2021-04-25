@@ -1,5 +1,6 @@
 ﻿using EasyMusic.Helper;
 using FzLib.Program.Runtime;
+using FzLib.UI.Program;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -17,6 +18,7 @@ namespace EasyMusic
     {
         private void CheckFiles()
         {
+            bool x64 = IntPtr.Size == 8;
             string[] neededFiles = new string[] {
                 "Bass.Net.dll",
                 "ControlzEx.dll",
@@ -28,20 +30,34 @@ namespace EasyMusic
                 "Newtonsoft.Json.dll",
                 "System.Windows.Interactivity.dll",
                 "FzStandardLib.dll",
-                "FzWpfControlLib.dll",
-                "FzWpfLib.dll",
+                "FzUILib.WPF.dll",
+                "FzDesktopLib.Windows.dll",
                 "music.png",
-                "bass.dll",
-                "bass_fx.dll"};
+                "dlls\\bass_x64.dll",
+                "dlls\\bass_x86.dll",
+                "dlls\\bass_fx_x86.dll",
+                "dlls\\bass_fx_x64.dll"};
 
+            string p = FzLib.Program.App.ProgramDirectoryPath;
             foreach (var file in neededFiles)
             {
-                if (!File.Exists(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName) + "\\" + file))
+                if (!File.Exists(Path.Combine(p, file)))
                 {
                     MessageBox.Show("缺少依赖文件" + file, "打开EasyMusic失败", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(-1);
                     break;
                 }
+            }
+
+            if (x64)
+            {
+                File.Copy(Path.Combine(p, "dlls/bass_x64.dll"), Path.Combine(p, "bass.dll"), true);
+                File.Copy(Path.Combine(p, "dlls/bass_fx_x64.dll"), Path.Combine(p, "bass_fx.dll"), true);
+            }
+            else
+            {
+                File.Copy(Path.Combine(p, "dlls/bass_x86.dll"), Path.Combine(p, "bass.dll"), true);
+                File.Copy(Path.Combine(p, "dlls/bass_fx_x86.dll"), Path.Combine(p, "bass_fx.dll"), true);
             }
         }
 
@@ -157,7 +173,7 @@ namespace EasyMusic
         {
             var color = Setting.BackgroundColor;
             Resources["backgroundBrushColor"] = color;
-            FzLib.Control.DarkerBrushConverter.GetDarkerColor(color, out SolidColorBrush darker1, out SolidColorBrush darker2, out SolidColorBrush darker3, out SolidColorBrush darker4);
+            FzLib.UI.DarkerBrushConverter.GetDarkerColor(color, out SolidColorBrush darker1, out SolidColorBrush darker2, out SolidColorBrush darker3, out SolidColorBrush darker4);
             Resources["darker1BrushColor"] = darker1;
             Resources["darker2BrushColor"] = darker2;
             Resources["darker3BrushColor"] = darker3;

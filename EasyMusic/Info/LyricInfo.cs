@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicControlHelper;
-using static FzLib.Control.Dialog.DialogBox;
+using static FzLib.UI.Dialog.MessageBox;
 using static System.Math;
 
 namespace EasyMusic.Info

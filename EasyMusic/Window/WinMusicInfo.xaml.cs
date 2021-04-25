@@ -30,7 +30,7 @@ namespace EasyMusic.Windows
                   }
                   catch (Exception ex)
                   {
-                      FzLib.Control.Dialog.DialogBox.ShowException("加载失败", ex);
+                      FzLib.UI.Dialog.MessageBox.ShowException("加载失败", ex);
                       Close();
                   }
               };

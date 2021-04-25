@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using static FzLib.Basic.String;
-using static FzLib.Program.Runtime.SinglePipe;
+using static FzLib.Program.Runtime.SimplePipe;
 
 namespace EasyMusic.Helper
 {
@@ -41,7 +41,7 @@ namespace EasyMusic.Helper
                 }
                 else
                 {
-                    App.Current.Dispatcher.Invoke(() => FzLib.Control.Dialog.DialogBox.ShowError($"文件{path}不存在"));
+                    App.Current.Dispatcher.Invoke(() => FzLib.UI.Dialog.MessageBox.ShowError($"文件{path}不存在"));
                 }
             }
         }

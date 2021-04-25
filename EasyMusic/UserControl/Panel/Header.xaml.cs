@@ -139,7 +139,7 @@ namespace EasyMusic.UserControls
             }
             else
             {
-                FileFormatAssociation.SetAssociation(".mp3", Properties.Resources.AppName, "mp3 文件", Information.ProgramDirectoryPath + "\\music.png");
+                FileFormatAssociation.SetAssociation(".mp3", Properties.Resources.AppName, "mp3 文件", FzLib.Program.App.ProgramDirectoryPath + "\\music.png");
             }
         }
 
@@ -328,6 +328,21 @@ namespace EasyMusic.UserControls
         private void Button_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             isMoving = false;
+        }
+
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Debug.WriteLine(b.ActualWidth);
+            //不知道什么原因，在缩小窗体时，宽度达到662.686264216973，则再缩小一段距离将不会改变，
+            //导致部分元素无法显示，因此需要手动修改Margin。
+            if (b.ActualWidth < 662 && b.Margin.Right == 0)
+            {
+                b.Margin = new Thickness(0, 0, 20, 0);
+            }
+            else if (b.ActualWidth > 663 && b.Margin.Right != 0)
+            {
+                b.Margin = new Thickness(0);
+            }
         }
     }
 }

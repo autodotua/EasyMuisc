@@ -21,6 +21,64 @@ namespace EasyMusic.UserControls
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public int Pitch
+        {
+            get
+            {
+                if (Music == null)
+                {
+                    if (Setting.MusicFxMode == Enum.MusicFxRemainMode.All)
+                    {
+                        return Setting.Pitch;
+                    }
+                    return 0;
+                }
+                return Music.Pitch;
+            }
+            set
+            {
+                if (Music != null)
+                {
+                    Music.Pitch = value;
+                }
+                PitchText = Setting.Pitch == 0 ? "±0" : ((Setting.Pitch > 0 ? "+" : "") + Setting.Pitch.ToString());
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PitchText)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Pitch)));
+            }
+        }
+
+        public string PitchText { get; set; } = "±0";
+
+        public int Tempo
+        {
+            get
+            {
+                if (Music == null)
+                {
+                    if (Setting.MusicFxMode == Enum.MusicFxRemainMode.All)
+                    {
+                        return Setting.Tempo;
+                    }
+                    return 0;
+                }
+                return Music.Tempo;
+            }
+            set
+            {
+                if (Music != null)
+                {
+                    Music.Tempo = value;
+                }
+                TempoText = (Setting.Tempo + 100).ToString() + "%";
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TempoText)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tempo)));
+            }
+        }
+
+        public string TempoText { get; private set; } = "100%";
+
         /// <summary>
         /// 刷新界面
         /// </summary>
@@ -62,19 +120,6 @@ namespace EasyMusic.UserControls
             Tempo = Tempo;
         }
 
-        private void ScrollViewerPreviewMouseWheelEventHandler(object sender, MouseWheelEventArgs e)
-        {
-            var scv = sender as ScrollViewer;
-            if (e.Delta > 0)
-            {
-                scv.LineLeft();
-            }
-            else
-            {
-                scv.LineRight();
-            }
-        }
-
         ///// <summary>
         ///// 单击关闭按钮事件
         ///// </summary>
@@ -99,79 +144,42 @@ namespace EasyMusic.UserControls
         {
             switch ((sender as Button).Tag as string)
             {
-                case "1":
+                case "P-":
                     sldPitch.Value--;
                     break;
 
-                case "2":
+                case "P+":
                     sldPitch.Value++;
                     break;
 
-                case "3":
+                case "P":
+                    sldPitch.Value = 0;
+                    break;
+
+                case "T-":
                     sldTempo.Value--;
                     break;
 
-                case "4":
+                case "T+":
                     sldTempo.Value++;
+                    break;
+
+                case "T":
+                    sldTempo.Value = 0;
                     break;
             }
         }
 
-        public string PitchText { get; set; } = "±0";
-
-        public int Pitch
+        private void ScrollViewerPreviewMouseWheelEventHandler(object sender, MouseWheelEventArgs e)
         {
-            get
+            var scv = sender as ScrollViewer;
+            if (e.Delta > 0)
             {
-                if (Music == null)
-                {
-                    if (Setting.MusicFxMode == Enum.MusicFxRemainMode.All)
-                    {
-                        return Setting.Pitch;
-                    }
-                    return 0;
-                }
-                return Music.Pitch;
+                scv.LineLeft();
             }
-            set
+            else
             {
-                if (Music != null)
-                {
-                    Music.Pitch = value;
-                }
-                PitchText = Setting.Pitch == 0 ? "±0" : ((Setting.Pitch > 0 ? "+" : "") + Setting.Pitch.ToString());
-
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PitchText)));
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Pitch)));
-            }
-        }
-
-        public string TempoText { get; private set; } = "100%";
-
-        public int Tempo
-        {
-            get
-            {
-                if (Music == null)
-                {
-                    if (Setting.MusicFxMode == Enum.MusicFxRemainMode.All)
-                    {
-                        return Setting.Tempo;
-                    }
-                    return 0;
-                }
-                return Music.Tempo;
-            }
-            set
-            {
-                if (Music != null)
-                {
-                    Music.Tempo = value;
-                }
-                TempoText = (Setting.Tempo + 100).ToString() + "%";
-
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TempoText)));
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tempo)));
+                scv.LineRight();
             }
         }
     }

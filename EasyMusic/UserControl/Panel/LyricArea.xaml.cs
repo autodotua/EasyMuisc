@@ -1,7 +1,7 @@
 ﻿using EasyMusic.Enum;
 using EasyMusic.Windows;
 using FzLib.Basic;
-using FzLib.Control.Dialog;
+using FzLib.UI.Dialog;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -181,7 +181,7 @@ namespace EasyMusic.UserControls
                 }
                 else
                 {
-                    int index = DialogBox.ShowMessage("Lrc歌词文件还是Txt文本文件？", DialogType.Information, new string[] { "Lrc文件", "Txt文件", "取消" });
+                    int index = FzLib.UI.Dialog.MessageBox.ShowMessage("Lrc歌词文件还是Txt文本文件？", DialogType.Information, new string[] { "Lrc文件", "Txt文件", "取消" });
                     if (index == 0)
                     {
                         WinLrcEdit.Edit(MainWindow.Current, file.FullName.RemoveEnd(file.Extension) + ".lrc");

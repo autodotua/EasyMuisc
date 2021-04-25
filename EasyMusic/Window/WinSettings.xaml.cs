@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using static EasyMusic.GlobalDatas;
-using static FzLib.Control.Dialog.DialogBox;
+using static FzLib.UI.Dialog.MessageBox;
 
 namespace EasyMusic.Windows
 {
@@ -68,7 +68,7 @@ namespace EasyMusic.Windows
             {
                 trayIcon.ShowMessage("字体文件设置异常，请重新设置");
             }
-            DefaultDialogOwner = this;
+            DefaultOwner = new FzLib.UI.Dialog.WindowOwner(this);
 
             HotKeyHelper.UnregistAll();
         }
@@ -242,7 +242,7 @@ namespace EasyMusic.Windows
                 AlwaysAppendDefaultExtension = true,
             };
 
-            int type = ShowMessage("请选择导出类型", FzLib.Control.Dialog.DialogType.Information, new string[] { "仅设置", "所有文件" });
+            int type = ShowMessage("请选择导出类型", FzLib.UI.Dialog.DialogType.Information, new string[] { "仅设置", "所有文件" });
             if (type == 0)
             {
                 dialog.Filters.Add(new CommonFileDialogFilter("Json设置", "json"));
@@ -456,7 +456,7 @@ namespace EasyMusic.Windows
 
         private void WindowClosed(object sender, EventArgs e)
         {
-            DefaultDialogOwner = MainWindow.Current;
+            DefaultOwner = new FzLib.UI.Dialog.WindowOwner(MainWindow.Current);
             HotKeyHelper.RegistGolbalHotKey();
         }
 

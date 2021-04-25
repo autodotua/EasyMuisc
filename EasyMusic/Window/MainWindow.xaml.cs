@@ -20,7 +20,7 @@ using Un4seen.Bass;
 using static EasyMusic.GlobalDatas;
 using static EasyMusic.Helper.MusicControlHelper;
 using static EasyMusic.Helper.MusicListHelper;
-using static FzLib.Control.Dialog.DialogBox;
+using static FzLib.UI.Dialog.MessageBox;
 
 namespace EasyMusic
 {
@@ -90,7 +90,7 @@ namespace EasyMusic
         {
             Current = this;
             InitializeComponent();
-            DefaultDialogOwner = this;
+            DefaultOwner = new FzLib.UI.Dialog.WindowOwner(this);
 
             if (Setting.MaxWindow)
             {
@@ -117,6 +117,7 @@ namespace EasyMusic
             {
                 CaptionHeight = 0,
                 ResizeBorderThickness = new Thickness(16),
+                GlassFrameThickness = new Thickness(0),
             });
 
             //UpdateColor(Setting.BackgroundColor);
@@ -293,7 +294,7 @@ namespace EasyMusic
             if (WindowState == WindowState.Maximized)
             {
                 BorderThickness = new Thickness();
-                grdMain.Margin = new Thickness(8);
+                grdMain.Margin = new Thickness(8, 8, 8, 48);
                 WindowChrome.GetWindowChrome(this).ResizeBorderThickness = new Thickness(0);
             }
             else
