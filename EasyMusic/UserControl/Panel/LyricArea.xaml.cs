@@ -238,7 +238,14 @@ namespace EasyMusic.UserControls
 
         public void Update()
         {
-            lbxLrc.RefreshFontSize(lrc.CurrentIndex);
+            if (Setting.LyricsHighlightType == 0)
+            {
+                lbxLrc.RefreshFontSize(lrc.CurrentIndex);
+            }
+            else
+            {
+                lbxLrc.RefreshFontOpacity(lrc.CurrentIndex);
+            }
             lbxLrc.ScrollTo(lrc.CurrentIndex, lrcLineSumToIndex);
         }
 

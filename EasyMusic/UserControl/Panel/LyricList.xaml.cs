@@ -19,10 +19,6 @@ namespace EasyMusic.UserControls
             DataContext = this;
         }
 
-        //public LrcListView(ObservableCollection<string> lrcs)
-        //{
-        //    lbx.ItemsSource = Lrcs;
-        //}
         private List<double> sumHeights = new List<double>() { 0 };
 
         private List<double> heights = new List<double>();
@@ -37,10 +33,6 @@ namespace EasyMusic.UserControls
             lbx.Items.Add(item);
         }
 
-        //public void ChangeFontSize(double size)
-        //{
-        //    lbx.FontSize = size;
-        //}
         public void Clear()
         {
             lbx.Items.Clear();
@@ -62,10 +54,6 @@ namespace EasyMusic.UserControls
 
         public void ScrollTo(int index, List<int> indexArray)
         {
-            //double fontSize = Setting.NormalLrcFontSize;
-            //int lines = (index == 0 ? 0 : (indexArray[index - 1] - 1));
-            //double height = lines * fontSize * FontFamily.LineSpacing * FontFamily.Baseline;// (1 + 1.8 / fontSize);//瞎几把乱写的公式
-
             double height = sumHeights[index] + 0.5 * heights[index];
             DoubleAnimation ani = new DoubleAnimation(-height, Setting.AnimationDuration) { EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } };
             Storyboard.SetTarget(ani, lbx);
@@ -76,36 +64,50 @@ namespace EasyMusic.UserControls
 
         private DoubleAnimation aniFontSize = new DoubleAnimation
         {
-            Duration = Setting.AnimationDuration,// new Duration(TimeSpan.FromSeconds(0.8)),//动画时间1秒
+            Duration = Setting.AnimationDuration,
             EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut },
-            //DecelerationRatio = 0.5,
+        };
+
+        private DoubleAnimation aniOpacity = new DoubleAnimation
+        {
+            Duration = Setting.AnimationDuration,
+            EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut },
         };
 
         public void RefreshFontSize(int index)
         {
-            //return;
-
             for (int i = 0; i < lbx.Items.Count; i++)
             {
                 var txt = ((lbx.Items[i] as ListBoxItem).Content as TextBlock);
                 if (i == index)
                 {
-                    //    //txt.FontSize = highlight;
-                    //Tools.NewDoubleAnimation(
-                    //    txt,
-                    //    FontSizeProperty,
-                    //    highlight,
-                    //    0.8,0.5
-                    //    );
                     aniFontSize.To = Setting.HighlightLrcFontSize;
                     txt.BeginAnimation(TextBlock.FontSizeProperty, aniFontSize);
-                    //BeginStoryboard(story);
                 }
                 else if (txt.FontSize != Setting.NormalLrcFontSize)
                 {
-                    //txt.FontSize = normal;
                     aniFontSize.To = Setting.NormalLrcFontSize;
                     txt.BeginAnimation(TextBlock.FontSizeProperty, aniFontSize);
+                }
+            }
+        }
+
+        public void RefreshFontOpacity(int index)
+        {
+            for (int i = 0; i < lbx.Items.Count; i++)
+            {
+                var txt = ((lbx.Items[i] as ListBoxItem).Content as TextBlock);
+                if (i == index)
+                {
+                    aniOpacity.To = 1;
+                    txt.BeginAnimation(OpacityProperty, aniOpacity);
+                    txt.FontWeight = FontWeights.Bold;
+                }
+                else if (txt.Opacity != Setting.NormalLrcOpacity)
+                {
+                    aniOpacity.To = Setting.NormalLrcOpacity;
+                    txt.BeginAnimation(OpacityProperty, aniOpacity);
+                    txt.FontWeight = FontWeights.Normal;
                 }
             }
         }

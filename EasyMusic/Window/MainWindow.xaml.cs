@@ -6,9 +6,11 @@ using FzLib.Program.Runtime;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -77,7 +79,7 @@ namespace EasyMusic
         /// <summary>
         /// 主定时器
         /// </summary>
-        private DispatcherTimer UiTimer { get; set; }
+        private Timer UiTimer { get; set; }
 
         #endregion 属性
 
@@ -119,8 +121,9 @@ namespace EasyMusic
         /// </summary>
         private void InitializeField()
         {
-            UiTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000 / Setting.UpdateSpeed) };
-            UiTimer.Tick += UpdateTick;
+            UiTimer = new Timer(new TimerCallback(p => UpdateTick(null, null)), null, 0, 1000 / Setting.UpdateSpeed);
+            //UiTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000 / Setting.UpdateSpeed) };
+            //UiTimer.Tick += UpdateTick;
             if (Setting.ShowFloatLyric)
             {
                 FloatLyric.Show();
@@ -311,10 +314,10 @@ namespace EasyMusic
                 case ControlStatus.Play:
                     tbiPlay.Visibility = Visibility.Collapsed;
                     tbiPause.Visibility = Visibility.Visible;
-                    if (!UiTimer.IsEnabled)
-                    {
-                        UiTimer.Start();
-                    }
+                    //if (!UiTimer.IsEnabled)
+                    //{
+                    //    UiTimer.Start();
+                    //}
                     break;
 
                 case ControlStatus.Pause:
@@ -717,12 +720,8 @@ namespace EasyMusic
         /// </summary>
         private void InitializeAnimation()
         {
-            if (Setting.LrcAnimation)
-            {
-                //Storyboard.SetTargetName(aniLrc, stkLrc.Name);
-                Storyboard.SetTargetProperty(aniLrc, new PropertyPath(MarginProperty));
-                storyLrc.Children.Add(aniLrc);
-            }
+            Storyboard.SetTargetProperty(aniLrc, new PropertyPath(MarginProperty));
+            storyLrc.Children.Add(aniLrc);
             AnimationFps = -1;
         }
 
@@ -735,20 +734,22 @@ namespace EasyMusic
         {
             if (Music == null || Music.Status != BASSActive.BASS_ACTIVE_PLAYING)
             {
-                UiTimer.Stop();
-                return;
+                //UiTimer.Stop();
+                //return;
             }
-            if (!controlBar.IsManuallyChangingPosition)
+            Dispatcher.BeginInvoke((Action)(() =>
             {
-                double position = Music.Position;
-                controlBar.UpdatePosition(position);
-
-                UpdateLyric(position);
-                if (Music.IsEnd)
+                if (!controlBar.IsManuallyChangingPosition)
                 {
-                    PlayNext(false);
+                    controlBar.UpdatePosition();
+
+                    UpdateLyric(Music.Position);
+                    if (Music.IsEnd)
+                    {
+                        PlayNext(false);
+                    }
                 }
-            }
+            }), DispatcherPriority.Render);
         }
 
         /// <summary>

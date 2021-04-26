@@ -43,7 +43,7 @@ namespace EasyMusic.UserControls
             }
         }
 
-        public bool IsManuallyChangingPosition => sldProcess.IsMouseOver && System.Windows.Input.Mouse.LeftButton == MouseButtonState.Pressed;
+        public bool IsManuallyChangingPosition => sldProgress.IsMouseOver && System.Windows.Input.Mouse.LeftButton == MouseButtonState.Pressed;
 
         public double SliderMaxBinding
         {
@@ -156,9 +156,9 @@ namespace EasyMusic.UserControls
             }
         }
 
-        public void UpdatePosition(double position)
+        public void UpdatePosition()
         {
-            Notify("SliderPositionBinding", "PostionText");
+            Notify(nameof(SliderPositionBinding), nameof(PositionText));
         }
 
         private Popup ppp;
@@ -280,12 +280,12 @@ namespace EasyMusic.UserControls
                 if (Music != null)
                 {
                     Music.Position = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PostionText"));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PositionText"));
                 }
             }
         }
 
-        public string PostionText
+        public string PositionText
         {
             get
             {
@@ -294,11 +294,11 @@ namespace EasyMusic.UserControls
             }
         }
 
-        private void sldProcess_PreviewMouseMove(object sender, MouseEventArgs e)
+        private void sldProgress_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            // if (sldProcess.IsMouseCaptured)
+            // if (sldProgress.IsMouseCaptured)
             // {
-            //     double position = sldProcess.Value;
+            //     double position = sldProgress.Value;
             //     if (IsManuallyChangingPosition)
             //     {
             //         Music.Position = position;

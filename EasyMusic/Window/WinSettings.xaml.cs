@@ -27,7 +27,6 @@ namespace EasyMusic.Windows
 
             chkOffset.IsChecked = Setting.SaveLrcOffsetByTag;
             chkPreferMusicInfo.IsChecked = Setting.PreferMusicInfo;
-            chkLrcAnimation.IsChecked = Setting.LrcAnimation;
             txtAnimationFps.Text = Setting.AnimationFps.ToString();
             txtOffset.Text = Setting.LrcDefautOffset.ToString();
             txtUpdateSpeed.Text = Setting.UpdateSpeed.ToString();
@@ -69,7 +68,9 @@ namespace EasyMusic.Windows
                 trayIcon.ShowMessage("字体文件设置异常，请重新设置");
             }
             DefaultOwner = new FzLib.UI.Dialog.WindowOwner(this);
-
+            cbbHighlightType.SelectedIndex = Setting.LyricsHighlightType;
+            sldLyricOpacity.Value = Setting.NormalLrcOpacity * 100;
+            sldLyricOpacity.TextConvert = p => p + "%";
             HotKeyHelper.UnregistAll();
         }
 
@@ -163,7 +164,6 @@ namespace EasyMusic.Windows
 
                 Setting.SaveLrcOffsetByTag = (bool)chkOffset.IsChecked;
                 Setting.PreferMusicInfo = (bool)chkPreferMusicInfo.IsChecked;
-                Setting.LrcAnimation = (bool)chkLrcAnimation.IsChecked;
                 switch (cbbMusicFx.SelectedIndex)
                 {
                     case 0:
@@ -212,6 +212,8 @@ namespace EasyMusic.Windows
                 Setting.ThresholdValueOfListenTime = listenValue.Value;
                 Setting.BackgroundColor = mainColor.ColorBrush;
                 Setting.ShowOneLineInFloatLyric = chkOneLineFloatLyric.IsChecked.Value;
+                Setting.LyricsHighlightType = cbbHighlightType.SelectedIndex;
+                Setting.NormalLrcOpacity = sldLyricOpacity.Value * 1.0 / 100;
                 (App.Current as App).UpdateColor();
                 if (MusicControlHelper.Music != null)
                 {
@@ -467,6 +469,14 @@ namespace EasyMusic.Windows
                 ShowPrompt("测试通过");
             }
             HotKeyHelper.UnregistAll();
+        }
+
+        private void cbbHighlightType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int s = cbbHighlightType.SelectedIndex;
+            stkCurrentFontSize.Visibility = s == 0 ? Visibility.Visible : Visibility.Collapsed;
+            stkLyricBold.Visibility = s == 0 ? Visibility.Visible : Visibility.Collapsed;
+            stkLyricOpacity.Visibility = s == 1 ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

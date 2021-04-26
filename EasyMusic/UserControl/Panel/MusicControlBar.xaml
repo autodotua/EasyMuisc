@@ -43,15 +43,15 @@
                 <ColumnDefinition Width="4" />
                 <ColumnDefinition Width="72" />
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="tbkCurrentPosition" Text="{Binding PostionText}" />
+            <TextBlock x:Name="tbkCurrentPosition" Text="{Binding PositionText}" />
             <Slider
-                x:Name="sldProcess" Grid.Column="2"
+                x:Name="sldProgress" Grid.Column="2"
                 VerticalAlignment="Center"
                 FocusVisualStyle="{x:Null}"
                 IsMoveToPointEnabled="True"
                 Maximum="{Binding SliderMaxBinding}"
                 Orientation="Horizontal"
-                PreviewMouseMove="sldProcess_PreviewMouseMove"
+                PreviewMouseMove="sldProgress_PreviewMouseMove"
                 Template="{StaticResource SliderHorizontal}"
                 Value="{Binding SliderPositionBinding}" />
             <uc:ControlButton

@@ -9,6 +9,7 @@ namespace EasyMusic
     {
         public double NormalLrcFontSize { get; set; } = 24;
         public double HighlightLrcFontSize { get; set; } = 36;
+        public double NormalLrcOpacity { get; set; } = 0.7;
         public double TextLrcFontSize { get; set; } = 28;
         public double Volumn { get; set; } = 1;
         public double LrcDefautOffset { get; set; } = 0.2;
@@ -27,7 +28,7 @@ namespace EasyMusic
         public double Height { get; set; } = 600;
         public double Width { get; set; } = 1000;
 
-        public int UpdateSpeed { get; set; } = 30;
+        public int UpdateSpeed { get; set; } = 10;
         public int AnimationFps { get; set; } = 60;
         public int Pitch { get; set; } = 0;
         public int Tempo { get; set; } = 100;
@@ -40,7 +41,6 @@ namespace EasyMusic
         public bool ShowLrc { get; set; } = true;
         public bool SaveLrcOffsetByTag { get; set; } = true;
         public bool PreferMusicInfo { get; set; } = true;
-        public bool LrcAnimation { get; set; } = true;
         public bool MaxWindow { get; set; } = false;
         public bool RecordListenHistory { get; set; } = true;
         public MusicFxRemainMode MusicFxMode { get; set; } = MusicFxRemainMode.Each;
@@ -49,6 +49,7 @@ namespace EasyMusic
         public bool ShowFloatLyric { get; set; } = true;
         public bool FloatLyricsFontBold { get; set; } = false;
         public bool LyricsFontBold { get; set; } = false;
+        public int LyricsHighlightType { get; set; } = 1;
 
         public SolidColorBrush BackgroundColor { get; set; } = new SolidColorBrush(Color.FromArgb(0xFF, 0xEB, 0xF1, 0xDD));
         public SolidColorBrush FloatLyricsFontColor { get; set; } = Brushes.White;
