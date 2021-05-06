@@ -83,7 +83,7 @@ namespace EasyMusic.Helper
             }
             catch (Exception ex)
             {
-                FzLib.UI.Dialog.MessageBox.ShowException("保存音乐效果配置失败", ex);
+                MessageBox.ShowException("保存音乐效果配置失败", ex);
             }
         }
     }

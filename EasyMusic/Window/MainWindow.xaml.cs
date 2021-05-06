@@ -271,6 +271,10 @@ namespace EasyMusic
                 {
                     await Task.Delay(100);
                 }
+                if (Setting.MusicFxMode == Enum.MusicFxRemainMode.Each)
+                {
+                    MusicFxConfigHelper.Instance.Set(Music.FilePath, new MusicFxInfo(Music.Pitch, Music.Tempo));
+                }
                 Music.Dispose();
             }
             App.Current.Shutdown();
@@ -732,12 +736,12 @@ namespace EasyMusic
         /// <param name="e"></param>
         private void UpdateTick(object sender, EventArgs e)
         {
-            if (Music == null || Music.Status != BASSActive.BASS_ACTIVE_PLAYING)
+            if (Music == null)
             {
                 //UiTimer.Stop();
-                //return;
+                return;
             }
-            Dispatcher.BeginInvoke((Action)(() =>
+            Dispatcher.Invoke(() =>
             {
                 if (!controlBar.IsManuallyChangingPosition)
                 {
@@ -749,7 +753,7 @@ namespace EasyMusic
                         PlayNext(false);
                     }
                 }
-            }), DispatcherPriority.Render);
+            }, DispatcherPriority.Render);
         }
 
         /// <summary>

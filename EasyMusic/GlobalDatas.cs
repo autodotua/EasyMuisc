@@ -127,7 +127,7 @@ namespace EasyMusic
         /// <returns></returns>
         public static IList<string> EnumerateMusics(string path, SearchOption searchOption)
         {
-            return Directory.EnumerateFiles(path).Where(p => IsExtensionSupported(Path.GetExtension(p))).ToList();
+            return Directory.EnumerateFiles(path,"*", searchOption).Where(p => IsExtensionSupported(Path.GetExtension(p))).ToList();
         }
 
         public static double ScreenHight => SystemParameters.PrimaryScreenHeight;

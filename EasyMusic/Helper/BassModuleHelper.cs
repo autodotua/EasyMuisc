@@ -79,7 +79,7 @@ namespace EasyMusic.Helper
             }
         }
 
-        public bool IsEnd => BASS_ChannelGetLength(stream) - BASS_ChannelGetPosition(stream) <= 144;
+        public bool IsEnd => BASS_ChannelGetLength(stream) > 0 && BASS_ChannelGetLength(stream) - BASS_ChannelGetPosition(stream) <= 144;
 
         public int Pitch
         {
